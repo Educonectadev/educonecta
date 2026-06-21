@@ -12,18 +12,20 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
 const TABLE = (name: string) => `"${name}"`
 
 async function createAuthUser(email: string, password: string) {
-  const { data: existing } = await supabase.auth.admin.listUsers()
-  const exists = existing?.users?.find((u) => u.email === email)
-  if (!exists) {
-    const { error } = await supabase.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-    })
-    if (error) console.error(`Error creating auth user ${email}:`, error.message)
-    else console.log(`  Auth user created: ${email}`)
+  // Try to create the user directly; if they already exist, skip
+  const { error } = await supabase.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+  })
+  if (error) {
+    if (error.message.includes("already exists") || error.message.includes("already registered")) {
+      console.log(`  Auth user already exists: ${email}`)
+    } else {
+      console.error(`  Error creating auth user ${email}:`, error.message)
+    }
   } else {
-    console.log(`  Auth user already exists: ${email}`)
+    console.log(`  Auth user created: ${email}`)
   }
 }
 
@@ -31,18 +33,26 @@ async function seed() {
   const hash = await bcrypt.hash("admin123", 10)
 
   // ── Institution ──
-  const { data: existingInst } = await supabase
+  const { data: existingInst, error: existingInstErr } = await supabase
     .from("Institution").select("id").eq("code", "COL001").maybeSingle()
+  if (existingInstErr) {
+    console.error("Error checking Institution:", existingInstErr.message)
+    process.exit(1)
+  }
   let instId = existingInst?.id
   if (!instId) {
-    const { data } = await supabase.from("Institution").insert({
+    const { data, error } = await supabase.from("Institution").insert({
       name: "Colegio Ejemplo", code: "COL001", type: "private",
       address: "Av. Principal 123", district: "Miraflores",
       province: "Lima", department: "Lima",
       phone: "555-0100", email: "info@colegioejemplo.com",
       website: "https://colegioejemplo.edu.pe", directorName: "Director Ejemplo",
     }).select("id").single()
-    instId = data!.id
+    if (error || !data) {
+      console.error("Error inserting Institution:", error?.message ?? "data is null")
+      process.exit(1)
+    }
+    instId = data.id
   }
 
   // ── Super Admin User ──
