@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import bcrypt from "bcryptjs"
-import { authOptions } from "@/lib/auth"
 import { query, create } from "@/lib/prisma"
 
 function normalize(str: string): string {
@@ -26,7 +25,7 @@ async function generateEmail(firstName: string, lastName: string): Promise<strin
 }
 
 export async function GET() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
@@ -46,7 +45,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }

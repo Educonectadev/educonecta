@@ -1,6 +1,5 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/lib/auth"
 import { query } from "@/lib/prisma"
 import Link from "next/link"
 
@@ -11,7 +10,7 @@ const typeLabels: Record<string, string> = {
 }
 
 export default async function DisciplinaPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "TEACHER") redirect("/login")
 
   const teacherId = session.user.teacherId!

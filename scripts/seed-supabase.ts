@@ -11,6 +11,22 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
 
 const TABLE = (name: string) => `"${name}"`
 
+async function createAuthUser(email: string, password: string) {
+  const { data: existing } = await supabase.auth.admin.listUsers()
+  const exists = existing?.users?.find((u) => u.email === email)
+  if (!exists) {
+    const { error } = await supabase.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+    })
+    if (error) console.error(`Error creating auth user ${email}:`, error.message)
+    else console.log(`  Auth user created: ${email}`)
+  } else {
+    console.log(`  Auth user already exists: ${email}`)
+  }
+}
+
 async function seed() {
   const hash = await bcrypt.hash("admin123", 10)
 
@@ -40,6 +56,7 @@ async function seed() {
     }).select("id").single()
     superUserId = data!.id
   }
+  await createAuthUser("super@educonecta.com", "admin123")
 
   // ── Admin User ──
   const { data: existingAdmin } = await supabase
@@ -53,6 +70,7 @@ async function seed() {
     }).select("id").single()
     adminUserId = data!.id
   }
+  await createAuthUser("admin@colegio.com", "admin123")
 
   const { data: existingIA } = await supabase
     .from("InstitutionalAdmin").select("id").eq("userId", adminUserId).maybeSingle()
@@ -73,6 +91,7 @@ async function seed() {
     }).select("id").single()
     teacherUserId = data!.id
   }
+  await createAuthUser("profesor@colegio.com", "admin123")
 
   let teacherId: number
   const { data: existingT } = await supabase
@@ -97,6 +116,7 @@ async function seed() {
     }).select("id").single()
     parentUserId = data!.id
   }
+  await createAuthUser("padre@ejemplo.com", "admin123")
 
   let parentId: number
   const { data: existingP } = await supabase

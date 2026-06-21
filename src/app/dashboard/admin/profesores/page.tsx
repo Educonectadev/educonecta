@@ -1,11 +1,10 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/lib/auth"
 import { query } from "@/lib/prisma"
 import ProfesoresList from "./ProfesoresList"
 
 export default async function ProfesoresPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") redirect("/login")
 
   const institutionId = session.user.institutionId!

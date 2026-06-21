@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
+import { getServerSession } from "@/lib/auth"
 import { query, create, remove } from "@/lib/prisma"
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
@@ -59,7 +58,7 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }

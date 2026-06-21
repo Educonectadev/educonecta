@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
+import { getServerSession } from "@/lib/auth"
 import { findOne, create, update, remove, query } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 
@@ -11,7 +10,7 @@ const GRADE_STRUCTURE: Record<string, string[]> = {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "SUPER_ADMIN") {
     return NextResponse.json({ message: "No autorizado" }, { status: 403 })
   }
@@ -147,7 +146,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "SUPER_ADMIN") {
     return NextResponse.json({ message: "No autorizado" }, { status: 403 })
   }
@@ -202,7 +201,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "SUPER_ADMIN") {
     return NextResponse.json({ message: "No autorizado" }, { status: 403 })
   }
@@ -236,7 +235,7 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "SUPER_ADMIN") {
     return NextResponse.json({ message: "No autorizado" }, { status: 403 })
   }

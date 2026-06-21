@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
+import { getServerSession } from "@/lib/auth"
 import { query } from "@/lib/prisma"
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "SUPER_ADMIN") {
     return NextResponse.json({ message: "No autorizado" }, { status: 403 })
   }

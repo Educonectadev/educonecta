@@ -1,11 +1,10 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/lib/auth"
 import { query } from "@/lib/prisma"
 import TeacherHorariosClient from "./TeacherHorariosClient"
 
 export default async function TeacherHorariosPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "TEACHER") redirect("/login")
 
   const teacherId = session.user.teacherId!

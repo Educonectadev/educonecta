@@ -1,10 +1,9 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/lib/auth"
 import { getParentChildren, getChildrenGrades } from "@/lib/parent-data"
 
 export default async function CalificacionesPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "PARENT") redirect("/login")
 
   const parentId = session.user.parentId!

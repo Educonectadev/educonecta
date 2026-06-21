@@ -1,5 +1,8 @@
-import NextAuth from "next-auth"
-import { authOptions } from "@/lib/auth"
+// Supabase Auth handles this via /api/auth/login, /api/auth/logout, /api/auth/session
+export async function GET() {
+  return new Response(null, { status: 404 })
+}
 
-const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST }
+export async function POST() {
+  return new Response(null, { status: 404 })
+}

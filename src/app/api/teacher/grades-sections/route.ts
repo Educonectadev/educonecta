@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
+import { getServerSession } from "@/lib/auth"
 import { query } from "@/lib/prisma"
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession()
     if (!session || session.user.role !== "TEACHER") {
       return NextResponse.json({ success: false, message: "No autorizado" }, { status: 401 })
     }

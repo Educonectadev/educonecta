@@ -1,10 +1,9 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/lib/auth"
 import { count } from "@/lib/prisma"
 
 export default async function SuperAdminDashboardPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "SUPER_ADMIN") redirect("/login")
 
   const [totalInstituciones, totalUsuarios, activas] = await Promise.all([

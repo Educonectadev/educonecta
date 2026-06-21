@@ -10,12 +10,15 @@ if (!supabaseUrl || !serviceRoleKey) {
   process.exit(1)
 }
 
+const _supabaseUrl: string = supabaseUrl
+const _serviceRoleKey: string = serviceRoleKey
+
 const schemaPath = path.resolve(__dirname, "../supabase-schema.sql")
 const schema = fs.readFileSync(schemaPath, "utf-8")
 
 async function migrate() {
   console.log("Connecting to Supabase...")
-  const supabase = createClient(supabaseUrl, serviceRoleKey, {
+  const supabase = createClient(_supabaseUrl, _serviceRoleKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   })
 

@@ -1,6 +1,5 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/lib/auth"
 import Navbar from "@/components/Navbar"
 import BottomNav from "@/components/BottomNav"
 import SidebarNav from "@/components/SidebarNav"
@@ -16,7 +15,7 @@ const bottomNavItems = [
 ]
 
 export default async function SuperAdminLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
 
   if (!session || session.user.role !== "SUPER_ADMIN") redirect("/login")
 

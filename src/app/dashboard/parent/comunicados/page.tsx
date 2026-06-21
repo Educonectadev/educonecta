@@ -1,11 +1,10 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/lib/auth"
 import { getInstitutionCommunications } from "@/lib/parent-data"
 import CommunicationsList from "./CommunicationsList"
 
 export default async function ComunicadosPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "PARENT") redirect("/login")
 
   const institutionId = session.user.institutionId!

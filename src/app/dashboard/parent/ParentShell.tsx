@@ -1,6 +1,5 @@
 "use client"
 
-import { SessionProvider } from "next-auth/react"
 import Navbar from "@/components/Navbar"
 import BottomNav from "@/components/BottomNav"
 import Link from "next/link"
@@ -31,7 +30,7 @@ export default function ParentShell({ children }: { children: React.ReactNode })
   const pathname = usePathname()
 
   return (
-    <SessionProvider>
+    <>
       <Navbar />
       <div className="flex min-h-screen pt-14 md:pt-16">
         <aside className="hidden w-56 shrink-0 md:block">
@@ -62,6 +61,6 @@ export default function ParentShell({ children }: { children: React.ReactNode })
         <main className="flex-1 p-4 pb-20 md:p-8 md:pb-8">{children}</main>
       </div>
       <BottomNav items={bottomLinks} />
-    </SessionProvider>
+    </>
   )
 }

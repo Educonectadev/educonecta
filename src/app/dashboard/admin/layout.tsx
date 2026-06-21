@@ -1,13 +1,12 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/lib/auth"
 import Navbar from "@/components/Navbar"
 import Provider from "@/components/Provider"
 import AdminSidebar from "./AdminSidebar"
 import AdminBottomNav from "./AdminBottomNav"
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
 
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
     redirect("/login")

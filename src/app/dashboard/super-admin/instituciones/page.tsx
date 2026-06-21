@@ -1,12 +1,11 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { authOptions } from "@/lib/auth"
 import { findMany } from "@/lib/prisma"
 import InstitutionList from "./InstitutionList"
 
 export default async function InstitucionesPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "SUPER_ADMIN") redirect("/login")
 
   const instituciones: any[] = await findMany("Institution", { orderBy: "createdAt", orderDir: "DESC" })

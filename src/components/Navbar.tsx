@@ -1,13 +1,13 @@
 "use client"
 
-import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
+import { useSession } from "@/lib/auth-context"
 import { themes } from "@/lib/themes"
 import ParentProfileModal from "./ParentProfileModal"
 
 export default function Navbar() {
-  const { data: session } = useSession()
+  const { data: session, signOut } = useSession()
   const [open, setOpen] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -78,7 +78,7 @@ export default function Navbar() {
                     </button>
                   )}
                   <button
-                    onClick={() => { signOut({ callbackUrl: "/" }); setOpen(false) }}
+                    onClick={() => { signOut(); setOpen(false) }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-500 hover:text-[#1a1a1a] hover:bg-gray-50 transition-all duration-200"
                   >
                     Cerrar Sesión

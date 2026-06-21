@@ -1,89 +1,50 @@
-import type { NextAuthOptions } from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-import bcrypt from "bcryptjs"
-import { query } from "./db"
+import { createSupabaseServerClient } from "./supabase-server"
+import { supabaseAdmin } from "./supabase"
+import type { Session } from "./session"
 
-export const authOptions: NextAuthOptions = {
-  providers: [
-    CredentialsProvider({
-      name: "credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Contraseña", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+export type { Session }
 
-        const users = await query<any[]>(
-          `SELECT u.*, i.name as institutionName, t.id as teacherId, p.id as parentId, ia.id as adminId
-           FROM User u
-           LEFT JOIN Institution i ON i.id = u.institutionId
-           LEFT JOIN Teacher t ON t.userId = u.id
-           LEFT JOIN Parent p ON p.userId = u.id
-           LEFT JOIN InstitutionalAdmin ia ON ia.userId = u.id
-           WHERE u.email = ? LIMIT 1`,
-          [credentials.email],
-        )
+export async function getServerSession(): Promise<Session | null> {
+  const supabase = await createSupabaseServerClient()
+  const { data: authData } = await supabase.auth.getUser()
+  const authUser = authData?.user
+  if (!authUser?.email) return null
 
-        const user = users[0]
-        if (!user || !user.isActive) return null
+  const { data: user } = await supabaseAdmin
+    .from("User")
+    .select(`
+      id, email, name, role, institutionId,
+      Institution!institutionId (name),
+      Teacher!userId (id),
+      Parent!userId (id),
+      InstitutionalAdmin!userId (id)
+    `)
+    .eq("email", authUser.email)
+    .maybeSingle()
 
-        const isValid = await bcrypt.compare(credentials.password, user.passwordHash)
-        if (!isValid) return null
+  if (!user) return null
 
-        return {
-          id: String(user.id),
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          institutionId: user.institutionId ?? null,
-          institutionName: user.institutionName ?? null,
-          teacherId: user.teacherId ?? null,
-          parentId: user.parentId ?? null,
-          adminId: user.adminId ?? null,
-        }
-      },
-    }),
-  ],
-  session: {
-    strategy: "jwt",
-    maxAge: 24 * 60 * 60,
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        const u = user as {
-          role: string
-          institutionId: number | null
-          institutionName: string | null
-          teacherId: number | null
-          parentId: number | null
-          adminId: number | null
-        }
-        token.id = user.id
-        token.role = u.role
-        token.institutionId = u.institutionId
-        token.institutionName = u.institutionName
-        token.teacherId = u.teacherId
-        token.parentId = u.parentId
-        token.adminId = u.adminId
-      }
-      return token
+  const teacherArr = (user as any).Teacher as { id: number }[] | undefined
+  const parentArr = (user as any).Parent as { id: number }[] | undefined
+  const adminArr = (user as any).InstitutionalAdmin as { id: number }[] | undefined
+
+  return {
+    user: {
+      id: String(user.id),
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      institutionId: user.institutionId ?? null,
+      institutionName: (user as any).Institution?.name ?? null,
+      teacherId: teacherArr?.[0]?.id ?? null,
+      parentId: parentArr?.[0]?.id ?? null,
+      adminId: adminArr?.[0]?.id ?? null,
     },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
-        session.user.role = token.role as string
-        session.user.institutionId = token.institutionId as number | null
-        session.user.institutionName = token.institutionName as string | null
-        session.user.teacherId = token.teacherId as number | null
-        session.user.parentId = token.parentId as number | null
-        session.user.adminId = token.adminId as number | null
-      }
-      return session
-    },
-  },
-  pages: {
-    signIn: "/login",
-  },
+    expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+  }
+}
+
+export async function hashPassword(password: string): Promise<string> {
+  const bcrypt = await import("bcryptjs")
+  return bcrypt.hash(password, 10)
 }

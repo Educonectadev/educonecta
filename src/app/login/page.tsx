@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, FormEvent } from "react"
-import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { useSession } from "@/lib/auth-context"
 
 export default function LoginPage() {
   const router = useRouter()
+  const { signIn } = useSession()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -17,13 +18,9 @@ export default function LoginPage() {
     setError("")
     setLoading(true)
 
-    const result = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    })
+    const { error: signInError } = await signIn(email, password)
 
-    if (result?.error) {
+    if (signInError) {
       setError("Credenciales inválidas. Intenta de nuevo.")
       setLoading(false)
       return

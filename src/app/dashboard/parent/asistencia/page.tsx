@@ -1,11 +1,10 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "@/lib/auth"
 import { getParentChildren, getChildrenAttendance } from "@/lib/parent-data"
 import AttendanceList from "./AttendanceList"
 
 export default async function AsistenciaPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "PARENT") redirect("/login")
 
   const parentId = session.user.parentId!

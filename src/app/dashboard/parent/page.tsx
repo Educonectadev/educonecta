@@ -1,11 +1,10 @@
-import { getServerSession } from "next-auth"
+import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
-import { authOptions } from "@/lib/auth"
 import { getParentChildren, getChildrenHomeworks, getChildrenGrades, getChildrenAttendance } from "@/lib/parent-data"
 
 export default async function ParentDashboardPage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession()
   if (!session || session.user.role !== "PARENT") redirect("/login")
 
   const parentId = session.user.parentId!

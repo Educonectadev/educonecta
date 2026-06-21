@@ -1,48 +1,18 @@
 import { supabaseAdmin } from "./supabase"
-import bcrypt from "bcryptjs"
 
 type Row = Record<string, unknown>
-
-function toSnakeCase(str: string): string {
-  return str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`)
-}
-
-function toCamelCase(str: string): string {
-  return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
-}
-
-function convertKeysToSnake(obj: Record<string, unknown>): Record<string, unknown> {
-  const result: Record<string, unknown> = {}
-  for (const [key, value] of Object.entries(obj)) {
-    result[toSnakeCase(key)] = value
-  }
-  return result
-}
-
-function convertKeysToCamel(obj: Record<string, unknown>): Record<string, unknown> {
-  const result: Record<string, unknown> = {}
-  for (const [key, value] of Object.entries(obj)) {
-    result[toCamelCase(key)] = value
-  }
-  return result
-}
 
 export function toSupabaseTable(table: string): string {
   return table
 }
 
-export async function query<T extends Row[] = Row[]>(
-  sql: string,
-  params?: unknown[],
-): Promise<T> {
-  // For raw SQL queries, we use rpc with exec_sql
-  // If exec_sql is not available, this will fail
+export async function query<T = any[]>(sql: string, params?: unknown[]): Promise<T> {
   const { data, error } = await supabaseAdmin.rpc("exec_sql", {
     query: sql,
     params: params || [],
   })
   if (error) throw error
-  return (data as T) || ([] as T)
+  return (data ?? []) as T
 }
 
 export async function execute(sql: string, params?: unknown[]): Promise<{ affectedRows: number; insertId: number }> {
@@ -54,7 +24,7 @@ export async function execute(sql: string, params?: unknown[]): Promise<{ affect
   return { affectedRows: 0, insertId: 0 }
 }
 
-export async function findOne<T extends Row = Row>(
+export async function findOne<T = Record<string, unknown>>(
   table: string,
   where: Record<string, unknown>,
   select?: string[],
@@ -62,14 +32,14 @@ export async function findOne<T extends Row = Row>(
   const cols = select?.join(", ") || "*"
   let query = supabaseAdmin.from(table).select(cols)
   for (const [key, value] of Object.entries(where)) {
-    query = query.eq(key, value)
+    query = query.eq(key, value as any)
   }
   const { data, error } = await query.limit(1).maybeSingle()
   if (error) throw error
   return data as T | null
 }
 
-export async function findMany<T extends Row = Row>(
+export async function findMany<T = Record<string, unknown>>(
   table: string,
   opts?: {
     where?: Record<string, unknown>
@@ -86,7 +56,7 @@ export async function findMany<T extends Row = Row>(
 
   if (opts?.where) {
     for (const [key, value] of Object.entries(opts.where)) {
-      query = query.eq(key, value)
+      query = query.eq(key, value as any)
     }
   }
 
@@ -101,30 +71,30 @@ export async function findMany<T extends Row = Row>(
 
   const { data, error } = await query
   if (error) throw error
-  return (data as T[]) || []
+  return (data ?? []) as T[]
 }
 
-export async function create<T extends Row = Row>(
+export async function create<T = Record<string, unknown>>(
   table: string,
-  data: Partial<T>,
+  data: Record<string, unknown>,
 ): Promise<number> {
   const { data: inserted, error } = await supabaseAdmin
     .from(table)
-    .insert(data)
+    .insert(data as any)
     .select("id")
     .single()
   if (error) throw error
   return (inserted as any).id
 }
 
-export async function update<T extends Row = Row>(
+export async function update<T = Record<string, unknown>>(
   table: string,
   where: Record<string, unknown>,
   data: Partial<T>,
 ): Promise<number> {
-  let query = supabaseAdmin.from(table).update(data)
+  let query = supabaseAdmin.from(table).update(data as any)
   for (const [key, value] of Object.entries(where)) {
-    query = query.eq(key, value)
+    query = query.eq(key, value as any)
   }
   const { error, count } = await query
   if (error) throw error
@@ -137,7 +107,7 @@ export async function remove(
 ): Promise<number> {
   let query = supabaseAdmin.from(table).delete()
   for (const [key, value] of Object.entries(where)) {
-    query = query.eq(key, value)
+    query = query.eq(key, value as any)
   }
   const { error, count } = await query
   if (error) throw error
@@ -151,7 +121,7 @@ export async function count(
   let query = supabaseAdmin.from(table).select("*", { count: "exact", head: true })
   if (where) {
     for (const [key, value] of Object.entries(where)) {
-      query = query.eq(key, value)
+      query = query.eq(key, value as any)
     }
   }
   const { count: total, error } = await query
@@ -163,6 +133,4 @@ export async function transaction<T>(fn: () => Promise<T>): Promise<T> {
   return fn()
 }
 
-export async function endPool(): Promise<void> {
-  // no-op for Supabase
-}
+export async function endPool(): Promise<void> {}
