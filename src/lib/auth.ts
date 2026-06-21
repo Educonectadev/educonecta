@@ -1,5 +1,5 @@
 import { createSupabaseServerClient } from "./supabase-server"
-import { supabaseAdmin } from "./supabase"
+import { getSupabaseAdmin } from "./supabase"
 import type { Session } from "./session"
 
 export type { Session }
@@ -10,7 +10,7 @@ export async function getServerSession(): Promise<Session | null> {
   const authUser = authData?.user
   if (!authUser?.email) return null
 
-  const { data: user } = await supabaseAdmin
+  const { data: user } = await getSupabaseAdmin()
     .from("User")
     .select(`
       id, email, name, role, institutionId,
