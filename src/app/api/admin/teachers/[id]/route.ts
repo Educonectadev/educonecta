@@ -1,0 +1,91 @@
+import { NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
+import bcrypt from "bcryptjs"
+import { authOptions } from "@/lib/auth"
+import { query, execute, update, remove } from "@/lib/prisma"
+
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+  }
+  const institutionId = session.user.institutionId!
+  const id = Number((await params).id)
+
+  const teacherRows = await query(
+    `SELECT t.*, JSON_OBJECT('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
+    FROM Teacher t
+    JOIN User u ON t.userId = u.id
+    WHERE t.id = ? AND t.institutionId = ?`,
+    [id, institutionId]
+  )
+  if (teacherRows.length === 0) return NextResponse.json({ error: "No encontrado" }, { status: 404 })
+  const teacher = teacherRows[0]
+
+  try {
+    const body = await request.json()
+    const { firstName, lastName, password, phone, speciality, documentId, professionalTitle, educationLevel, hireDate, contractType, address, emergencyContactName, emergencyContactPhone } = body
+
+    const userData: Record<string, unknown> = {}
+    if (firstName || lastName) {
+      userData.name = `${firstName?.trim() ?? ""} ${lastName?.trim() ?? ""}`.trim()
+    }
+    if (phone !== undefined) userData.phone = phone
+    if (password) userData.passwordHash = await bcrypt.hash(password, 10)
+
+    if (Object.keys(userData).length > 0) {
+      await update("User", { id: teacher.userId }, userData)
+    }
+
+    await update("Teacher", { id }, {
+      speciality: speciality !== undefined ? speciality : teacher.speciality,
+      documentId: documentId !== undefined ? documentId : teacher.documentId,
+      professionalTitle: professionalTitle !== undefined ? professionalTitle : teacher.professionalTitle,
+      educationLevel: educationLevel !== undefined ? educationLevel : teacher.educationLevel,
+      hireDate: hireDate !== undefined ? hireDate : teacher.hireDate,
+      contractType: contractType !== undefined ? contractType : teacher.contractType,
+      address: address !== undefined ? address : teacher.address,
+      emergencyContactName: emergencyContactName !== undefined ? emergencyContactName : teacher.emergencyContactName,
+      emergencyContactPhone: emergencyContactPhone !== undefined ? emergencyContactPhone : teacher.emergencyContactPhone,
+    })
+
+    const updated = await query(
+      `SELECT t.*,
+        JSON_OBJECT('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
+      FROM Teacher t
+      JOIN User u ON t.userId = u.id
+      WHERE t.id = ?`,
+      [id]
+    )
+    return NextResponse.json(updated[0])
+  } catch {
+    return NextResponse.json({ error: "Error al actualizar" }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const session = await getServerSession(authOptions)
+  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 })
+  }
+  const institutionId = session.user.institutionId!
+  const id = Number((await params).id)
+
+  const teacherRows = await query("SELECT * FROM Teacher WHERE id = ? AND institutionId = ?", [id, institutionId])
+  if (teacherRows.length === 0) return NextResponse.json({ error: "No encontrado" }, { status: 404 })
+  const teacher = teacherRows[0]
+
+  try {
+    await execute("DELETE FROM CourseTeacher WHERE teacherId = ?", [id])
+    await execute("DELETE FROM Attendance WHERE teacherId = ?", [id])
+    await execute("DELETE FROM GradeRecord WHERE teacherId = ?", [id])
+    await execute("DELETE FROM Discipline WHERE teacherId = ?", [id])
+    await execute("DELETE FROM Homework WHERE teacherId = ?", [id])
+    await execute("DELETE FROM Communication WHERE teacherId = ?", [id])
+    await remove("Teacher", { id })
+    await remove("User", { id: teacher.userId })
+    return NextResponse.json({ success: true })
+  } catch {
+    return NextResponse.json({ error: "Error al eliminar: el profesor tiene registros asociados" }, { status: 500 })
+  }
+}

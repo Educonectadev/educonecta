@@ -1,0 +1,193 @@
+"use client"
+
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import Link from "next/link"
+
+interface Student {
+  id: number
+  firstName: string
+  lastName: string
+}
+
+interface CourseTeacher {
+  id: number
+  courseId: number
+  gradeId: number | null
+  sectionId: number | null
+  course: { id: number; name: string }
+  grade: { id: number; name: string } | null
+  section: { id: number; name: string } | null
+}
+
+export default function RegistrarCalificacionesPage() {
+  const router = useRouter()
+
+  const [courses, setCourses] = useState<CourseTeacher[]>([])
+  const [students, setStudents] = useState<Student[]>([])
+  const [courseId, setCourseId] = useState("")
+  const [evaluationName, setEvaluationName] = useState("")
+  const [evaluationDate, setEvaluationDate] = useState("")
+  const [grades, setGrades] = useState<Record<number, string>>({})
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState("")
+
+  useEffect(() => {
+    fetch("/api/teacher/courses")
+      .then((r) => r.json())
+      .then(setCourses)
+  }, [])
+
+  useEffect(() => {
+    if (!courseId) return
+    const ct = courses.find((c) => c.courseId === Number(courseId))
+    if (!ct) return
+    const params = new URLSearchParams()
+    if (ct.gradeId) params.set("gradeId", String(ct.gradeId))
+    if (ct.sectionId) params.set("sectionId", String(ct.sectionId))
+    fetch(`/api/teacher/courses/students?${params}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setStudents(data)
+        const init: Record<number, string> = {}
+        data.forEach((s: Student) => { init[s.id] = "" })
+        setGrades(init)
+      })
+  }, [courseId, courses])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!courseId || !evaluationName) {
+      setError("Completa los campos obligatorios.")
+      return
+    }
+    setSubmitting(true)
+    setError("")
+
+    const records = Object.entries(grades)
+      .filter(([, grade]) => grade !== "")
+      .map(([studentId, grade]) => ({
+        studentId: Number(studentId),
+        grade: Number(grade),
+      }))
+
+    if (records.length === 0) {
+      setError("Ingresa al menos una nota.")
+      setSubmitting(false)
+      return
+    }
+
+    const res = await fetch("/api/teacher/grades", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        courseId: Number(courseId),
+        evaluationName,
+        evaluationDate: evaluationDate ? new Date(evaluationDate).toISOString() : null,
+        records,
+      }),
+    })
+
+    const result = await res.json()
+    setSubmitting(false)
+    if (result.success) {
+      router.push("/dashboard/teacher/calificaciones")
+    } else {
+      setError("Error al registrar calificaciones.")
+    }
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold tracking-tight">Registrar Calificaciones</h1>
+        <Link
+          href="/dashboard/teacher/calificaciones"
+          className="text-sm text-gray-400 hover:text-black transition-colors"
+        >
+          Cancelar
+        </Link>
+      </div>
+
+      {error && (
+        <p className="mb-6 text-sm border border-gray-100 rounded-[30px] p-4 bg-gray-50 text-gray-600">{error}</p>
+      )}
+
+      <form onSubmit={handleSubmit} className="max-w-lg space-y-5">
+        <div>
+          <label className="block text-sm font-medium text-gray-500 mb-1.5">Curso *</label>
+          <select
+            value={courseId}
+            onChange={(e) => setCourseId(e.target.value)}
+            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm bg-white focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            required
+          >
+            <option value="">Seleccionar curso</option>
+            {courses.map((ct) => (
+              <option key={ct.id} value={ct.courseId}>
+                {ct.course.name} — {ct.grade?.name ?? ""} / {ct.section?.name ?? ""}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-500 mb-1.5">Nombre de la Evaluación *</label>
+          <input
+            type="text"
+            value={evaluationName}
+            onChange={(e) => setEvaluationName(e.target.value)}
+            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            placeholder="Ej: Examen Parcial 1"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-500 mb-1.5">Fecha</label>
+          <input
+            type="date"
+            value={evaluationDate}
+            onChange={(e) => setEvaluationDate(e.target.value)}
+            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+          />
+        </div>
+
+        {students.length > 0 && (
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-3">Notas</p>
+            <div className="space-y-2">
+              {students.map((s) => (
+                <div key={s.id} className="flex items-center gap-3">
+                  <span className="text-sm w-48 truncate text-gray-600">
+                    {s.firstName} {s.lastName}
+                  </span>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min={0}
+                    max={20}
+                    value={grades[s.id] ?? ""}
+                    onChange={(e) =>
+                      setGrades((prev) => ({ ...prev, [s.id]: e.target.value }))
+                    }
+                    className="w-24 rounded-[30px] border border-gray-200 px-3 py-1.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                    placeholder="Nota"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="bg-emerald-600 text-white px-8 py-3 rounded-[25px] text-sm font-medium hover:bg-emerald-700 transition-all disabled:opacity-50"
+        >
+          {submitting ? "Guardando..." : "Guardar Calificaciones"}
+        </button>
+      </form>
+    </div>
+  )
+}
