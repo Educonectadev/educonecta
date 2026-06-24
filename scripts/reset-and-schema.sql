@@ -26,6 +26,7 @@ DROP TABLE IF EXISTS "Communication" CASCADE;
 DROP TABLE IF EXISTS "Notification" CASCADE;
 DROP TABLE IF EXISTS "NotificationRead" CASCADE;
 DROP TABLE IF EXISTS "AuditLog" CASCADE;
+DROP TABLE IF EXISTS "Version" CASCADE;
 DROP TABLE IF EXISTS "Schedule" CASCADE;
 DROP FUNCTION IF EXISTS update_updated_at_column CASCADE;
 
@@ -99,6 +100,12 @@ CREATE TRIGGER update_GradeRecord_updatedAt BEFORE UPDATE ON "GradeRecord" FOR E
 CREATE TRIGGER update_Discipline_updatedAt BEFORE UPDATE ON "Discipline" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_Communication_updatedAt BEFORE UPDATE ON "Communication" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_Notification_updatedAt BEFORE UPDATE ON "Notification" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ═══════════════════════════════════════════════════════
+-- Version - registro de versiones del sistema
+-- ═══════════════════════════════════════════════════════
+
+CREATE TABLE "Version" ("id" SERIAL PRIMARY KEY, "version" VARCHAR(50) NOT NULL, "title" VARCHAR(255), "description" TEXT, "isCurrent" BOOLEAN DEFAULT FALSE, "createdAt" TIMESTAMPTZ DEFAULT NOW());
 
 -- ═══════════════════════════════════════════════════════
 -- exec_sql - permite ejecutar SQL desde la app via RPC
