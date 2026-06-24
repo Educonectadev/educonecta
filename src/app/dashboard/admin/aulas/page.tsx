@@ -14,5 +14,5 @@ export default async function AulasPage() {
     orderDir: "ASC",
   })
 
-  return <AulasList aulas={aulas} />
+  return <AulasList aulas={aulas as any} />
 }

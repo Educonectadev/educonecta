@@ -36,5 +36,5 @@ export default async function GradosPage() {
     sections: sectionMap.get(g.id) ?? [],
   }))
 
-  return <GradosList grades={result} />
+  return <GradosList grades={result as any} />
 }

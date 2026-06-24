@@ -64,13 +64,13 @@ export default async function HorariosPage() {
 
   return (
     <HorariosList
-      schedules={schedules}
-      courses={courses}
-      classrooms={classrooms}
-      teachers={teachers || []}
-      grades={grades}
-      sections={sectionsData || []}
-      studentsWithParents={studentsWithParents || []}
+      schedules={schedules as any}
+      courses={courses as any}
+      classrooms={classrooms as any}
+      teachers={(teachers || []) as any}
+      grades={grades as any}
+      sections={(sectionsData || []) as any}
+      studentsWithParents={(studentsWithParents || []) as any}
     />
   )
 }

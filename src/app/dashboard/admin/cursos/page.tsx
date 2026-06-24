@@ -77,5 +77,5 @@ export default async function CursosPage() {
   const coursesList = Array.from(courseMap.values())
   const teachers = teachersData.map((t: any) => ({ id: t.id, user: { name: t.user.name } }))
 
-  return <CursosList courses={coursesList} teachers={teachers} grades={grades} sections={sections} />
+  return <CursosList courses={coursesList as any} teachers={teachers as any} grades={grades as any} sections={sections as any} />
 }

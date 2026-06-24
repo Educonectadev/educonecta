@@ -42,5 +42,5 @@ export default async function PadresPage() {
   }
   const parents = Array.from(parentMap.values())
 
-  return <PadresList parents={parents} allStudents={allStudents} />
+  return <PadresList parents={parents as any} allStudents={allStudents as any} />
 }

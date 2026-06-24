@@ -31,5 +31,5 @@ export default async function ProfesoresPage() {
     user: t.user,
   }))
 
-  return <ProfesoresList teachers={teachers} />
+  return <ProfesoresList teachers={teachers as any} />
 }
