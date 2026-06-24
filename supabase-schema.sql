@@ -1,17 +1,17 @@
 -- PostgreSQL Schema for EduConecta (Supabase)
--- Run this in the Supabase SQL Editor
+-- Run this in the Supabase SQL Editor AFTER running cleanup-supabase.sql
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Institution
+-- ── Institution ──
 CREATE TABLE "Institution" (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   code VARCHAR(255) NOT NULL UNIQUE,
-  type VARCHAR(50) DEFAULT 'public',
+  type VARCHAR(50) NOT NULL DEFAULT 'public',
   ruc VARCHAR(11) DEFAULT NULL,
-  address VARCHAR(255),
+  address TEXT,
   district VARCHAR(255),
   province VARCHAR(255),
   department VARCHAR(255),
@@ -28,13 +28,13 @@ CREATE TABLE "Institution" (
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- User
+-- ── User ──
 CREATE TABLE "User" (
   id SERIAL PRIMARY KEY,
   email VARCHAR(255) NOT NULL UNIQUE,
   passwordHash VARCHAR(255) NOT NULL,
   name VARCHAR(255) NOT NULL,
-  role VARCHAR(255) NOT NULL,
+  role VARCHAR(50) NOT NULL CHECK (role IN ('SUPER_ADMIN', 'INSTITUTIONAL_ADMIN', 'TEACHER', 'PARENT')),
   phone VARCHAR(255),
   isActive BOOLEAN NOT NULL DEFAULT TRUE,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -42,7 +42,11 @@ CREATE TABLE "User" (
   institutionId INT REFERENCES "Institution"(id) ON DELETE SET NULL
 );
 
--- InstitutionalAdmin
+CREATE INDEX idx_user_role ON "User"(role);
+CREATE INDEX idx_user_email ON "User"(email);
+CREATE INDEX idx_user_institution ON "User"(institutionId);
+
+-- ── InstitutionalAdmin ──
 CREATE TABLE "InstitutionalAdmin" (
   id SERIAL PRIMARY KEY,
   userId INT NOT NULL UNIQUE REFERENCES "User"(id) ON DELETE CASCADE,
@@ -51,7 +55,9 @@ CREATE TABLE "InstitutionalAdmin" (
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Teacher
+CREATE INDEX idx_inst_admin_institution ON "InstitutionalAdmin"(institutionId);
+
+-- ── Teacher ──
 CREATE TABLE "Teacher" (
   id SERIAL PRIMARY KEY,
   userId INT NOT NULL UNIQUE REFERENCES "User"(id) ON DELETE CASCADE,
@@ -66,7 +72,9 @@ CREATE TABLE "Teacher" (
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Parent
+CREATE INDEX idx_teacher_institution ON "Teacher"(institutionId);
+
+-- ── Parent ──
 CREATE TABLE "Parent" (
   id SERIAL PRIMARY KEY,
   userId INT NOT NULL UNIQUE REFERENCES "User"(id) ON DELETE CASCADE,
@@ -76,11 +84,13 @@ CREATE TABLE "Parent" (
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Grade
+CREATE INDEX idx_parent_institution ON "Parent"(institutionId);
+
+-- ── Grade ──
 CREATE TABLE "Grade" (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  level VARCHAR(255),
+  level VARCHAR(255) NOT NULL,
   institutionId INT NOT NULL REFERENCES "Institution"(id) ON DELETE CASCADE,
   shift VARCHAR(255),
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -88,18 +98,22 @@ CREATE TABLE "Grade" (
   UNIQUE (name, level, institutionId)
 );
 
--- Section
+CREATE INDEX idx_grade_institution ON "Grade"(institutionId);
+
+-- ── Section ──
 CREATE TABLE "Section" (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   gradeId INT NOT NULL REFERENCES "Grade"(id) ON DELETE CASCADE,
-  capacity INT,
+  capacity INT DEFAULT 30,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (name, gradeId)
 );
 
--- Student
+CREATE INDEX idx_section_grade ON "Section"(gradeId);
+
+-- ── Student ──
 CREATE TABLE "Student" (
   id SERIAL PRIMARY KEY,
   firstName VARCHAR(255) NOT NULL,
@@ -115,7 +129,12 @@ CREATE TABLE "Student" (
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- ParentStudent (many-to-many)
+CREATE INDEX idx_student_institution ON "Student"(institutionId);
+CREATE INDEX idx_student_grade ON "Student"(gradeId);
+CREATE INDEX idx_student_section ON "Student"(sectionId);
+CREATE INDEX idx_student_document ON "Student"(documentId);
+
+-- ── ParentStudent (many-to-many) ──
 CREATE TABLE "ParentStudent" (
   parentId INT NOT NULL REFERENCES "Parent"(id) ON DELETE CASCADE,
   studentId INT NOT NULL REFERENCES "Student"(id) ON DELETE CASCADE,
@@ -123,19 +142,23 @@ CREATE TABLE "ParentStudent" (
   PRIMARY KEY (parentId, studentId)
 );
 
--- Course
+CREATE INDEX idx_parent_student_student ON "ParentStudent"(studentId);
+
+-- ── Course ──
 CREATE TABLE "Course" (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   code VARCHAR(255),
-  description VARCHAR(255),
+  description TEXT,
   institutionId INT NOT NULL REFERENCES "Institution"(id) ON DELETE CASCADE,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (name, institutionId)
 );
 
--- CourseTeacher
+CREATE INDEX idx_course_institution ON "Course"(institutionId);
+
+-- ── CourseTeacher ──
 CREATE TABLE "CourseTeacher" (
   id SERIAL PRIMARY KEY,
   courseId INT NOT NULL REFERENCES "Course"(id) ON DELETE CASCADE,
@@ -145,27 +168,32 @@ CREATE TABLE "CourseTeacher" (
   UNIQUE (courseId, teacherId, gradeId, sectionId)
 );
 
--- Schedule
+CREATE INDEX idx_course_teacher_teacher ON "CourseTeacher"(teacherId);
+
+-- ── Schedule ──
 CREATE TABLE "Schedule" (
   id SERIAL PRIMARY KEY,
-  dayOfWeek INT NOT NULL,
-  startTime VARCHAR(255) NOT NULL,
-  endTime VARCHAR(255) NOT NULL,
+  dayOfWeek INT NOT NULL CHECK (dayOfWeek BETWEEN 1 AND 7),
+  startTime TIME NOT NULL,
+  endTime TIME NOT NULL,
   classroom VARCHAR(255),
-  shift VARCHAR(255) NOT NULL DEFAULT 'MAÑANA',
+  shift VARCHAR(50) NOT NULL DEFAULT 'MAÑANA',
   courseId INT NOT NULL REFERENCES "Course"(id) ON DELETE CASCADE,
   institutionId INT NOT NULL REFERENCES "Institution"(id) ON DELETE CASCADE,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Enrollment
+CREATE INDEX idx_schedule_course ON "Schedule"(courseId);
+CREATE INDEX idx_schedule_institution ON "Schedule"(institutionId);
+
+-- ── Enrollment ──
 CREATE TABLE "Enrollment" (
   id SERIAL PRIMARY KEY,
   studentId INT NOT NULL REFERENCES "Student"(id) ON DELETE CASCADE,
   gradeId INT NOT NULL REFERENCES "Grade"(id) ON DELETE CASCADE,
   sectionId INT NOT NULL REFERENCES "Section"(id) ON DELETE CASCADE,
-  academicYear VARCHAR(255) NOT NULL,
+  academicYear VARCHAR(9) NOT NULL,
   enrollmentDate TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   isActive BOOLEAN NOT NULL DEFAULT TRUE,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -173,37 +201,47 @@ CREATE TABLE "Enrollment" (
   UNIQUE (studentId, academicYear)
 );
 
--- Attendance
+CREATE INDEX idx_enrollment_grade ON "Enrollment"(gradeId);
+CREATE INDEX idx_enrollment_section ON "Enrollment"(sectionId);
+CREATE INDEX idx_enrollment_year ON "Enrollment"(academicYear);
+
+-- ── Attendance ──
 CREATE TABLE "Attendance" (
   id SERIAL PRIMARY KEY,
   studentId INT NOT NULL REFERENCES "Student"(id) ON DELETE CASCADE,
   teacherId INT NOT NULL REFERENCES "Teacher"(id) ON DELETE CASCADE,
-  date TIMESTAMPTZ NOT NULL,
+  date DATE NOT NULL,
   isPresent BOOLEAN NOT NULL DEFAULT TRUE,
-  note VARCHAR(255),
+  note TEXT,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (studentId, date)
 );
 
--- Tardiness
+CREATE INDEX idx_attendance_teacher ON "Attendance"(teacherId);
+CREATE INDEX idx_attendance_date ON "Attendance"(date);
+
+-- ── Tardiness ──
 CREATE TABLE "Tardiness" (
   id SERIAL PRIMARY KEY,
   studentId INT NOT NULL REFERENCES "Student"(id) ON DELETE CASCADE,
   teacherId INT NOT NULL REFERENCES "Teacher"(id) ON DELETE CASCADE,
-  date TIMESTAMPTZ NOT NULL,
-  minutesLate INT NOT NULL,
-  note VARCHAR(255),
+  date DATE NOT NULL,
+  minutesLate INT NOT NULL CHECK (minutesLate > 0),
+  note TEXT,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (studentId, date)
 );
 
--- Homework
+CREATE INDEX idx_tardiness_teacher ON "Tardiness"(teacherId);
+CREATE INDEX idx_tardiness_date ON "Tardiness"(date);
+
+-- ── Homework ──
 CREATE TABLE "Homework" (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
-  description VARCHAR(255),
+  description TEXT,
   dueDate TIMESTAMPTZ NOT NULL,
   courseId INT NOT NULL REFERENCES "Course"(id) ON DELETE CASCADE,
   teacherId INT NOT NULL REFERENCES "Teacher"(id) ON DELETE CASCADE,
@@ -213,64 +251,81 @@ CREATE TABLE "Homework" (
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- HomeworkSubmission
+CREATE INDEX idx_homework_course ON "Homework"(courseId);
+CREATE INDEX idx_homework_teacher ON "Homework"(teacherId);
+CREATE INDEX idx_homework_due ON "Homework"(dueDate);
+
+-- ── HomeworkSubmission ──
 CREATE TABLE "HomeworkSubmission" (
   id SERIAL PRIMARY KEY,
   homeworkId INT NOT NULL REFERENCES "Homework"(id) ON DELETE CASCADE,
   studentId INT NOT NULL REFERENCES "Student"(id) ON DELETE CASCADE,
   submitted BOOLEAN NOT NULL DEFAULT FALSE,
-  note VARCHAR(255),
+  note TEXT,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (homeworkId, studentId)
 );
 
--- GradeRecord
+CREATE INDEX idx_hw_submission_student ON "HomeworkSubmission"(studentId);
+
+-- ── GradeRecord ──
 CREATE TABLE "GradeRecord" (
   id SERIAL PRIMARY KEY,
   studentId INT NOT NULL REFERENCES "Student"(id) ON DELETE CASCADE,
   courseId INT NOT NULL REFERENCES "Course"(id) ON DELETE CASCADE,
   teacherId INT NOT NULL REFERENCES "Teacher"(id) ON DELETE CASCADE,
-  grade DECIMAL(5,2) NOT NULL,
+  grade DECIMAL(5,2) NOT NULL CHECK (grade >= 0 AND grade <= 20),
   evaluationName VARCHAR(255) NOT NULL,
-  evaluationDate TIMESTAMPTZ,
+  evaluationDate DATE,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Discipline
+CREATE INDEX idx_grade_student ON "GradeRecord"(studentId);
+CREATE INDEX idx_grade_course ON "GradeRecord"(courseId);
+CREATE INDEX idx_grade_teacher ON "GradeRecord"(teacherId);
+
+-- ── Discipline ──
 CREATE TABLE "Discipline" (
   id SERIAL PRIMARY KEY,
   studentId INT NOT NULL REFERENCES "Student"(id) ON DELETE CASCADE,
   teacherId INT NOT NULL REFERENCES "Teacher"(id) ON DELETE CASCADE,
-  date TIMESTAMPTZ NOT NULL,
-  description VARCHAR(255) NOT NULL,
+  date DATE NOT NULL,
+  description TEXT NOT NULL,
   type VARCHAR(255) NOT NULL,
   isResolved BOOLEAN NOT NULL DEFAULT FALSE,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Communication
+CREATE INDEX idx_discipline_student ON "Discipline"(studentId);
+CREATE INDEX idx_discipline_teacher ON "Discipline"(teacherId);
+CREATE INDEX idx_discipline_date ON "Discipline"(date);
+
+-- ── Communication ──
 CREATE TABLE "Communication" (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
-  content VARCHAR(255) NOT NULL,
-  type VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  type VARCHAR(50) NOT NULL,
   authorId INT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
   teacherId INT REFERENCES "Teacher"(id) ON DELETE SET NULL,
   institutionId INT NOT NULL REFERENCES "Institution"(id) ON DELETE CASCADE,
-  priority VARCHAR(255) NOT NULL DEFAULT 'normal',
+  priority VARCHAR(50) NOT NULL DEFAULT 'normal',
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Notification
+CREATE INDEX idx_comm_institution ON "Communication"(institutionId);
+CREATE INDEX idx_comm_author ON "Communication"(authorId);
+
+-- ── Notification ──
 CREATE TABLE "Notification" (
   id SERIAL PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
-  message VARCHAR(255) NOT NULL,
-  type VARCHAR(255) NOT NULL,
+  message TEXT NOT NULL,
+  type VARCHAR(50) NOT NULL,
   userId INT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
   parentId INT REFERENCES "Parent"(id) ON DELETE SET NULL,
   studentId INT REFERENCES "Student"(id) ON DELETE SET NULL,
@@ -281,7 +336,10 @@ CREATE TABLE "Notification" (
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- NotificationRead
+CREATE INDEX idx_notification_user ON "Notification"(userId);
+CREATE INDEX idx_notification_read ON "Notification"(userId, isRead);
+
+-- ── NotificationRead ──
 CREATE TABLE "NotificationRead" (
   id SERIAL PRIMARY KEY,
   notificationId INT NOT NULL REFERENCES "Notification"(id) ON DELETE CASCADE,
@@ -290,19 +348,25 @@ CREATE TABLE "NotificationRead" (
   UNIQUE (notificationId, userId)
 );
 
--- AuditLog
+CREATE INDEX idx_notif_read_user ON "NotificationRead"(userId);
+
+-- ── AuditLog ──
 CREATE TABLE "AuditLog" (
   id SERIAL PRIMARY KEY,
   userId INT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
   action VARCHAR(255) NOT NULL,
   entity VARCHAR(255) NOT NULL,
   entityId INT,
-  details VARCHAR(255),
-  ipAddress VARCHAR(255),
+  details TEXT,
+  ipAddress VARCHAR(45),
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Auto-update updatedAt trigger
+CREATE INDEX idx_audit_user ON "AuditLog"(userId);
+CREATE INDEX idx_audit_entity ON "AuditLog"(entity, entityId);
+CREATE INDEX idx_audit_created ON "AuditLog"(createdAt);
+
+-- ── Auto-update updatedAt trigger ──
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -311,7 +375,7 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Create triggers for each table
+-- Create triggers for each table with updatedAt
 CREATE TRIGGER update_Institution_updatedAt BEFORE UPDATE ON "Institution" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_User_updatedAt BEFORE UPDATE ON "User" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_InstitutionalAdmin_updatedAt BEFORE UPDATE ON "InstitutionalAdmin" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
