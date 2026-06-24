@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { getSupabaseAdmin } from "@/lib/supabase"
+import { hashPassword } from "@/lib/auth"
 
 export async function POST(req: Request) {
   try {
@@ -24,15 +25,11 @@ export async function POST(req: Request) {
       )
     }
 
-    let authUser = null
-
     const { data: existingAuth } = await supabase.auth.admin.listUsers()
     const found = existingAuth?.users?.find((u) => u.email === email)
 
-    if (found) {
-      authUser = found
-    } else {
-      const { data, error } = await supabase.auth.admin.createUser({
+    if (!found) {
+      const { error } = await supabase.auth.admin.createUser({
         email,
         password,
         email_confirm: true,
@@ -40,11 +37,12 @@ export async function POST(req: Request) {
       if (error) {
         return NextResponse.json({ error: error.message }, { status: 400 })
       }
-      authUser = data.user
     }
 
+    const passwordHash = await hashPassword(password)
+
     const { error: dbError } = await supabase.from("User").upsert(
-      { email, name, role: "SUPER_ADMIN" },
+      { email, passwordHash, name, role: "SUPER_ADMIN" },
       { onConflict: "email", ignoreDuplicates: false },
     )
 
