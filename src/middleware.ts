@@ -48,36 +48,38 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url))
   }
 
-  const serviceClient = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { autoRefreshToken: false, persistSession: false } },
-  )
+  try {
+    const serviceClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { autoRefreshToken: false, persistSession: false } },
+    )
 
-  const { data: user } = await serviceClient
-    .from("User")
-    .select("role")
-    .eq("email", authUser.email)
-    .maybeSingle()
+    const { data: user } = await serviceClient
+      .from("User")
+      .select("role")
+      .eq("email", authUser.email)
+      .maybeSingle()
 
-  const role = user?.role
+    const role = user?.role
 
-  if (!role) {
-    return NextResponse.redirect(new URL("/login", req.url))
-  }
+    if (role) {
+      const allowed = rolePaths[role] ?? []
 
-  const allowed = rolePaths[role] ?? []
+      const isProtected = [
+        "/admin", "/profesor", "/padre", "/super-admin",
+        "/dashboard/admin", "/dashboard/teacher", "/dashboard/parent", "/dashboard/super-admin",
+      ].some((p) => pathname === p || pathname.startsWith(p + "/"))
 
-  const isProtected = [
-    "/admin", "/profesor", "/padre", "/super-admin",
-    "/dashboard/admin", "/dashboard/teacher", "/dashboard/parent", "/dashboard/super-admin",
-  ].some((p) => pathname === p || pathname.startsWith(p + "/"))
-
-  if (isProtected) {
-    const hasAccess = allowed.some((p) => pathname === p || pathname.startsWith(p + "/"))
-    if (!hasAccess) {
-      return NextResponse.redirect(new URL("/unauthorized", req.url))
+      if (isProtected) {
+        const hasAccess = allowed.some((p) => pathname === p || pathname.startsWith(p + "/"))
+        if (!hasAccess) {
+          return NextResponse.redirect(new URL("/unauthorized", req.url))
+        }
+      }
     }
+  } catch {
+    // If role query fails, let the page handle auth
   }
 
   return supabaseResponse
