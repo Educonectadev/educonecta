@@ -36,12 +36,12 @@ export default async function SuperAdminDashboardPage() {
   ])
 
   const stats = [
-    { label: "Instituciones", value: totalInstituciones, href: "/super-admin/instituciones" },
-    { label: "Usuarios", value: totalUsuarios, href: "/super-admin/instituciones" },
-    { label: "Activas", value: activas, href: "/super-admin/instituciones" },
-    { label: "Profesores", value: totalProfesores, href: "/super-admin/instituciones" },
-    { label: "Alumnos", value: totalAlumnos, href: "/super-admin/instituciones" },
-    { label: "Padres", value: totalPadres, href: "/super-admin/instituciones" },
+    { label: "Instituciones", value: totalInstituciones, href: "/dashboard/super-admin/instituciones" },
+    { label: "Usuarios", value: totalUsuarios, href: "/dashboard/super-admin/instituciones" },
+    { label: "Activas", value: activas, href: "/dashboard/super-admin/instituciones" },
+    { label: "Profesores", value: totalProfesores, href: "/dashboard/super-admin/instituciones" },
+    { label: "Alumnos", value: totalAlumnos, href: "/dashboard/super-admin/instituciones" },
+    { label: "Padres", value: totalPadres, href: "/dashboard/super-admin/instituciones" },
   ]
 
   const versionActual = versiones.data
@@ -75,7 +75,7 @@ export default async function SuperAdminDashboardPage() {
         <div className="bg-white border border-gray-200 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-gray-700">Últimas instituciones</h2>
-            <Link href="/super-admin/instituciones" className="text-xs text-gray-400 hover:text-gray-600">
+            <Link href="/dashboard/super-admin/instituciones" className="text-xs text-gray-400 hover:text-gray-600">
               Ver todas
             </Link>
           </div>
@@ -86,7 +86,7 @@ export default async function SuperAdminDashboardPage() {
               {institucionesRecientes.map((inst: any) => (
                 <Link
                   key={inst.id}
-                  href="/super-admin/instituciones"
+                  href="/dashboard/super-admin/instituciones"
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <span className="text-sm font-medium text-gray-900">{inst.name}</span>
@@ -107,7 +107,7 @@ export default async function SuperAdminDashboardPage() {
         <div className="bg-white border border-gray-200 rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-gray-700">Versión actual</h2>
-            <Link href="/super-admin/versiones" className="text-xs text-gray-400 hover:text-gray-600">
+            <Link href="/dashboard/super-admin/versiones" className="text-xs text-gray-400 hover:text-gray-600">
               Ver todas
             </Link>
           </div>
@@ -131,7 +131,7 @@ export default async function SuperAdminDashboardPage() {
             <div className="text-center py-8">
               <p className="text-sm text-gray-400 mb-3">No hay versión registrada</p>
               <Link
-                href="/super-admin/versiones"
+                href="/dashboard/super-admin/versiones"
                 className="text-xs font-medium bg-black text-white rounded-full px-4 py-2 hover:bg-gray-800 transition-colors"
               >
                 Registrar versión

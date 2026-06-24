@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "@/lib/auth"
-import { findOne, create, query } from "@/lib/prisma"
+import { findOne, create } from "@/lib/prisma"
+import { getSupabaseAdmin } from "@/lib/supabase"
 import bcrypt from "bcryptjs"
 
 export async function POST(req: NextRequest) {
@@ -26,8 +27,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "El email ya está registrado" }, { status: 409 })
     }
 
-    const passwordHash = await bcrypt.hash(password, 10)
+    const supabase = getSupabaseAdmin()
+    const { data: existingAuth } = await supabase.auth.admin.listUsers()
+    const found = existingAuth?.users?.find((u) => u.email === email.trim())
+    if (!found) {
+      const { error: authError } = await supabase.auth.admin.createUser({
+        email: email.trim(),
+        password,
+        email_confirm: true,
+      })
+      if (authError) {
+        return NextResponse.json({ message: `Error al crear acceso: ${authError.message}` }, { status: 500 })
+      }
+    } else {
+      await supabase.auth.admin.updateUserById(found.id, { password })
+    }
 
+    const passwordHash = await bcrypt.hash(password, 10)
     const userId = await create("User", {
       email: email.trim(),
       passwordHash,
@@ -36,20 +52,13 @@ export async function POST(req: NextRequest) {
       institutionId,
     } as any)
 
-    await create("InstitutionalAdmin", {
-      userId,
-      institutionId,
-    } as any)
+    await create("InstitutionalAdmin", { userId, institutionId } as any)
 
     const user = await findOne("User", { id: userId }, ["id", "email", "name", "role"])
 
     return NextResponse.json({ success: true, user }, { status: 201 })
-  } catch (error) {
-    const mysqlError = error as { code?: string }
-    return NextResponse.json(
-      { message: mysqlError.code === "ER_DUP_ENTRY" ? "El email ya está registrado" : "Error interno del servidor" },
-      { status: 500 },
-    )
+  } catch {
+    return NextResponse.json({ message: "Error interno del servidor" }, { status: 500 })
   }
 }
 
@@ -65,16 +74,18 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const rows = await query<any[]>(
-      `SELECT u.id, u.email, u.name, u.phone, u.isActive
-       FROM User u
-       INNER JOIN InstitutionalAdmin ia ON ia.userId = u.id
-       WHERE ia.institutionId = ? AND u.role = 'INSTITUTIONAL_ADMIN'
-       LIMIT 1`,
-      [institutionId],
-    )
+    const supabase = getSupabaseAdmin()
+    const { data: admin } = await supabase
+      .from("InstitutionalAdmin")
+      .select("userId")
+      .eq("institutionId", institutionId)
+      .limit(1)
+      .maybeSingle()
 
-    return NextResponse.json(rows.length ? rows[0] : null)
+    if (!admin) return NextResponse.json(null)
+
+    const user = await findOne("User", { id: (admin as any).userId, role: "INSTITUTIONAL_ADMIN" }, ["id", "email", "name"])
+    return NextResponse.json(user)
   } catch {
     return NextResponse.json({ message: "Error interno" }, { status: 500 })
   }
