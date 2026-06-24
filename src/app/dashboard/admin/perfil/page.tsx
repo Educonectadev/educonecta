@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { query, findOne } from "@/lib/prisma"
+import { findOne } from "@/lib/prisma"
+import { getSupabaseAdmin } from "@/lib/supabase"
 
 export default async function AdminPerfilPage() {
   const session = await getServerSession()
@@ -8,25 +9,23 @@ export default async function AdminPerfilPage() {
 
   const institutionId = session.user.institutionId!
 
-  const user = await query<any[]>(
-    "SELECT id, email, name, role, createdAt FROM User WHERE id = ?",
-    [Number(session.user.id)]
-  )
+  const supabase = getSupabaseAdmin()
 
-  const institution = await findOne("Institution", { id: institutionId })
+  const [user, institution, studentRes, teacherRes, courseRes, scheduleRes, gradeRes, gradeIds] = await Promise.all([
+    findOne("User", { id: Number(session.user.id) }, ["id", "email", "name", "role", "createdAt"]),
+    findOne("Institution", { id: institutionId }),
+    supabase.from("Student").select("id", { count: "exact", head: true }).eq("institutionId", institutionId).eq("isActive", true),
+    supabase.from("Teacher").select("id", { count: "exact", head: true }).eq("institutionId", institutionId),
+    supabase.from("Course").select("id", { count: "exact", head: true }).eq("institutionId", institutionId),
+    supabase.from("Schedule").select("id", { count: "exact", head: true }).eq("institutionId", institutionId),
+    supabase.from("Grade").select("id", { count: "exact", head: true }).eq("institutionId", institutionId),
+    supabase.from("Grade").select("id").eq("institutionId", institutionId),
+  ])
 
-  const stats = await query<any[]>(
-    `SELECT
-       (SELECT COUNT(*) FROM Student WHERE institutionId = ? AND isActive = 1) AS totalStudents,
-       (SELECT COUNT(*) FROM Teacher WHERE institutionId = ?) AS totalTeachers,
-       (SELECT COUNT(*) FROM Course WHERE institutionId = ?) AS totalCourses,
-       (SELECT COUNT(*) FROM Schedule WHERE institutionId = ?) AS totalSchedules,
-       (SELECT COUNT(*) FROM Grade WHERE institutionId = ?) AS totalGrades,
-       (SELECT COUNT(*) FROM Section WHERE gradeId IN (SELECT id FROM Grade WHERE institutionId = ?)) AS totalSections`,
-    [institutionId, institutionId, institutionId, institutionId, institutionId, institutionId]
-  )
-
-  const s = stats[0]
+  const gIds = (gradeIds.data ?? []).map((g: any) => g.id)
+  const sectionRes = gIds.length > 0
+    ? await supabase.from("Section").select("id", { count: "exact", head: true }).in("gradeId", gIds)
+    : { count: 0 }
 
   return (
     <div>
@@ -43,11 +42,11 @@ export default async function AdminPerfilPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
             <div>
               <p className="text-xs text-gray-400">Nombre</p>
-              <p className="font-medium">{user[0]?.name}</p>
+              <p className="font-medium">{(user as any)?.name}</p>
             </div>
             <div>
               <p className="text-xs text-gray-400">Email</p>
-              <p className="font-medium">{user[0]?.email}</p>
+              <p className="font-medium">{(user as any)?.email}</p>
             </div>
             <div>
               <p className="text-xs text-gray-400">Rol</p>
@@ -133,27 +132,27 @@ export default async function AdminPerfilPage() {
         <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Estadísticas</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <div className="bg-gray-50 border border-gray-200 rounded-[20px] p-5 text-center">
-            <p className="text-2xl font-bold">{s?.totalStudents ?? 0}</p>
+            <p className="text-2xl font-bold">{studentRes.count ?? 0}</p>
             <p className="text-xs text-gray-400 mt-1">Estudiantes</p>
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-[20px] p-5 text-center">
-            <p className="text-2xl font-bold">{s?.totalTeachers ?? 0}</p>
+            <p className="text-2xl font-bold">{teacherRes.count ?? 0}</p>
             <p className="text-xs text-gray-400 mt-1">Docentes</p>
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-[20px] p-5 text-center">
-            <p className="text-2xl font-bold">{s?.totalCourses ?? 0}</p>
+            <p className="text-2xl font-bold">{courseRes.count ?? 0}</p>
             <p className="text-xs text-gray-400 mt-1">Cursos</p>
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-[20px] p-5 text-center">
-            <p className="text-2xl font-bold">{s?.totalGrades ?? 0}</p>
+            <p className="text-2xl font-bold">{gradeRes.count ?? 0}</p>
             <p className="text-xs text-gray-400 mt-1">Grados</p>
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-[20px] p-5 text-center">
-            <p className="text-2xl font-bold">{s?.totalSections ?? 0}</p>
+            <p className="text-2xl font-bold">{sectionRes.count ?? 0}</p>
             <p className="text-xs text-gray-400 mt-1">Secciones</p>
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-[20px] p-5 text-center">
-            <p className="text-2xl font-bold">{s?.totalSchedules ?? 0}</p>
+            <p className="text-2xl font-bold">{scheduleRes.count ?? 0}</p>
             <p className="text-xs text-gray-400 mt-1">Horarios</p>
           </div>
         </div>
