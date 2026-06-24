@@ -1,33 +1,59 @@
 "use client"
 
-import { useState, FormEvent } from "react"
+import { useState, FormEvent, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useSession } from "@/lib/auth-context"
 
-export default function LoginPage() {
+export default function SuperAdminRegisterPage() {
   const router = useRouter()
-  const { signIn } = useSession()
+  const { status } = useSession()
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/dashboard")
+    }
+  }, [status, router])
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setError("")
     setLoading(true)
 
-    const { error: signInError } = await signIn(email, password)
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      })
 
-    if (signInError) {
-      setError("Credenciales inválidas. Intenta de nuevo.")
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || "Error al registrar")
+        setLoading(false)
+        return
+      }
+
+      router.push("/login")
+    } catch {
+      setError("Error de conexión")
       setLoading(false)
-      return
     }
+  }
 
-    router.push("/dashboard")
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <p className="text-gray-400">Cargando...</p>
+      </div>
+    )
   }
 
   return (
@@ -41,10 +67,28 @@ export default function LoginPage() {
       <main className="flex flex-1 items-center justify-center px-6">
         <div className="w-full max-w-sm">
           <h1 className="text-2xl font-bold text-black text-center tracking-tight">
-            Iniciar Sesión
+            Registrar Super Admin
           </h1>
+          <p className="mt-2 text-center text-sm text-gray-400">
+            Crea la cuenta principal del sistema
+          </p>
 
           <form onSubmit={handleSubmit} className="mt-10 space-y-6">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-500 mb-1.5">
+                Nombre completo
+              </label>
+              <input
+                id="name"
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="mt-1 block w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                placeholder="Super Administrador"
+              />
+            </div>
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-500 mb-1.5">
                 Correo electrónico
@@ -56,7 +100,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="mt-1 block w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
-                placeholder="correo@ejemplo.com"
+                placeholder="super@educonecta.com"
               />
             </div>
 
@@ -69,6 +113,7 @@ export default function LoginPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   required
+                  minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="block w-full rounded-[30px] border border-gray-200 px-5 py-3 pr-12 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
@@ -108,12 +153,15 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full rounded-[25px] bg-black px-4 py-3.5 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              {loading ? "Ingresando..." : "Iniciar Sesión"}
+              {loading ? "Registrando..." : "Crear Super Admin"}
             </button>
           </form>
 
           <p className="mt-8 text-center text-sm text-gray-400">
-            ¿No tienes cuenta? Contacta a tu institución educativa.
+            ¿Ya tienes cuenta?{" "}
+            <Link href="/login" className="text-black underline underline-offset-4 hover:text-gray-600">
+              Iniciar sesión
+            </Link>
           </p>
         </div>
       </main>
