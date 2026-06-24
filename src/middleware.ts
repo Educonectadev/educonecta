@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr"
+import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
@@ -47,10 +48,19 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url))
   }
 
-  // Get user role from our User table via API
-  const sessionRes = await fetch(new URL("/api/auth/session", req.url))
-  const session = sessionRes.ok ? await sessionRes.json() : null
-  const role = session?.user?.role
+  const serviceClient = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } },
+  )
+
+  const { data: user } = await serviceClient
+    .from("User")
+    .select("role")
+    .eq("email", authUser.email)
+    .maybeSingle()
+
+  const role = user?.role
 
   if (!role) {
     return NextResponse.redirect(new URL("/login", req.url))
