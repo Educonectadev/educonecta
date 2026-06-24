@@ -23,8 +23,8 @@ export default async function SuperAdminDashboardPage() {
       <h1 className="text-2xl font-bold tracking-tight mb-8">Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {stats.map((s) => (
-          <div key={s.label} className="bg-gray-800 border border-gray-700 rounded-[25px] p-6 hover:bg-gray-700 transition-all duration-200">
-            <p className="text-xs uppercase tracking-widest text-gray-400">{s.label}</p>
+          <div key={s.label} className="bg-black border border-white/10 rounded-[25px] p-6 hover:bg-black/80 transition-all duration-200">
+            <p className="text-xs uppercase tracking-widest text-white/50">{s.label}</p>
             <p className="text-3xl font-bold mt-2 text-white">{s.value}</p>
           </div>
         ))}

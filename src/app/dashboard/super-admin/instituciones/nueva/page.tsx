@@ -177,7 +177,7 @@ export default function NuevaInstitucionPage() {
                       className={`rounded-[30px] px-4 py-2 text-xs font-medium transition-all ${
                         selected
                           ? "bg-black text-white"
-                          : "bg-white border border-gray-200 text-gray-500 hover:border-gray-300"
+                          : "bg-white border border-black/10 text-black/50 hover:border-black/30"
                       }`}
                     >
                       {opt.label}
@@ -343,7 +343,7 @@ export default function NuevaInstitucionPage() {
                       className={`rounded-[30px] px-4 py-2 text-xs font-medium transition-all ${
                         selected
                           ? "bg-black text-white"
-                          : "bg-white border border-gray-200 text-gray-500 hover:border-gray-300"
+                          : "bg-white border border-black/10 text-black/50 hover:border-black/30"
                       }`}
                     >
                       {opt.label}
@@ -392,7 +392,7 @@ export default function NuevaInstitucionPage() {
                     onChange={(e) => setForm((p) => ({ ...p, sectionsPerGrade: Number(e.target.value) }))}
                     className="flex-1 accent-black"
                   />
-                  <span className="text-sm font-medium text-gray-700 w-8 text-center">{form.sectionsPerGrade}</span>
+                  <span className="text-sm font-medium text-black/70 w-8 text-center">{form.sectionsPerGrade}</span>
                 </div>
                 <p className="text-[11px] text-gray-400 mt-1">Se crearán A-{String.fromCharCode(64 + form.sectionsPerGrade)}</p>
               </div>
@@ -420,7 +420,7 @@ export default function NuevaInstitucionPage() {
             <button
               type="submit"
               disabled={loading}
-              className="rounded-[30px] bg-black px-8 py-3 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="rounded-[30px] bg-black px-8 py-3 text-sm font-medium text-white hover:bg-black/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {loading ? "Guardando..." : "Guardar Institución"}
             </button>

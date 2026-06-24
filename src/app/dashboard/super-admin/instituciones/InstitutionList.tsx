@@ -89,8 +89,8 @@ export default function InstitutionList({ institutions: initial }: { institution
                 <div className="flex items-center gap-2 ml-3 shrink-0">
                   <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium ${
                     inst.type === "private"
-                      ? "bg-gray-800 text-white"
-                      : "bg-gray-100 text-gray-600"
+                      ? "bg-black text-white"
+                      : "bg-black/5 text-black/60"
                   }`}>
                     {inst.type === "private" ? "Priv" : "Púb"}
                   </span>
@@ -134,13 +134,14 @@ export default function InstitutionList({ institutions: initial }: { institution
                 </p>
               </div>
               <div className="col-span-1">
-                <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium ${
-                  inst.type === "private"
-                    ? "bg-gray-800 text-white"
-                    : "bg-gray-100 text-gray-600"
-                }`}>
-                  {inst.type === "private" ? "Privada" : "Pública"}
-                </span>
+                  <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium ${
+                    inst.type === "private"
+                      ? "bg-black text-white"
+                      : "bg-black/5 text-black/60"
+                  }`}>
+                    {inst.type === "private" ? "Privada" : "Pública"}
+                  </span>
+                </div>
               </div>
               <div className="col-span-2 text-sm text-gray-600 truncate">
                 {[inst.district, inst.province, inst.department].filter(Boolean).join(", ") || <span className="text-gray-300">—</span>}

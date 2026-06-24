@@ -194,7 +194,7 @@ export default function InstitutionModal({
                 </button>
                 <button
                   onClick={() => setEditing(true)}
-                  className="rounded-[30px] bg-gray-800 px-5 py-2 text-xs font-medium text-white hover:bg-black transition-all"
+                  className="rounded-[30px] bg-black px-5 py-2 text-xs font-medium text-white hover:bg-black/80 transition-all"
                 >
                   Editar
                 </button>
@@ -308,7 +308,7 @@ export default function InstitutionModal({
               <button
                 type="submit"
                 disabled={loading}
-                className="rounded-[30px] bg-gray-800 px-8 py-3 text-sm font-medium text-white hover:bg-black disabled:opacity-50 transition-all"
+                className="rounded-[30px] bg-black px-8 py-3 text-sm font-medium text-white hover:bg-black/80 disabled:opacity-50 transition-all"
               >
                 {loading ? "Guardando..." : "Guardar Cambios"}
               </button>
@@ -331,7 +331,7 @@ export default function InstitutionModal({
               ) : stats ? (
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
                   <StatCard value={stats.total} label="Total" color="text-gray-900" />
-                  <StatCard value={stats.admins} label="Admins" color="text-blue-600" />
+                  <StatCard value={stats.admins} label="Admins" color="text-black" />
                   <StatCard value={stats.teachers} label="Docentes" color="text-emerald-600" />
                   <StatCard value={stats.parents} label="Padres" color="text-amber-600" />
                   <StatCard value={stats.students} label="Alumnos" color="text-violet-600" />
@@ -347,7 +347,7 @@ export default function InstitutionModal({
               <div className="flex items-center justify-between">
                 <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Director(a) - Acceso al Sistema</h3>
                 {!directorLoading && !directorUser && !showCreateDirector && (
-                  <button onClick={() => setShowCreateDirector(true)} className="text-[11px] font-medium text-black hover:text-gray-600 transition-colors">Crear Acceso</button>
+                  <button                 onClick={() => setShowCreateDirector(true)} className="text-[11px] font-medium text-black hover:text-black/60 transition-colors">Crear Acceso</button>
                 )}
               </div>
               {directorLoading ? (
@@ -381,7 +381,7 @@ export default function InstitutionModal({
                     <button
                       onClick={handleCreateDirector}
                       disabled={directorSaving}
-                      className="rounded-[30px] bg-gray-800 px-5 py-2 text-xs font-medium text-white hover:bg-black disabled:opacity-50 transition-all"
+                      className="rounded-[30px] bg-black px-5 py-2 text-xs font-medium text-white hover:bg-black/80 disabled:opacity-50 transition-all"
                     >
                       {directorSaving ? "Creando..." : "Crear Director"}
                     </button>
@@ -469,7 +469,7 @@ export default function InstitutionModal({
             {/* Badges row */}
             <div className="flex flex-wrap gap-1.5">
               <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium ${
-                institution.type === "private" ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-600"
+                institution.type === "private" ? "bg-black text-white" : "bg-black/5 text-black/60"
               }`}>
                 {institution.type === "private" ? "Privada" : "Pública"}
               </span>

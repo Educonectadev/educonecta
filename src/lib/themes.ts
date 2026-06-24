@@ -18,19 +18,19 @@ export interface RoleTheme {
 export const themes: Record<string, RoleTheme> = {
   SUPER_ADMIN: {
     sidebar: {
-      activeBg: "bg-gray-800",
+      activeBg: "bg-black",
       activeText: "text-white",
-      hoverBg: "hover:bg-gray-800",
+      hoverBg: "hover:bg-black",
       hoverText: "hover:text-white",
-      labelColor: "text-gray-500",
+      labelColor: "text-black/40",
     },
     card: {
-      bg: "bg-gray-50",
-      border: "border-gray-200",
-      hoverBg: "hover:bg-gray-100",
+      bg: "bg-white",
+      border: "border-black/10",
+      hoverBg: "hover:bg-black/5",
     },
-    avatar: "bg-gray-800",
-    accent: "text-gray-800",
+    avatar: "bg-black",
+    accent: "text-black",
   },
   INSTITUTIONAL_ADMIN: {
     sidebar: {
