@@ -47,6 +47,7 @@ export default function NuevaInstitucionPage() {
     sectionsPerGrade: 8,
     shiftTimes: {} as Record<string, { start: string; end: string }>,
   })
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [created, setCreated] = useState<{
@@ -305,7 +306,7 @@ export default function NuevaInstitucionPage() {
 
           {/* Configuración */}
           <section className="lg:col-span-2">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">Configuración</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4 -mt-2">Configuración</h2>
             <div className="bg-gray-50 border border-gray-200 rounded-[30px] p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -326,7 +327,24 @@ export default function NuevaInstitucionPage() {
                   </div>
                   <div>
                     <label htmlFor="directorPassword" className={labelClass}>Contraseña *</label>
-                    <input id="directorPassword" type="password" value={form.directorPassword} onChange={(e) => setValue("directorPassword", e.target.value)} className={inputClass} placeholder="••••••" />
+                    <div className="relative">
+                      <input id="directorPassword" type={showPassword ? "text" : "password"} value={form.directorPassword} onChange={(e) => setValue("directorPassword", e.target.value)} className={`${inputClass} pr-12`} placeholder="••••••" />
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors" tabIndex={-1}>
+                        {showPassword ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
+                            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" />
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <p className="text-[11px] text-gray-400 mt-2">Si completas ambos campos, se creará automáticamente el usuario del director con acceso al dashboard.</p>
