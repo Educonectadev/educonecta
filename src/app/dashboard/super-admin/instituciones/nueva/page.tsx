@@ -306,7 +306,7 @@ export default function NuevaInstitucionPage() {
 
           {/* Configuración */}
           <section className="lg:col-span-2">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4 -mt-2">Configuración</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4 mt-6">Configuración</h2>
             <div className="bg-gray-50 border border-gray-200 rounded-[30px] p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
