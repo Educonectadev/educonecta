@@ -24,26 +24,31 @@ export async function POST(req: Request) {
       )
     }
 
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-    })
+    let authUser = null
 
-    if (authError) {
-      return NextResponse.json({ error: authError.message }, { status: 400 })
+    const { data: existingAuth } = await supabase.auth.admin.listUsers()
+    const found = existingAuth?.users?.find((u) => u.email === email)
+
+    if (found) {
+      authUser = found
+    } else {
+      const { data, error } = await supabase.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+      })
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 400 })
+      }
+      authUser = data.user
     }
 
-    const { error: dbError } = await supabase.from("User").insert({
-      email,
-      name,
-      role: "SUPER_ADMIN",
-    })
+    const { error: dbError } = await supabase.from("User").upsert(
+      { email, name, role: "SUPER_ADMIN" },
+      { onConflict: "email", ignoreDuplicates: false },
+    )
 
     if (dbError) {
-      if (authData.user?.id) {
-        await supabase.auth.admin.deleteUser(authData.user.id)
-      }
       return NextResponse.json({ error: dbError.message }, { status: 500 })
     }
 
