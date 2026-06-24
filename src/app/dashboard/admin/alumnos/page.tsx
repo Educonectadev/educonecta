@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { query, findMany } from "@/lib/prisma"
+import { findMany } from "@/lib/prisma"
+import { getSupabaseAdmin } from "@/lib/supabase"
 import AlumnosList from "./AlumnosList"
 
 export default async function AlumnosPage() {
@@ -8,23 +9,25 @@ export default async function AlumnosPage() {
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") redirect("/login")
 
   const institutionId = session.user.institutionId!
-  const [studentsData, grades, sections] = await Promise.all([
-    query<any[]>(
-      "SELECT s.*, g.id as g_id, g.name as g_name, sec.id as sec_id, sec.name as sec_name FROM Student s LEFT JOIN Grade g ON g.id = s.gradeId LEFT JOIN Section sec ON sec.id = s.sectionId WHERE s.institutionId = ? ORDER BY s.createdAt DESC",
-      [institutionId]
-    ),
-    findMany("Grade", { where: { institutionId } }) as Promise<{ id: number; name: string }[]>,
-    query<any[]>(
-      "SELECT sec.* FROM Section sec JOIN Grade g ON g.id = sec.gradeId WHERE g.institutionId = ?",
-      [institutionId]
-    ),
+  const supabase = getSupabaseAdmin()
+
+  const [studentsRaw, grades, sectionsRaw] = await Promise.all([
+    supabase.from("Student").select("*, grade:Grade(id, name), section:Section(id, name)").eq("institutionId", institutionId).order("createdAt", { ascending: false }),
+    findMany("Grade", { where: { institutionId } }),
+    supabase.from("Section").select("id, name, gradeId").in("gradeId", [] as number[]),
   ])
 
-  const students = studentsData.map((s) => ({
-    ...s,
-    grade: s.g_id ? { id: s.g_id, name: s.g_name } : null,
-    section: s.sec_id ? { id: s.sec_id, name: s.sec_name } : null,
+  const allGradeIds = (grades as any[]).map((g) => g.id)
+  const sections = allGradeIds.length > 0
+    ? (await supabase.from("Section").select("id, name, gradeId").in("gradeId", allGradeIds)).data ?? []
+    : []
+
+  const students = (studentsRaw.data ?? []).map((s: any) => ({
+    id: s.id, firstName: s.firstName, lastName: s.lastName, documentId: s.documentId,
+    gradeId: s.gradeId, sectionId: s.sectionId, isActive: s.isActive, createdAt: s.createdAt,
+    grade: s.grade ?? null,
+    section: s.section ?? null,
   }))
 
-  return <AlumnosList students={students} grades={grades} sections={sections} />
+  return <AlumnosList students={students} grades={grades as any[]} sections={sections as any[]} />
 }

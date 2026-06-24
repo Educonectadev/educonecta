@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { query } from "@/lib/prisma"
+import { findMany } from "@/lib/prisma"
+import { getSupabaseAdmin } from "@/lib/supabase"
 import GradosList from "./GradosList"
 
 export default async function GradosPage() {
@@ -8,22 +9,32 @@ export default async function GradosPage() {
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") redirect("/login")
 
   const institutionId = session.user.institutionId!
-  const raw = await query<any[]>(
-    "SELECT g.*, s.id as s_id, s.name as s_name, s.gradeId as s_gradeId, s.capacity as s_capacity FROM Grade g LEFT JOIN Section s ON s.gradeId = g.id WHERE g.institutionId = ? ORDER BY g.name ASC, s.name ASC",
-    [institutionId]
-  )
+  const grades = await findMany<any>("Grade", { where: { institutionId }, orderBy: "name" })
 
-  const gradeMap = new Map<number, any>()
-  for (const row of raw) {
-    if (!gradeMap.has(row.id)) {
-      gradeMap.set(row.id, { id: row.id, name: row.name, level: row.level, sections: [] })
-    }
-    const grade = gradeMap.get(row.id)!
-    if (row.s_id && !grade.sections.some((s: any) => s.id === row.s_id)) {
-      grade.sections.push({ id: row.s_id, name: row.s_name, gradeId: row.s_gradeId, capacity: row.s_capacity })
-    }
+  const gradeIds = grades.map((g: any) => g.id)
+  let sections: any[] = []
+  if (gradeIds.length > 0) {
+    const { data, error } = await getSupabaseAdmin()
+      .from("Section")
+      .select("*")
+      .in("gradeId", gradeIds)
+      .order("name")
+    if (error) throw error
+    sections = data ?? []
   }
-  const grades = Array.from(gradeMap.values())
 
-  return <GradosList grades={grades} />
+  const sectionMap = new Map<number, any[]>()
+  for (const s of sections) {
+    if (!sectionMap.has(s.gradeId)) sectionMap.set(s.gradeId, [])
+    sectionMap.get(s.gradeId)!.push(s)
+  }
+
+  const result = grades.map((g: any) => ({
+    id: g.id,
+    name: g.name,
+    level: g.level,
+    sections: sectionMap.get(g.id) ?? [],
+  }))
+
+  return <GradosList grades={result} />
 }

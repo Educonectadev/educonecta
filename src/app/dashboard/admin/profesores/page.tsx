@@ -1,6 +1,6 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { query } from "@/lib/prisma"
+import { getSupabaseAdmin } from "@/lib/supabase"
 import ProfesoresList from "./ProfesoresList"
 
 export default async function ProfesoresPage() {
@@ -8,17 +8,16 @@ export default async function ProfesoresPage() {
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") redirect("/login")
 
   const institutionId = session.user.institutionId!
-  const data = await query<any[]>(
-    `SELECT t.id, t.speciality, t.documentId, t.professionalTitle, t.educationLevel, t.hireDate, t.contractType, t.address, t.emergencyContactName, t.emergencyContactPhone,
-      u.id as u_id, u.name as u_name, u.email as u_email, u.phone as u_phone
-    FROM Teacher t
-    LEFT JOIN User u ON u.id = t.userId
-    WHERE t.institutionId = ?
-    ORDER BY t.createdAt DESC`,
-    [institutionId]
-  )
+  const supabase = getSupabaseAdmin()
+  const { data, error } = await supabase
+    .from("Teacher")
+    .select("*, user:User(id, name, email, phone)")
+    .eq("institutionId", institutionId)
+    .order("createdAt", { ascending: false })
 
-  const teachers = data.map((t: any) => ({
+  if (error) throw error
+
+  const teachers = (data ?? []).map((t: any) => ({
     id: t.id,
     speciality: t.speciality,
     documentId: t.documentId,
@@ -29,7 +28,7 @@ export default async function ProfesoresPage() {
     address: t.address,
     emergencyContactName: t.emergencyContactName,
     emergencyContactPhone: t.emergencyContactPhone,
-    user: { id: t.u_id, name: t.u_name, email: t.u_email, phone: t.u_phone },
+    user: t.user,
   }))
 
   return <ProfesoresList teachers={teachers} />
