@@ -182,7 +182,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { name, code, type, ruc, address, district, province, department, phone, email, website, directorName, educationalLevel, shifts, foundedYear, description } = body
+    const { name, code, type, ruc, address, district, province, department, phone, email, website, directorName, educationalLevel, shifts, foundedYear, description, directorEmail, directorPassword } = body
 
     if (!name?.trim() || !code?.trim()) {
       return NextResponse.json({ message: "Nombre y código son requeridos" }, { status: 400 })
@@ -211,6 +211,45 @@ export async function PUT(req: NextRequest) {
       foundedYear: foundedYear ? Number(foundedYear) : null,
       description: description || null,
     })
+
+    if (directorEmail) {
+      const existingUser = await findOne("User", { institutionId: id, role: "INSTITUTIONAL_ADMIN" })
+      const supabase = getSupabaseAdmin()
+      const pw = directorPassword || undefined
+
+      if (existingUser) {
+        const updateData: Record<string, unknown> = { email: directorEmail.trim(), name: (directorName || name).trim() }
+        if (pw) {
+          updateData.passwordHash = await bcrypt.hash(pw, 10)
+        }
+        await update("User", { id: (existingUser as any).id }, updateData)
+
+        if (pw) {
+          const { data: authUsers } = await supabase.auth.admin.listUsers()
+          const found = authUsers?.users?.find((u) => u.email === (existingUser as any).email)
+          if (found) {
+            await supabase.auth.admin.updateUserById(found.id, { email: directorEmail.trim(), password: pw })
+          }
+        }
+      } else if (pw) {
+        const passwordHash = await bcrypt.hash(pw, 10)
+        const userId = await create("User", {
+          email: directorEmail.trim(),
+          passwordHash,
+          name: (directorName || name).trim(),
+          role: "INSTITUTIONAL_ADMIN",
+          institutionId: id,
+        } as any)
+        await create("InstitutionalAdmin", { userId, institutionId: id } as any)
+        const { data: authUsers } = await supabase.auth.admin.listUsers()
+        const found = authUsers?.users?.find((u) => u.email === directorEmail.trim())
+        if (!found) {
+          await supabase.auth.admin.createUser({ email: directorEmail.trim(), password: pw, email_confirm: true })
+        } else {
+          await supabase.auth.admin.updateUserById(found.id, { password: pw })
+        }
+      }
+    }
 
     const updated = await findOne("Institution", { id })
     return NextResponse.json({ success: true, institution: updated })
