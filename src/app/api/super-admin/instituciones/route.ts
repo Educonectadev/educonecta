@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "@/lib/auth"
 import { findOne, create, update, remove, query } from "@/lib/prisma"
+import { getSupabaseAdmin } from "@/lib/supabase"
 import bcrypt from "bcryptjs"
 
 const GRADE_STRUCTURE: Record<string, string[]> = {
@@ -69,6 +70,24 @@ export async function POST(req: NextRequest) {
 
       let user = null
       if (directorEmail && directorPassword) {
+        const supabase = getSupabaseAdmin()
+        const { data: existingAuth } = await supabase.auth.admin.listUsers()
+        const found = existingAuth?.users?.find((u) => u.email === directorEmail.trim())
+        if (!found) {
+          const { error: authError } = await supabase.auth.admin.createUser({
+            email: directorEmail.trim(),
+            password: directorPassword,
+            email_confirm: true,
+          })
+          if (authError) {
+            return NextResponse.json({ message: `Error al crear usuario de acceso: ${authError.message}` }, { status: 500 })
+          }
+        } else {
+          const { error: updateError } = await supabase.auth.admin.updateUserById(found.id, { password: directorPassword })
+          if (updateError) {
+            return NextResponse.json({ message: `Error al actualizar contraseña: ${updateError.message}` }, { status: 500 })
+          }
+        }
         const passwordHash = await bcrypt.hash(directorPassword, 10)
         const userId = await create("User", {
           email: directorEmail.trim(),
@@ -78,7 +97,7 @@ export async function POST(req: NextRequest) {
           institutionId: insertId,
         } as any)
         await create("InstitutionalAdmin", { userId, institutionId: insertId } as any)
-        user = { email: directorEmail.trim(), name: (directorName || name).trim() }
+        user = { email: directorEmail.trim(), password: directorPassword, name: (directorName || name).trim() }
       }
 
       let grades: Record<string, string[]> = {}
