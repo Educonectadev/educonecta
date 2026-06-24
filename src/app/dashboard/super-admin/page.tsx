@@ -1,15 +1,28 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { count } from "@/lib/prisma"
+import { getSupabaseAdmin } from "@/lib/supabase"
+
+async function supabaseCount(table: string, match?: Record<string, unknown>): Promise<number> {
+  const admin = getSupabaseAdmin()
+  let query = admin.from(table).select("id", { count: "exact", head: true })
+  if (match) {
+    for (const [key, value] of Object.entries(match)) {
+      query = query.eq(key, value)
+    }
+  }
+  const { count, error } = await query
+  if (error) return 0
+  return count ?? 0
+}
 
 export default async function SuperAdminDashboardPage() {
   const session = await getServerSession()
   if (!session || session.user.role !== "SUPER_ADMIN") redirect("/login")
 
   const [totalInstituciones, totalUsuarios, activas] = await Promise.all([
-    count("Institution"),
-    count("User"),
-    count("Institution", { isActive: true }),
+    supabaseCount("Institution"),
+    supabaseCount("User"),
+    supabaseCount("Institution", { isActive: true }),
   ])
 
   const stats = [
