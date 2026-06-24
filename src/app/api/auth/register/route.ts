@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import { getSupabaseAdmin } from "@/lib/supabase"
-import { hashPassword } from "@/lib/auth"
 
 export async function POST(req: Request) {
   try {
@@ -35,11 +34,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: authError.message }, { status: 400 })
     }
 
-    const passwordHash = await hashPassword(password)
-
     const { error: dbError } = await supabase.from("User").insert({
       email,
-      passwordHash,
       name,
       role: "SUPER_ADMIN",
     })
