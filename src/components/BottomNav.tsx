@@ -29,13 +29,6 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
               href={item.href}
               className="flex flex-col items-center gap-0.5 py-2 min-w-0 flex-1 group"
             >
-              <span className={`material-icons text-3xl transition-all duration-200 ${
-                isActive
-                  ? t.accent.replace("text-", "text-")
-                  : "text-gray-500"
-              }`}>
-                {item.icon}
-              </span>
               <span className={`text-[11px] leading-tight font-medium transition-all duration-200 ${
                 isActive
                   ? `${t.accent} font-semibold`
