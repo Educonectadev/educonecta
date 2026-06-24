@@ -33,9 +33,6 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   if (pathname === "/login" || pathname === "/super-admin/register" || pathname.startsWith("/api/auth/")) {
-    if (authUser && pathname === "/login") {
-      return NextResponse.redirect(new URL("/", req.url))
-    }
     return supabaseResponse
   }
 
