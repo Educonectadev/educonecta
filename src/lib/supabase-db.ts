@@ -129,8 +129,10 @@ export async function count(
   return total || 0
 }
 
-export async function transaction<T>(fn: () => Promise<T>): Promise<T> {
+export async function transaction<T>(fn: (conn?: unknown) => Promise<T>): Promise<T> {
   return fn()
 }
 
 export async function endPool(): Promise<void> {}
+
+export const db = { query, execute, findOne, findMany, create, update, remove, count, transaction, endPool }

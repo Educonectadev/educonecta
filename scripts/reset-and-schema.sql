@@ -101,6 +101,32 @@ CREATE TRIGGER update_Communication_updatedAt BEFORE UPDATE ON "Communication" F
 CREATE TRIGGER update_Notification_updatedAt BEFORE UPDATE ON "Notification" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ═══════════════════════════════════════════════════════
+-- exec_sql - permite ejecutar SQL desde la app via RPC
+-- ═══════════════════════════════════════════════════════
+
+CREATE OR REPLACE FUNCTION exec_sql(query text, params jsonb DEFAULT '[]'::jsonb)
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  result JSONB;
+  is_select BOOLEAN;
+BEGIN
+  query := trim(query);
+  is_select := (upper(left(query, 6)) = 'SELECT' OR upper(left(query, 4)) = 'WITH');
+
+  IF is_select THEN
+    EXECUTE query INTO result;
+    RETURN COALESCE(result, '[]'::jsonb);
+  ELSE
+    EXECUTE query;
+    RETURN '{"affectedRows": 1}'::jsonb;
+  END IF;
+END;
+$$;
+
+-- ═══════════════════════════════════════════════════════
 -- DONE! Ahora ve a /super-admin/register en tu app
 -- para crear la cuenta de Super Admin.
 -- ═══════════════════════════════════════════════════════
