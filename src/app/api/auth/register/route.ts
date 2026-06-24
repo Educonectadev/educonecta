@@ -37,6 +37,14 @@ export async function POST(req: Request) {
       if (error) {
         return NextResponse.json({ error: error.message }, { status: 400 })
       }
+    } else {
+      const { error: updateError } = await supabase.auth.admin.updateUserById(
+        found.id,
+        { password },
+      )
+      if (updateError) {
+        return NextResponse.json({ error: updateError.message }, { status: 400 })
+      }
     }
 
     const passwordHash = await hashPassword(password)

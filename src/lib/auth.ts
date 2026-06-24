@@ -10,23 +10,31 @@ export async function getServerSession(): Promise<Session | null> {
   const authUser = authData?.user
   if (!authUser?.email) return null
 
-  const { data: user } = await getSupabaseAdmin()
+  const supabaseAdmin = getSupabaseAdmin()
+
+  const { data: user } = await supabaseAdmin
     .from("User")
-    .select(`
-      id, email, name, role, institutionId,
-      Institution!institutionId (name),
-      Teacher!userId (id),
-      Parent!userId (id),
-      InstitutionalAdmin!userId (id)
-    `)
+    .select("id, email, name, role, institutionId")
     .eq("email", authUser.email)
     .maybeSingle()
 
   if (!user) return null
 
-  const teacherArr = (user as any).Teacher as { id: number }[] | undefined
-  const parentArr = (user as any).Parent as { id: number }[] | undefined
-  const adminArr = (user as any).InstitutionalAdmin as { id: number }[] | undefined
+  let institutionName: string | null = null
+  if (user.institutionId) {
+    const { data: inst } = await supabaseAdmin
+      .from("Institution")
+      .select("name")
+      .eq("id", user.institutionId)
+      .maybeSingle()
+    institutionName = inst?.name ?? null
+  }
+
+  const [{ data: teacher }, { data: parent }, { data: admin }] = await Promise.all([
+    supabaseAdmin.from("Teacher").select("id").eq("userId", user.id).maybeSingle(),
+    supabaseAdmin.from("Parent").select("id").eq("userId", user.id).maybeSingle(),
+    supabaseAdmin.from("InstitutionalAdmin").select("id").eq("userId", user.id).maybeSingle(),
+  ])
 
   return {
     user: {
@@ -35,10 +43,10 @@ export async function getServerSession(): Promise<Session | null> {
       name: user.name,
       role: user.role,
       institutionId: user.institutionId ?? null,
-      institutionName: (user as any).Institution?.name ?? null,
-      teacherId: teacherArr?.[0]?.id ?? null,
-      parentId: parentArr?.[0]?.id ?? null,
-      adminId: adminArr?.[0]?.id ?? null,
+      institutionName,
+      teacherId: teacher?.id ?? null,
+      parentId: parent?.id ?? null,
+      adminId: admin?.id ?? null,
     },
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
   }
