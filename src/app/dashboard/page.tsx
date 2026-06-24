@@ -9,9 +9,9 @@ export default async function DashboardPage() {
   const role = session.user.role
 
   if (role === "SUPER_ADMIN") redirect("/dashboard/super-admin")
-  if (role === "INSTITUTIONAL_ADMIN") redirect("/admin")
-  if (role === "TEACHER") redirect("/profesor")
-  if (role === "PARENT") redirect("/padre")
+  if (role === "INSTITUTIONAL_ADMIN") redirect("/dashboard/admin")
+  if (role === "TEACHER") redirect("/dashboard/teacher")
+  if (role === "PARENT") redirect("/dashboard/parent")
 
   redirect("/unauthorized")
 }

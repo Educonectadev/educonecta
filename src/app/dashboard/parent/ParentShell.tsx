@@ -6,24 +6,24 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 const bottomLinks = [
-  { href: "/padre", label: "Inicio", icon: "home" },
-  { href: "/padre/horarios", label: "Horarios", icon: "calendar_month" },
-  { href: "/padre/tareas", label: "Tareas", icon: "assignment" },
-  { href: "/padre/calificaciones", label: "Notas", icon: "grade" },
-  { href: "/padre/asistencia", label: "Asistencia", icon: "fact_check" },
-  { href: "/padre/comunicados", label: "Mensajes", icon: "mail" },
+  { href: "/dashboard/parent", label: "Inicio", icon: "home" },
+  { href: "/dashboard/parent/horarios", label: "Horarios", icon: "calendar_month" },
+  { href: "/dashboard/parent/tareas", label: "Tareas", icon: "assignment" },
+  { href: "/dashboard/parent/calificaciones", label: "Notas", icon: "grade" },
+  { href: "/dashboard/parent/asistencia", label: "Asistencia", icon: "fact_check" },
+  { href: "/dashboard/parent/comunicados", label: "Mensajes", icon: "mail" },
 ]
 
 const sidebarLinks = [
-  { href: "/padre", label: "Dashboard", icon: "dashboard" },
-  { href: "/padre/perfil", label: "Perfil", icon: "person" },
-  { href: "/padre/tareas", label: "Tareas", icon: "assignment" },
-  { href: "/padre/calificaciones", label: "Calificaciones", icon: "grade" },
-  { href: "/padre/asistencia", label: "Asistencia", icon: "fact_check" },
-  { href: "/padre/horarios", label: "Horarios", icon: "calendar_month" },
-  { href: "/padre/disciplina", label: "Disciplina", icon: "gavel" },
-  { href: "/padre/comunicados", label: "Comunicados", icon: "mail" },
-  { href: "/padre/notificaciones", label: "Notificaciones", icon: "notifications" },
+  { href: "/dashboard/parent", label: "Dashboard", icon: "dashboard" },
+  { href: "/dashboard/parent/perfil", label: "Perfil", icon: "person" },
+  { href: "/dashboard/parent/tareas", label: "Tareas", icon: "assignment" },
+  { href: "/dashboard/parent/calificaciones", label: "Calificaciones", icon: "grade" },
+  { href: "/dashboard/parent/asistencia", label: "Asistencia", icon: "fact_check" },
+  { href: "/dashboard/parent/horarios", label: "Horarios", icon: "calendar_month" },
+  { href: "/dashboard/parent/disciplina", label: "Disciplina", icon: "gavel" },
+  { href: "/dashboard/parent/comunicados", label: "Comunicados", icon: "mail" },
+  { href: "/dashboard/parent/notificaciones", label: "Notificaciones", icon: "notifications" },
 ]
 
 export default function ParentShell({ children }: { children: React.ReactNode }) {

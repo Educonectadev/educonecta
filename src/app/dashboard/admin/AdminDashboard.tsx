@@ -42,13 +42,13 @@ export default function AdminDashboard({
   totalCourses: number
 }) {
   const quickLinks = [
-    { label: "Alumnos", href: "/admin/alumnos", count: totalStudents, icon: "group" },
-    { label: "Profesores", href: "/admin/profesores", count: totalTeachers, icon: "school" },
-    { label: "Padres", href: "/admin/padres", count: totalParents, icon: "diversity_3" },
-    { label: "Cursos", href: "/admin/cursos", count: totalCourses, icon: "book" },
-    { label: "Grados", href: "/admin/grados", count: null, icon: "layers" },
-    { label: "Horarios", href: "/admin/horarios", count: null, icon: "calendar_month" },
-    { label: "Aulas", href: "/admin/aulas", count: null, icon: "meeting_room" },
+    { label: "Alumnos", href: "/dashboard/admin/alumnos", count: totalStudents, icon: "group" },
+    { label: "Profesores", href: "/dashboard/admin/profesores", count: totalTeachers, icon: "school" },
+    { label: "Padres", href: "/dashboard/admin/padres", count: totalParents, icon: "diversity_3" },
+    { label: "Cursos", href: "/dashboard/admin/cursos", count: totalCourses, icon: "book" },
+    { label: "Grados", href: "/dashboard/admin/grados", count: null, icon: "layers" },
+    { label: "Horarios", href: "/dashboard/admin/horarios", count: null, icon: "calendar_month" },
+    { label: "Aulas", href: "/dashboard/admin/aulas", count: null, icon: "meeting_room" },
   ]
 
   return (
@@ -90,7 +90,7 @@ export default function AdminDashboard({
         <div className="bg-blue-50 border border-blue-200 rounded-[25px] p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold tracking-tight">Últimos Alumnos</h2>
-            <Link href="/admin/alumnos" className="text-xs text-blue-500 hover:text-blue-700 transition-all">Ver todos</Link>
+            <Link href="/dashboard/admin/alumnos" className="text-xs text-blue-500 hover:text-blue-700 transition-all">Ver todos</Link>
           </div>
           {recentStudents.length === 0 ? (
             <p className="text-sm text-blue-400">No hay alumnos registrados.</p>
@@ -109,7 +109,7 @@ export default function AdminDashboard({
         <div className="bg-blue-50 border border-blue-200 rounded-[25px] p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold tracking-tight">Últimos Profesores</h2>
-            <Link href="/admin/profesores" className="text-xs text-blue-500 hover:text-blue-700 transition-all">Ver todos</Link>
+            <Link href="/dashboard/admin/profesores" className="text-xs text-blue-500 hover:text-blue-700 transition-all">Ver todos</Link>
           </div>
           {recentTeachers.length === 0 ? (
             <p className="text-sm text-blue-400">No hay profesores registrados.</p>

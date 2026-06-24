@@ -5,24 +5,24 @@ import BottomNav from "@/components/BottomNav"
 import SidebarNav from "@/components/SidebarNav"
 
 const sidebarLinks = [
-  { href: "/profesor", label: "Dashboard", icon: "dashboard" },
-  { href: "/profesor/perfil", label: "Perfil", icon: "person" },
-  { href: "/profesor/horarios", label: "Horarios", icon: "calendar_month" },
-  { href: "/profesor/asistencia", label: "Asistencia", icon: "fact_check" },
-  { href: "/profesor/tareas", label: "Tareas", icon: "assignment" },
-  { href: "/profesor/calificaciones", label: "Calificaciones", icon: "grade" },
-  { href: "/profesor/disciplina", label: "Disciplina", icon: "gavel" },
-  { href: "/profesor/comunicados", label: "Comunicados", icon: "mail" },
+  { href: "/dashboard/teacher", label: "Dashboard", icon: "dashboard" },
+  { href: "/dashboard/teacher/perfil", label: "Perfil", icon: "person" },
+  { href: "/dashboard/teacher/horarios", label: "Horarios", icon: "calendar_month" },
+  { href: "/dashboard/teacher/asistencia", label: "Asistencia", icon: "fact_check" },
+  { href: "/dashboard/teacher/tareas", label: "Tareas", icon: "assignment" },
+  { href: "/dashboard/teacher/calificaciones", label: "Calificaciones", icon: "grade" },
+  { href: "/dashboard/teacher/disciplina", label: "Disciplina", icon: "gavel" },
+  { href: "/dashboard/teacher/comunicados", label: "Comunicados", icon: "mail" },
 ]
 
 const bottomNavItems = [
-  { href: "/profesor", label: "Inicio", icon: "home" },
-  { href: "/profesor/perfil", label: "Perfil", icon: "person" },
-  { href: "/profesor/horarios", label: "Horarios", icon: "calendar_month" },
-  { href: "/profesor/asistencia", label: "Asistencia", icon: "fact_check" },
-  { href: "/profesor/tareas", label: "Tareas", icon: "assignment" },
-  { href: "/profesor/calificaciones", label: "Notas", icon: "grade" },
-  { href: "/profesor/comunicados", label: "Mensajes", icon: "mail" },
+  { href: "/dashboard/teacher", label: "Inicio", icon: "home" },
+  { href: "/dashboard/teacher/perfil", label: "Perfil", icon: "person" },
+  { href: "/dashboard/teacher/horarios", label: "Horarios", icon: "calendar_month" },
+  { href: "/dashboard/teacher/asistencia", label: "Asistencia", icon: "fact_check" },
+  { href: "/dashboard/teacher/tareas", label: "Tareas", icon: "assignment" },
+  { href: "/dashboard/teacher/calificaciones", label: "Notas", icon: "grade" },
+  { href: "/dashboard/teacher/comunicados", label: "Mensajes", icon: "mail" },
 ]
 
 export default async function TeacherLayout({ children }: { children: React.ReactNode }) {

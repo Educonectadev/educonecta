@@ -4,15 +4,15 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 const links = [
-  { href: "/admin", label: "Dashboard", icon: "dashboard" },
-  { href: "/admin/perfil", label: "Perfil", icon: "person" },
-  { href: "/admin/alumnos", label: "Alumnos", icon: "school" },
-  { href: "/admin/profesores", label: "Profesores", icon: "badge" },
-  { href: "/admin/padres", label: "Padres", icon: "group" },
-  { href: "/admin/cursos", label: "Cursos", icon: "menu_book" },
-  { href: "/admin/grados", label: "Grados", icon: "layers" },
-  { href: "/admin/horarios", label: "Horarios", icon: "calendar_month" },
-  { href: "/admin/aulas", label: "Aulas", icon: "meeting_room" },
+  { href: "/dashboard/admin", label: "Dashboard", icon: "dashboard" },
+  { href: "/dashboard/admin/perfil", label: "Perfil", icon: "person" },
+  { href: "/dashboard/admin/alumnos", label: "Alumnos", icon: "school" },
+  { href: "/dashboard/admin/profesores", label: "Profesores", icon: "badge" },
+  { href: "/dashboard/admin/padres", label: "Padres", icon: "group" },
+  { href: "/dashboard/admin/cursos", label: "Cursos", icon: "menu_book" },
+  { href: "/dashboard/admin/grados", label: "Grados", icon: "layers" },
+  { href: "/dashboard/admin/horarios", label: "Horarios", icon: "calendar_month" },
+  { href: "/dashboard/admin/aulas", label: "Aulas", icon: "meeting_room" },
 ]
 
 export default function AdminSidebar() {

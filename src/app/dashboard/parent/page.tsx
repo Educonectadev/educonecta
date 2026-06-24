@@ -173,19 +173,19 @@ export default async function ParentDashboardPage() {
 
               <div className="mt-5 flex gap-2">
                 <Link
-                  href="/padre/tareas"
+                  href="/dashboard/parent/tareas"
                   className="flex-1 text-center text-xs rounded-[30px] bg-gray-50 border border-gray-200 py-2 text-gray-500 hover:bg-gray-100 transition-all"
                 >
                   Tareas
                 </Link>
                 <Link
-                  href="/padre/calificaciones"
+                  href="/dashboard/parent/calificaciones"
                   className="flex-1 text-center text-xs rounded-[30px] bg-gray-50 border border-gray-200 py-2 text-gray-500 hover:bg-gray-100 transition-all"
                 >
                   Notas
                 </Link>
                 <Link
-                  href="/padre/asistencia"
+                  href="/dashboard/parent/asistencia"
                   className="flex-1 text-center text-xs rounded-[30px] bg-gray-50 border border-gray-200 py-2 text-gray-500 hover:bg-gray-100 transition-all"
                 >
                   Asistencia
@@ -200,7 +200,7 @@ export default async function ParentDashboardPage() {
         <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Más secciones</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <Link
-            href="/padre/perfil"
+            href="/dashboard/parent/perfil"
             className="flex flex-col items-center justify-center gap-2 bg-amber-50 border border-amber-200 rounded-[25px] p-5 hover:bg-amber-100 transition-all duration-200"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500">
@@ -210,7 +210,7 @@ export default async function ParentDashboardPage() {
             <span className="text-sm font-medium text-amber-600">Perfil</span>
           </Link>
           <Link
-            href="/padre/horarios"
+            href="/dashboard/parent/horarios"
             className="flex flex-col items-center justify-center gap-2 bg-gray-50 border border-gray-200 rounded-[25px] p-5 hover:bg-gray-100 transition-all duration-200"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
@@ -220,7 +220,7 @@ export default async function ParentDashboardPage() {
             <span className="text-sm font-medium text-gray-500">Horarios</span>
           </Link>
           <Link
-            href="/padre/disciplina"
+            href="/dashboard/parent/disciplina"
             className="flex flex-col items-center justify-center gap-2 bg-gray-50 border border-gray-200 rounded-[25px] p-5 hover:bg-gray-100 transition-all duration-200"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
@@ -229,7 +229,7 @@ export default async function ParentDashboardPage() {
             <span className="text-sm font-medium text-gray-500">Disciplina</span>
           </Link>
           <Link
-            href="/padre/notificaciones"
+            href="/dashboard/parent/notificaciones"
             className="flex flex-col items-center justify-center gap-2 bg-gray-50 border border-gray-200 rounded-[25px] p-5 hover:bg-gray-100 transition-all duration-200"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
@@ -239,7 +239,7 @@ export default async function ParentDashboardPage() {
             <span className="text-sm font-medium text-gray-500">Notificaciones</span>
           </Link>
           <Link
-            href="/padre/comunicados"
+            href="/dashboard/parent/comunicados"
             className="flex flex-col items-center justify-center gap-2 bg-gray-50 border border-gray-200 rounded-[25px] p-5 hover:bg-gray-100 transition-all duration-200"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
