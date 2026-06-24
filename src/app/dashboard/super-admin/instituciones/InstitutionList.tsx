@@ -142,7 +142,6 @@ export default function InstitutionList({ institutions: initial }: { institution
                     {inst.type === "private" ? "Privada" : "Pública"}
                   </span>
                 </div>
-              </div>
               <div className="col-span-2 text-sm text-gray-600 truncate">
                 {[inst.district, inst.province, inst.department].filter(Boolean).join(", ") || <span className="text-gray-300">—</span>}
               </div>
