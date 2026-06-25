@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import Select from "@/components/Select"
 
 interface Grade {
   id: number
@@ -135,36 +136,12 @@ export default function NuevoAlumnoPage() {
 
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-500">Grado</label>
-          <select
-            name="gradeId"
-            value={form.gradeId}
-            onChange={handleChange}
-            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
-          >
-            <option value="">Seleccionar grado</option>
-            {grades.map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.name}
-              </option>
-            ))}
-          </select>
+          <Select value={form.gradeId} onChange={(val) => setForm((prev) => ({...prev, gradeId: val}))} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Seleccionar grado" />
         </div>
 
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-500">Sección</label>
-          <select
-            name="sectionId"
-            value={form.sectionId}
-            onChange={handleChange}
-            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
-          >
-            <option value="">Seleccionar sección</option>
-            {sections.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
+          <Select value={form.sectionId} onChange={(val) => setForm((prev) => ({...prev, sectionId: val}))} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Seleccionar sección" />
         </div>
 
         <div className="flex items-center gap-3 pt-2">

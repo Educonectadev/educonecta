@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Modal from "@/components/Modal"
+import Select from "@/components/Select"
 
 interface Grade {
   id: number
@@ -260,28 +261,11 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
               <>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">Nivel</label>
-                  <select
-                    value={form.level}
-                    onChange={(e) => setForm({ ...form, level: e.target.value })}
-                    className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
-                  >
-                    <option value="">Sin nivel</option>
-                    <option value="Inicial">Inicial</option>
-                    <option value="Primaria">Primaria</option>
-                    <option value="Secundaria">Secundaria</option>
-                  </select>
+                  <Select value={form.level} onChange={(val) => setForm({...form, level: val})} options={[{value: "Inicial", label: "Inicial"}, {value: "Primaria", label: "Primaria"}, {value: "Secundaria", label: "Secundaria"}]} placeholder="Sin nivel" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">Turno por defecto</label>
-                  <select
-                    value={form.defaultShift}
-                    onChange={(e) => setForm({ ...form, defaultShift: e.target.value })}
-                    className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
-                  >
-                    <option value="">Sin turno</option>
-                    <option value="MAÑANA">Mañana</option>
-                    <option value="TARDE">Tarde</option>
-                  </select>
+                  <Select value={form.defaultShift} onChange={(val) => setForm({...form, defaultShift: val})} options={[{value: "MAÑANA", label: "Mañana"}, {value: "TARDE", label: "Tarde"}]} placeholder="Sin turno" />
                 </div>
               </>
             )}

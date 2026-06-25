@@ -3,6 +3,7 @@
 import { useState, useCallback, memo } from "react"
 import { useRouter } from "next/navigation"
 import Modal from "@/components/Modal"
+import Select from "@/components/Select"
 
 interface Teacher {
   id: number
@@ -101,17 +102,11 @@ const TeacherFormFields = memo(function TeacherFormFields({
         <div className="grid grid-cols-2 gap-3 mt-3">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Nivel de Estudios</label>
-            <select value={form.educationLevel} onChange={(e) => setField("educationLevel", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Seleccionar</option>
-              {educationLevels.map((l) => <option key={l} value={l}>{l}</option>)}
-            </select>
+            <Select value={form.educationLevel} onChange={(val) => setField("educationLevel", val)} options={educationLevels.map(l => ({value: l, label: l}))} placeholder="Seleccionar" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Tipo de Contrato</label>
-            <select value={form.contractType} onChange={(e) => setField("contractType", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Seleccionar</option>
-              {contractTypes.map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
+            <Select value={form.contractType} onChange={(val) => setField("contractType", val)} options={contractTypes.map(c => ({value: c, label: c}))} placeholder="Seleccionar" />
           </div>
         </div>
         <div className="mt-3">

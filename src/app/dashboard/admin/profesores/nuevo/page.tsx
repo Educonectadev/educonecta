@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import Select from "@/components/Select"
 
 const educationLevels = ["Bachiller", "Titulado", "Magíster", "Doctor"]
 const contractTypes = ["Tiempo completo", "Medio tiempo", "Por horas", "CAS"]
@@ -117,19 +118,11 @@ export default function NuevoProfesorPage() {
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-gray-500">Nivel de Estudios</label>
-              <select name="educationLevel" value={form.educationLevel} onChange={handleChange}
-                className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                <option value="">Seleccionar</option>
-                {educationLevels.map((l) => <option key={l} value={l}>{l}</option>)}
-              </select>
+              <Select value={form.educationLevel} onChange={(val) => setForm((prev) => ({ ...prev, educationLevel: val }))} options={educationLevels.map(l => ({value: l, label: l}))} placeholder="Seleccionar" />
             </div>
             <div>
               <label className="mb-1.5 block text-sm font-medium text-gray-500">Tipo de Contrato</label>
-              <select name="contractType" value={form.contractType} onChange={handleChange}
-                className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                <option value="">Seleccionar</option>
-                {contractTypes.map((c) => <option key={c} value={c}>{c}</option>)}
-              </select>
+              <Select value={form.contractType} onChange={(val) => setForm((prev) => ({ ...prev, contractType: val }))} options={contractTypes.map(c => ({value: c, label: c}))} placeholder="Seleccionar" />
             </div>
           </div>
           <div className="mt-4">

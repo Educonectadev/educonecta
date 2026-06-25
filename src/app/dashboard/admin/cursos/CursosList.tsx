@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Modal from "@/components/Modal"
+import Select from "@/components/Select"
 
 interface CourseTeacher {
   id: number
@@ -235,26 +236,15 @@ export default function CursosList({
         <div className="border-t border-gray-100 pt-4 space-y-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Profesor</label>
-            <select value={assignForm.teacherId} onChange={(e) => setAssignForm({ ...assignForm, teacherId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Seleccionar...</option>
-              {teachers.filter((t) => assigning && !assigning.teachers.some((ct) => ct.teacher.id === t.id)).map((t) => (
-                <option key={t.id} value={t.id}>{t.user.name}</option>
-              ))}
-            </select>
+            <Select value={assignForm.teacherId} onChange={(val) => setAssignForm({...assignForm, teacherId: val})} options={teachers.filter((t) => assigning && !assigning.teachers.some((ct) => ct.teacher.id === t.id)).map(t => ({value: String(t.id), label: t.user.name}))} placeholder="Seleccionar..." />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
-            <select value={assignForm.gradeId} onChange={(e) => setAssignForm({ ...assignForm, gradeId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Todos</option>
-              {grades.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-            </select>
+            <Select value={assignForm.gradeId} onChange={(val) => setAssignForm({...assignForm, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Todos" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
-            <select value={assignForm.sectionId} onChange={(e) => setAssignForm({ ...assignForm, sectionId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Todas</option>
-              {sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-            </select>
+            <Select value={assignForm.sectionId} onChange={(val) => setAssignForm({...assignForm, sectionId: val})} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Todas" />
           </div>
         </div>
 

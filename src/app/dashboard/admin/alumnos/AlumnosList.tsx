@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Modal from "@/components/Modal"
+import Select from "@/components/Select"
 
 interface Student {
   id: number
@@ -177,17 +178,11 @@ export default function AlumnosList({
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
-            <select value={form.gradeId} onChange={(e) => setForm({ ...form, gradeId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Sin grado</option>
-              {grades.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-            </select>
+            <Select value={form.gradeId} onChange={(val) => setForm({...form, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Sin grado" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
-            <select value={form.sectionId} onChange={(e) => setForm({ ...form, sectionId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Sin sección</option>
-              {sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-            </select>
+            <Select value={form.sectionId} onChange={(val) => setForm({...form, sectionId: val})} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Sin sección" />
           </div>
         </div>
         <div className="flex gap-3 mt-8">
@@ -218,17 +213,11 @@ export default function AlumnosList({
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
-            <select value={form.gradeId} onChange={(e) => setForm({ ...form, gradeId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Sin grado</option>
-              {grades.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-            </select>
+            <Select value={form.gradeId} onChange={(val) => setForm({...form, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Sin grado" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
-            <select value={form.sectionId} onChange={(e) => setForm({ ...form, sectionId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Sin sección</option>
-              {sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-            </select>
+            <Select value={form.sectionId} onChange={(val) => setForm({...form, sectionId: val})} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Sin sección" />
           </div>
         </div>
         <div className="flex gap-3 mt-8">

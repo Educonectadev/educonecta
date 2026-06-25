@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Modal from "@/components/Modal"
+import Select from "@/components/Select"
 
 interface StudentWithParent {
   studentId: number
@@ -446,43 +447,30 @@ export default function HorariosList({
         <div className="space-y-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Curso</label>
-            <select value={form.courseId} onChange={(e) => updateField("courseId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Seleccionar...</option>
-              {courses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
+            <Select value={form.courseId} onChange={(val) => updateField("courseId", val)} options={courses.map(c => ({value: String(c.id), label: c.name}))} placeholder="Seleccionar..." />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Profesor</label>
-            <select value={form.teacherId} onChange={(e) => updateField("teacherId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Seleccionar...</option>
-              {teachers.map((t) => <option key={t.id} value={t.id}>{t.name}{t.speciality ? ` — ${t.speciality}` : ""}</option>)}
-            </select>
+            <Select value={form.teacherId} onChange={(val) => updateField("teacherId", val)} options={teachers.map(t => ({value: String(t.id), label: t.name + (t.speciality ? ` — ${t.speciality}` : "")}))} placeholder="Seleccionar..." />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
-              <select value={form.gradeId} onChange={(e) => {
-                const gId = e.target.value
-                updateField("gradeId", gId)
+              <Select value={form.gradeId} onChange={(val) => {
+                updateField("gradeId", val)
                 updateField("sectionId", "")
-                const g = grades.find((gr) => gr.id === Number(gId))
+                const g = grades.find((gr) => gr.id === Number(val))
                 if (g?.defaultShift) {
                   const shift = g.defaultShift
                   updateField("shift", shift)
                   updateField("startTime", shift === "MAÑANA" ? "06:10" : "12:00")
                   updateField("endTime", shift === "MAÑANA" ? "12:00" : "18:00")
                 }
-              }} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                <option value="">Seleccionar...</option>
-                {grades.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-              </select>
+              }} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Seleccionar..." />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
-              <select value={form.sectionId} onChange={(e) => updateField("sectionId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                <option value="">Seleccionar...</option>
-                {filteredSections.map((sec) => <option key={sec.id} value={sec.id}>{sec.name}</option>)}
-              </select>
+              <Select value={form.sectionId} onChange={(val) => updateField("sectionId", val)} options={filteredSections.map(sec => ({value: String(sec.id), label: sec.name}))} placeholder="Seleccionar..." />
             </div>
           </div>
           {previewStudents.length > 0 && (
@@ -504,21 +492,15 @@ export default function HorariosList({
           )}
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Día</label>
-            <select value={form.dayOfWeek} onChange={(e) => updateField("dayOfWeek", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              {Object.entries(dayLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-            </select>
+            <Select value={form.dayOfWeek} onChange={(val) => updateField("dayOfWeek", val)} options={Object.entries(dayLabels).map(([k, v]) => ({value: k, label: v}))} placeholder="" />
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Turno</label>
-            <select value={form.shift} onChange={(e) => {
-              const shift = e.target.value
-              updateField("shift", shift)
-              updateField("startTime", shift === "MAÑANA" ? "06:10" : "12:00")
-              updateField("endTime", shift === "MAÑANA" ? "12:00" : "18:00")
-            }} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="MAÑANA">Mañana (6:10 - 12:00)</option>
-              <option value="TARDE">Tarde (12:00 - 18:00)</option>
-            </select>
+            <Select value={form.shift} onChange={(val) => {
+              updateField("shift", val)
+              updateField("startTime", val === "MAÑANA" ? "06:10" : "12:00")
+              updateField("endTime", val === "MAÑANA" ? "12:00" : "18:00")
+            }} options={[{value: "MAÑANA", label: "Mañana (6:10 - 12:00)"}, {value: "TARDE", label: "Tarde (12:00 - 18:00)"}]} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -532,10 +514,7 @@ export default function HorariosList({
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Aula</label>
-            <select value={form.classroom} onChange={(e) => updateField("classroom", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="">Sin aula</option>
-              {classrooms.map((a) => <option key={a.id} value={a.name}>{a.name}{a.code ? ` (${a.code})` : ""}</option>)}
-            </select>
+            <Select value={form.classroom} onChange={(val) => updateField("classroom", val)} options={classrooms.map(a => ({value: a.name, label: a.name + (a.code ? ` (${a.code})` : "")}))} placeholder="Sin aula" />
           </div>
         </div>
         <div className="flex gap-3 mt-8">
@@ -552,16 +531,11 @@ export default function HorariosList({
         <div className="flex gap-4 mb-6">
           <div className="flex-1">
             <label className="block text-xs font-medium text-gray-500 mb-1">Día</label>
-            <select value={jornadaDay} onChange={(e) => setJornadaDay(e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              {Object.entries(dayLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-            </select>
+            <Select value={jornadaDay} onChange={setJornadaDay} options={Object.entries(dayLabels).map(([k, v]) => ({value: k, label: v}))} placeholder="" />
           </div>
           <div className="flex-1">
             <label className="block text-xs font-medium text-gray-500 mb-1">Turno</label>
-            <select value={jornadaShift} onChange={(e) => setJornadaShift(e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-              <option value="MAÑANA">Mañana (6:10 - 12:00)</option>
-              <option value="TARDE">Tarde (12:00 - 18:00)</option>
-            </select>
+            <Select value={jornadaShift} onChange={setJornadaShift} options={[{value: "MAÑANA", label: "Mañana (6:10 - 12:00)"}, {value: "TARDE", label: "Tarde (12:00 - 18:00)"}]} />
           </div>
         </div>
 
@@ -578,38 +552,23 @@ export default function HorariosList({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">Curso</label>
-                  <select value={blocks[idx]?.courseId ?? ""} onChange={(e) => updateBlock(idx, "courseId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                    <option value="">Seleccionar...</option>
-                    {courses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                  </select>
+                  <Select value={blocks[idx]?.courseId ?? ""} onChange={(val) => updateBlock(idx, "courseId", val)} options={courses.map(c => ({value: String(c.id), label: c.name}))} placeholder="Seleccionar..." />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">Profesor</label>
-                  <select value={blocks[idx]?.teacherId ?? ""} onChange={(e) => updateBlock(idx, "teacherId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                    <option value="">Seleccionar...</option>
-                    {teachers.map((t) => <option key={t.id} value={t.id}>{t.name}{t.speciality ? ` — ${t.speciality}` : ""}</option>)}
-                  </select>
+                  <Select value={blocks[idx]?.teacherId ?? ""} onChange={(val) => updateBlock(idx, "teacherId", val)} options={teachers.map(t => ({value: String(t.id), label: t.name + (t.speciality ? ` — ${t.speciality}` : "")}))} placeholder="Seleccionar..." />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
-                  <select value={blocks[idx]?.gradeId ?? ""} onChange={(e) => { updateBlock(idx, "gradeId", e.target.value); updateBlock(idx, "sectionId", "") }} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                    <option value="">Seleccionar...</option>
-                    {grades.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-                  </select>
+                  <Select value={blocks[idx]?.gradeId ?? ""} onChange={(val) => { updateBlock(idx, "gradeId", val); updateBlock(idx, "sectionId", "") }} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Seleccionar..." />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
-                  <select value={blocks[idx]?.sectionId ?? ""} onChange={(e) => updateBlock(idx, "sectionId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                    <option value="">Seleccionar...</option>
-                    {filteredSecs.map((sec) => <option key={sec.id} value={sec.id}>{sec.name}</option>)}
-                  </select>
+                  <Select value={blocks[idx]?.sectionId ?? ""} onChange={(val) => updateBlock(idx, "sectionId", val)} options={blocks[idx]?.gradeId ? sections.filter((s) => s.gradeId === Number(blocks[idx].gradeId)).map(sec => ({value: String(sec.id), label: sec.name})) : []} placeholder="Seleccionar..." />
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs font-medium text-gray-500 mb-1">Aula</label>
-                  <select value={blocks[idx]?.classroom ?? ""} onChange={(e) => updateBlock(idx, "classroom", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                    <option value="">Sin aula</option>
-                    {classrooms.map((a) => <option key={a.id} value={a.name}>{a.name}{a.code ? ` (${a.code})` : ""}</option>)}
-                  </select>
+                  <Select value={blocks[idx]?.classroom ?? ""} onChange={(val) => updateBlock(idx, "classroom", val)} options={classrooms.map(a => ({value: a.name, label: a.name + (a.code ? ` (${a.code})` : "")}))} placeholder="Sin aula" />
                 </div>
                   </div>
                 </div>
