@@ -66,8 +66,7 @@ export default function Select({ value, onChange, options, placeholder = "Selecc
                     value={opt.value}
                     className={({ focus, selected }) =>
                       `flex items-center gap-2 px-3 py-2 rounded-[10px] text-sm cursor-pointer transition-colors
-                      ${focus ? "bg-gray-100" : ""}
-                      ${selected ? "bg-black text-white" : "text-[#1a1a1a]"}`}
+                      ${selected ? "bg-black text-white" : `${focus ? "bg-gray-100" : ""} text-[#1a1a1a]`}`}
                   >
                     {({ selected }) => (
                       <>
