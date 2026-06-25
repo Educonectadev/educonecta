@@ -25,8 +25,8 @@ export default function Modal({ open, onClose, title, children, size = "cover", 
   return (
     <HeroModal isOpen={open} onOpenChange={(v) => { if (!v) onClose() }}>
       <HeroModal.Backdrop>
-        <HeroModal.Container size={(sizeMap[size] || size) as any} scroll={scroll}>
-          <HeroModal.Dialog className="z-[60]">
+        <HeroModal.Container size={(sizeMap[size] || size) as any} scroll={scroll} style={{ overflowX: "hidden" }}>
+          <HeroModal.Dialog className="z-[60]" style={{ overflowX: "hidden" }}>
             <HeroModal.CloseTrigger />
             <HeroModal.Header>
               <HeroModal.Heading>{title}</HeroModal.Heading>

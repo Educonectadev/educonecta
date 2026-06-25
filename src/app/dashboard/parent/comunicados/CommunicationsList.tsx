@@ -95,7 +95,7 @@ export default function CommunicationsList({ communications }: { communications:
       {selected && (
         <Modal isOpen onOpenChange={(v) => { if (!v) setSelected(null) }}>
           <Modal.Backdrop />
-          <Modal.Container size="lg" scroll="outside">
+          <Modal.Container size="lg" scroll="inside" style={{ overflowX: "hidden" }}>
             <Modal.Dialog className="z-[60]">
               <Modal.CloseTrigger />
               <Modal.Header>
