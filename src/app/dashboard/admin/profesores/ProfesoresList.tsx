@@ -186,37 +186,51 @@ export default function ProfesoresList({ teachers }: { teachers: Teacher[] }) {
 
   async function handleCreate() {
     setLoading(true)
-    await fetch("/api/admin/teachers", {
+    const res = await fetch("/api/admin/teachers", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...form }),
     })
     setLoading(false)
-    setShowCreate(false)
-    resetForm()
-    router.refresh()
+    if (res.ok) {
+      setShowCreate(false)
+      resetForm()
+      router.refresh()
+    } else {
+      const data = await res.json()
+      alert(data.error || "Error al registrar profesor")
+    }
   }
 
   async function handleSave() {
     if (!editing) return
     setLoading(true)
-    await fetch(`/api/admin/teachers/${editing.id}`, {
+    const res = await fetch(`/api/admin/teachers/${editing.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...form, password: form.password || undefined }),
     })
     setLoading(false)
-    setEditing(null)
-    router.refresh()
+    if (res.ok) {
+      setEditing(null)
+      router.refresh()
+    } else {
+      const data = await res.json()
+      alert(data.error || "Error al actualizar profesor")
+    }
   }
 
   async function handleDelete() {
     if (!deleting) return
     setLoading(true)
-    await fetch(`/api/admin/teachers/${deleting.id}`, { method: "DELETE" })
+    const res = await fetch(`/api/admin/teachers/${deleting.id}`, { method: "DELETE" })
     setLoading(false)
-    setDeleting(null)
-    router.refresh()
+    if (res.ok) {
+      setDeleting(null)
+      router.refresh()
+    } else {
+      alert("Error al eliminar profesor")
+    }
   }
 
   return (

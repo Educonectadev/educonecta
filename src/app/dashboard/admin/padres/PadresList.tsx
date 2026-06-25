@@ -34,7 +34,7 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
 
   async function handleCreate() {
     setLoading(true)
-    await fetch("/api/admin/parents", {
+    const res = await fetch("/api/admin/parents", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -46,15 +46,20 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
       }),
     })
     setLoading(false)
-    setShowCreate(false)
-    resetForm()
-    router.refresh()
+    if (res.ok) {
+      setShowCreate(false)
+      resetForm()
+      router.refresh()
+    } else {
+      const data = await res.json()
+      alert(data.error || "Error al registrar padre")
+    }
   }
 
   async function handleSave() {
     if (!editing) return
     setLoading(true)
-    await fetch(`/api/admin/parents/${editing.id}`, {
+    const res = await fetch(`/api/admin/parents/${editing.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -66,17 +71,26 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
       }),
     })
     setLoading(false)
-    setEditing(null)
-    router.refresh()
+    if (res.ok) {
+      setEditing(null)
+      router.refresh()
+    } else {
+      const data = await res.json()
+      alert(data.error || "Error al actualizar padre")
+    }
   }
 
   async function handleDelete() {
     if (!deleting) return
     setLoading(true)
-    await fetch(`/api/admin/parents/${deleting.id}`, { method: "DELETE" })
+    const res = await fetch(`/api/admin/parents/${deleting.id}`, { method: "DELETE" })
     setLoading(false)
-    setDeleting(null)
-    router.refresh()
+    if (res.ok) {
+      setDeleting(null)
+      router.refresh()
+    } else {
+      alert("Error al eliminar padre")
+    }
   }
 
   function toggleChild(id: number) {

@@ -51,7 +51,7 @@ export default function AlumnosList({
 
   async function handleCreate() {
     setLoading(true)
-    await fetch("/api/admin/students", {
+    const res = await fetch("/api/admin/students", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -64,15 +64,20 @@ export default function AlumnosList({
       }),
     })
     setLoading(false)
-    setShowCreate(false)
-    resetForm()
-    router.refresh()
+    if (res.ok) {
+      setShowCreate(false)
+      resetForm()
+      router.refresh()
+    } else {
+      const data = await res.json()
+      alert(data.error || "Error al registrar alumno")
+    }
   }
 
   async function handleSave() {
     if (!editing) return
     setLoading(true)
-    await fetch(`/api/admin/students/${editing.id}`, {
+    const res = await fetch(`/api/admin/students/${editing.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -85,17 +90,26 @@ export default function AlumnosList({
       }),
     })
     setLoading(false)
-    setEditing(null)
-    router.refresh()
+    if (res.ok) {
+      setEditing(null)
+      router.refresh()
+    } else {
+      const data = await res.json()
+      alert(data.error || "Error al actualizar alumno")
+    }
   }
 
   async function handleDelete() {
     if (!deleting) return
     setLoading(true)
-    await fetch(`/api/admin/students/${deleting.id}`, { method: "DELETE" })
+    const res = await fetch(`/api/admin/students/${deleting.id}`, { method: "DELETE" })
     setLoading(false)
-    setDeleting(null)
-    router.refresh()
+    if (res.ok) {
+      setDeleting(null)
+      router.refresh()
+    } else {
+      alert("Error al eliminar alumno")
+    }
   }
 
   return (
