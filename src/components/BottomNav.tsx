@@ -19,21 +19,17 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
   })?.href
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-gray-200 pb-safe">
-      <Tabs selectedKey={selectedKey} onSelectionChange={(key) => router.push(key as string)} className="w-full max-w-lg mx-auto">
+    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-gray-100 pb-safe shadow-[0_-2px_12px_rgba(0,0,0,0.04)]">
+      <Tabs selectedKey={selectedKey} onSelectionChange={(key) => router.push(key as string)} className="w-full">
         <Tabs.ListContainer>
-          <Tabs.List aria-label="Mobile navigation">
+          <Tabs.List aria-label="Mobile navigation" className="w-full justify-around py-1">
             {items.map((item) => (
-              <Tabs.Tab
-                key={item.href}
-                id={item.href}
-                className="flex-1 py-2 text-gray-400 data-[selected=true]:text-gray-900"
-              >
+              <Tabs.Tab key={item.href} id={item.href} className="flex-1 py-1.5 text-gray-300 data-[selected=true]:text-gray-900">
                 <div className="flex flex-col items-center gap-0.5">
-                  <span className="material-icons text-3xl">{item.icon}</span>
-                  <span className="text-xs font-medium">{item.label}</span>
+                  <span className="material-icons text-2xl">{item.icon}</span>
+                  <span className="text-[10px] font-medium tracking-tight">{item.label}</span>
                 </div>
-                <Tabs.Indicator className="bg-gray-900 h-0.5 top-0 rounded-full" />
+                <Tabs.Indicator className="bg-gray-900 h-0.5 top-0 rounded-full w-8" />
               </Tabs.Tab>
             ))}
           </Tabs.List>

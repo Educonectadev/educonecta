@@ -18,6 +18,7 @@ interface DataTableProps<T> {
   data: T[]
   onEdit?: (item: T) => void
   onDelete?: (item: T) => void
+  onRowClick?: (item: T) => void
   emptyMessage?: string
 }
 
@@ -26,6 +27,7 @@ export default function DataTable<T extends { id: number }>({
   data,
   onEdit,
   onDelete,
+  onRowClick,
   emptyMessage = "No hay registros.",
 }: DataTableProps<T>) {
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
@@ -101,7 +103,7 @@ export default function DataTable<T extends { id: number }>({
           </thead>
           <tbody>
             {sorted.map((item) => (
-              <tr key={item.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors last:border-b-0">
+              <tr key={item.id} className={`border-b border-gray-50 hover:bg-gray-50/50 transition-colors last:border-b-0 ${onRowClick ? "cursor-pointer" : ""}`} onClick={() => onRowClick?.(item)}>
                 {columns.map((col) => (
                   <td key={col.key} className="px-4 py-3 text-sm">
                     {col.render
