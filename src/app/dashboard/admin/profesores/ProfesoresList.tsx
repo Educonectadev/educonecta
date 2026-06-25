@@ -167,7 +167,7 @@ export default function ProfesoresList({ teachers }: { teachers: Teacher[] }) {
     setEditing(t)
     setForm({
       firstName: parts[0] ?? "",
-      lastName: (parts.slice(1).join(" ") || parts[0]) ?? "",
+      lastName: parts.slice(1).join(" "),
       password: "",
       phone: t.user.phone ?? "",
       speciality: t.speciality ?? "",
