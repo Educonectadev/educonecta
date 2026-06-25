@@ -44,6 +44,14 @@ input, textarea, select {
   color: #000000;
 }
 
+/* HeroUI component overrides */
+[data-slot="modal-close-trigger"] {
+  color: #000000;
+}
+.modal__body {
+  color: #000000;
+}
+
 ::selection {
   background: #000;
   color: #fff;

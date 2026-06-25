@@ -24,7 +24,7 @@ export default function Modal({ open, onClose, title, children, size = "full" }:
   return (
     <HeroModal isOpen={open} onOpenChange={(v) => { if (!v) onClose() }}>
       <HeroModal.Backdrop>
-        <HeroModal.Container size={(sizeMap[size] || size) as any}>
+        <HeroModal.Container size={(sizeMap[size] || size) as any} scroll="outside">
           <HeroModal.Dialog className="z-[60]">
             <HeroModal.CloseTrigger />
             <HeroModal.Header>
