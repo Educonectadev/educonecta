@@ -1,11 +1,29 @@
 import { NextResponse } from "next/server"
 import { query, execute, findOne, create } from "@/lib/prisma"
+import { getSupabaseAdmin } from "@/lib/supabase"
+
+async function ensureAuthUser(email: string, password: string) {
+  const supabase = getSupabaseAdmin()
+  const { data: existing } = await supabase.auth.admin.listUsers()
+  const found = existing?.users?.find((u) => u.email === email)
+  if (found) {
+    await supabase.auth.admin.updateUserById(found.id, { password })
+  } else {
+    await supabase.auth.admin.createUser({ email, password, email_confirm: true })
+  }
+}
 
 export async function POST() {
   try {
     const bcrypt = await import("bcryptjs")
 
     const hash = await bcrypt.hash("admin123", 10)
+
+    // Sync all seed accounts into Supabase Auth so they can log in
+    await ensureAuthUser("super@educonecta.com", "admin123")
+    await ensureAuthUser("admin@colegio.com", "admin123")
+    await ensureAuthUser("profesor@colegio.com", "admin123")
+    await ensureAuthUser("padre@ejemplo.com", "admin123")
 
     await execute(
       `INSERT IGNORE INTO User (email, passwordHash, name, role) VALUES (?, ?, ?, 'SUPER_ADMIN')`,
