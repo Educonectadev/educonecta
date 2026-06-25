@@ -179,7 +179,7 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
             <div className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-hide">
               {allStudents.map((s) => (
                 <label key={s.id} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                  <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} className="accent-black" />
+                  <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} />
                   {s.firstName} {s.lastName}
                 </label>
               ))}
@@ -219,7 +219,7 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
             <div className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-hide">
               {allStudents.map((s) => (
                 <label key={s.id} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                  <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} className="accent-black" />
+                  <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} />
                   {s.firstName} {s.lastName}
                 </label>
               ))}

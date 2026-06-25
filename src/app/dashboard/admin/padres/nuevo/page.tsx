@@ -150,7 +150,6 @@ export default function NuevoPadrePage() {
                     type="checkbox"
                     checked={form.studentIds.includes(s.id)}
                     onChange={() => toggleStudent(s.id)}
-                    className="accent-black"
                   />
                   {s.firstName} {s.lastName} ({s.documentId})
                 </label>

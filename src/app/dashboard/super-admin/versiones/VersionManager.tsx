@@ -127,7 +127,6 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
             type="checkbox"
             checked={isCurrent}
             onChange={(e) => setIsCurrent(e.target.checked)}
-            className="rounded border-gray-300"
           />
           Marcar como versión actual
         </label>
