@@ -13,11 +13,11 @@ export async function GET() {
     `SELECT c.*,
       COALESCE(
         JSON_ARRAYAGG(
-          JSON_OBJECT(
+          jsonb_build_object(
             'id', ct.id, 'courseId', ct.courseId, 'teacherId', ct.teacherId, 'gradeId', ct.gradeId, 'sectionId', ct.sectionId,
-            'teacher', JSON_OBJECT('id', t.id, 'userId', t.userId, 'speciality', t.speciality, 'user', JSON_OBJECT('id', u.id, 'name', u.name, 'email', u.email)),
-            'grade', CASE WHEN ct.gradeId IS NOT NULL THEN JSON_OBJECT('id', g.id, 'name', g.name) ELSE NULL END,
-            'section', CASE WHEN ct.sectionId IS NOT NULL THEN JSON_OBJECT('id', s.id, 'name', s.name) ELSE NULL END
+            'teacher', jsonb_build_object('id', t.id, 'userId', t.userId, 'speciality', t.speciality, 'user', jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email)),
+            'grade', CASE WHEN ct.gradeId IS NOT NULL THEN jsonb_build_object('id', g.id, 'name', g.name) ELSE NULL END,
+            'section', CASE WHEN ct.sectionId IS NOT NULL THEN jsonb_build_object('id', s.id, 'name', s.name) ELSE NULL END
           )
         ),
         JSON_ARRAY()

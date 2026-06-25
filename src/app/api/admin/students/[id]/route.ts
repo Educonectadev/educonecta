@@ -35,8 +35,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     const updated = await query(
       `SELECT s.*,
-        CASE WHEN s.gradeId IS NOT NULL THEN JSON_OBJECT('id', g.id, 'name', g.name) ELSE NULL END AS grade,
-        CASE WHEN s.sectionId IS NOT NULL THEN JSON_OBJECT('id', sec.id, 'name', sec.name) ELSE NULL END AS section
+        CASE WHEN s.gradeId IS NOT NULL THEN jsonb_build_object('id', g.id, 'name', g.name) ELSE NULL END AS grade,
+        CASE WHEN s.sectionId IS NOT NULL THEN jsonb_build_object('id', sec.id, 'name', sec.name) ELSE NULL END AS section
       FROM Student s
       LEFT JOIN Grade g ON s.gradeId = g.id
       LEFT JOIN Section sec ON s.sectionId = sec.id

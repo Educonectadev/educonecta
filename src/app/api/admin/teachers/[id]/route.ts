@@ -12,7 +12,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   const id = Number((await params).id)
 
   const teacherRows = await query(
-    `SELECT t.*, JSON_OBJECT('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
+    `SELECT t.*, jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
     FROM Teacher t
     JOIN User u ON t.userId = u.id
     WHERE t.id = ? AND t.institutionId = ?`,
@@ -47,7 +47,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     const updated = await query(
       `SELECT t.*,
-        JSON_OBJECT('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
+        jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
       FROM Teacher t
       JOIN User u ON t.userId = u.id
       WHERE t.id = ?`,

@@ -32,7 +32,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     `SELECT g.*,
       COALESCE(
         JSON_ARRAYAGG(
-          JSON_OBJECT('id', s.id, 'name', s.name, 'gradeId', s.gradeId, 'capacity', s.capacity)
+          jsonb_build_object('id', s.id, 'name', s.name, 'gradeId', s.gradeId, 'capacity', s.capacity)
           ORDER BY s.name ASC
         ),
         JSON_ARRAY()

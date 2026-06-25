@@ -37,10 +37,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     const updated = await query(
       `SELECT s.*,
-        JSON_OBJECT('id', c.id, 'name', c.name, 'code', c.code) AS course,
-        CASE WHEN s.teacherId IS NOT NULL THEN JSON_OBJECT('id', t.id, 'userId', t.userId, 'name', u.name, 'speciality', t.speciality) ELSE NULL END AS teacher,
-        CASE WHEN s.gradeId IS NOT NULL THEN JSON_OBJECT('id', g.id, 'name', g.name) ELSE NULL END AS grade,
-        CASE WHEN s.sectionId IS NOT NULL THEN JSON_OBJECT('id', sec.id, 'name', sec.name) ELSE NULL END AS section
+        jsonb_build_object('id', c.id, 'name', c.name, 'code', c.code) AS course,
+        CASE WHEN s.teacherId IS NOT NULL THEN jsonb_build_object('id', t.id, 'userId', t.userId, 'name', u.name, 'speciality', t.speciality) ELSE NULL END AS teacher,
+        CASE WHEN s.gradeId IS NOT NULL THEN jsonb_build_object('id', g.id, 'name', g.name) ELSE NULL END AS grade,
+        CASE WHEN s.sectionId IS NOT NULL THEN jsonb_build_object('id', sec.id, 'name', sec.name) ELSE NULL END AS section
       FROM Schedule s
       LEFT JOIN Course c ON s.courseId = c.id
       LEFT JOIN Teacher t ON s.teacherId = t.id

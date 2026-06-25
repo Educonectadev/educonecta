@@ -12,7 +12,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   const id = Number((await params).id)
 
   const parentRows = await query(
-    `SELECT p.*, JSON_OBJECT('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
+    `SELECT p.*, jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
     FROM Parent p
     JOIN User u ON p.userId = u.id
     WHERE p.id = ? AND p.institutionId = ?`,
@@ -47,10 +47,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     const updated = await query(
       `SELECT p.*,
-        JSON_OBJECT('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user,
+        jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user,
         COALESCE(
           JSON_ARRAYAGG(
-            JSON_OBJECT('id', ps.id, 'parentId', ps.parentId, 'studentId', ps.studentId, 'student', JSON_OBJECT('id', st.id, 'firstName', st.firstName, 'lastName', st.lastName, 'documentId', st.documentId))
+            jsonb_build_object('id', ps.id, 'parentId', ps.parentId, 'studentId', ps.studentId, 'student', jsonb_build_object('id', st.id, 'firstName', st.firstName, 'lastName', st.lastName, 'documentId', st.documentId))
           ),
           JSON_ARRAY()
         ) AS children

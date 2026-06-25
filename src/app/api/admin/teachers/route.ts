@@ -35,7 +35,7 @@ export async function GET() {
   const institutionId = session.user.institutionId!
   const teachers = await query(
     `SELECT t.*,
-      JSON_OBJECT('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
+      jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
     FROM Teacher t
     JOIN User u ON t.userId = u.id
     WHERE t.institutionId = ?
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
 
     const teacher = await query(
       `SELECT t.*,
-        JSON_OBJECT('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
+        jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
       FROM Teacher t
       JOIN User u ON t.userId = u.id
       WHERE t.id = ?`,

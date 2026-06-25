@@ -40,9 +40,9 @@ export async function POST(request: Request) {
 
     const ct = await query(
       `SELECT ct.*,
-        JSON_OBJECT('id', t.id, 'userId', t.userId, 'speciality', t.speciality, 'user', JSON_OBJECT('id', u.id, 'name', u.name, 'email', u.email)) AS teacher,
-        CASE WHEN ct.gradeId IS NOT NULL THEN JSON_OBJECT('id', g.id, 'name', g.name) ELSE NULL END AS grade,
-        CASE WHEN ct.sectionId IS NOT NULL THEN JSON_OBJECT('id', s.id, 'name', s.name) ELSE NULL END AS section
+        jsonb_build_object('id', t.id, 'userId', t.userId, 'speciality', t.speciality, 'user', jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email)) AS teacher,
+        CASE WHEN ct.gradeId IS NOT NULL THEN jsonb_build_object('id', g.id, 'name', g.name) ELSE NULL END AS grade,
+        CASE WHEN ct.sectionId IS NOT NULL THEN jsonb_build_object('id', s.id, 'name', s.name) ELSE NULL END AS section
       FROM CourseTeacher ct
       LEFT JOIN Teacher t ON ct.teacherId = t.id
       LEFT JOIN User u ON t.userId = u.id
