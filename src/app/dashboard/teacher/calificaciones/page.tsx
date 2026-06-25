@@ -39,37 +39,37 @@ export default async function CalificacionesPage() {
       {grades.length === 0 ? (
         <p className="text-sm text-gray-500">No hay calificaciones registradas.</p>
       ) : (
-        <div className="bg-gray-50 border border-gray-200 rounded-[30px]">
-          <table className="w-full text-sm border-collapse">
-            <thead className="hidden md:table-header-group">
-              <tr className="border-b border-gray-200 text-left">
-                <th className="py-3 px-5 font-medium text-gray-500 text-xs uppercase tracking-widest">Estudiante</th>
-                <th className="py-3 px-5 font-medium text-gray-500 text-xs uppercase tracking-widest">Curso</th>
-                <th className="py-3 px-5 font-medium text-gray-500 text-xs uppercase tracking-widest">Evaluación</th>
-                <th className="py-3 px-5 font-medium text-gray-500 text-xs uppercase tracking-widest">Nota</th>
-                <th className="py-3 px-5 font-medium text-gray-500 text-xs uppercase tracking-widest">Fecha</th>
+        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="hidden md:table-header-group border-b border-gray-100">
+              <tr className="text-left">
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">Estudiante</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">Curso</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">Evaluación</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">Nota</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">Fecha</th>
               </tr>
             </thead>
             <tbody>
               {grades.map((g: { id: number; student: { firstName: string; lastName: string }; course: { name: string }; evaluationName: string; grade: number; evaluationDate: Date | null }) => (
-                <tr key={g.id} className="flex flex-col md:table-row border border-gray-200 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0">
-                  <td className="flex justify-between md:table-cell px-0 md:px-5 py-1 md:py-3">
+                <tr key={g.id} className="flex flex-col md:table-row border border-gray-100 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 hover:bg-gray-50/50 transition-colors">
+                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Estudiante</span>
                     <span>{g.student.firstName} {g.student.lastName}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-5 py-1 md:py-3 text-gray-600">
+                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-600">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Curso</span>
                     <span>{g.course.name}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-5 py-1 md:py-3 text-gray-600">
+                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-600">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Evaluación</span>
                     <span>{g.evaluationName}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-5 py-1 md:py-3 font-medium">
+                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 font-medium">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Nota</span>
                     <span>{g.grade}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-5 py-1 md:py-3 text-gray-500">
+                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-500">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Fecha</span>
                     <span>{g.evaluationDate?.toLocaleDateString("es-ES") ?? "—"}</span>
                   </td>

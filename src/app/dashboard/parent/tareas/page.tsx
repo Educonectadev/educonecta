@@ -50,20 +50,20 @@ export default async function TareasPage() {
                   No hay tareas registradas.
                 </p>
               ) : (
-                <div className="bg-gray-50 border border-gray-200 rounded-[30px]">
+                <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
                   <table className="w-full text-left text-sm">
-                    <thead className="hidden md:table-header-group border-b border-gray-200">
+                    <thead className="hidden md:table-header-group border-b border-gray-100">
                       <tr>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">
+                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">
                           Título
                         </th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">
+                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">
                           Curso
                         </th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">
+                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">
                           Fecha límite
                         </th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">
+                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">
                           Estado
                         </th>
                       </tr>
@@ -76,20 +76,20 @@ export default async function TareasPage() {
                         const submitted = sub?.submitted ?? false
                         const overdue = new Date(hw.dueDate) < new Date()
                         return (
-                          <tr key={hw.id} className="flex flex-col md:table-row border border-gray-100 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0">
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
+                          <tr key={hw.id} className="flex flex-col md:table-row border border-gray-100 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 hover:bg-gray-50/50 transition-colors">
+                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
                               <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Título</span>
                               <span>{hw.title}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
+                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-500">
                               <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Curso</span>
                               <span>{hw.course.name}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
+                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-500">
                               <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Fecha límite</span>
                               <span>{new Date(hw.dueDate).toLocaleDateString("es-ES")}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
+                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
                               <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Estado</span>
                               <span>
                                 {submitted ? (

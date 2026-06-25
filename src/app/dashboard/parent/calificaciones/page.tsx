@@ -60,23 +60,23 @@ export default async function CalificacionesPage() {
                   No hay calificaciones registradas.
                 </p>
               ) : (
-                <div className="bg-gray-50 border border-gray-200 rounded-[30px]">
+                <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
                   <table className="w-full text-left text-sm">
-                    <thead className="hidden md:table-header-group border-b border-gray-200">
+                    <thead className="hidden md:table-header-group border-b border-gray-100">
                       <tr>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">
+                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">
                           Curso
                         </th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">
+                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">
                           Evaluación
                         </th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">
+                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">
                           Nota
                         </th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">
+                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">
                           Fecha
                         </th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">
+                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">
                           Promedio
                         </th>
                       </tr>
@@ -84,11 +84,11 @@ export default async function CalificacionesPage() {
                     <tbody className="divide-y divide-gray-50 md:divide-y-0">
                       {Object.entries(byCourse).map(([courseName, gs]) =>
                         gs.map((g, idx) => (
-                          <tr key={g.id} className="flex flex-col md:table-row border border-gray-100 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0">
+                          <tr key={g.id} className="flex flex-col md:table-row border border-gray-100 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 hover:bg-gray-50/50 transition-colors">
                             {idx === 0 && (
                               <td
                                 rowSpan={gs.length}
-                                className="hidden md:table-cell px-6 py-4 font-medium"
+                                className="hidden md:table-cell px-4 py-3 font-medium"
                               >
                                 {courseName}
                               </td>
@@ -97,15 +97,15 @@ export default async function CalificacionesPage() {
                               <span className="text-xs uppercase tracking-widest text-gray-500">Curso</span>
                               <span className="font-medium">{courseName}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
+                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-500">
                               <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Evaluación</span>
                               <span>{g.evaluationName}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
+                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
                               <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Nota</span>
                               <span>{g.grade}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
+                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-500">
                               <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Fecha</span>
                               <span>
                                 {g.evaluationDate
@@ -118,7 +118,7 @@ export default async function CalificacionesPage() {
                             {idx === 0 && (
                               <td
                                 rowSpan={gs.length}
-                                className="hidden md:table-cell px-6 py-4 font-medium"
+                                className="hidden md:table-cell px-4 py-3 font-medium"
                               >
                                 {courseAverages[courseName]}
                               </td>
