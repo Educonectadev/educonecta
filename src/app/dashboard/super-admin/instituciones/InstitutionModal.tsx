@@ -187,7 +187,7 @@ export default function InstitutionModal({
 
   return (
     <Modal isOpen onOpenChange={(v) => { if (!v) onClose() }}>
-      <Modal.Backdrop />
+      <Modal.Backdrop>
       <Modal.Container size="cover" scroll="outside">
         <Modal.Dialog className="z-[60]">
           <Modal.CloseTrigger />
@@ -558,6 +558,7 @@ export default function InstitutionModal({
           </Modal.Body>
         </Modal.Dialog>
       </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   )
 }
