@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "@/lib/auth"
 import bcrypt from "bcryptjs"
 import { query, create } from "@/lib/prisma"
+import { getSupabaseAdmin } from "@/lib/supabase"
 
 function normalize(str: string): string {
   return str
@@ -75,6 +76,17 @@ export async function POST(request: Request) {
     const email = await generateEmail(firstName.trim(), lastName.trim(), institutionId)
 
     const passwordHash = await bcrypt.hash(password, 10)
+
+    // Create Supabase Auth user so the parent can log in
+    const supabase = getSupabaseAdmin()
+    const { error: authError } = await supabase.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+    })
+    if (authError) {
+      return NextResponse.json({ error: authError.message }, { status: 400 })
+    }
 
     const userId = await create("User", {
       name,
