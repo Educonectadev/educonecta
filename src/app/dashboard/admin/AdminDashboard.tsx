@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useState } from "react"
 
 interface Stat {
   label: string
@@ -32,6 +33,7 @@ export default function AdminDashboard({
   totalTeachers,
   totalParents,
   totalCourses,
+  institutionName,
 }: {
   stats: Stat[]
   recentStudents: RecentStudent[]
@@ -40,6 +42,7 @@ export default function AdminDashboard({
   totalTeachers: number
   totalParents: number
   totalCourses: number
+  institutionName?: string
 }) {
   const quickLinks = [
     { label: "Alumnos", href: "/dashboard/admin/alumnos", count: totalStudents, icon: "group" },
@@ -51,20 +54,27 @@ export default function AdminDashboard({
     { label: "Aulas", href: "/dashboard/admin/aulas", count: null, icon: "meeting_room" },
   ]
 
-  const statIcons: Record<string, string> = {
-    "Alumnos": "group",
-    "Profesores": "school",
-    "Padres": "diversity_3",
-    "Cursos": "book",
-  }
+  const teachers = recentTeachers.slice(0, 6)
+  const [teacherIdx, setTeacherIdx] = useState(0)
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Bienvenido</h1>
-        <p className="mt-1.5 text-sm text-gray-500">Resumen general de la institución</p>
+      {/* Hero banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 min-h-[200px] sm:min-h-[240px] flex items-end">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-40" />
+        <div className="relative z-10 w-full p-6 sm:p-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+              <span className="material-icons text-white/80 text-xl">school</span>
+            </div>
+            <span className="text-xs font-medium text-white/60 uppercase tracking-wider">{institutionName || "Institución"}</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Bienvenido</h1>
+          <p className="mt-1 text-sm text-white/60">Panel de Administración</p>
+        </div>
       </div>
 
+      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {stats.map((s) => (
           <Link
@@ -74,13 +84,43 @@ export default function AdminDashboard({
           >
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">{s.label}</span>
-              <span className="material-icons text-lg text-gray-300 group-hover:text-gray-400 transition-colors">{statIcons[s.label] || "bar_chart"}</span>
+              <span className="material-icons text-lg text-gray-300 group-hover:text-gray-400 transition-colors">{s.icon}</span>
             </div>
             <p className="text-3xl font-bold text-gray-900">{s.value}</p>
           </Link>
         ))}
       </div>
 
+      {/* Teacher carousel */}
+      {teachers.length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <span className="material-icons text-base text-gray-400">people</span>
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400">Nuestros Docentes</h2>
+            </div>
+            <div className="flex gap-1">
+              <button onClick={() => setTeacherIdx(Math.max(0, teacherIdx - 1))} disabled={teacherIdx === 0} className="w-7 h-7 rounded-lg bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-all material-icons text-sm text-gray-500">chevron_left</button>
+              <button onClick={() => setTeacherIdx(Math.min(teachers.length - 3, teacherIdx + 1))} disabled={teacherIdx >= teachers.length - 3} className="w-7 h-7 rounded-lg bg-white border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-30 transition-all material-icons text-sm text-gray-500">chevron_right</button>
+            </div>
+          </div>
+          <div className="overflow-hidden rounded-2xl">
+            <div className="flex gap-3 transition-transform duration-300" style={{ transform: `translateX(-${teacherIdx * (160 + 12)}px)` }}>
+              {teachers.map((t) => (
+                <div key={t.id} className="shrink-0 w-[160px] bg-white border border-gray-100 rounded-2xl p-4 hover:shadow-sm transition-shadow">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-lg font-semibold text-gray-500 mx-auto mb-3">
+                    {t.user.name.charAt(0)}
+                  </div>
+                  <p className="text-sm font-semibold text-gray-800 text-center truncate">{t.user.name}</p>
+                  <p className="text-[11px] text-gray-400 text-center truncate">{t.speciality || "Docente"}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quick links */}
       <div>
         <div className="flex items-center gap-2 mb-4">
           <span className="material-icons text-base text-gray-400">grid_view</span>
@@ -103,6 +143,7 @@ export default function AdminDashboard({
         </div>
       </div>
 
+      {/* Recent */}
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="bg-white border border-gray-100 rounded-2xl p-6">
           <div className="flex items-center justify-between mb-5">

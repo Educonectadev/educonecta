@@ -1,6 +1,6 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { count, query } from "@/lib/prisma"
+import { count, query, findOne } from "@/lib/prisma"
 import AdminDashboard from "./AdminDashboard"
 
 export default async function AdminDashboardPage() {
@@ -10,8 +10,12 @@ export default async function AdminDashboardPage() {
   const institutionId = session.user.institutionId!
   let studentCount = 0, teacherCount = 0, parentCount = 0, courseCount = 0
   let students: any[] = [], teachers: any[] = []
+  let institutionName = ""
 
   try {
+    const institution = await findOne("Institution", { id: institutionId })
+    institutionName = (institution as any)?.name ?? ""
+
     const results = await Promise.allSettled([
       count("Student", { institutionId }),
       count("Teacher", { institutionId }),
@@ -58,10 +62,10 @@ export default async function AdminDashboardPage() {
   }
 
   const stats = [
-    { label: "Alumnos", value: studentCount, href: "/dashboard/admin/alumnos", icon: "▤" },
-    { label: "Profesores", value: teacherCount, href: "/dashboard/admin/profesores", icon: "▥" },
-    { label: "Padres", value: parentCount, href: "/dashboard/admin/padres", icon: "▣" },
-    { label: "Cursos", value: courseCount, href: "/dashboard/admin/cursos", icon: "◇" },
+    { label: "Alumnos", value: studentCount, href: "/dashboard/admin/alumnos", icon: "group" },
+    { label: "Profesores", value: teacherCount, href: "/dashboard/admin/profesores", icon: "school" },
+    { label: "Padres", value: parentCount, href: "/dashboard/admin/padres", icon: "diversity_3" },
+    { label: "Cursos", value: courseCount, href: "/dashboard/admin/cursos", icon: "book" },
   ]
 
   return (
@@ -73,6 +77,7 @@ export default async function AdminDashboardPage() {
       totalTeachers={teacherCount}
       totalParents={parentCount}
       totalCourses={courseCount}
+      institutionName={institutionName}
     />
   )
 }
