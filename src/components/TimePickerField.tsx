@@ -51,17 +51,21 @@ export default function TimePickerField({ value, onChange, className = "" }: Tim
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
-          <div className="fixed inset-0 bg-black/50" onClick={() => setOpen(false)} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/60" onClick={() => setOpen(false)} />
 
           <div
             ref={panelRef}
-            className="relative w-full max-w-sm rounded-t-2xl sm:rounded-2xl bg-black p-6 shadow-xl border border-gray-800"
+            className="relative w-full max-w-xs rounded-2xl bg-neutral-900 p-6 shadow-2xl"
           >
+            <p className="mb-5 text-center text-sm font-medium tracking-wide text-neutral-400 uppercase">
+              Seleccionar hora
+            </p>
+
             <TimePicker
               value={value}
               onChange={onChange}
-              itemHeight={40}
+              itemHeight={38}
               visibleCount={5}
               loop
             />
@@ -69,7 +73,7 @@ export default function TimePickerField({ value, onChange, className = "" }: Tim
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="mt-4 w-full rounded-[30px] bg-white px-4 py-2.5 text-sm font-medium text-black transition-all hover:bg-gray-100"
+              className="mt-5 w-full rounded-xl bg-white px-4 py-3 text-sm font-semibold text-black transition-all active:scale-95 hover:bg-neutral-100"
             >
               Listo
             </button>
