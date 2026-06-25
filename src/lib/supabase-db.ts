@@ -14,6 +14,7 @@ const COLUMN_NAMES = [
   "createdAt", "updatedAt", "academicYear", "isPresent", "minutesLate",
   "isCurrent", "enrollmentDate", "dayOfWeek", "startTime", "endTime",
   "speciality", "submitDate", "classroomId",
+  "educationLevel", "hireDate", "contractType", "emergencyContact", "emergencyPhone",
 ]
 
 function quoteTableNames(sql: string): string {

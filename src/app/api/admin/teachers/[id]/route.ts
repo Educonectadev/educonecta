@@ -40,7 +40,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       speciality: speciality !== undefined ? speciality : (teacher as any).speciality,
       documentId: documentId !== undefined ? documentId : (teacher as any).documentId,
       title: professionalTitle !== undefined ? professionalTitle : (teacher as any).title,
-      educationalLevel: educationLevel !== undefined ? educationLevel : (teacher as any).educationalLevel,
+      educationLevel: educationLevel !== undefined ? educationLevel : (teacher as any).educationLevel,
       hireDate: hireDate !== undefined ? hireDate : (teacher as any).hireDate,
       address: address !== undefined ? address : (teacher as any).address,
       contractType: contractType !== undefined ? contractType : (teacher as any).contractType,
