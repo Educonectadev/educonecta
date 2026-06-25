@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Modal from "@/components/Modal"
 
 interface Grade {
   id: number
@@ -218,95 +219,92 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
         </div>
       )}
 
-      {modal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setModal(null)}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-md w-full p-8 animate-fade-in" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setModal(null)} className="absolute top-4 right-4 text-gray-400 hover:text-black text-xl leading-none">&times;</button>
-
-            <h2 className="text-lg font-semibold tracking-tight mb-4">
-              {modal === "create-grade" && "Nuevo Grado"}
-              {modal === "edit-grade" && "Editar Grado"}
-              {modal === "create-section" && `Nueva Sección en ${(selected as Grade).name}`}
-              {modal === "edit-section" && "Editar Sección"}
-              {modal === "delete-grade" && `Eliminar ${(selected as Grade).name}`}
-              {modal === "delete-section" && `Eliminar Sección ${(selected as Section).name}`}
-            </h2>
-
-            {modal === "delete-grade" || modal === "delete-section" ? (
-              <form onSubmit={handleSubmit}>
-                <p className="text-sm text-gray-500 mb-6">
-                  ¿Estás seguro de eliminar {modal === "delete-grade" ? "este grado" : "esta sección"}? Los estudiantes asociados perderán la asignación.
-                </p>
-                {error && <p className="text-xs text-red-500 mb-4">{error}</p>}
-                <div className="flex gap-3 justify-end">
-                  <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-black transition-all">Cancelar</button>
-                  <button type="submit" disabled={loading} className="bg-red-600 text-white px-5 py-2 rounded-[30px] text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">{loading ? "..." : "Eliminar"}</button>
-                </div>
-              </form>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+      <Modal
+        open={modal !== null}
+        onClose={() => setModal(null)}
+        title={
+          modal === "create-grade" ? "Nuevo Grado"
+          : modal === "edit-grade" ? "Editar Grado"
+          : modal === "create-section" ? `Nueva Sección en ${(selected as Grade).name}`
+          : modal === "edit-section" ? "Editar Sección"
+          : modal === "delete-grade" ? `Eliminar ${(selected as Grade).name}`
+          : modal === "delete-section" ? `Eliminar Sección ${(selected as Section).name}`
+          : ""
+        }
+      >
+        {(modal === "delete-grade" || modal === "delete-section") ? (
+          <form onSubmit={handleSubmit}>
+            <p className="text-sm text-gray-500 mb-6">
+              ¿Estás seguro de eliminar {modal === "delete-grade" ? "este grado" : "esta sección"}? Los estudiantes asociados perderán la asignación.
+            </p>
+            {error && <p className="text-xs text-red-500 mb-4">{error}</p>}
+            <div className="flex gap-3 justify-end">
+              <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-black transition-all">Cancelar</button>
+              <button type="submit" disabled={loading} className="bg-red-600 text-white px-5 py-2 rounded-[30px] text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">{loading ? "..." : "Eliminar"}</button>
+            </div>
+          </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
+              <input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
+                placeholder={modal === "create-section" ? "Ej: A, B, C..." : "Ej: 1ero, 2do..."}
+                required
+                autoFocus
+              />
+            </div>
+            {(modal === "create-grade" || modal === "edit-grade") && (
+              <>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
-                  <input
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Nivel</label>
+                  <select
+                    value={form.level}
+                    onChange={(e) => setForm({ ...form, level: e.target.value })}
                     className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
-                    placeholder={modal === "create-section" ? "Ej: A, B, C..." : "Ej: 1ero, 2do..."}
-                    required
-                    autoFocus
-                  />
+                  >
+                    <option value="">Sin nivel</option>
+                    <option value="Inicial">Inicial</option>
+                    <option value="Primaria">Primaria</option>
+                    <option value="Secundaria">Secundaria</option>
+                  </select>
                 </div>
-                {(modal === "create-grade" || modal === "edit-grade") && (
-                  <>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1">Nivel</label>
-                      <select
-                        value={form.level}
-                        onChange={(e) => setForm({ ...form, level: e.target.value })}
-                        className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
-                      >
-                        <option value="">Sin nivel</option>
-                        <option value="Inicial">Inicial</option>
-                        <option value="Primaria">Primaria</option>
-                        <option value="Secundaria">Secundaria</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1">Turno por defecto</label>
-                      <select
-                        value={form.defaultShift}
-                        onChange={(e) => setForm({ ...form, defaultShift: e.target.value })}
-                        className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
-                      >
-                        <option value="">Sin turno</option>
-                        <option value="MAÑANA">Mañana</option>
-                        <option value="TARDE">Tarde</option>
-                      </select>
-                    </div>
-                  </>
-                )}
-                {(modal === "create-section" || modal === "edit-section") && (
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">Capacidad</label>
-                    <input
-                      type="number"
-                      value={form.capacity}
-                      onChange={(e) => setForm({ ...form, capacity: e.target.value })}
-                      className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
-                      placeholder="Opcional"
-                    />
-                  </div>
-                )}
-                {error && <p className="text-xs text-red-500">{error}</p>}
-                <div className="flex gap-3 justify-end pt-2">
-                  <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-black transition-all">Cancelar</button>
-                  <button type="submit" disabled={loading} className="bg-black text-white px-5 py-2 rounded-[30px] text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">{loading ? "..." : "Guardar"}</button>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Turno por defecto</label>
+                  <select
+                    value={form.defaultShift}
+                    onChange={(e) => setForm({ ...form, defaultShift: e.target.value })}
+                    className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
+                  >
+                    <option value="">Sin turno</option>
+                    <option value="MAÑANA">Mañana</option>
+                    <option value="TARDE">Tarde</option>
+                  </select>
                 </div>
-              </form>
+              </>
             )}
-          </div>
-        </div>
-      )}
+            {(modal === "create-section" || modal === "edit-section") && (
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">Capacidad</label>
+                <input
+                  type="number"
+                  value={form.capacity}
+                  onChange={(e) => setForm({ ...form, capacity: e.target.value })}
+                  className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
+                  placeholder="Opcional"
+                />
+              </div>
+            )}
+            {error && <p className="text-xs text-red-500">{error}</p>}
+            <div className="flex gap-3 justify-end pt-2">
+              <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-black transition-all">Cancelar</button>
+              <button type="submit" disabled={loading} className="bg-black text-white px-5 py-2 rounded-[30px] text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">{loading ? "..." : "Guardar"}</button>
+            </div>
+          </form>
+        )}
+      </Modal>
     </div>
   )
 }

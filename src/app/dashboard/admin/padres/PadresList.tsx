@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Modal from "@/components/Modal"
 
 interface Parent {
   id: number
@@ -134,116 +135,101 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
         </table>
       </div>
 
-      {showCreate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setShowCreate(false) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-md w-full p-8 animate-fade-in max-h-[80vh] overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold tracking-tight mb-6">Registrar Padre</h2>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Nombres</label>
-                  <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Juan" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Apellidos</label>
-                  <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Pérez" />
-                </div>
-              </div>
-              {form.firstName && form.lastName && (
-                <div className="bg-gray-50 rounded-[20px] px-4 py-2.5">
-                  <p className="text-[11px] text-gray-400">Email generado automáticamente:</p>
-                  <p className="text-sm font-medium text-gray-700">{form.firstName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}.{form.lastName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}@colegio.edu.pe</p>
-                </div>
-              )}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Contraseña</label>
-                <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
-                <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Hijos vinculados</label>
-                <div className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-hide">
-                  {allStudents.map((s) => (
-                    <label key={s.id} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                      <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} className="accent-black" />
-                      {s.firstName} {s.lastName}
-                    </label>
-                  ))}
-                </div>
-              </div>
+      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Padre">
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Nombres</label>
+              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Juan" />
             </div>
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.password} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
-                {loading ? "Guardando..." : "Registrar"}
-              </button>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Apellidos</label>
+              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Pérez" />
+            </div>
+          </div>
+          {form.firstName && form.lastName && (
+            <div className="bg-gray-50 rounded-[20px] px-4 py-2.5">
+              <p className="text-[11px] text-gray-400">Email generado automáticamente:</p>
+              <p className="text-sm font-medium text-gray-700">{form.firstName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}.{form.lastName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}@colegio.edu.pe</p>
+            </div>
+          )}
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Contraseña</label>
+            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
+            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Hijos vinculados</label>
+            <div className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-hide">
+              {allStudents.map((s) => (
+                <label key={s.id} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                  <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} className="accent-black" />
+                  {s.firstName} {s.lastName}
+                </label>
+              ))}
             </div>
           </div>
         </div>
-      )}
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.password} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+            {loading ? "Guardando..." : "Registrar"}
+          </button>
+        </div>
+      </Modal>
 
-      {editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setEditing(null) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-md w-full p-8 animate-fade-in max-h-[80vh] overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold tracking-tight mb-6">Editar Padre</h2>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Nombres</label>
-                  <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Apellidos</label>
-                  <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Nueva contraseña (vacío = mantener)</label>
-                <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
-                <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Hijos vinculados</label>
-                <div className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-hide">
-                  {allStudents.map((s) => (
-                    <label key={s.id} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-                      <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} className="accent-black" />
-                      {s.firstName} {s.lastName}
-                    </label>
-                  ))}
-                </div>
-              </div>
+      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Padre">
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Nombres</label>
+              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
             </div>
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
-                {loading ? "Guardando..." : "Guardar"}
-              </button>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Apellidos</label>
+              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Nueva contraseña (vacío = mantener)</label>
+            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
+            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Hijos vinculados</label>
+            <div className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-hide">
+              {allStudents.map((s) => (
+                <label key={s.id} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                  <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} className="accent-black" />
+                  {s.firstName} {s.lastName}
+                </label>
+              ))}
             </div>
           </div>
         </div>
-      )}
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+            {loading ? "Guardando..." : "Guardar"}
+          </button>
+        </div>
+      </Modal>
 
-      {deleting && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setDeleting(null) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-sm w-full p-8 animate-fade-in text-center">
-            <h2 className="text-lg font-bold tracking-tight mb-2">¿Eliminar padre?</h2>
-            <p className="text-sm text-gray-500">Se eliminará {deleting.user.name}. Esta acción no se puede deshacer.</p>
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
-                {loading ? "Eliminando..." : "Eliminar"}
-              </button>
-            </div>
-          </div>
+      <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar padre" size="sm">
+        <p className="text-sm text-gray-500 text-center">Se eliminará {deleting?.user?.name}. Esta acción no se puede deshacer.</p>
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
+            {loading ? "Eliminando..." : "Eliminar"}
+          </button>
         </div>
-      )}
+      </Modal>
     </>
   )
 }

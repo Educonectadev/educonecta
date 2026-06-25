@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Modal from "@/components/Modal"
 
 interface Aula {
   id: number
@@ -149,50 +150,35 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
         </table>
       </div>
 
-      {showCreate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setShowCreate(false) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-md w-full p-8 animate-fade-in">
-            <h2 className="text-xl font-bold tracking-tight mb-6">Registrar Aula</h2>
-            <FormFields form={form} setForm={setForm} />
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleCreate} disabled={loading || !form.name} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
-                {loading ? "Guardando..." : "Registrar"}
-              </button>
-            </div>
-          </div>
+      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Aula">
+        <FormFields form={form} setForm={setForm} />
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleCreate} disabled={loading || !form.name} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+            {loading ? "Guardando..." : "Registrar"}
+          </button>
         </div>
-      )}
+      </Modal>
 
-      {editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setEditing(null) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-md w-full p-8 animate-fade-in">
-            <h2 className="text-xl font-bold tracking-tight mb-6">Editar Aula</h2>
-            <FormFields form={form} setForm={setForm} />
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
-                {loading ? "Guardando..." : "Guardar"}
-              </button>
-            </div>
-          </div>
+      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Aula">
+        <FormFields form={form} setForm={setForm} />
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+            {loading ? "Guardando..." : "Guardar"}
+          </button>
         </div>
-      )}
+      </Modal>
 
-      {deleting && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setDeleting(null) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-sm w-full p-8 animate-fade-in text-center">
-            <h2 className="text-lg font-bold tracking-tight mb-2">¿Eliminar aula?</h2>
-            <p className="text-sm text-gray-500">Se eliminará {deleting.name}. Esta acción no se puede deshacer.</p>
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
-                {loading ? "Eliminando..." : "Eliminar"}
-              </button>
-            </div>
-          </div>
+      <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar aula" size="sm">
+        <p className="text-sm text-gray-500 text-center">Se eliminará {deleting?.name}. Esta acción no se puede deshacer.</p>
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
+            {loading ? "Eliminando..." : "Eliminar"}
+          </button>
         </div>
-      )}
+      </Modal>
     </>
   )
 }

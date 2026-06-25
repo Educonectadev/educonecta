@@ -2,6 +2,7 @@
 
 import { useState, useCallback, memo } from "react"
 import { useRouter } from "next/navigation"
+import Modal from "@/components/Modal"
 
 interface Teacher {
   id: number
@@ -287,50 +288,35 @@ export default function ProfesoresList({ teachers }: { teachers: Teacher[] }) {
         </table>
       </div>
 
-      {showCreate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setShowCreate(false) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-lg w-full p-8 animate-fade-in max-h-[90vh] overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold tracking-tight mb-6">Contratar Profesor</h2>
-            <TeacherFormFields form={form} setField={setField} passwordRequired />
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.password} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
-                {loading ? "Guardando..." : "Contratar"}
-              </button>
-            </div>
-          </div>
+      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Contratar Profesor" size="lg">
+        <TeacherFormFields form={form} setField={setField} passwordRequired />
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.password} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+            {loading ? "Guardando..." : "Contratar"}
+          </button>
         </div>
-      )}
+      </Modal>
 
-      {editing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setEditing(null) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-lg w-full p-8 animate-fade-in max-h-[90vh] overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold tracking-tight mb-6">Editar Profesor</h2>
-            <TeacherFormFields form={form} setField={setField} passwordRequired={false} />
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
-                {loading ? "Guardando..." : "Guardar"}
-              </button>
-            </div>
-          </div>
+      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Profesor" size="lg">
+        <TeacherFormFields form={form} setField={setField} passwordRequired={false} />
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+            {loading ? "Guardando..." : "Guardar"}
+          </button>
         </div>
-      )}
+      </Modal>
 
-      {deleting && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setDeleting(null) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-sm w-full p-8 animate-fade-in text-center">
-            <h2 className="text-lg font-bold tracking-tight mb-2">¿Eliminar profesor?</h2>
-            <p className="text-sm text-gray-500">Se eliminará {deleting.user.name}. Esta acción no se puede deshacer.</p>
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
-                {loading ? "Eliminando..." : "Eliminar"}
-              </button>
-            </div>
-          </div>
+      <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar profesor" size="sm">
+        <p className="text-sm text-gray-500 text-center">Se eliminará {deleting?.user?.name}. Esta acción no se puede deshacer.</p>
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
+            {loading ? "Eliminando..." : "Eliminar"}
+          </button>
         </div>
-      )}
+      </Modal>
     </>
   )
 }

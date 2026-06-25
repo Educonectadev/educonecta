@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
+import Modal from "@/components/Modal"
 
 interface StudentWithParent {
   studentId: number
@@ -387,13 +388,9 @@ export default function HorariosList({
         }
       `}</style>
 
-      {detail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setDetail(null) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-md w-full p-8 animate-fade-in">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold tracking-tight">Detalle del Horario</h2>
-              <button onClick={() => setDetail(null)} className="text-gray-400 hover:text-black transition-colors material-icons">close</button>
-            </div>
+      <Modal open={!!detail} onClose={() => setDetail(null)} title="Detalle del Horario">
+        {detail && (
+          <>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -441,220 +438,205 @@ export default function HorariosList({
               <button onClick={() => { setDetail(null); openEdit(detail) }} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Editar</button>
               <button onClick={() => setDetail(null)} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all">Cerrar</button>
             </div>
+          </>
+        )}
+      </Modal>
+
+      <Modal open={showCreate || !!editing} onClose={() => { setShowCreate(false); setEditing(null) }} title={showCreate ? "Nuevo Horario" : "Editar Horario"} size="lg">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Curso</label>
+            <select value={form.courseId} onChange={(e) => updateField("courseId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+              <option value="">Seleccionar...</option>
+              {courses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Profesor</label>
+            <select value={form.teacherId} onChange={(e) => updateField("teacherId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+              <option value="">Seleccionar...</option>
+              {teachers.map((t) => <option key={t.id} value={t.id}>{t.name}{t.speciality ? ` — ${t.speciality}` : ""}</option>)}
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+              <select value={form.gradeId} onChange={(e) => {
+                const gId = e.target.value
+                updateField("gradeId", gId)
+                updateField("sectionId", "")
+                const g = grades.find((gr) => gr.id === Number(gId))
+                if (g?.defaultShift) {
+                  const shift = g.defaultShift
+                  updateField("shift", shift)
+                  updateField("startTime", shift === "MAÑANA" ? "06:10" : "12:00")
+                  updateField("endTime", shift === "MAÑANA" ? "12:00" : "18:00")
+                }
+              }} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+                <option value="">Seleccionar...</option>
+                {grades.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+              <select value={form.sectionId} onChange={(e) => updateField("sectionId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+                <option value="">Seleccionar...</option>
+                {filteredSections.map((sec) => <option key={sec.id} value={sec.id}>{sec.name}</option>)}
+              </select>
+            </div>
+          </div>
+          {previewStudents.length > 0 && (
+            <div className="bg-gray-50 rounded-[20px] p-4 max-h-48 overflow-y-auto scrollbar-hide">
+              <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">
+                Alumnos ({previewStudents.length}) y sus padres
+              </p>
+              <div className="space-y-1.5">
+                {previewStudents.map(({ student, parents }) => (
+                  <div key={student.studentId} className="flex items-center justify-between text-sm">
+                    <span className="font-medium text-gray-700">{student.lastName}, {student.firstName}</span>
+                    <span className="text-xs text-gray-400 truncate ml-2 max-w-[180px]">
+                      {parents.length > 0 ? parents.join(", ") : "Sin padre asignado"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Día</label>
+            <select value={form.dayOfWeek} onChange={(e) => updateField("dayOfWeek", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+              {Object.entries(dayLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Turno</label>
+            <select value={form.shift} onChange={(e) => {
+              const shift = e.target.value
+              updateField("shift", shift)
+              updateField("startTime", shift === "MAÑANA" ? "06:10" : "12:00")
+              updateField("endTime", shift === "MAÑANA" ? "12:00" : "18:00")
+            }} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+              <option value="MAÑANA">Mañana (6:10 - 12:00)</option>
+              <option value="TARDE">Tarde (12:00 - 18:00)</option>
+            </select>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Inicio</label>
+              <input type="time" value={form.startTime} onChange={(e) => updateField("startTime", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Fin</label>
+              <input type="time" value={form.endTime} onChange={(e) => updateField("endTime", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Aula</label>
+            <select value={form.classroom} onChange={(e) => updateField("classroom", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+              <option value="">Sin aula</option>
+              {classrooms.map((a) => <option key={a.id} value={a.name}>{a.name}{a.code ? ` (${a.code})` : ""}</option>)}
+            </select>
           </div>
         </div>
-      )}
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => { setShowCreate(false); setEditing(null) }} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={showCreate ? handleCreate : handleSave} disabled={loading || !form.courseId} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+            {loading ? "Guardando..." : showCreate ? "Crear" : "Guardar"}
+          </button>
+        </div>
+      </Modal>
 
-      {(showCreate || editing) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) { setShowCreate(false); setEditing(null) } }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-lg w-full p-8 animate-fade-in max-h-[90vh] overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold tracking-tight mb-6">{showCreate ? "Nuevo Horario" : "Editar Horario"}</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Curso</label>
-                <select value={form.courseId} onChange={(e) => updateField("courseId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                  <option value="">Seleccionar...</option>
-                  {courses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Profesor</label>
-                <select value={form.teacherId} onChange={(e) => updateField("teacherId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                  <option value="">Seleccionar...</option>
-                  {teachers.map((t) => <option key={t.id} value={t.id}>{t.name}{t.speciality ? ` — ${t.speciality}` : ""}</option>)}
-                </select>
+      <Modal open={showJornada} onClose={() => setShowJornada(false)} title="Crear Jornada" size="2xl">
+        <p className="text-sm text-gray-500 mb-6">Define los bloques de curso para un día completo. El receso se agrega automáticamente.</p>
+
+        <div className="flex gap-4 mb-6">
+          <div className="flex-1">
+            <label className="block text-xs font-medium text-gray-500 mb-1">Día</label>
+            <select value={jornadaDay} onChange={(e) => setJornadaDay(e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+              {Object.entries(dayLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+            </select>
+          </div>
+          <div className="flex-1">
+            <label className="block text-xs font-medium text-gray-500 mb-1">Turno</label>
+            <select value={jornadaShift} onChange={(e) => setJornadaShift(e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+              <option value="MAÑANA">Mañana (6:10 - 12:00)</option>
+              <option value="TARDE">Tarde (12:00 - 18:00)</option>
+            </select>
+          </div>
+        </div>
+
+        {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].filter((b) => !b.recess).map((block, idx) => {
+          const filteredSecs = blocks[idx]?.gradeId
+            ? sections.filter((s) => s.gradeId === Number(blocks[idx].gradeId))
+            : []
+          return (
+            <div key={idx} className="border border-gray-200 rounded-[25px] p-5 mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-sm">{block.label}</h3>
+                <span className="text-xs text-gray-400">{block.start} – {block.end}</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Curso</label>
+                  <select value={blocks[idx]?.courseId ?? ""} onChange={(e) => updateBlock(idx, "courseId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+                    <option value="">Seleccionar...</option>
+                    {courses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Profesor</label>
+                  <select value={blocks[idx]?.teacherId ?? ""} onChange={(e) => updateBlock(idx, "teacherId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+                    <option value="">Seleccionar...</option>
+                    {teachers.map((t) => <option key={t.id} value={t.id}>{t.name}{t.speciality ? ` — ${t.speciality}` : ""}</option>)}
+                  </select>
+                </div>
+                <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
-                  <select value={form.gradeId} onChange={(e) => {
-                    const gId = e.target.value
-                    updateField("gradeId", gId)
-                    updateField("sectionId", "")
-                    const g = grades.find((gr) => gr.id === Number(gId))
-                    if (g?.defaultShift) {
-                      const shift = g.defaultShift
-                      updateField("shift", shift)
-                      updateField("startTime", shift === "MAÑANA" ? "06:10" : "12:00")
-                      updateField("endTime", shift === "MAÑANA" ? "12:00" : "18:00")
-                    }
-                  }} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+                  <select value={blocks[idx]?.gradeId ?? ""} onChange={(e) => { updateBlock(idx, "gradeId", e.target.value); updateBlock(idx, "sectionId", "") }} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
                     <option value="">Seleccionar...</option>
                     {grades.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
-                  <select value={form.sectionId} onChange={(e) => updateField("sectionId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+                  <select value={blocks[idx]?.sectionId ?? ""} onChange={(e) => updateBlock(idx, "sectionId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
                     <option value="">Seleccionar...</option>
-                    {filteredSections.map((sec) => <option key={sec.id} value={sec.id}>{sec.name}</option>)}
+                    {filteredSecs.map((sec) => <option key={sec.id} value={sec.id}>{sec.name}</option>)}
                   </select>
                 </div>
-              </div>
-              {previewStudents.length > 0 && (
-                <div className="bg-gray-50 rounded-[20px] p-4 max-h-48 overflow-y-auto scrollbar-hide">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">
-                    Alumnos ({previewStudents.length}) y sus padres
-                  </p>
-                  <div className="space-y-1.5">
-                    {previewStudents.map(({ student, parents }) => (
-                      <div key={student.studentId} className="flex items-center justify-between text-sm">
-                        <span className="font-medium text-gray-700">{student.lastName}, {student.firstName}</span>
-                        <span className="text-xs text-gray-400 truncate ml-2 max-w-[180px]">
-                          {parents.length > 0 ? parents.join(", ") : "Sin padre asignado"}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-gray-500 mb-1">Aula</label>
+                  <select value={blocks[idx]?.classroom ?? ""} onChange={(e) => updateBlock(idx, "classroom", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
+                    <option value="">Sin aula</option>
+                    {classrooms.map((a) => <option key={a.id} value={a.name}>{a.name}{a.code ? ` (${a.code})` : ""}</option>)}
+                  </select>
                 </div>
-              )}
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Día</label>
-                <select value={form.dayOfWeek} onChange={(e) => updateField("dayOfWeek", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                  {Object.entries(dayLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Turno</label>
-                <select value={form.shift} onChange={(e) => {
-                  const shift = e.target.value
-                  updateField("shift", shift)
-                  updateField("startTime", shift === "MAÑANA" ? "06:10" : "12:00")
-                  updateField("endTime", shift === "MAÑANA" ? "12:00" : "18:00")
-                }} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                  <option value="MAÑANA">Mañana (6:10 - 12:00)</option>
-                  <option value="TARDE">Tarde (12:00 - 18:00)</option>
-                </select>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Inicio</label>
-                  <input type="time" value={form.startTime} onChange={(e) => updateField("startTime", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Fin</label>
-                  <input type="time" value={form.endTime} onChange={(e) => updateField("endTime", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Aula</label>
-                <select value={form.classroom} onChange={(e) => updateField("classroom", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                  <option value="">Sin aula</option>
-                  {classrooms.map((a) => <option key={a.id} value={a.name}>{a.name}{a.code ? ` (${a.code})` : ""}</option>)}
-                </select>
-              </div>
-            </div>
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => { setShowCreate(false); setEditing(null) }} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={showCreate ? handleCreate : handleSave} disabled={loading || !form.courseId} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
-                {loading ? "Guardando..." : showCreate ? "Crear" : "Guardar"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showJornada && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setShowJornada(false) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-2xl w-full p-8 animate-fade-in max-h-[90vh] overflow-y-auto scrollbar-hide">
-            <h2 className="text-xl font-bold tracking-tight mb-6">Crear Jornada</h2>
-            <p className="text-sm text-gray-500 mb-6">Define los bloques de curso para un día completo. El receso se agrega automáticamente.</p>
-
-            <div className="flex gap-4 mb-6">
-              <div className="flex-1">
-                <label className="block text-xs font-medium text-gray-500 mb-1">Día</label>
-                <select value={jornadaDay} onChange={(e) => setJornadaDay(e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                  {Object.entries(dayLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                </select>
-              </div>
-              <div className="flex-1">
-                <label className="block text-xs font-medium text-gray-500 mb-1">Turno</label>
-                <select value={jornadaShift} onChange={(e) => setJornadaShift(e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                  <option value="MAÑANA">Mañana (6:10 - 12:00)</option>
-                  <option value="TARDE">Tarde (12:00 - 18:00)</option>
-                </select>
-              </div>
-            </div>
-
-            {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].filter((b) => !b.recess).map((block, idx) => {
-              const filteredSecs = blocks[idx]?.gradeId
-                ? sections.filter((s) => s.gradeId === Number(blocks[idx].gradeId))
-                : []
-              return (
-                <div key={idx} className="border border-gray-200 rounded-[25px] p-5 mb-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-semibold text-sm">{block.label}</h3>
-                    <span className="text-xs text-gray-400">{block.start} – {block.end}</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1">Curso</label>
-                      <select value={blocks[idx]?.courseId ?? ""} onChange={(e) => updateBlock(idx, "courseId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                        <option value="">Seleccionar...</option>
-                        {courses.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1">Profesor</label>
-                      <select value={blocks[idx]?.teacherId ?? ""} onChange={(e) => updateBlock(idx, "teacherId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                        <option value="">Seleccionar...</option>
-                        {teachers.map((t) => <option key={t.id} value={t.id}>{t.name}{t.speciality ? ` — ${t.speciality}` : ""}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
-                      <select value={blocks[idx]?.gradeId ?? ""} onChange={(e) => { updateBlock(idx, "gradeId", e.target.value); updateBlock(idx, "sectionId", "") }} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                        <option value="">Seleccionar...</option>
-                        {grades.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
-                      <select value={blocks[idx]?.sectionId ?? ""} onChange={(e) => updateBlock(idx, "sectionId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                        <option value="">Seleccionar...</option>
-                        {filteredSecs.map((sec) => <option key={sec.id} value={sec.id}>{sec.name}</option>)}
-                      </select>
-                    </div>
-                    <div className="col-span-2">
-                      <label className="block text-xs font-medium text-gray-500 mb-1">Aula</label>
-                      <select value={blocks[idx]?.classroom ?? ""} onChange={(e) => updateBlock(idx, "classroom", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all">
-                        <option value="">Sin aula</option>
-                        {classrooms.map((a) => <option key={a.id} value={a.name}>{a.name}{a.code ? ` (${a.code})` : ""}</option>)}
-                      </select>
-                    </div>
                   </div>
                 </div>
               )
             })}
 
-            <div className="bg-amber-50 rounded-[20px] p-4 text-sm text-amber-700 mb-4">
-              <span className="font-semibold">Receso:</span> {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].find((b) => b.recess)?.start} – {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].find((b) => b.recess)?.end} (15 min) — se agrega automáticamente
-            </div>
-
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowJornada(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleCreateJornada} disabled={loading || blocks.every((b) => !b.courseId)} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
-                {loading ? "Guardando..." : "Guardar Jornada"}
-              </button>
-            </div>
-          </div>
+        <div className="bg-amber-50 rounded-[20px] p-4 text-sm text-amber-700 mb-4">
+          <span className="font-semibold">Receso:</span> {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].find((b) => b.recess)?.start} – {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].find((b) => b.recess)?.end} (15 min) — se agrega automáticamente
         </div>
-      )}
 
-      {deleting && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setDeleting(null) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-sm w-full p-8 animate-fade-in text-center">
-            <h2 className="text-lg font-bold tracking-tight mb-2">¿Eliminar horario?</h2>
-            <p className="text-sm text-gray-500">{dayLabels[deleting.dayOfWeek]} — {deleting.course.name} ({deleting.startTime} - {deleting.endTime}). Esta acción no se puede deshacer.</p>
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-              <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
-                {loading ? "Eliminando..." : "Eliminar"}
-              </button>
-            </div>
-          </div>
+        <div className="flex gap-3 mt-6">
+          <button onClick={() => setShowJornada(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleCreateJornada} disabled={loading || blocks.every((b) => !b.courseId)} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+            {loading ? "Guardando..." : "Guardar Jornada"}
+          </button>
         </div>
-      )}
+      </Modal>
+
+      <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar horario" size="sm">
+        <p className="text-sm text-gray-500 text-center">{deleting ? `${dayLabels[deleting.dayOfWeek]} — ${deleting.course.name} (${deleting.startTime} - ${deleting.endTime}). Esta acción no se puede deshacer.` : ""}</p>
+        <div className="flex gap-3 mt-8">
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
+            {loading ? "Eliminando..." : "Eliminar"}
+          </button>
+        </div>
+      </Modal>
     </>
   )
 }
