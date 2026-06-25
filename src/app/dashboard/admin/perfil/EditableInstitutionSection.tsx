@@ -156,6 +156,7 @@ export default function EditableInstitutionSection({ institution }: { institutio
           institution={data}
           onClose={() => setShowModal(false)}
           onUpdate={(updated) => { setData(updated); setShowModal(false) }}
+          readOnlyCode
         />
       )}
     </>

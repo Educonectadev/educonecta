@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { departments, getProvinces, getDistricts } from "@/data/ubigeo"
 import Link from "next/link"
 import Select from "@/components/Select"
+import TimePickerField from "@/components/TimePickerField"
 
 const levelOptions = [
   { value: "inicial", label: "Inicial" },
@@ -339,9 +340,9 @@ export default function NuevaInstitucionPage() {
                           <div key={id} className="flex items-center gap-3 bg-white rounded-[20px] border border-gray-200 px-4 py-2.5">
                             <span className="text-xs font-medium text-gray-600 w-14 shrink-0">{opt?.label ?? id}</span>
                             <div className="flex items-center gap-2 flex-1">
-                              <input type="time" value={time.start} onChange={(e) => setForm((p) => ({ ...p, shiftTimes: { ...p.shiftTimes, [id]: { ...(p.shiftTimes[id] ?? { start: "08:00", end: "17:00" }), start: e.target.value } } }))} className="flex-1 min-w-0 rounded-[15px] border border-gray-200 px-3 py-1.5 text-xs text-black focus:border-black focus:outline-none focus:ring-1 focus:ring-black bg-white" />
+                              <TimePickerField value={time.start} onChange={(val) => setForm((p) => ({ ...p, shiftTimes: { ...p.shiftTimes, [id]: { ...(p.shiftTimes[id] ?? { start: "08:00", end: "17:00" }), start: val } } }))} />
                               <span className="text-xs text-gray-400 shrink-0">a</span>
-                              <input type="time" value={time.end} onChange={(e) => setForm((p) => ({ ...p, shiftTimes: { ...p.shiftTimes, [id]: { ...(p.shiftTimes[id] ?? { start: "08:00", end: "17:00" }), end: e.target.value } } }))} className="flex-1 min-w-0 rounded-[15px] border border-gray-200 px-3 py-1.5 text-xs text-black focus:border-black focus:outline-none focus:ring-1 focus:ring-black bg-white" />
+                              <TimePickerField value={time.end} onChange={(val) => setForm((p) => ({ ...p, shiftTimes: { ...p.shiftTimes, [id]: { ...(p.shiftTimes[id] ?? { start: "08:00", end: "17:00" }), end: val } } }))} />
                             </div>
                           </div>
                         )

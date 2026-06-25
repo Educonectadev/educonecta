@@ -51,10 +51,12 @@ export default function InstitutionModal({
   institution,
   onClose,
   onUpdate,
+  readOnlyCode,
 }: {
   institution: Institution
   onClose: () => void
   onUpdate: (updated: Institution) => void
+  readOnlyCode?: boolean
 }) {
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState({ ...institution })
@@ -231,7 +233,7 @@ export default function InstitutionModal({
               </div>
               <div>
                 <label className={labelClass}>Código *</label>
-                <input type="text" required value={form.code} onChange={(e) => setValue("code", e.target.value)} className={inputClass} />
+                <input type="text" required value={form.code} onChange={(e) => setValue("code", e.target.value)} className={inputClass} readOnly={readOnlyCode} />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -4,6 +4,7 @@ import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
+import TimePickerField from "@/components/TimePickerField"
 
 interface StudentWithParent {
   studentId: number
@@ -505,11 +506,11 @@ export default function HorariosList({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Inicio</label>
-              <input type="time" value={form.startTime} onChange={(e) => updateField("startTime", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <TimePickerField value={form.startTime} onChange={(val) => updateField("startTime", val)} />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Fin</label>
-              <input type="time" value={form.endTime} onChange={(e) => updateField("endTime", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <TimePickerField value={form.endTime} onChange={(val) => updateField("endTime", val)} />
             </div>
           </div>
           <div>
