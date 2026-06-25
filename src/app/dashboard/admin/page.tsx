@@ -13,8 +13,8 @@ export default async function AdminDashboardPage() {
     count("Teacher", { institutionId }),
     count("Parent", { institutionId }),
     count("Course", { institutionId }),
-    findMany("Student", { where: { institutionId }, orderBy: "createdAt", orderDir: "DESC", limit: 5 }),
-    findMany("Teacher", { where: { institutionId }, orderBy: "createdAt", orderDir: "DESC", limit: 5 }),
+    findMany("Student", { where: { institutionId }, select: ["id", "firstName", "lastName", "documentId", "grade:gradeId(name)", "section:sectionId(name)"], orderBy: "createdAt", orderDir: "DESC", limit: 5 }),
+    findMany("Teacher", { where: { institutionId }, select: ["id", "speciality", "user:userId(id, name, email)"], orderBy: "createdAt", orderDir: "DESC", limit: 5 }),
   ])
 
   const stats = [
