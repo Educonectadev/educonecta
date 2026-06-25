@@ -24,10 +24,16 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
         <Tabs.ListContainer>
           <Tabs.List aria-label="Mobile navigation">
             {items.map((item) => (
-              <Tabs.Tab key={item.href} id={item.href}>
-                <span className="material-icons text-2xl">{item.icon}</span>
-                <span className="text-[11px] leading-tight font-medium">{item.label}</span>
-                <Tabs.Indicator />
+              <Tabs.Tab
+                key={item.href}
+                id={item.href}
+                className="flex-1 py-2 text-gray-400 data-[selected=true]:text-gray-900"
+              >
+                <div className="flex flex-col items-center gap-0.5">
+                  <span className="material-icons text-3xl">{item.icon}</span>
+                  <span className="text-xs font-medium">{item.label}</span>
+                </div>
+                <Tabs.Indicator className="bg-gray-900 h-0.5 top-0 rounded-full" />
               </Tabs.Tab>
             ))}
           </Tabs.List>
