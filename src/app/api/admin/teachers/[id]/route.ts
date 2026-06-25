@@ -30,7 +30,16 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       userData.name = `${firstName?.trim() ?? ""} ${lastName?.trim() ?? ""}`.trim()
     }
     if (phone !== undefined) userData.phone = phone
-    if (password) userData.passwordHash = await bcrypt.hash(password, 10)
+    if (password) {
+      userData.passwordHash = await bcrypt.hash(password, 10)
+      const { getSupabaseAdmin } = await import("@/lib/supabase")
+      const supabase = getSupabaseAdmin()
+      const { data: authUsers } = await supabase.auth.admin.listUsers()
+      const authUser = authUsers.users.find((u) => u.email === (teacher as any).user.email)
+      if (authUser) {
+        await supabase.auth.admin.updateUserById(authUser.id, { password })
+      }
+    }
 
     if (Object.keys(userData).length > 0) {
       await update("User", { id: (teacher as any).userId }, userData)
