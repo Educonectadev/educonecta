@@ -6,9 +6,16 @@ export function toSupabaseTable(table: string): string {
   return table
 }
 
+const TABLE_NAMES = ["Student", "Grade", "Section", "Teacher", "Course", "Parent", "User", "Institution", "CourseTeacher", "Schedule", "Homework", "HomeworkSubmission", "Attendance", "Tardiness", "GradeRecord", "Discipline", "Notification", "ParentStudent", "Communication", "InstitutionalAdmin", "Enrollment", "Subject", "Classroom"]
+
+function quoteTableNames(sql: string): string {
+  const joined = TABLE_NAMES.join("|")
+  return sql.replace(new RegExp(`\\b(FROM|JOIN|INTO|UPDATE|TABLE|REFERENCES)\\s+(${joined})\\b`, "g"), '$1 "$2"')
+}
+
 export async function query<T = any[]>(sql: string, params?: unknown[]): Promise<T> {
   const { data, error } = await getSupabaseAdmin().rpc("exec_sql", {
-    query: sql,
+    query: quoteTableNames(sql),
     params: params || [],
   })
   if (error) throw error
@@ -17,7 +24,7 @@ export async function query<T = any[]>(sql: string, params?: unknown[]): Promise
 
 export async function execute(sql: string, params?: unknown[]): Promise<{ affectedRows: number; insertId: number }> {
   const { data, error } = await getSupabaseAdmin().rpc("exec_sql", {
-    query: sql,
+    query: quoteTableNames(sql),
     params: params || [],
   })
   if (error) throw error
