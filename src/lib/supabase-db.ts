@@ -85,9 +85,12 @@ export async function create<T = Record<string, unknown>>(
   table: string,
   data: Record<string, unknown>,
 ): Promise<number> {
+  const lowerData = Object.fromEntries(
+    Object.entries(data).map(([k, v]) => [k.toLowerCase(), v])
+  )
   const { data: inserted, error } = await getSupabaseAdmin()
     .from(table)
-    .insert(data as any)
+    .insert(lowerData as any)
     .select("id")
     .single()
   if (error) throw error
@@ -99,7 +102,10 @@ export async function update<T = Record<string, unknown>>(
   where: Record<string, unknown>,
   data: Partial<T>,
 ): Promise<number> {
-  let query = getSupabaseAdmin().from(table).update(data as any)
+  const lowerData = Object.fromEntries(
+    Object.entries(data as Record<string, unknown>).map(([k, v]) => [k.toLowerCase(), v])
+  )
+  let query = getSupabaseAdmin().from(table).update(lowerData as any)
   for (const [key, value] of Object.entries(where)) {
     query = query.eq(key, value as any)
   }
