@@ -1,0 +1,18 @@
+{
+  "name": "EduConecta",
+  "short_name": "EduConecta",
+  "description": "Plataforma de seguimiento escolar en tiempo real",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

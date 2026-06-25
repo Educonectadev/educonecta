@@ -106,61 +106,56 @@ export default function AlumnosList({
         </button>
       </div>
 
-      <div className="bg-gray-50 border border-gray-200 rounded-[30px]">
-        <table className="w-full text-sm">
-          <thead className="hidden md:table-header-group">
-            <tr className="border-b border-gray-200 text-left text-xs font-medium uppercase tracking-widest text-gray-500">
-              <th className="px-6 py-4">Nombre</th>
-              <th className="px-6 py-4">Documento</th>
-              <th className="px-6 py-4">Grado</th>
-              <th className="px-6 py-4">Sección</th>
-              <th className="px-6 py-4">Email</th>
-              <th className="px-6 py-4 w-24">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100 md:divide-y-0">
-            {students.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
-                  No hay alumnos registrados.
-                </td>
-              </tr>
-            ) : (
-              students.map((s) => (
-                <tr key={s.id} className="flex flex-col md:table-row border border-gray-200 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0">
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 font-medium">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Nombre</span>
-                    <span>{s.firstName} {s.lastName}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Documento</span>
-                    <span>{s.documentId}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Grado</span>
-                    <span>{s.grade?.name ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Sección</span>
-                    <span>{s.section?.name ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Email</span>
-                    <span>{s.email ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Acciones</span>
-                    <div className="flex gap-2">
-                      <button onClick={() => openEdit(s)} className="text-xs text-gray-500 hover:text-black transition-all border border-gray-200 rounded-[30px] px-3 py-1">Editar</button>
-                      <button onClick={() => setDeleting(s)} className="text-xs text-red-500 hover:text-red-700 transition-all border border-red-200 rounded-[30px] px-3 py-1">Eliminar</button>
+      {students.length === 0 ? (
+        <div className="bg-gray-50 border border-gray-200 rounded-[30px] p-12 text-center text-gray-500">No hay alumnos registrados.</div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          {students.map((s) => {
+            const initials = `${s.firstName[0]}${s.lastName[0]}`.toUpperCase()
+            return (
+              <div key={s.id} className="bg-white border border-gray-200 rounded-[25px] p-5 hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center text-sm font-bold shrink-0">
+                    {initials}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-[#1a1a1a] truncate">{s.firstName} {s.lastName}</h3>
+                    <div className="flex gap-1.5 mt-1">
+                      {s.grade && (
+                        <span className="text-[11px] bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">{s.grade.name}</span>
+                      )}
+                      {s.section && (
+                        <span className="text-[11px] bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">Sec. {s.section.name}</span>
+                      )}
                     </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                  </div>
+                </div>
+                <div className="space-y-1.5 text-sm">
+                  <div className="flex items-center gap-2 text-gray-500">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" />
+                    </svg>
+                    <span>{s.documentId}</span>
+                  </div>
+                  {s.email && (
+                    <div className="flex items-center gap-2 text-gray-500">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                        <polyline points="22,6 12,13 2,6" />
+                      </svg>
+                      <span className="truncate">{s.email}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100">
+                  <button onClick={() => openEdit(s)} className="text-xs text-gray-500 hover:text-black transition-all border border-gray-200 rounded-[30px] px-3 py-1.5">Editar</button>
+                  <button onClick={() => setDeleting(s)} className="text-xs text-red-500 hover:text-red-700 transition-all border border-red-200 rounded-[30px] px-3 py-1.5">Eliminar</button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Alumno">
         <div className="space-y-4">
