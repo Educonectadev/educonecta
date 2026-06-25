@@ -105,7 +105,7 @@ export default function HorariosList({
 
   const filteredSections = useMemo(() => {
     if (!form.gradeId) return []
-    return sections.filter((s) => s.gradeId === Number(form.gradeId))
+    return sections.filter((s) => String(s.gradeId) === form.gradeId)
   }, [form.gradeId, sections])
 
   const previewStudents = useMemo(() => {
@@ -470,7 +470,7 @@ export default function HorariosList({
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
-              <Select value={form.sectionId} onChange={(val) => updateField("sectionId", val)} options={filteredSections.map(sec => ({value: String(sec.id), label: sec.name}))} placeholder="Seleccionar..." />
+              <Select key={`sec-${form.gradeId}`} value={form.sectionId} onChange={(val) => updateField("sectionId", val)} options={filteredSections.map(sec => ({value: String(sec.id), label: sec.name}))} placeholder="Seleccionar..." />
             </div>
           </div>
           {previewStudents.length > 0 && (
@@ -541,7 +541,7 @@ export default function HorariosList({
 
         {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].filter((b) => !b.recess).map((block, idx) => {
           const filteredSecs = blocks[idx]?.gradeId
-            ? sections.filter((s) => s.gradeId === Number(blocks[idx].gradeId))
+            ? sections.filter((s) => String(s.gradeId) === blocks[idx].gradeId)
             : []
           return (
             <div key={idx} className="border border-gray-200 rounded-[25px] p-5 mb-4">
@@ -564,7 +564,7 @@ export default function HorariosList({
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
-                  <Select value={blocks[idx]?.sectionId ?? ""} onChange={(val) => updateBlock(idx, "sectionId", val)} options={blocks[idx]?.gradeId ? sections.filter((s) => s.gradeId === Number(blocks[idx].gradeId)).map(sec => ({value: String(sec.id), label: sec.name})) : []} placeholder="Seleccionar..." />
+                  <Select key={`blk-sec-${idx}-${blocks[idx]?.gradeId ?? ""}`} value={blocks[idx]?.sectionId ?? ""} onChange={(val) => updateBlock(idx, "sectionId", val)} options={blocks[idx]?.gradeId ? sections.filter((s) => String(s.gradeId) === blocks[idx].gradeId).map(sec => ({value: String(sec.id), label: sec.name})) : []} placeholder="Seleccionar..." />
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs font-medium text-gray-500 mb-1">Aula</label>
