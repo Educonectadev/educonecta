@@ -163,7 +163,7 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
         </div>
       )}
 
-      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Padre" size="md">
+      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Padre" size="md" scroll="inside">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -209,7 +209,7 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
         </div>
       </Modal>
 
-      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Padre" size="md">
+      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Padre" size="md" scroll="inside">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>

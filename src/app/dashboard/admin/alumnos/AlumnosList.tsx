@@ -173,7 +173,7 @@ export default function AlumnosList({
         </div>
       )}
 
-      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Alumno" size="md">
+      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Alumno" size="md" scroll="inside">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -214,7 +214,7 @@ export default function AlumnosList({
         </div>
       </Modal>
 
-      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Alumno" size="md">
+      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Alumno" size="md" scroll="inside">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>

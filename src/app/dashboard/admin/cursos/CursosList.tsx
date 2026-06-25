@@ -174,7 +174,7 @@ export default function CursosList({
         </div>
       )}
 
-      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Nuevo Curso" size="md">
+      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Nuevo Curso" size="md" scroll="inside">
         <div className="space-y-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
@@ -195,7 +195,7 @@ export default function CursosList({
         </div>
       </Modal>
 
-      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Curso" size="md">
+      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Curso" size="md" scroll="inside">
         <div className="space-y-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
@@ -216,7 +216,7 @@ export default function CursosList({
         </div>
       </Modal>
 
-      <Modal open={!!assigning} onClose={() => setAssigning(null)} title="Asignar Profesor" size="md">
+      <Modal open={!!assigning} onClose={() => setAssigning(null)} title="Asignar Profesor" size="md" scroll="inside">
         <p className="text-sm text-gray-500 mb-6">Curso: {assigning?.name}</p>
 
         {assigning && assigning.teachers.length > 0 && (
