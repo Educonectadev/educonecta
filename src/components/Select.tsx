@@ -52,7 +52,7 @@ export default function Select({ value, onChange, options, placeholder = "Selecc
             <ListboxOptions
               portal
               anchor="bottom"
-              className="z-20 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg
+              className="z-50 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg
                 max-h-60 overflow-y-auto scrollbar-hide p-1.5 min-w-[var(--button-width)]
                 max-[640px]:!fixed max-[640px]:!inset-x-4 max-[640px]:!top-1/2 max-[640px]:!-translate-y-1/2
                 max-[640px]:max-h-[60vh] max-[640px]:!w-auto max-[640px]:!m-0"
