@@ -10,7 +10,11 @@ const TABLE_NAMES = ["Student", "Grade", "Section", "Teacher", "Course", "Parent
 
 function quoteTableNames(sql: string): string {
   const joined = TABLE_NAMES.join("|")
-  return sql.replace(new RegExp(`\\b(FROM|JOIN|INTO|UPDATE|TABLE|REFERENCES)\\s+(${joined})\\b`, "g"), '$1 "$2"')
+  let result = sql.replace(new RegExp(`\\b(FROM|JOIN|INTO|UPDATE|TABLE|REFERENCES)\\s+(${joined})\\b`, "g"), '$1 "$2"')
+  // Quote column identifiers that contain uppercase letters (e.g. institutionId, firstName)
+  // but avoid already-quoted identifiers and string literals
+  result = result.replace(/(?<!["\w'])([a-z]+[A-Z][a-zA-Z0-9_]*)\b/g, '"$1"')
+  return result
 }
 
 export async function query<T = any[]>(sql: string, params?: unknown[]): Promise<T> {
