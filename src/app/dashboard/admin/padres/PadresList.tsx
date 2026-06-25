@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 
 interface Parent {
@@ -52,7 +53,7 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
       router.refresh()
     } else {
       const data = await res.json()
-      alert(data.error || "Error al registrar padre")
+      toast.danger(data.error || "Error al registrar padre")
     }
   }
 
@@ -76,7 +77,7 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
       router.refresh()
     } else {
       const data = await res.json()
-      alert(data.error || "Error al actualizar padre")
+      toast.danger(data.error || "Error al actualizar padre")
     }
   }
 
@@ -89,7 +90,7 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
       setDeleting(null)
       router.refresh()
     } else {
-      alert("Error al eliminar padre")
+      toast.danger("Error al eliminar padre")
     }
   }
 

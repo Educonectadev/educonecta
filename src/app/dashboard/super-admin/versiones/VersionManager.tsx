@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { toast } from "@heroui/react"
 
 interface Version {
   id: number
@@ -47,7 +48,7 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
       setEditing(null)
     } else {
       const err = await res.json()
-      alert(err.error)
+      toast.danger(err.error)
     }
     setLoading(false)
   }

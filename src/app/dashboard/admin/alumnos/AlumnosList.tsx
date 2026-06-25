@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
 
@@ -70,7 +71,7 @@ export default function AlumnosList({
       router.refresh()
     } else {
       const data = await res.json()
-      alert(data.error || "Error al registrar alumno")
+      toast.danger(data.error || "Error al registrar alumno")
     }
   }
 
@@ -95,7 +96,7 @@ export default function AlumnosList({
       router.refresh()
     } else {
       const data = await res.json()
-      alert(data.error || "Error al actualizar alumno")
+      toast.danger(data.error || "Error al actualizar alumno")
     }
   }
 
@@ -108,7 +109,7 @@ export default function AlumnosList({
       setDeleting(null)
       router.refresh()
     } else {
-      alert("Error al eliminar alumno")
+      toast.danger("Error al eliminar alumno")
     }
   }
 

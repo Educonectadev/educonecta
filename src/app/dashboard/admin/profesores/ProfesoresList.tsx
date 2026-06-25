@@ -2,6 +2,7 @@
 
 import { useState, useCallback, memo } from "react"
 import { useRouter } from "next/navigation"
+import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
 
@@ -198,7 +199,7 @@ export default function ProfesoresList({ teachers }: { teachers: Teacher[] }) {
       router.refresh()
     } else {
       const data = await res.json()
-      alert(data.error || "Error al registrar profesor")
+      toast.danger(data.error || "Error al registrar profesor")
     }
   }
 
@@ -216,7 +217,7 @@ export default function ProfesoresList({ teachers }: { teachers: Teacher[] }) {
       router.refresh()
     } else {
       const data = await res.json()
-      alert(data.error || "Error al actualizar profesor")
+      toast.danger(data.error || "Error al actualizar profesor")
     }
   }
 
@@ -229,7 +230,7 @@ export default function ProfesoresList({ teachers }: { teachers: Teacher[] }) {
       setDeleting(null)
       router.refresh()
     } else {
-      alert("Error al eliminar profesor")
+      toast.danger("Error al eliminar profesor")
     }
   }
 
