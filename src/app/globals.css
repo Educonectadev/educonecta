@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 @import "tailwindcss";
+@import "@heroui/styles";
 
 :root {
   --background: #f8f8f8;
