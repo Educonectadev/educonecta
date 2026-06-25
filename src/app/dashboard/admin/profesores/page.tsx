@@ -21,13 +21,13 @@ export default async function ProfesoresPage() {
     id: t.id,
     speciality: t.speciality,
     documentId: t.documentId,
-    professionalTitle: t.professionalTitle,
+    professionalTitle: t.title,
     educationLevel: t.educationLevel,
     hireDate: t.hireDate,
     contractType: t.contractType,
     address: t.address,
-    emergencyContactName: t.emergencyContactName,
-    emergencyContactPhone: t.emergencyContactPhone,
+    emergencyContactName: t.emergencyContact,
+    emergencyContactPhone: t.emergencyPhone,
     user: t.user,
   }))
 

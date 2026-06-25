@@ -69,7 +69,7 @@ export default async function TeacherPerfilPage() {
             </div>
             <div>
               <p className="text-xs text-gray-400">Título Profesional</p>
-              <p className="font-medium">{t?.professionalTitle ?? "—"}</p>
+              <p className="font-medium">{t?.title ?? "—"}</p>
             </div>
             <div>
               <p className="text-xs text-gray-400">Nivel de Educación</p>
@@ -89,7 +89,7 @@ export default async function TeacherPerfilPage() {
             </div>
             <div>
               <p className="text-xs text-gray-400">Contacto Emergencia</p>
-              <p className="font-medium">{t?.emergencyContactName ? `${t.emergencyContactName} (${t.emergencyContactPhone ?? "—"})` : "—"}</p>
+              <p className="font-medium">{t?.emergencyContact ? `${t.emergencyContact} (${t.emergencyPhone ?? "—"})` : "—"}</p>
             </div>
           </div>
         </div>
