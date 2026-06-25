@@ -42,13 +42,15 @@ export default async function TeacherDashboardPage() {
     totalStudents = r[0].total
   }
 
-  const [activeHw, classesTodayResult] = await Promise.all([
-    query<any[]>("SELECT COUNT(*) as total FROM Homework WHERE teacherId = ? AND dueDate >= ?", [teacherId, today]),
-    query<any[]>(
+  const activeHw = await query<any[]>("SELECT COUNT(*) as total FROM Homework WHERE teacherId = ? AND dueDate >= ?", [teacherId, today])
+  let classesTodayResult = [{ total: 0 }]
+  
+  if (courseTeachers.length > 0) {
+    classesTodayResult = await query<any[]>(
       "SELECT COUNT(*) as total FROM Schedule WHERE institutionId = ? AND dayOfWeek = ? AND courseId IN (?)",
       [institutionId, today.getDay(), courseTeachers.map((ct) => ct.courseId)]
-    ),
-  ])
+    )
+  }
 
   const activeHomework = activeHw[0].total
   const classesToday = classesTodayResult[0].total
