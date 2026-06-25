@@ -22,7 +22,22 @@ export default async function AlumnosPage() {
     ? (await supabase.from("Section").select("id, name, gradeId").in("gradeId", allGradeIds)).data ?? []
     : []
 
-  const students = (studentsRaw.data ?? []).map((s: any) => ({ ...s, grade: s.grade ?? null, section: s.section ?? null }))
+  const students = (studentsRaw.data ?? []).map((s: any) => ({
+    id: s.id,
+    firstName: s.firstname,
+    lastName: s.lastname,
+    documentId: s.documentid,
+    email: s.email,
+    phone: s.phone,
+    gradeId: s.gradeid,
+    sectionId: s.sectionid,
+    isActive: s.isactive,
+    createdAt: s.createdat,
+    updatedAt: s.updatedat,
+    grade: s.grade ?? null,
+    section: s.section ?? null,
+    institutionId: s.institutionid,
+  }))
 
   return <AlumnosList students={students as any} grades={grades as any[]} sections={sections as any[]} />
 }
