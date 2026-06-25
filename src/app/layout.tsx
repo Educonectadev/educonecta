@@ -7,7 +7,6 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "EduConecta",
   description: "Plataforma de seguimiento escolar en tiempo real",
-  manifest: "/manifest.json",
   icons: { icon: "/icons/icon.svg", apple: "/icons/icon.svg" },
   appleWebApp: { capable: true, title: "EduConecta", statusBarStyle: "black-translucent" },
   other: {
@@ -24,6 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className="h-full antialiased">
+      <head>
+        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
+      </head>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" precedence="default" />
