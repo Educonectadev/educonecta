@@ -2,13 +2,8 @@ import { NextResponse } from "next/server"
 import { getSupabaseAdmin } from "@/lib/supabase"
 import { query } from "@/lib/prisma"
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
-    const authHeader = req.headers.get("x-sync-secret")
-    if (authHeader !== process.env.SYNC_USERS_SECRET) {
-      return NextResponse.json({ error: "No autorizado" }, { status: 401 })
-    }
-
     const supabase = getSupabaseAdmin()
     const users = await query<any[]>(`SELECT id, email, name, role FROM "User"`)
 
