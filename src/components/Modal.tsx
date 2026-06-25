@@ -15,17 +15,17 @@ const sizeMap: Record<string, string> = {
   md: "md",
   lg: "lg",
   xl: "lg",
-  "2xl": "cover",
-  cover: "cover",
+  "2xl": "full",
+  cover: "full",
   full: "full",
 }
 
-export default function Modal({ open, onClose, title, children, size = "cover" }: ModalProps) {
+export default function Modal({ open, onClose, title, children, size = "full" }: ModalProps) {
   return (
     <HeroModal isOpen={open} onOpenChange={(v) => { if (!v) onClose() }}>
       <HeroModal.Backdrop>
         <HeroModal.Container size={(sizeMap[size] || size) as any}>
-          <HeroModal.Dialog>
+          <HeroModal.Dialog className="z-[60]">
             <HeroModal.CloseTrigger />
             <HeroModal.Header>
               <HeroModal.Heading>{title}</HeroModal.Heading>

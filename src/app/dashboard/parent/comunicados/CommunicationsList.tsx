@@ -95,8 +95,8 @@ export default function CommunicationsList({ communications }: { communications:
       {selected && (
         <Modal isOpen onOpenChange={(v) => { if (!v) setSelected(null) }}>
           <Modal.Backdrop />
-          <Modal.Container size="cover">
-            <Modal.Dialog>
+          <Modal.Container size="full">
+            <Modal.Dialog className="z-[60]">
               <Modal.CloseTrigger />
               <Modal.Header>
                 <Modal.Heading>
