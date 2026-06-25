@@ -19,6 +19,7 @@ interface DataTableProps<T> {
   onEdit?: (item: T) => void
   onDelete?: (item: T) => void
   onRowClick?: (item: T) => void
+  renderCard?: (item: T) => React.ReactNode
   emptyMessage?: string
 }
 
@@ -28,6 +29,7 @@ export default function DataTable<T extends { id: number }>({
   onEdit,
   onDelete,
   onRowClick,
+  renderCard,
   emptyMessage = "No hay registros.",
 }: DataTableProps<T>) {
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
@@ -57,7 +59,20 @@ export default function DataTable<T extends { id: number }>({
 
   return (
     <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
-      <div className="overflow-x-auto">
+      {renderCard && (
+        <div className="grid gap-3 md:hidden p-4">
+          {sorted.map((item) => (
+            <div
+              key={item.id}
+              onClick={() => onRowClick?.(item)}
+              className={`bg-white border border-gray-200 rounded-[25px] p-5 space-y-3 ${onRowClick ? "cursor-pointer" : ""}`}
+            >
+              {renderCard(item)}
+            </div>
+          ))}
+        </div>
+      )}
+      <div className={`overflow-x-auto ${renderCard ? "hidden md:block" : ""}`}>
         <table className="w-full min-w-[600px]">
           <thead>
             <tr className="border-b border-gray-100">
