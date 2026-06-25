@@ -40,7 +40,7 @@ export default function ParentProfileModal({ onClose }: { onClose: () => void })
   return (
     <Modal isOpen onOpenChange={(v) => { if (!v) onClose() }}>
       <Modal.Backdrop />
-      <Modal.Container size="full" scroll="outside">
+      <Modal.Container size="cover" scroll="outside">
         <Modal.Dialog className="z-[60]">
           <Modal.CloseTrigger />
           <Modal.Header>

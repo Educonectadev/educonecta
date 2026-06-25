@@ -181,7 +181,7 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
       {detail && (
         <Modal isOpen onOpenChange={(v) => { if (!v) setDetail(null) }}>
           <Modal.Backdrop />
-          <Modal.Container size="full" scroll="outside">
+          <Modal.Container size="cover" scroll="outside">
             <Modal.Dialog className="z-[60]">
               <Modal.CloseTrigger />
               <Modal.Header>

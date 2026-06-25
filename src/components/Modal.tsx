@@ -15,12 +15,12 @@ const sizeMap: Record<string, string> = {
   md: "md",
   lg: "lg",
   xl: "lg",
-  "2xl": "full",
-  cover: "full",
+  "2xl": "cover",
+  cover: "cover",
   full: "full",
 }
 
-export default function Modal({ open, onClose, title, children, size = "full" }: ModalProps) {
+export default function Modal({ open, onClose, title, children, size = "cover" }: ModalProps) {
   return (
     <HeroModal isOpen={open} onOpenChange={(v) => { if (!v) onClose() }}>
       <HeroModal.Backdrop>
