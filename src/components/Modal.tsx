@@ -31,7 +31,7 @@ export default function Modal({ open, onClose, title, children, size = "cover", 
             <HeroModal.Header>
               <HeroModal.Heading>{title}</HeroModal.Heading>
             </HeroModal.Header>
-            <HeroModal.Body>
+            <HeroModal.Body className="overflow-x-hidden">
               {children}
             </HeroModal.Body>
           </HeroModal.Dialog>
