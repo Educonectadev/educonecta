@@ -47,7 +47,7 @@ export async function getServerSession(): Promise<Session | null> {
         email: user.email,
         name: user.name,
         role: user.role,
-        institutionId: user.institutionid ?? null,
+        institutionId: user.institutionId ?? null,
         institutionName,
         teacherId: teacher?.id ?? null,
         parentId: parent?.id ?? null,
