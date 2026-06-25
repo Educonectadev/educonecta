@@ -1,6 +1,6 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { count, findMany } from "@/lib/prisma"
+import { count, query } from "@/lib/prisma"
 import AdminDashboard from "./AdminDashboard"
 
 export default async function AdminDashboardPage() {
@@ -13,8 +13,28 @@ export default async function AdminDashboardPage() {
     count("Teacher", { institutionId }),
     count("Parent", { institutionId }),
     count("Course", { institutionId }),
-    findMany("Student", { where: { institutionId }, select: ["id", "firstName", "lastName", "documentId", "grade:gradeId(name)", "section:sectionId(name)"], orderBy: "createdAt", orderDir: "DESC", limit: 5 }),
-    findMany("Teacher", { where: { institutionId }, select: ["id", "speciality", "user:userId(id, name, email)"], orderBy: "createdAt", orderDir: "DESC", limit: 5 }),
+    query(
+      `SELECT s.id, s.firstName, s.lastName, s.documentId,
+              jsonb_build_object('name', g.name) AS grade,
+              jsonb_build_object('name', sec.name) AS section
+       FROM Student s
+       LEFT JOIN Grade g ON s.gradeId = g.id
+       LEFT JOIN Section sec ON s.sectionId = sec.id
+       WHERE s.institutionId = ?
+       ORDER BY s.createdAt DESC
+       LIMIT 5`,
+      [institutionId]
+    ),
+    query(
+      `SELECT t.id, t.speciality,
+              jsonb_build_object('name', u.name, 'email', u.email) AS "user"
+       FROM Teacher t
+       JOIN User u ON t.userId = u.id
+       WHERE t.institutionId = ?
+       ORDER BY t.createdAt DESC
+       LIMIT 5`,
+      [institutionId]
+    ),
   ])
 
   const stats = [
