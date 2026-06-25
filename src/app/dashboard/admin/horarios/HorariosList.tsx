@@ -526,7 +526,7 @@ export default function HorariosList({
         </div>
       </Modal>
 
-      <Modal open={showJornada} onClose={() => setShowJornada(false)} title="Crear Jornada" size="2xl">
+      <Modal open={showJornada} onClose={() => setShowJornada(false)} title="Crear Jornada" size="2xl" scroll="inside">
         <p className="text-sm text-gray-500 mb-6">Define los bloques de curso para un día completo. El receso se agrega automáticamente.</p>
 
         <div className="flex gap-4 mb-6">

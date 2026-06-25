@@ -8,6 +8,7 @@ interface ModalProps {
   title: string
   children: React.ReactNode
   size?: string
+  scroll?: "inside" | "outside"
 }
 
 const sizeMap: Record<string, string> = {
@@ -20,11 +21,11 @@ const sizeMap: Record<string, string> = {
   full: "full",
 }
 
-export default function Modal({ open, onClose, title, children, size = "cover" }: ModalProps) {
+export default function Modal({ open, onClose, title, children, size = "cover", scroll = "outside" }: ModalProps) {
   return (
     <HeroModal isOpen={open} onOpenChange={(v) => { if (!v) onClose() }}>
       <HeroModal.Backdrop>
-        <HeroModal.Container size={(sizeMap[size] || size) as any} scroll="outside">
+        <HeroModal.Container size={(sizeMap[size] || size) as any} scroll={scroll}>
           <HeroModal.Dialog className="z-[60]">
             <HeroModal.CloseTrigger />
             <HeroModal.Header>
