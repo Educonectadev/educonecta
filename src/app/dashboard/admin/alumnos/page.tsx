@@ -1,7 +1,6 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { findMany } from "@/lib/prisma"
-import { getSupabaseAdmin } from "@/lib/supabase"
+import { query } from "@/lib/prisma"
 import AlumnosList from "./AlumnosList"
 
 export default async function AlumnosPage() {
@@ -9,35 +8,27 @@ export default async function AlumnosPage() {
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") redirect("/login")
 
   const institutionId = session.user.institutionId!
-  const supabase = getSupabaseAdmin()
 
-  const [studentsRaw, grades, sectionsRaw] = await Promise.all([
-    supabase.from("Student").select("*, grade:Grade(id, name), section:Section(id, name)").eq("institutionId", institutionId).order("createdAt", { ascending: false }),
-    findMany("Grade", { where: { institutionId } }),
-    supabase.from("Section").select("id, name, gradeId").in("gradeId", [] as number[]),
+  const [students, grades, sections] = await Promise.all([
+    query(
+      `SELECT s.id,
+              s.firstName AS "firstName",
+              s.lastName AS "lastName",
+              s.documentId AS "documentId",
+              s.email,
+              s.phone,
+              jsonb_build_object('id', g.id, 'name', g.name) AS grade,
+              jsonb_build_object('id', sec.id, 'name', sec.name) AS section
+       FROM Student s
+       LEFT JOIN Grade g ON s.gradeId = g.id
+       LEFT JOIN Section sec ON s.sectionId = sec.id
+       WHERE s.institutionId = ?
+       ORDER BY s.createdAt DESC`,
+      [institutionId]
+    ),
+    query("SELECT id, name FROM Grade WHERE institutionId = ? ORDER BY name", [institutionId]),
+    query("SELECT id, name, gradeId FROM Section WHERE gradeId IN (SELECT id FROM Grade WHERE institutionId = ?) ORDER BY name", [institutionId]),
   ])
-
-  const allGradeIds = (grades as any[]).map((g) => g.id)
-  const sections = allGradeIds.length > 0
-    ? (await supabase.from("Section").select("id, name, gradeId").in("gradeId", allGradeIds)).data ?? []
-    : []
-
-  const students = (studentsRaw.data ?? []).map((s: any) => ({
-    id: s.id,
-    firstName: s.firstname,
-    lastName: s.lastname,
-    documentId: s.documentid,
-    email: s.email,
-    phone: s.phone,
-    gradeId: s.gradeid,
-    sectionId: s.sectionid,
-    isActive: s.isactive,
-    createdAt: s.createdat,
-    updatedAt: s.updatedat,
-    grade: s.grade ?? null,
-    section: s.section ?? null,
-    institutionId: s.institutionid,
-  }))
 
   return <AlumnosList students={students as any} grades={grades as any[]} sections={sections as any[]} />
 }
