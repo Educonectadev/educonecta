@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
+import DataTable from "@/components/DataTable"
 
 interface Parent {
   id: number
@@ -108,60 +109,49 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
         <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] bg-black px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-gray-800 text-center">+ Registrar Padre</button>
       </div>
 
-      {parents.length === 0 ? (
-        <div className="bg-gray-50 border border-gray-200 rounded-[30px] p-12 text-center text-gray-500">No hay padres registrados.</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {parents.map((p) => {
-            const initials = p.user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
-            return (
-              <div key={p.id} className="bg-white border border-gray-200 rounded-[25px] p-5 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-11 h-11 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center text-sm font-bold shrink-0">
-                    {initials}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-[#1a1a1a] truncate">{p.user.name}</h3>
-                    <p className="text-xs text-gray-400 truncate">{p.user.email}</p>
-                  </div>
+      <DataTable
+        data={parents}
+        emptyMessage="No hay padres registrados."
+        onEdit={openEdit}
+        onDelete={(p) => setDeleting(p)}
+        columns={[
+          {
+            key: "name",
+            label: "Padre",
+            sortable: true,
+            render: (p) => (
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-500 shrink-0">
+                  {p.user.name.charAt(0)}
                 </div>
-                {p.user.phone && (
-                  <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                    </svg>
-                    <span>{p.user.phone}</span>
-                  </div>
-                )}
-                <div className="bg-gray-50 rounded-[15px] p-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
-                    Hijos ({p.children.length})
-                  </p>
-                  {p.children.length === 0 ? (
-                    <p className="text-xs text-gray-400">Sin hijos vinculados</p>
-                  ) : (
-                    <div className="space-y-1.5">
-                      {p.children.map((c) => (
-                        <div key={c.student.id} className="flex items-center gap-2 text-sm">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                          </svg>
-                          <span className="text-gray-600">{c.student.firstName} {c.student.lastName}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100">
-                  <button onClick={() => openEdit(p)} className="text-xs text-gray-500 hover:text-black transition-all border border-gray-200 rounded-[30px] px-3 py-1.5">Editar</button>
-                  <button onClick={() => setDeleting(p)} className="text-xs text-red-500 hover:text-red-700 transition-all border border-red-200 rounded-[30px] px-3 py-1.5">Eliminar</button>
+                <div>
+                  <p className="text-sm font-medium text-gray-800">{p.user.name}</p>
+                  <p className="text-[11px] text-gray-400">{p.user.email}</p>
                 </div>
               </div>
-            )
-          })}
-        </div>
-      )}
+            ),
+          },
+          {
+            key: "phone",
+            label: "Teléfono",
+            render: (p) => p.user.phone ? <span className="text-sm text-gray-500">{p.user.phone}</span> : <span className="text-sm text-gray-300">—</span>,
+          },
+          {
+            key: "childrenCount",
+            label: "Hijos",
+            render: (p) => (
+              <div>
+                <span className="text-sm font-medium text-gray-700">{p.children.length}</span>
+                {p.children.length > 0 && (
+                  <div className="text-[11px] text-gray-400 mt-0.5">
+                    {p.children.map((c) => c.student.firstName).join(", ")}
+                  </div>
+                )}
+              </div>
+            ),
+          },
+        ]}
+      />
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Padre" size="md" scroll="inside">
         <div className="space-y-4">

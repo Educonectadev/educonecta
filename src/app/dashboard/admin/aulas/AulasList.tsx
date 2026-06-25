@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Modal from "@/components/Modal"
+import DataTable from "@/components/DataTable"
 
 interface Aula {
   id: number
@@ -103,56 +104,37 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
         <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] bg-black px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-gray-800 text-center">+ Registrar Aula</button>
       </div>
 
-      {aulas.length === 0 ? (
-        <div className="bg-gray-50 border border-gray-200 rounded-[30px] p-12 text-center text-gray-500">No hay aulas registradas.</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {aulas.map((a) => (
-            <div key={a.id} className="bg-white border border-gray-200 rounded-[25px] p-5 hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-100 rounded-[12px] flex items-center justify-center text-gray-400">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                      <polyline points="9 22 9 12 15 12 15 22" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-[#1a1a1a]">{a.name}</h3>
-                    {a.code && <span className="text-xs text-gray-400">{a.code}</span>}
-                  </div>
-                </div>
+      <DataTable
+        data={aulas}
+        onEdit={openEdit}
+        onDelete={(a) => setDeleting(a)}
+        emptyMessage="No hay aulas registradas."
+        columns={[
+          {
+            key: "name",
+            label: "Aula",
+            sortable: true,
+            render: (a) => (
+              <div>
+                <p className="text-sm font-medium text-gray-800">{a.name}</p>
+                {a.code && <p className="text-[11px] text-gray-400">{a.code}</p>}
               </div>
-              <div className="space-y-2 text-sm">
-                {a.capacity != null && (
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                      <circle cx="9" cy="7" r="4" />
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                    <span>{a.capacity} estudiantes</span>
-                  </div>
-                )}
-                {a.location && (
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                      <circle cx="12" cy="10" r="3" />
-                    </svg>
-                    <span>{a.location}</span>
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100">
-                <button onClick={() => openEdit(a)} className="text-xs text-gray-500 hover:text-black transition-all border border-gray-200 rounded-[30px] px-3 py-1.5">Editar</button>
-                <button onClick={() => setDeleting(a)} className="text-xs text-red-500 hover:text-red-700 transition-all border border-red-200 rounded-[30px] px-3 py-1.5">Eliminar</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ),
+          },
+          {
+            key: "capacity",
+            label: "Capacidad",
+            sortable: true,
+            render: (a) => a.capacity != null ? <span className="text-sm text-gray-500">{a.capacity} estudiantes</span> : <span className="text-sm text-gray-300">—</span>,
+          },
+          {
+            key: "location",
+            label: "Ubicación",
+            sortable: true,
+            render: (a) => a.location ? <span className="text-sm text-gray-500">{a.location}</span> : <span className="text-sm text-gray-300">—</span>,
+          },
+        ]}
+      />
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Aula" size="md" scroll="inside">
         <FormFields form={form} setForm={setForm} />

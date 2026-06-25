@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
+import DataTable from "@/components/DataTable"
 
 interface CourseTeacher {
   id: number
@@ -122,57 +123,44 @@ export default function CursosList({
         </button>
       </div>
 
-      {courses.length === 0 ? (
-        <div className="bg-gray-50 border border-gray-200 rounded-[30px] p-12 text-center text-gray-500">No hay cursos registrados.</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {courses.map((c) => (
-            <div key={c.id} className="bg-white border border-gray-200 rounded-[25px] p-5 hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h3 className="font-semibold text-[#1a1a1a]">{c.name}</h3>
-                  {c.code && <span className="text-xs text-gray-400">{c.code}</span>}
-                </div>
-                <div className="w-9 h-9 bg-gray-100 rounded-[10px] flex items-center justify-center text-gray-400 shrink-0">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                  </svg>
-                </div>
+      <DataTable
+        data={courses}
+        emptyMessage="No hay cursos registrados."
+        onEdit={openEdit}
+        onDelete={(c) => setDeleting(c)}
+        columns={[
+          {
+            key: "name",
+            label: "Curso",
+            sortable: true,
+            render: (c) => (
+              <div>
+                <p className="text-sm font-medium text-gray-800">{c.name}</p>
+                {c.code && <p className="text-[11px] text-gray-400">{c.code}</p>}
               </div>
-              {c.description && (
-                <p className="text-sm text-gray-500 mb-3 line-clamp-2">{c.description}</p>
-              )}
-              <div className="space-y-2">
-                {c.teachers.length > 0 ? (
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-1.5">Profesores</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {c.teachers.map((ct) => (
-                        <span key={ct.id} className="text-[11px] bg-blue-50 text-blue-700 rounded-full px-2.5 py-0.5 flex items-center gap-1">
-                          {ct.teacher.user.name}
-                          {(ct.grade || ct.section) && (
-                            <span className="opacity-60">
-                              ({ct.grade?.name}{ct.grade && ct.section ? " / " : ""}{ct.section?.name ?? ""})
-                            </span>
-                          )}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-xs text-gray-400">Sin profesores asignados</p>
-                )}
+            ),
+          },
+          {
+            key: "description",
+            label: "Descripción",
+            render: (c) => c.description ? <span className="text-sm text-gray-500 line-clamp-1">{c.description}</span> : <span className="text-sm text-gray-300">—</span>,
+          },
+          {
+            key: "teachers",
+            label: "Profesores",
+            render: (c) => c.teachers.length > 0 ? (
+              <div className="flex flex-wrap gap-1">
+                {c.teachers.map((ct) => (
+                  <span key={ct.id} className="text-[11px] bg-blue-50 text-blue-700 rounded-full px-2 py-0.5">
+                    {ct.teacher.user.name}
+                    {(ct.grade || ct.section) && ` (${ct.grade?.name || ""}${ct.grade && ct.section ? " / " : ""}${ct.section?.name || ""})`}
+                  </span>
+                ))}
               </div>
-              <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100">
-                <button onClick={() => { setAssigning(c); setAssignForm({ teacherId: "", gradeId: "", sectionId: "" }) }} className="text-xs text-gray-500 hover:text-black transition-all border border-gray-200 rounded-[30px] px-2.5 py-1.5">+ Profesor</button>
-                <button onClick={() => openEdit(c)} className="text-xs text-gray-500 hover:text-black transition-all border border-gray-200 rounded-[30px] px-2.5 py-1.5">Editar</button>
-                <button onClick={() => setDeleting(c)} className="text-xs text-red-500 hover:text-red-700 transition-all border border-red-200 rounded-[30px] px-2.5 py-1.5">Eliminar</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ) : <span className="text-sm text-gray-400">—</span>,
+          },
+        ]}
+      />
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Nuevo Curso" size="md" scroll="inside">
         <div className="space-y-4">

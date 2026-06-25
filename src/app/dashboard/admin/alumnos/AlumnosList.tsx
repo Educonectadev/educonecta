@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
+import DataTable from "@/components/DataTable"
 
 interface Student {
   id: number
@@ -122,56 +123,45 @@ export default function AlumnosList({
         </button>
       </div>
 
-      {students.length === 0 ? (
-        <div className="bg-gray-50 border border-gray-200 rounded-[30px] p-12 text-center text-gray-500">No hay alumnos registrados.</div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {students.map((s) => {
-            const initials = `${s.firstName[0]}${s.lastName[0]}`.toUpperCase()
-            return (
-              <div key={s.id} className="bg-white border border-gray-200 rounded-[25px] p-5 hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-11 h-11 rounded-full bg-black text-white flex items-center justify-center text-sm font-bold shrink-0">
-                    {initials}
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-[#1a1a1a] truncate">{s.firstName} {s.lastName}</h3>
-                    <div className="flex gap-1.5 mt-1">
-                      {s.grade && (
-                        <span className="text-[11px] bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">{s.grade.name}</span>
-                      )}
-                      {s.section && (
-                        <span className="text-[11px] bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">Sec. {s.section.name}</span>
-                      )}
-                    </div>
-                  </div>
+      <DataTable
+        data={students}
+        emptyMessage="No hay alumnos registrados."
+        onEdit={openEdit}
+        onDelete={(s) => setDeleting(s)}
+        columns={[
+          {
+            key: "name",
+            label: "Alumno",
+            sortable: true,
+            render: (s) => (
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-500 shrink-0">
+                  {s.firstName.charAt(0)}{s.lastName.charAt(0)}
                 </div>
-                <div className="space-y-1.5 text-sm">
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" /><line x1="3" y1="9" x2="21" y2="9" /><line x1="9" y1="21" x2="9" y2="9" />
-                    </svg>
-                    <span>{s.documentId}</span>
-                  </div>
-                  {s.email && (
-                    <div className="flex items-center gap-2 text-gray-500">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                        <polyline points="22,6 12,13 2,6" />
-                      </svg>
-                      <span className="truncate">{s.email}</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex gap-2 mt-4 pt-3 border-t border-gray-100">
-                  <button onClick={() => openEdit(s)} className="text-xs text-gray-500 hover:text-black transition-all border border-gray-200 rounded-[30px] px-3 py-1.5">Editar</button>
-                  <button onClick={() => setDeleting(s)} className="text-xs text-red-500 hover:text-red-700 transition-all border border-red-200 rounded-[30px] px-3 py-1.5">Eliminar</button>
+                <div>
+                  <p className="text-sm font-medium text-gray-800">{s.firstName} {s.lastName}</p>
+                  <p className="text-[11px] text-gray-400">{s.email || "—"}</p>
                 </div>
               </div>
-            )
-          })}
-        </div>
-      )}
+            ),
+          },
+          {
+            key: "documentId",
+            label: "Documento",
+            sortable: true,
+          },
+          {
+            key: "grade",
+            label: "Grado / Sección",
+            render: (s) => (
+              <div className="flex gap-1.5">
+                {s.grade && <span className="text-xs bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">{s.grade.name}</span>}
+                {s.section && <span className="text-xs bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">Sec. {s.section.name}</span>}
+              </div>
+            ),
+          },
+        ]}
+      />
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Alumno" size="md" scroll="inside">
         <div className="space-y-4">
