@@ -23,7 +23,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   try {
     const body = await request.json()
-    const { firstName, lastName, password, phone, speciality, documentId, professionalTitle, educationLevel, hireDate, contractType, address, emergencyContactName, emergencyContactPhone } = body
+    const { firstName, lastName, password, phone, speciality, documentId, professionalTitle, contractType, emergencyContactName, emergencyContactPhone } = body
 
     const userData: Record<string, unknown> = {}
     if (firstName || lastName) {
@@ -33,19 +33,16 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     if (password) userData.passwordHash = await bcrypt.hash(password, 10)
 
     if (Object.keys(userData).length > 0) {
-      await update("User", { id: teacher.userId }, userData)
+      await update("User", { id: (teacher as any).userId }, userData)
     }
 
     await update("Teacher", { id }, {
-      speciality: speciality !== undefined ? speciality : teacher.speciality,
-      documentId: documentId !== undefined ? documentId : teacher.documentId,
-      professionalTitle: professionalTitle !== undefined ? professionalTitle : teacher.professionalTitle,
-      educationLevel: educationLevel !== undefined ? educationLevel : teacher.educationLevel,
-      hireDate: hireDate !== undefined ? hireDate : teacher.hireDate,
-      contractType: contractType !== undefined ? contractType : teacher.contractType,
-      address: address !== undefined ? address : teacher.address,
-      emergencyContactName: emergencyContactName !== undefined ? emergencyContactName : teacher.emergencyContactName,
-      emergencyContactPhone: emergencyContactPhone !== undefined ? emergencyContactPhone : teacher.emergencyContactPhone,
+      speciality: speciality !== undefined ? speciality : (teacher as any).speciality,
+      documentId: documentId !== undefined ? documentId : (teacher as any).documentId,
+      title: professionalTitle !== undefined ? professionalTitle : (teacher as any).title,
+      contractType: contractType !== undefined ? contractType : (teacher as any).contractType,
+      emergencyContact: emergencyContactName !== undefined ? emergencyContactName : (teacher as any).emergencyContact,
+      emergencyPhone: emergencyContactPhone !== undefined ? emergencyContactPhone : (teacher as any).emergencyPhone,
     })
 
     const updated = await query(
@@ -57,7 +54,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       [id]
     )
     return NextResponse.json(updated[0])
-  } catch {
+  } catch (e) {
+    console.error("Error updating teacher:", e)
     return NextResponse.json({ error: "Error al actualizar" }, { status: 500 })
   }
 }

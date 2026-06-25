@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { firstName, lastName, password, phone, speciality, documentId, professionalTitle, educationLevel, hireDate, contractType, address, emergencyContactName, emergencyContactPhone } = body
+    const { firstName, lastName, password, phone, speciality, documentId, professionalTitle, contractType, emergencyContactName, emergencyContactPhone } = body
 
     if (!firstName || !lastName || !password) {
       return NextResponse.json({ error: "Nombres, apellidos y contraseña son requeridos" }, { status: 400 })
@@ -81,13 +81,10 @@ export async function POST(request: Request) {
       userId,
       speciality: speciality || null,
       documentId: documentId || null,
-      professionalTitle: professionalTitle || null,
-      educationLevel: educationLevel || null,
-      hireDate: hireDate || null,
+      title: professionalTitle || null,
       contractType: contractType || null,
-      address: address || null,
-      emergencyContactName: emergencyContactName || null,
-      emergencyContactPhone: emergencyContactPhone || null,
+      emergencyContact: emergencyContactName || null,
+      emergencyPhone: emergencyContactPhone || null,
     })
 
     const teacher = await query(
@@ -100,7 +97,8 @@ export async function POST(request: Request) {
     )
 
     return NextResponse.json(teacher[0], { status: 201 })
-  } catch {
+  } catch (e) {
+    console.error("Error creating teacher:", e)
     return NextResponse.json({ error: "Error al crear profesor" }, { status: 500 })
   }
 }
