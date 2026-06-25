@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Provider from "@/components/Provider"
 import InstallPrompt from "@/components/InstallPrompt"
+import ToastProvider from "@/components/ToastProvider"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -28,7 +29,10 @@ export default function RootLayout({
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" precedence="default" />
       <meta name="theme-color" content="#000000" />
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
-        <Provider>{children}</Provider>
+        <Provider>
+          <ToastProvider />
+          {children}
+        </Provider>
         <InstallPrompt />
       </body>
     </html>
