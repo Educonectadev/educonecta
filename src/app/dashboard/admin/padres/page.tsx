@@ -13,8 +13,8 @@ export default async function PadresPage() {
     getSupabaseAdmin()
       .from("Parent")
       .select("*, user:User(*)")
-      .eq("institutionId", institutionId)
-      .order("createdAt", { ascending: false }),
+      .eq("institutionid", institutionId)
+      .order("createdat", { ascending: false }),
     getSupabaseAdmin()
       .from("ParentStudent")
       .select("*, student:Student(*)"),

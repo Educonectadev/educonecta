@@ -17,7 +17,7 @@ export default async function GradosPage() {
     const { data, error } = await getSupabaseAdmin()
       .from("Section")
       .select("*")
-      .in("gradeId", gradeIds)
+      .in("gradeid", gradeIds)
       .order("name")
     if (error) throw error
     sections = data ?? []

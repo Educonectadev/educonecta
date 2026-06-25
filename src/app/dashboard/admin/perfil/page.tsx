@@ -15,17 +15,17 @@ export default async function AdminPerfilPage() {
   const [user, institution, studentRes, teacherRes, courseRes, scheduleRes, gradeRes, gradeIds] = await Promise.all([
     findOne("User", { id: Number(session.user.id) }, ["id", "email", "name", "role", "createdAt"]),
     findOne("Institution", { id: institutionId }),
-    supabase.from("Student").select("id", { count: "exact", head: true }).eq("institutionId", institutionId).eq("isActive", true),
-    supabase.from("Teacher").select("id", { count: "exact", head: true }).eq("institutionId", institutionId),
-    supabase.from("Course").select("id", { count: "exact", head: true }).eq("institutionId", institutionId),
-    supabase.from("Schedule").select("id", { count: "exact", head: true }).eq("institutionId", institutionId),
-    supabase.from("Grade").select("id", { count: "exact", head: true }).eq("institutionId", institutionId),
-    supabase.from("Grade").select("id").eq("institutionId", institutionId),
+    supabase.from("Student").select("id", { count: "exact", head: true }).eq("institutionid", institutionId).eq("isactive", true),
+    supabase.from("Teacher").select("id", { count: "exact", head: true }).eq("institutionid", institutionId),
+    supabase.from("Course").select("id", { count: "exact", head: true }).eq("institutionid", institutionId),
+    supabase.from("Schedule").select("id", { count: "exact", head: true }).eq("institutionid", institutionId),
+    supabase.from("Grade").select("id", { count: "exact", head: true }).eq("institutionid", institutionId),
+    supabase.from("Grade").select("id").eq("institutionid", institutionId),
   ])
 
   const gIds = (gradeIds.data ?? []).map((g: any) => g.id)
   const sectionRes = gIds.length > 0
-    ? await supabase.from("Section").select("id", { count: "exact", head: true }).in("gradeId", gIds)
+    ? await supabase.from("Section").select("id", { count: "exact", head: true }).in("gradeid", gIds)
     : { count: 0 }
 
   return (

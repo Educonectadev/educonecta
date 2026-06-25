@@ -18,15 +18,15 @@ export default async function HorariosPage() {
         .select(
           "*, course:Course(id, name), teacher:Teacher(id, user:User(name), speciality), grade:Grade(id, name), section:Section(id, name)",
         )
-        .eq("institutionId", institutionId)
-        .order("dayOfWeek")
-        .order("startTime"),
+        .eq("institutionid", institutionId)
+        .order("dayofweek")
+        .order("starttime"),
       findMany("Course", { where: { institutionId }, orderBy: "name" }) as Promise<any[]>,
       findMany("Classroom", { where: { institutionId }, orderBy: "name" }) as Promise<any[]>,
       supabase
         .from("Teacher")
-        .select("id, userId, user:User(name), speciality")
-        .eq("institutionId", institutionId)
+        .select("id, userid, user:User(name), speciality")
+        .eq("institutionid", institutionId)
         .order("name", { foreignTable: "User" }),
       findMany("Grade", { where: { institutionId }, orderBy: "name" }) as Promise<any[]>,
     ])
@@ -35,16 +35,16 @@ export default async function HorariosPage() {
   const [{ data: sectionsData }, { data: studentsWithParents }] = await Promise.all([
     supabase
       .from("Section")
-      .select("id, name, gradeId")
-      .in("gradeId", gradeIds)
+      .select("id, name, gradeid")
+      .in("gradeid", gradeIds)
       .order("name"),
     supabase
       .from("Student")
-      .select("id, firstName, lastName, gradeId, sectionId, parent:Parent(id, user:User(name))")
-      .eq("institutionId", institutionId)
-      .eq("isActive", true)
-      .order("lastName")
-      .order("firstName"),
+      .select("id, firstname, lastname, gradeid, sectionid, parent:Parent(id, user:User(name))")
+      .eq("institutionid", institutionId)
+      .eq("isactive", true)
+      .order("lastname")
+      .order("firstname"),
   ])
 
   const schedules = (schedulesData || []).map((s: any) => ({

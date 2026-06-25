@@ -6,28 +6,12 @@ export function toSupabaseTable(table: string): string {
 
 const TABLE_NAMES = ["Student", "Grade", "Section", "Teacher", "Course", "Parent", "User", "Institution", "CourseTeacher", "Schedule", "Homework", "HomeworkSubmission", "Attendance", "Tardiness", "GradeRecord", "Discipline", "Notification", "ParentStudent", "Communication", "InstitutionalAdmin", "Enrollment", "Subject", "Classroom"]
 
-// camelCase column names used across raw SQL queries that must be double-quoted
-// so PostgreSQL preserves their case (it folds unquoted identifiers to lowercase)
-const COLUMN_NAMES = [
-  "gradeId", "sectionId", "institutionId", "teacherId", "courseId",
-  "studentId", "parentId", "userId", "homeworkId",
-  "firstName", "lastName", "documentId", "isActive", "passwordHash",
-  "createdAt", "updatedAt", "academicYear", "isPresent", "minutesLate",
-  "isCurrent", "enrollmentDate", "dayOfWeek", "startTime", "endTime",
-  "speciality", "submitDate", "classroomId",
-]
-
 function quoteTableNames(sql: string): string {
   const tableJoined = TABLE_NAMES.join("|")
-  let result = sql.replace(
+  return sql.replace(
     new RegExp(`\\b(FROM|JOIN|INTO|UPDATE|TABLE|REFERENCES)\\s+(${tableJoined})\\b`, "g"),
     '$1 "$2"'
   )
-  // Quote camelCase column names so Postgres treats them case-sensitively
-  for (const col of COLUMN_NAMES) {
-    result = result.replace(new RegExp(`\\b${col}\\b`, "g"), `"${col}"`)
-  }
-  return result
 }
 
 export async function query<T = any[]>(sql: string, params?: unknown[]): Promise<T> {
@@ -56,7 +40,7 @@ export async function findOne<T = Record<string, unknown>>(
   const cols = select?.join(", ") || "*"
   let q = getSupabaseAdmin().from(table).select(cols)
   for (const [key, value] of Object.entries(where)) {
-    q = q.eq(key, value as any)
+    q = q.eq(key.toLowerCase(), value as any)
   }
   const { data, error } = await q.limit(1).maybeSingle()
   if (error) throw error
@@ -79,12 +63,12 @@ export async function findMany<T = Record<string, unknown>>(
 
   if (opts?.where) {
     for (const [key, value] of Object.entries(opts.where)) {
-      q = q.eq(key, value as any)
+      q = q.eq(key.toLowerCase(), value as any)
     }
   }
 
   if (opts?.orderBy) {
-    q = q.order(opts.orderBy, { ascending: opts.orderDir !== "DESC" })
+    q = q.order(opts.orderBy.toLowerCase(), { ascending: opts.orderDir !== "DESC" })
   }
 
   if (opts?.limit) q = q.limit(opts.limit)
@@ -99,9 +83,12 @@ export async function create(
   table: string,
   data: Record<string, unknown>,
 ): Promise<number> {
+  const lowerData = Object.fromEntries(
+    Object.entries(data).map(([k, v]) => [k.toLowerCase(), v])
+  )
   const { data: inserted, error } = await getSupabaseAdmin()
     .from(table)
-    .insert(data as any)
+    .insert(lowerData as any)
     .select("id")
     .single()
   if (error) throw error
@@ -113,9 +100,12 @@ export async function update(
   where: Record<string, unknown>,
   data: Record<string, unknown>,
 ): Promise<number> {
-  let q = getSupabaseAdmin().from(table).update(data as any)
+  const lowerData = Object.fromEntries(
+    Object.entries(data).map(([k, v]) => [k.toLowerCase(), v])
+  )
+  let q = getSupabaseAdmin().from(table).update(lowerData as any)
   for (const [key, value] of Object.entries(where)) {
-    q = q.eq(key, value as any)
+    q = q.eq(key.toLowerCase(), value as any)
   }
   const { error, count } = await q
   if (error) throw error
@@ -128,7 +118,7 @@ export async function remove(
 ): Promise<number> {
   let q = getSupabaseAdmin().from(table).delete()
   for (const [key, value] of Object.entries(where)) {
-    q = q.eq(key, value as any)
+    q = q.eq(key.toLowerCase(), value as any)
   }
   const { error, count } = await q
   if (error) throw error
@@ -142,7 +132,7 @@ export async function count(
   let q = getSupabaseAdmin().from(table).select("*", { count: "exact", head: true })
   if (where) {
     for (const [key, value] of Object.entries(where)) {
-      q = q.eq(key, value as any)
+      q = q.eq(key.toLowerCase(), value as any)
     }
   }
   const { count: total, error } = await q

@@ -13,7 +13,7 @@ export default async function VersionesPage() {
   const { data: versiones } = await supabase
     .from("Version")
     .select("*")
-    .order("createdAt", { ascending: false })
+    .order("createdat", { ascending: false })
 
   return (
     <div>

@@ -26,8 +26,8 @@ export default async function AlumnosPage() {
        ORDER BY s.createdAt DESC`,
       [institutionId]
     ),
-    query('SELECT id, name FROM Grade WHERE "institutionId" = ? ORDER BY name', [institutionId]),
-    query('SELECT id, name, gradeId FROM Section WHERE gradeId IN (SELECT id FROM Grade WHERE "institutionId" = ?) ORDER BY name', [institutionId]),
+    query('SELECT id, name FROM Grade WHERE institutionid = ? ORDER BY name', [institutionId]),
+    query('SELECT id, name, gradeid FROM Section WHERE gradeid IN (SELECT id FROM Grade WHERE institutionid = ?) ORDER BY name', [institutionId]),
   ])
 
   return <AlumnosList students={students as any} grades={grades as any[]} sections={sections as any[]} />

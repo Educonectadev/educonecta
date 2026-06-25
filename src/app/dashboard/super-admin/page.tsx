@@ -8,7 +8,7 @@ async function supabaseCount(table: string, match?: Record<string, unknown>): Pr
   let query = admin.from(table).select("id", { count: "exact", head: true })
   if (match) {
     for (const [key, value] of Object.entries(match)) {
-      query = query.eq(key, value)
+      query = query.eq(key.toLowerCase(), value)
     }
   }
   const { count, error } = await query
@@ -31,8 +31,8 @@ export default async function SuperAdminDashboardPage() {
     supabaseCount("Teacher"),
     supabaseCount("Student"),
     supabaseCount("Parent"),
-    supabase.from("Version").select("*").eq("isCurrent", true).maybeSingle(),
-    supabase.from("Institution").select("id, name, isActive, createdAt").order("createdAt", { ascending: false }).limit(5),
+    supabase.from("Version").select("*").eq("iscurrent", true).maybeSingle(),
+    supabase.from("Institution").select("id, name, isactive, createdat").order("createdat", { ascending: false }).limit(5),
   ])
 
   const stats = [

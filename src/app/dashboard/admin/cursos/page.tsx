@@ -20,7 +20,7 @@ export default async function CursosPage() {
     supabase
       .from("Teacher")
       .select("id, user:User(name)")
-      .eq("institutionId", institutionId)
+      .eq("institutionid", institutionId)
       .then(({ data, error }) => {
         if (error) throw error
         return data ?? []
@@ -35,7 +35,7 @@ export default async function CursosPage() {
       ? supabase
           .from("CourseTeacher")
           .select("*, teacher:Teacher(id, user:User(name)), grade:Grade(id, name), section:Section(id, name)")
-          .in("courseId", courseIds)
+          .in("courseid", courseIds)
           .then(({ data, error }) => {
             if (error) throw error
             return data ?? []
@@ -47,7 +47,7 @@ export default async function CursosPage() {
       const { data, error } = await supabase
         .from("Section")
         .select("*")
-        .in("gradeId", gradeIds)
+        .in("gradeid", gradeIds)
       if (error) throw error
       return data ?? []
     })(),

@@ -50,7 +50,7 @@ export async function POST(req: Request) {
     const passwordHash = await hashPassword(password)
 
     const { error: dbError } = await supabase.from("User").upsert(
-      { email, passwordHash, name, role: "SUPER_ADMIN" },
+      { email, passwordhash: passwordHash, name, role: "SUPER_ADMIN" },
       { onConflict: "email", ignoreDuplicates: false },
     )
 

@@ -12,8 +12,8 @@ export default async function ProfesoresPage() {
   const { data, error } = await supabase
     .from("Teacher")
     .select("*, user:User(id, name, email, phone)")
-    .eq("institutionId", institutionId)
-    .order("createdAt", { ascending: false })
+    .eq("institutionid", institutionId)
+    .order("createdat", { ascending: false })
 
   if (error) throw error
 
