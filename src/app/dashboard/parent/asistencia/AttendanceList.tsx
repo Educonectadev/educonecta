@@ -124,7 +124,7 @@ export default function AttendanceList({
       {selected && (
         <Modal isOpen onOpenChange={(v) => { if (!v) setSelected(null) }}>
           <Modal.Backdrop />
-          <Modal.Container size="cover" scroll="outside">
+          <Modal.Container size="lg" scroll="outside">
             <Modal.Dialog className="z-[60]">
               <Modal.CloseTrigger />
               <Modal.Header>
