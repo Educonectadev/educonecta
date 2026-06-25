@@ -12,15 +12,17 @@ function normalize(str: string): string {
     .replace(/^\.|\.$/g, "")
 }
 
-async function generateEmail(firstName: string, lastName: string): Promise<string> {
+async function generateEmail(firstName: string, lastName: string, institutionId: number): Promise<string> {
   const base = `${normalize(firstName)}.${normalize(lastName)}`
-  let email = `${base}@colegio.edu.pe`
+  const inst = await query("SELECT name FROM Institution WHERE id = ?", [institutionId])
+  const domain = normalize((inst as any[])[0]?.name || "colegio")
+  let email = `${base}@${domain}.edu.pe`
   let counter = 1
   while (true) {
     const rows = await query("SELECT id FROM User WHERE email = ?", [email])
     if ((rows as any[]).length === 0) return email
     counter++
-    email = `${base}${counter}@colegio.edu.pe`
+    email = `${base}${counter}@${domain}.edu.pe`
   }
 }
 
@@ -70,7 +72,7 @@ export async function POST(request: Request) {
     }
 
     const name = `${firstName.trim()} ${lastName.trim()}`
-    const email = await generateEmail(firstName.trim(), lastName.trim())
+    const email = await generateEmail(firstName.trim(), lastName.trim(), institutionId)
 
     const passwordHash = await bcrypt.hash(password, 10)
 

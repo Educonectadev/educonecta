@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { TimePicker } from "react-wheel-time-picker"
 
 interface TimePickerFieldProps {
@@ -9,6 +10,21 @@ interface TimePickerFieldProps {
 }
 
 export default function TimePickerField({ value, onChange, className = "" }: TimePickerFieldProps) {
+  useEffect(() => {
+    const style = document.createElement("style")
+    style.textContent = `
+      button:not([class*="react-wheel-time-picker"]) {
+        background-color: revert !important;
+      }
+      input:not([class*="react-wheel-time-picker"]) {
+        background-color: revert !important;
+        border: revert !important;
+      }
+    `
+    document.head.appendChild(style)
+    return () => style.remove()
+  }, [])
+
   return (
     <TimePicker
       value={value}

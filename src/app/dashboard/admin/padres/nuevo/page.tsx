@@ -24,6 +24,11 @@ export default function NuevoPadrePage() {
   const router = useRouter()
   const [students, setStudents] = useState<Student[]>([])
   const [loading, setLoading] = useState(false)
+  const [institutionName, setInstitutionName] = useState("")
+
+  useEffect(() => {
+    fetch("/api/admin/institution-name").then(r => r.json()).then(d => setInstitutionName(d.name || "colegio"))
+  }, [])
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -72,8 +77,9 @@ export default function NuevoPadrePage() {
     }
   }
 
+  const domain = normalize(institutionName) || "colegio"
   const previewEmail = form.firstName && form.lastName
-    ? `${normalize(form.firstName)}.${normalize(form.lastName)}@colegio.edu.pe`
+    ? `${normalize(form.firstName)}.${normalize(form.lastName)}@${domain}.edu.pe`
     : ""
 
   return (

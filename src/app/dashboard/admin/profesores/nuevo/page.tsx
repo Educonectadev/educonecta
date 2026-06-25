@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Select from "@/components/Select"
@@ -11,6 +11,11 @@ const contractTypes = ["Tiempo completo", "Medio tiempo", "Por horas", "CAS"]
 export default function NuevoProfesorPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [institutionName, setInstitutionName] = useState("")
+
+  useEffect(() => {
+    fetch("/api/admin/institution-name").then(r => r.json()).then(d => setInstitutionName(d.name || "colegio"))
+  }, [])
 
   function normalize(str: string): string {
     return str
@@ -62,8 +67,9 @@ export default function NuevoProfesorPage() {
     }
   }
 
+  const domain = normalize(institutionName) || "colegio"
   const previewEmail = form.firstName && form.lastName
-    ? `${normalize(form.firstName)}.${normalize(form.lastName)}@colegio.edu.pe`
+    ? `${normalize(form.firstName)}.${normalize(form.lastName)}@${domain}.edu.pe`
     : ""
 
   return (
