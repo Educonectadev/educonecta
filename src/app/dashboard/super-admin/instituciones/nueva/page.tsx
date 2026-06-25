@@ -157,7 +157,7 @@ export default function NuevaInstitucionPage() {
                 </div>
                 <div>
                   <label htmlFor="type" className={labelClass}>Tipo</label>
-                  <Select value={form.type} onChange={(val) => setValue("type", val)} options={[{value: "public", label: "Pública"}, {value: "private", label: "Privada"}]} />
+                  <Select value={form.type} onChange={(val) => setValue("type", val)} options={[{value: "public", label: "Pública"}, {value: "private", label: "Privada"}]} className="mt-1" />
                 </div>
                 <div>
                   <label htmlFor="ruc" className={labelClass}>RUC</label>
@@ -225,18 +225,18 @@ export default function NuevaInstitucionPage() {
                 <label htmlFor="address" className={labelClass}>Dirección</label>
                 <input id="address" type="text" value={form.address} onChange={(e) => setValue("address", e.target.value)} className={inputClass} placeholder="Av. Principal 123" />
               </div>
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label htmlFor="department" className={labelClass}>Departamento</label>
-                  <Select value={form.department} onChange={(val) => { setValue("department", val); setValue("province", ""); setValue("district", "") }} options={[{value: "", label: "Seleccionar departamento"}, ...departments.map(d => ({value: d, label: d}))]} />
+                  <Select value={form.department} onChange={(val) => { setValue("department", val); setValue("province", ""); setValue("district", "") }} options={[{value: "", label: "Seleccionar departamento"}, ...departments.map(d => ({value: d, label: d}))]} className="mt-1" />
                 </div>
                 <div>
                   <label htmlFor="province" className={labelClass}>Provincia</label>
-                  <Select value={form.province} onChange={(val) => { setValue("province", val); setValue("district", "") }} options={[{value: "", label: "Seleccionar provincia"}, ...getProvinces(form.department).map(p => ({value: p, label: p}))]} disabled={!form.department} />
+                  <Select value={form.province} onChange={(val) => { setValue("province", val); setValue("district", "") }} options={[{value: "", label: "Seleccionar provincia"}, ...getProvinces(form.department).map(p => ({value: p, label: p}))]} disabled={!form.department} className="mt-1" />
                 </div>
                 <div>
                   <label htmlFor="district" className={labelClass}>Distrito</label>
-                  <Select value={form.district} onChange={(val) => setValue("district", val)} options={[{value: "", label: "Seleccionar distrito"}, ...getDistricts(form.department, form.province).map(d => ({value: d, label: d}))]} disabled={!form.province} />
+                  <Select value={form.district} onChange={(val) => setValue("district", val)} options={[{value: "", label: "Seleccionar distrito"}, ...getDistricts(form.department, form.province).map(d => ({value: d, label: d}))]} disabled={!form.province} className="mt-1" />
                 </div>
               </div>
             </div>
