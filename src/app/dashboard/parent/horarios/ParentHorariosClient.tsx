@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Modal } from "@heroui/react"
 
 const dayLabels: Record<number, string> = {
   1: "Lunes", 2: "Martes", 3: "Miércoles", 4: "Jueves", 5: "Viernes",
@@ -178,51 +179,53 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
       </div>
 
       {detail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setDetail(null) }}>
-          <div className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-md w-full p-8 animate-fade-in">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold tracking-tight">Detalle del Horario</h2>
-              <button onClick={() => setDetail(null)} className="text-gray-400 hover:text-black transition-colors material-icons">close</button>
-            </div>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Estudiante</p>
-                  <p className="font-medium">{detailChild?.firstName} {detailChild?.lastName}</p>
+        <Modal isOpen onOpenChange={(v) => { if (!v) setDetail(null) }}>
+          <Modal.Backdrop />
+          <Modal.Container size="cover">
+            <Modal.Dialog>
+              <Modal.CloseTrigger />
+              <Modal.Header>
+                <Modal.Heading>Detalle del Horario</Modal.Heading>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Estudiante</p>
+                      <p className="font-medium">{detailChild?.firstName} {detailChild?.lastName}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Día</p>
+                      <p className="font-medium">{detail.dayName}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Turno</p>
+                      <p className="font-medium">{detail.shift}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Inicio – Fin</p>
+                      <p className="font-medium">{detail.startTime} – {detail.endTime}</p>
+                    </div>
+                  </div>
+                  <div className="border-t border-gray-100 pt-4">
+                    <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Curso</p>
+                    <p className="font-medium text-lg">{detail.course.name}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Profesor</p>
+                      <p className="font-medium">{detail.teacherName ?? "—"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Aula</p>
+                      <p className="font-medium">{detail.classroom ?? "—"}</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Día</p>
-                  <p className="font-medium">{detail.dayName}</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Turno</p>
-                  <p className="font-medium">{detail.shift}</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Inicio – Fin</p>
-                  <p className="font-medium">{detail.startTime} – {detail.endTime}</p>
-                </div>
-              </div>
-              <div className="border-t border-gray-100 pt-4">
-                <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Curso</p>
-                <p className="font-medium text-lg">{detail.course.name}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Profesor</p>
-                  <p className="font-medium">{detail.teacherName ?? "—"}</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Aula</p>
-                  <p className="font-medium">{detail.classroom ?? "—"}</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-3 mt-8">
-              <button onClick={() => setDetail(null)} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all">Cerrar</button>
-            </div>
-          </div>
-        </div>
+              </Modal.Body>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal>
       )}
     </div>
   )

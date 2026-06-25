@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Modal } from "@heroui/react"
 
 interface Communication {
   id: number
@@ -92,57 +93,50 @@ export default function CommunicationsList({ communications }: { communications:
       )}
 
       {selected && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelected(null)}
-        >
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-          <div
-            className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-lg w-full p-8 animate-fade-in max-h-[80vh] overflow-y-auto scrollbar-hide"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-start justify-between gap-4 mb-6">
-              <div className="flex-1 min-w-0">
-                <h2 className="text-xl font-bold tracking-tight text-[#1a1a1a]">{selected.title}</h2>
-                <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400">
-                  <span>
-                    {new Date(selected.createdAt).toLocaleDateString("es-ES", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </span>
-                  <span className="text-gray-200">·</span>
-                  <span>{selected.author.name}</span>
-                  {selected.teacher && (
-                    <>
-                      <span className="text-gray-200">·</span>
-                      <span>Prof. {selected.teacher.user.name}</span>
-                    </>
-                  )}
-                </div>
-              </div>
-              <span
-                className={`shrink-0 inline-block rounded-[30px] border px-3 py-1 text-xs font-medium ${getPriorityBadge(selected.priority)}`}
-              >
-                {getPriorityLabel(selected.priority)}
-              </span>
-            </div>
-
-            <div className="border-t border-gray-100 pt-6">
-              <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
-                {selected.content}
-              </p>
-            </div>
-
-            <button
-              onClick={() => setSelected(null)}
-              className="mt-8 w-full rounded-[30px] bg-black text-white py-3 text-sm font-medium hover:bg-gray-800 transition-all"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
+        <Modal isOpen onOpenChange={(v) => { if (!v) setSelected(null) }}>
+          <Modal.Backdrop />
+          <Modal.Container size="cover">
+            <Modal.Dialog>
+              <Modal.CloseTrigger />
+              <Modal.Header>
+                <Modal.Heading>
+                  <div className="flex items-start justify-between gap-4 w-full">
+                    <div className="flex-1 min-w-0">
+                      <span className="truncate block">{selected.title}</span>
+                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 font-normal">
+                        <span>
+                          {new Date(selected.createdAt).toLocaleDateString("es-ES", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </span>
+                        <span className="text-gray-200">·</span>
+                        <span>{selected.author.name}</span>
+                        {selected.teacher && (
+                          <>
+                            <span className="text-gray-200">·</span>
+                            <span>Prof. {selected.teacher.user.name}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <span
+                      className={`shrink-0 inline-block rounded-[30px] border px-3 py-1 text-xs font-medium ${getPriorityBadge(selected.priority)}`}
+                    >
+                      {getPriorityLabel(selected.priority)}
+                    </span>
+                  </div>
+                </Modal.Heading>
+              </Modal.Header>
+              <Modal.Body>
+                <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                  {selected.content}
+                </p>
+              </Modal.Body>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal>
       )}
     </>
   )

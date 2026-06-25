@@ -3,6 +3,7 @@
 import { useState, FormEvent, useEffect, useCallback } from "react"
 import { departments, getProvinces, getDistricts } from "@/data/ubigeo"
 import Select from "@/components/Select"
+import { Modal } from "@heroui/react"
 
 interface Institution {
   id: number
@@ -185,47 +186,52 @@ export default function InstitutionModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-[30px] shadow-2xl w-full max-w-2xl max-h-[70vh] overflow-y-auto scrollbar-hide animate-scale-in">
-        {/* Header */}
-        <div className="sticky top-0 bg-white z-10 flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100 rounded-t-[30px]">
-          <div className="min-w-0 flex-1">
-            <h2 className="text-lg font-bold tracking-tight truncate">
-              {editing ? "Editar Institución" : institution.name}
-            </h2>
-            {!editing && <p className="text-xs text-gray-400 mt-0.5">Código: {institution.code}</p>}
-          </div>
-          <div className="flex items-center gap-2 shrink-0 ml-4">
-            {!editing ? (
-              <>
-                <button
-                  onClick={() => setShowDeleteConfirm(true)}
-                  className="rounded-[30px] border border-red-200 px-4 py-2 text-xs font-medium text-red-500 hover:bg-red-50 transition-all"
-                >
-                  Eliminar
-                </button>
-                <button
-                  onClick={() => setEditing(true)}
-                  className="rounded-[30px] bg-black px-5 py-2 text-xs font-medium text-white hover:bg-black/80 transition-all"
-                >
-                  Editar
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => { setEditing(false); setForm({ ...institution }); setError("") }}
-                className="text-sm text-gray-400 hover:text-black transition-colors"
-              >
-                Cancelar
-              </button>
-            )}
-            <button onClick={onClose} className="text-gray-300 hover:text-black transition-colors text-lg leading-none">&times;</button>
-          </div>
-        </div>
+    <Modal isOpen onOpenChange={(v) => { if (!v) onClose() }}>
+      <Modal.Backdrop />
+      <Modal.Container size="cover">
+        <Modal.Dialog>
+          <Modal.CloseTrigger />
+          <Modal.Header>
+            <Modal.Heading>
+              <div className="flex items-center justify-between w-full gap-4">
+                <div className="min-w-0 flex-1">
+                  <span className="truncate block">
+                    {editing ? "Editar Institución" : institution.name}
+                  </span>
+                  {!editing && <span className="text-xs text-gray-400 font-normal mt-0.5 block">Código: {institution.code}</span>}
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {!editing ? (
+                    <>
+                      <button
+                        onClick={() => setShowDeleteConfirm(true)}
+                        className="rounded-[30px] border border-red-200 px-4 py-2 text-xs font-medium text-red-500 hover:bg-red-50 transition-all"
+                      >
+                        Eliminar
+                      </button>
+                      <button
+                        onClick={() => setEditing(true)}
+                        className="rounded-[30px] bg-black px-5 py-2 text-xs font-medium text-white hover:bg-black/80 transition-all"
+                      >
+                        Editar
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => { setEditing(false); setForm({ ...institution }); setError("") }}
+                      className="text-sm text-gray-400 hover:text-black transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                  )}
+                </div>
+              </div>
+            </Modal.Heading>
+          </Modal.Header>
 
-        {editing ? (
-          <form onSubmit={handleSave} className="p-6 space-y-4">
+          <Modal.Body>
+            {editing ? (
+              <form onSubmit={handleSave} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelClass}>Nombre *</label>
@@ -523,7 +529,7 @@ export default function InstitutionModal({
         )}
 
         {showDeleteConfirm && (
-          <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm rounded-[30px] flex items-center justify-center p-6">
+          <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm rounded-xl flex items-center justify-center p-6">
             <div className="bg-white border border-red-200 rounded-[25px] shadow-xl p-6 max-w-sm w-full space-y-4 text-center">
               <div className="w-12 h-12 mx-auto rounded-full bg-red-50 flex items-center justify-center text-red-500 text-xl">!</div>
               <div>
@@ -549,8 +555,10 @@ export default function InstitutionModal({
             </div>
           </div>
         )}
-      </div>
-    </div>
+          </Modal.Body>
+        </Modal.Dialog>
+      </Modal.Container>
+    </Modal>
   )
 }
 

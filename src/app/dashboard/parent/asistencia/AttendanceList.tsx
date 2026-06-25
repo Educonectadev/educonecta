@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Modal } from "@heroui/react"
 
 interface AttendanceRecord {
   id: number
@@ -121,59 +122,52 @@ export default function AttendanceList({
       })}
 
       {selected && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelected(null)}
-        >
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-          <div
-            className="relative bg-white rounded-[25px] border border-gray-200 shadow-xl max-w-lg w-full p-8 animate-fade-in"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-start justify-between gap-4 mb-6">
-              <div className="flex-1 min-w-0">
-                <h2 className="text-xl font-bold tracking-tight text-[#1a1a1a]">
-                  Registro de Asistencia
-                </h2>
-                <p className="mt-2 text-sm text-gray-500">
-                  {new Date(selected.date).toLocaleDateString("es-ES", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
-              <span className={`shrink-0 inline-block rounded-[30px] border px-4 py-1.5 text-sm font-medium ${
-                selected.isPresent
-                  ? "bg-green-50 text-green-700 border-green-200"
-                  : "bg-red-50 text-red-700 border-red-200"
-              }`}>
-                {selected.isPresent ? "Presente" : "Ausente"}
-              </span>
-            </div>
-
-            <div className="border-t border-gray-100 pt-6 space-y-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Registrado por</p>
-                <p className="text-sm text-gray-600">{selected.teacher.user.name}</p>
-              </div>
-              {selected.note && (
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Nota del docente</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{selected.note}</p>
+        <Modal isOpen onOpenChange={(v) => { if (!v) setSelected(null) }}>
+          <Modal.Backdrop />
+          <Modal.Container size="cover">
+            <Modal.Dialog>
+              <Modal.CloseTrigger />
+              <Modal.Header>
+                <Modal.Heading>
+                  <div className="flex items-start justify-between gap-4 w-full">
+                    <div className="flex-1 min-w-0">
+                      <span className="truncate block">Registro de Asistencia</span>
+                      <p className="mt-1 text-sm text-gray-400 font-normal">
+                        {new Date(selected.date).toLocaleDateString("es-ES", {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </p>
+                    </div>
+                    <span className={`shrink-0 inline-block rounded-[30px] border px-4 py-1.5 text-sm font-medium ${
+                      selected.isPresent
+                        ? "bg-green-50 text-green-700 border-green-200"
+                        : "bg-red-50 text-red-700 border-red-200"
+                    }`}>
+                      {selected.isPresent ? "Presente" : "Ausente"}
+                    </span>
+                  </div>
+                </Modal.Heading>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Registrado por</p>
+                    <p className="text-sm text-gray-600">{selected.teacher.user.name}</p>
+                  </div>
+                  {selected.note && (
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Nota del docente</p>
+                      <p className="text-sm text-gray-600 leading-relaxed">{selected.note}</p>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-
-            <button
-              onClick={() => setSelected(null)}
-              className="mt-8 w-full rounded-[30px] bg-black text-white py-3 text-sm font-medium hover:bg-gray-800 transition-all"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
+              </Modal.Body>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal>
       )}
     </div>
   )
