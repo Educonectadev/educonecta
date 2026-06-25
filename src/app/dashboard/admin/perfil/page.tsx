@@ -2,6 +2,7 @@ import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { findOne } from "@/lib/prisma"
 import { getSupabaseAdmin } from "@/lib/supabase"
+import EditableInstitutionSection from "./EditableInstitutionSection"
 
 export default async function AdminPerfilPage() {
   const session = await getServerSession()
@@ -57,75 +58,7 @@ export default async function AdminPerfilPage() {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-blue-500 mb-3">Datos de la Institución</h2>
-        <div className="bg-white border border-gray-100 rounded-[25px] p-6">
-          {institution ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-              <div>
-                <p className="text-xs text-gray-400">Nombre</p>
-                <p className="font-medium">{(institution as any).name}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Código</p>
-                <p className="font-medium">{(institution as any).code}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Tipo</p>
-                <p className="font-medium">{(institution as any).type ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">RUC</p>
-                <p className="font-medium">{(institution as any).ruc ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Director</p>
-                <p className="font-medium">{(institution as any).directorName ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Teléfono</p>
-                <p className="font-medium">{(institution as any).phone ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Email</p>
-                <p className="font-medium">{(institution as any).email ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Website</p>
-                <p className="font-medium">{(institution as any).website ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Dirección</p>
-                <p className="font-medium">{(institution as any).address ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Distrito</p>
-                <p className="font-medium">{(institution as any).district ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Provincia</p>
-                <p className="font-medium">{(institution as any).province ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Departamento</p>
-                <p className="font-medium">{(institution as any).department ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Nivel Educativo</p>
-                <p className="font-medium">{(institution as any).educationalLevel ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Turnos</p>
-                <p className="font-medium">{(institution as any).shifts ?? "—"}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">Año de Fundación</p>
-                <p className="font-medium">{(institution as any).foundedYear ?? "—"}</p>
-              </div>
-            </div>
-          ) : (
-            <p className="text-sm text-gray-400">No se encontraron datos de la institución.</p>
-          )}
-        </div>
+        <EditableInstitutionSection institution={institution as any} />
       </section>
 
       <section>
