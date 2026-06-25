@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { TimePicker } from "react-wheel-time-picker"
 
 interface TimePickerFieldProps {
@@ -10,16 +10,24 @@ interface TimePickerFieldProps {
 }
 
 export default function TimePickerField({ value, onChange, className = "" }: TimePickerFieldProps) {
+  const injected = useRef(false)
+
   useEffect(() => {
+    if (injected.current) return
+    injected.current = true
+
+    const id = "__tp-fix"
+    if (document.getElementById(id)) return
+
     const style = document.createElement("style")
-    style.textContent = `
-      button.bg-black { background-color: #000 !important; }
-      button.bg-white { background-color: #fff !important; }
-      button.hover\\:bg-gray-800:hover { background-color: #1f2937 !important; }
-      button.hover\\:bg-gray-50:hover { background-color: #f9fafb !important; }
+    style.id = id
+    style.innerHTML = `
+      button.rounded-\\[30px\\] {
+        background: revert-layer;
+        border: revert-layer;
+      }
     `
     document.head.appendChild(style)
-    return () => style.remove()
   }, [])
 
   return (
