@@ -4,6 +4,7 @@ import { useState, FormEvent } from "react"
 import { useRouter } from "next/navigation"
 import { departments, getProvinces, getDistricts } from "@/data/ubigeo"
 import Link from "next/link"
+import Select from "@/components/Select"
 
 const levelOptions = [
   { value: "inicial", label: "Inicial" },
@@ -156,10 +157,7 @@ export default function NuevaInstitucionPage() {
                 </div>
                 <div>
                   <label htmlFor="type" className={labelClass}>Tipo</label>
-                  <select id="type" value={form.type} onChange={(e) => setValue("type", e.target.value)} className={selectClass}>
-                    <option value="public">Pública</option>
-                    <option value="private">Privada</option>
-                  </select>
+                  <Select value={form.type} onChange={(val) => setValue("type", val)} options={[{value: "public", label: "Pública"}, {value: "private", label: "Privada"}]} />
                 </div>
                 <div>
                   <label htmlFor="ruc" className={labelClass}>RUC</label>
@@ -230,54 +228,15 @@ export default function NuevaInstitucionPage() {
               <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label htmlFor="department" className={labelClass}>Departamento</label>
-                  <select
-                    id="department"
-                    value={form.department}
-                    onChange={(e) => {
-                      setValue("department", e.target.value)
-                      setValue("province", "")
-                      setValue("district", "")
-                    }}
-                    className={selectClass}
-                  >
-                    <option value="">Seleccionar departamento</option>
-                    {departments.map((d) => (
-                      <option key={d} value={d}>{d}</option>
-                    ))}
-                  </select>
+                  <Select value={form.department} onChange={(val) => { setValue("department", val); setValue("province", ""); setValue("district", "") }} options={[{value: "", label: "Seleccionar departamento"}, ...departments.map(d => ({value: d, label: d}))]} />
                 </div>
                 <div>
                   <label htmlFor="province" className={labelClass}>Provincia</label>
-                  <select
-                    id="province"
-                    value={form.province}
-                    onChange={(e) => {
-                      setValue("province", e.target.value)
-                      setValue("district", "")
-                    }}
-                    className={selectClass}
-                    disabled={!form.department}
-                  >
-                    <option value="">Seleccionar provincia</option>
-                    {getProvinces(form.department).map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
+                  <Select value={form.province} onChange={(val) => { setValue("province", val); setValue("district", "") }} options={[{value: "", label: "Seleccionar provincia"}, ...getProvinces(form.department).map(p => ({value: p, label: p}))]} disabled={!form.department} />
                 </div>
                 <div>
                   <label htmlFor="district" className={labelClass}>Distrito</label>
-                  <select
-                    id="district"
-                    value={form.district}
-                    onChange={(e) => setValue("district", e.target.value)}
-                    className={selectClass}
-                    disabled={!form.province}
-                  >
-                    <option value="">Seleccionar distrito</option>
-                    {getDistricts(form.department, form.province).map((d) => (
-                      <option key={d} value={d}>{d}</option>
-                    ))}
-                  </select>
+                  <Select value={form.district} onChange={(val) => setValue("district", val)} options={[{value: "", label: "Seleccionar distrito"}, ...getDistricts(form.department, form.province).map(d => ({value: d, label: d}))]} disabled={!form.province} />
                 </div>
               </div>
             </div>

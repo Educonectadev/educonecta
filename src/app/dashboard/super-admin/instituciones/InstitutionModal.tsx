@@ -2,6 +2,7 @@
 
 import { useState, FormEvent, useEffect, useCallback } from "react"
 import { departments, getProvinces, getDistricts } from "@/data/ubigeo"
+import Select from "@/components/Select"
 
 interface Institution {
   id: number
@@ -236,10 +237,7 @@ export default function InstitutionModal({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className={labelClass}>Tipo</label>
-                <select value={form.type ?? "public"} onChange={(e) => setValue("type", e.target.value)} className={selectClass}>
-                  <option value="public">Pública</option>
-                  <option value="private">Privada</option>
-                </select>
+                <Select value={form.type ?? "public"} onChange={(val) => setValue("type", val)} options={[{value: "public", label: "Pública"}, {value: "private", label: "Privada"}]} />
               </div>
               <div>
                 <label className={labelClass}>RUC</label>
@@ -253,24 +251,15 @@ export default function InstitutionModal({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className={labelClass}>Departamento</label>
-                <select value={form.department ?? ""} onChange={(e) => { setValue("department", e.target.value); setValue("province", ""); setValue("district", "") }} className={selectClass}>
-                  <option value="">Seleccionar</option>
-                  {departments.map((d) => (<option key={d} value={d}>{d}</option>))}
-                </select>
+                <Select value={form.department ?? ""} onChange={(val) => { setValue("department", val); setValue("province", ""); setValue("district", "") }} options={[{value: "", label: "Seleccionar"}, ...departments.map(d => ({value: d, label: d}))]} />
               </div>
               <div>
                 <label className={labelClass}>Provincia</label>
-                <select value={form.province ?? ""} onChange={(e) => { setValue("province", e.target.value); setValue("district", "") }} className={selectClass} disabled={!form.department}>
-                  <option value="">Seleccionar</option>
-                  {getProvinces(form.department ?? "").map((p) => (<option key={p} value={p}>{p}</option>))}
-                </select>
+                <Select value={form.province ?? ""} onChange={(val) => { setValue("province", val); setValue("district", "") }} options={[{value: "", label: "Seleccionar"}, ...getProvinces(form.department ?? "").map(p => ({value: p, label: p}))]} disabled={!form.department} />
               </div>
               <div>
                 <label className={labelClass}>Distrito</label>
-                <select value={form.district ?? ""} onChange={(e) => setValue("district", e.target.value)} className={selectClass} disabled={!form.province}>
-                  <option value="">Seleccionar</option>
-                  {getDistricts(form.department ?? "", form.province ?? "").map((d) => (<option key={d} value={d}>{d}</option>))}
-                </select>
+                <Select value={form.district ?? ""} onChange={(val) => setValue("district", val)} options={[{value: "", label: "Seleccionar"}, ...getDistricts(form.department ?? "", form.province ?? "").map(d => ({value: d, label: d}))]} disabled={!form.province} />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
