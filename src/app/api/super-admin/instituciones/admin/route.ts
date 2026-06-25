@@ -77,14 +77,14 @@ export async function GET(req: NextRequest) {
     const supabase = getSupabaseAdmin()
     const { data: admin } = await supabase
       .from("InstitutionalAdmin")
-      .select("userid")
-      .eq("institutionid", institutionId)
+      .select("userId")
+      .eq("institutionId", institutionId)
       .limit(1)
       .maybeSingle()
 
     if (!admin) return NextResponse.json(null)
 
-    const user = await findOne("User", { id: (admin as any).userid, role: "INSTITUTIONAL_ADMIN" }, ["id", "email", "name"])
+    const user = await findOne("User", { id: (admin as any).userId, role: "INSTITUTIONAL_ADMIN" }, ["id", "email", "name"])
     return NextResponse.json(user)
   } catch {
     return NextResponse.json({ message: "Error interno" }, { status: 500 })

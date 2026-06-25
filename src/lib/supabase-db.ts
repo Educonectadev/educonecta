@@ -1,7 +1,5 @@
 import { getSupabaseAdmin } from "./supabase"
 
-type Row = Record<string, unknown>
-
 export function toSupabaseTable(table: string): string {
   return table
 }
@@ -55,12 +53,12 @@ export async function findOne<T = Record<string, unknown>>(
   where: Record<string, unknown>,
   select?: string[],
 ): Promise<T | null> {
-  const cols = select?.map(c => c.toLowerCase()).join(", ") || "*"
-  let query = getSupabaseAdmin().from(table).select(cols)
+  const cols = select?.join(", ") || "*"
+  let q = getSupabaseAdmin().from(table).select(cols)
   for (const [key, value] of Object.entries(where)) {
-    query = query.eq(key.toLowerCase(), value as any)
+    q = q.eq(key, value as any)
   }
-  const { data, error } = await query.limit(1).maybeSingle()
+  const { data, error } = await q.limit(1).maybeSingle()
   if (error) throw error
   return data as T | null
 }
@@ -74,61 +72,52 @@ export async function findMany<T = Record<string, unknown>>(
     orderDir?: "ASC" | "DESC"
     limit?: number
     offset?: number
-    joins?: string
   },
 ): Promise<T[]> {
-  const cols = opts?.select?.map(c => c.toLowerCase()).join(", ") || "*"
-  let query = getSupabaseAdmin().from(table).select(cols)
+  const cols = opts?.select?.join(", ") || "*"
+  let q = getSupabaseAdmin().from(table).select(cols)
 
   if (opts?.where) {
     for (const [key, value] of Object.entries(opts.where)) {
-      query = query.eq(key.toLowerCase(), value as any)
+      q = q.eq(key, value as any)
     }
   }
 
   if (opts?.orderBy) {
-    query = query.order(opts.orderBy.toLowerCase(), {
-      ascending: opts.orderDir !== "DESC",
-    })
+    q = q.order(opts.orderBy, { ascending: opts.orderDir !== "DESC" })
   }
 
-  if (opts?.limit) query = query.limit(opts.limit)
-  if (opts?.offset) query = query.range(opts.offset, opts.offset + (opts?.limit || 10) - 1)
+  if (opts?.limit) q = q.limit(opts.limit)
+  if (opts?.offset) q = q.range(opts.offset, opts.offset + (opts?.limit || 10) - 1)
 
-  const { data, error } = await query
+  const { data, error } = await q
   if (error) throw error
   return (data ?? []) as T[]
 }
 
-export async function create<T = Record<string, unknown>>(
+export async function create(
   table: string,
   data: Record<string, unknown>,
 ): Promise<number> {
-  const lowerData = Object.fromEntries(
-    Object.entries(data).map(([k, v]) => [k.toLowerCase(), v])
-  )
   const { data: inserted, error } = await getSupabaseAdmin()
     .from(table)
-    .insert(lowerData as any)
+    .insert(data as any)
     .select("id")
     .single()
   if (error) throw error
   return (inserted as any).id
 }
 
-export async function update<T = Record<string, unknown>>(
+export async function update(
   table: string,
   where: Record<string, unknown>,
-  data: Partial<T>,
+  data: Record<string, unknown>,
 ): Promise<number> {
-  const lowerData = Object.fromEntries(
-    Object.entries(data as Record<string, unknown>).map(([k, v]) => [k.toLowerCase(), v])
-  )
-  let query = getSupabaseAdmin().from(table).update(lowerData as any)
+  let q = getSupabaseAdmin().from(table).update(data as any)
   for (const [key, value] of Object.entries(where)) {
-    query = query.eq(key.toLowerCase(), value as any)
+    q = q.eq(key, value as any)
   }
-  const { error, count } = await query
+  const { error, count } = await q
   if (error) throw error
   return count || 0
 }
@@ -137,11 +126,11 @@ export async function remove(
   table: string,
   where: Record<string, unknown>,
 ): Promise<number> {
-  let query = getSupabaseAdmin().from(table).delete()
+  let q = getSupabaseAdmin().from(table).delete()
   for (const [key, value] of Object.entries(where)) {
-    query = query.eq(key.toLowerCase(), value as any)
+    q = q.eq(key, value as any)
   }
-  const { error, count } = await query
+  const { error, count } = await q
   if (error) throw error
   return count || 0
 }
@@ -150,13 +139,13 @@ export async function count(
   table: string,
   where?: Record<string, unknown>,
 ): Promise<number> {
-  let query = getSupabaseAdmin().from(table).select("*", { count: "exact", head: true })
+  let q = getSupabaseAdmin().from(table).select("*", { count: "exact", head: true })
   if (where) {
     for (const [key, value] of Object.entries(where)) {
-      query = query.eq(key.toLowerCase(), value as any)
+      q = q.eq(key, value as any)
     }
   }
-  const { count: total, error } = await query
+  const { count: total, error } = await q
   if (error) throw error
   return total || 0
 }
