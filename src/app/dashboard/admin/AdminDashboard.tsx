@@ -51,74 +51,113 @@ export default function AdminDashboard({
     { label: "Aulas", href: "/dashboard/admin/aulas", count: null, icon: "meeting_room" },
   ]
 
-  return (
-    <div>
-      <h1 className="text-2xl font-bold tracking-tight">Panel de Administración</h1>
-      <p className="mt-1 text-sm text-gray-500">Resumen general de la institución</p>
+  const statIcons: Record<string, string> = {
+    "Alumnos": "group",
+    "Profesores": "school",
+    "Padres": "diversity_3",
+    "Cursos": "book",
+  }
 
-      <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+  return (
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Bienvenido</h1>
+        <p className="mt-1.5 text-sm text-gray-500">Resumen general de la institución</p>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {stats.map((s) => (
           <Link
             key={s.label}
             href={s.href}
-            className="bg-blue-50 border border-blue-200 rounded-[25px] p-5 hover:bg-blue-100 transition-all duration-200"
+            className="group relative bg-white border border-gray-100 rounded-2xl p-5 hover:border-gray-200 hover:shadow-sm transition-all duration-200"
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-blue-500">{s.label}</p>
-            <p className="mt-2 text-3xl font-bold text-[#1a1a1a]">{s.value}</p>
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">{s.label}</span>
+              <span className="material-icons text-lg text-gray-300 group-hover:text-gray-400 transition-colors">{statIcons[s.label] || "bar_chart"}</span>
+            </div>
+            <p className="text-3xl font-bold text-gray-900">{s.value}</p>
           </Link>
         ))}
       </div>
 
-      <div className="mt-8">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-blue-500 mb-4">Acceso rápido</h2>
+      <div>
+        <div className="flex items-center gap-2 mb-4">
+          <span className="material-icons text-base text-gray-400">grid_view</span>
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400">Acceso rápido</h2>
+        </div>
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-7 gap-3">
           {quickLinks.map((l) => (
             <Link
               key={l.label}
               href={l.href}
-              className="flex flex-col items-center justify-center gap-2 bg-blue-50 border border-blue-200 rounded-[25px] p-4 hover:bg-blue-100 transition-all duration-200 min-h-[90px]"
+              className="group flex flex-col items-center justify-center gap-2 bg-white border border-gray-100 rounded-2xl p-4 hover:border-gray-200 hover:shadow-sm transition-all duration-200 min-h-[100px]"
             >
-              <span className="material-icons text-3xl text-blue-500">{l.icon}</span>
-              <span className="text-sm font-semibold text-blue-700">{l.label}</span>
-              {l.count !== null && <span className="text-[11px] text-blue-400">{l.count} registrados</span>}
+              <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center group-hover:bg-gray-100 transition-colors">
+                <span className="material-icons text-xl text-gray-500">{l.icon}</span>
+              </div>
+              <span className="text-xs font-semibold text-gray-700">{l.label}</span>
+              {l.count !== null && <span className="text-[10px] text-gray-400">{l.count} registrados</span>}
             </Link>
           ))}
         </div>
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <div className="bg-blue-50 border border-blue-200 rounded-[25px] p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold tracking-tight">Últimos Alumnos</h2>
-            <Link href="/dashboard/admin/alumnos" className="text-xs text-blue-500 hover:text-blue-700 transition-all">Ver todos</Link>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="bg-white border border-gray-100 rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <span className="material-icons text-base text-gray-400">person</span>
+              <h2 className="text-sm font-semibold text-gray-700">Últimos Alumnos</h2>
+            </div>
+            <Link href="/dashboard/admin/alumnos" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Ver todos</Link>
           </div>
           {recentStudents.length === 0 ? (
-            <p className="text-sm text-blue-400">No hay alumnos registrados.</p>
+            <p className="text-sm text-gray-400 text-center py-6">No hay alumnos registrados.</p>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-1">
               {recentStudents.map((s) => (
-                <div key={s.id} className="flex items-center justify-between text-sm">
-                  <span className="text-blue-800">{s.firstName} {s.lastName}</span>
-                  <span className="text-xs text-blue-400">{s.grade?.name ?? "—"} {s.section?.name ?? ""}</span>
+                <div key={s.id} className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-500">
+                      {s.firstName.charAt(0)}{s.lastName.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">{s.firstName} {s.lastName}</p>
+                      <p className="text-[11px] text-gray-400">{s.documentId}</p>
+                    </div>
+                  </div>
+                  <span className="text-xs text-gray-400 bg-gray-50 px-2.5 py-1 rounded-full">{s.grade?.name ?? "—"} {s.section?.name ?? ""}</span>
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        <div className="bg-blue-50 border border-blue-200 rounded-[25px] p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold tracking-tight">Últimos Profesores</h2>
-            <Link href="/dashboard/admin/profesores" className="text-xs text-blue-500 hover:text-blue-700 transition-all">Ver todos</Link>
+        <div className="bg-white border border-gray-100 rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <span className="material-icons text-base text-gray-400">school</span>
+              <h2 className="text-sm font-semibold text-gray-700">Últimos Profesores</h2>
+            </div>
+            <Link href="/dashboard/admin/profesores" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">Ver todos</Link>
           </div>
           {recentTeachers.length === 0 ? (
-            <p className="text-sm text-blue-400">No hay profesores registrados.</p>
+            <p className="text-sm text-gray-400 text-center py-6">No hay profesores registrados.</p>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-1">
               {recentTeachers.map((t) => (
-                <div key={t.id} className="flex items-center justify-between text-sm">
-                  <span className="text-blue-800">{t.user.name}</span>
-                  <span className="text-xs text-blue-400">{t.speciality ?? "—"}</span>
+                <div key={t.id} className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-gray-50 transition-colors -mx-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-500">
+                      {t.user.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">{t.user.name}</p>
+                      <p className="text-[11px] text-gray-400">{t.user.email}</p>
+                    </div>
+                  </div>
+                  <span className="text-xs text-gray-400 bg-gray-50 px-2.5 py-1 rounded-full">{t.speciality ?? "—"}</span>
                 </div>
               ))}
             </div>
