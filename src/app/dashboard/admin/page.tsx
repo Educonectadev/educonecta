@@ -22,9 +22,9 @@ export default async function AdminDashboardPage() {
                 jsonb_build_object('name', g.name) AS grade,
                 jsonb_build_object('name', sec.name) AS section
          FROM Student s
-         LEFT JOIN Grade g ON s.gradeId = g.id
-         LEFT JOIN Section sec ON s.sectionId = sec.id
-         WHERE s.institutionId = ?
+         LEFT JOIN Grade g ON s."gradeId" = g.id
+         LEFT JOIN Section sec ON s."sectionId" = sec.id
+         WHERE s."institutionId" = ?
          ORDER BY s.createdAt DESC
          LIMIT 5`,
         [institutionId]
@@ -33,8 +33,8 @@ export default async function AdminDashboardPage() {
         `SELECT t.id, t.speciality,
                 jsonb_build_object('name', u.name, 'email', u.email) AS "user"
          FROM Teacher t
-         JOIN User u ON t.userId = u.id
-         WHERE t.institutionId = ?
+         JOIN "User" u ON t."userId" = u.id
+         WHERE t."institutionId" = ?
          ORDER BY t.createdAt DESC
          LIMIT 5`,
         [institutionId]
