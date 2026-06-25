@@ -140,7 +140,7 @@ export async function getParentChildren(parentId: number) {
 
     const enrollments = await query<any[]>(
       `SELECT id, academicYear, isActive FROM Enrollment
-       WHERE studentId = ? AND isActive = 1
+       WHERE studentId = ? AND isActive = true
        ORDER BY academicYear DESC
        LIMIT 1`,
       [student__id]

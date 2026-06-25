@@ -35,10 +35,10 @@ export default async function TeacherDashboardPage() {
 
   let totalStudents: number
   if (gradeIds.length > 0) {
-    const r = await query<any[]>("SELECT COUNT(*) as total FROM Student WHERE institutionId = ? AND isActive = 1 AND gradeId IN (?)", [institutionId, gradeIds])
+    const r = await query<any[]>("SELECT COUNT(*) as total FROM Student WHERE institutionId = ? AND isActive = true AND gradeId IN (?)", [institutionId, gradeIds])
     totalStudents = r[0].total
   } else {
-    const r = await query<any[]>("SELECT COUNT(*) as total FROM Student WHERE institutionId = ? AND isActive = 1", [institutionId])
+    const r = await query<any[]>("SELECT COUNT(*) as total FROM Student WHERE institutionId = ? AND isActive = true", [institutionId])
     totalStudents = r[0].total
   }
 

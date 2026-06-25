@@ -20,7 +20,7 @@ export async function GET() {
 
   const stats = await query<any[]>(
     `SELECT
-       (SELECT COUNT(*) FROM Student WHERE institutionId = ? AND isActive = 1) AS totalStudents,
+       (SELECT COUNT(*) FROM Student WHERE institutionId = ? AND isActive = true) AS totalStudents,
        (SELECT COUNT(*) FROM Teacher WHERE institutionId = ?) AS totalTeachers,
        (SELECT COUNT(*) FROM Course WHERE institutionId = ?) AS totalCourses,
        (SELECT COUNT(*) FROM Schedule WHERE institutionId = ?) AS totalSchedules`,

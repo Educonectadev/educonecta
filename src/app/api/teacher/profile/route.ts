@@ -40,7 +40,7 @@ export async function GET() {
        (SELECT COUNT(*) FROM CourseTeacher WHERE teacherId = ?) AS totalCourses,
        (SELECT COUNT(DISTINCT s.id) FROM Student s
         INNER JOIN CourseTeacher ct ON ct.gradeId = s.gradeId AND ct.sectionId = s.sectionId
-        WHERE ct.teacherId = ? AND s.isActive = 1) AS totalStudents`,
+        WHERE ct.teacherId = ? AND s.isActive = true) AS totalStudents`,
     [teacherId, teacherId]
   )
 

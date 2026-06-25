@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     const students = await query<any[]>(
       `SELECT id, firstName, lastName FROM Student
-       WHERE gradeId = ? AND isActive = 1 ${sectionClause}
+       WHERE gradeId = ? AND isActive = true ${sectionClause}
        ORDER BY lastName ASC, firstName ASC`,
       params
     )
