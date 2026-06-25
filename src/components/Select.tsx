@@ -1,7 +1,7 @@
 "use client"
 
 import { Fragment } from "react"
-import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } from "@headlessui/react"
+import { Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition, Portal } from "@headlessui/react"
 
 interface SelectOption {
   value: string
@@ -45,36 +45,40 @@ export default function Select({ value, onChange, options, placeholder = "Selecc
           leaveFrom="opacity-100 translate-y-0"
           leaveTo="opacity-0 translate-y-1"
         >
-          <ListboxOptions
-            className="absolute z-20 mt-1.5 w-full bg-white border border-gray-200 rounded-[17px] shadow-lg
-              max-h-60 overflow-y-auto scrollbar-hide p-1.5"
-          >
-            {options.length === 0 ? (
-              <div className="px-3 py-2 text-sm text-gray-400 text-center">Sin opciones</div>
-            ) : (
-              options.map((opt) => (
-                <ListboxOption
-                  key={opt.value}
-                  value={opt.value}
-                  className={({ focus, selected }) =>
-                    `flex items-center gap-2 px-3 py-2 rounded-[12px] text-sm cursor-pointer transition-colors
-                    ${focus ? "bg-gray-100" : ""}
-                    ${selected ? "bg-black text-white" : "text-[#1a1a1a]"}`}
-                >
-                  {({ selected }) => (
-                    <>
-                      <span className="truncate flex-1">{opt.label}</span>
-                      {selected && (
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                      )}
-                    </>
-                  )}
-                </ListboxOption>
-              ))
-            )}
-          </ListboxOptions>
+          <Portal>
+            <ListboxOptions
+              className="fixed z-[100] mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg
+                max-h-60 overflow-y-auto scrollbar-hide p-1.5 min-w-[180px]"
+              style={{ width: 'var(--button-width)' }}
+              anchor={{ to: 'bottom start', gap: 4 }}
+            >
+              {options.length === 0 ? (
+                <div className="px-3 py-2 text-sm text-gray-400 text-center">Sin opciones</div>
+              ) : (
+                options.map((opt) => (
+                  <ListboxOption
+                    key={opt.value}
+                    value={opt.value}
+                    className={({ focus, selected }) =>
+                      `flex items-center gap-2 px-3 py-2 rounded-[10px] text-sm cursor-pointer transition-colors
+                      ${focus ? "bg-gray-100" : ""}
+                      ${selected ? "bg-black text-white" : "text-[#1a1a1a]"}`}
+                  >
+                    {({ selected }) => (
+                      <>
+                        <span className="truncate flex-1">{opt.label}</span>
+                        {selected && (
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        )}
+                      </>
+                    )}
+                  </ListboxOption>
+                ))
+              )}
+            </ListboxOptions>
+          </Portal>
         </Transition>
       </div>
     </Listbox>
