@@ -17,12 +17,12 @@ export async function GET(req: NextRequest) {
     const supabase = getSupabaseAdmin()
 
     const [adminsRes, teachersRes, parentsRes, studentsRes, coursesRes, gradesRes] = await Promise.all([
-      supabase.from("User").select("id", { count: "exact", head: true }).eq("institutionid", id).eq("role", "INSTITUTIONAL_ADMIN"),
-      supabase.from("User").select("id", { count: "exact", head: true }).eq("institutionid", id).eq("role", "TEACHER"),
-      supabase.from("User").select("id", { count: "exact", head: true }).eq("institutionid", id).eq("role", "PARENT"),
-      supabase.from("Student").select("id", { count: "exact", head: true }).eq("institutionid", id),
-      supabase.from("Course").select("id", { count: "exact", head: true }).eq("institutionid", id),
-      supabase.from("Grade").select("id", { count: "exact", head: true }).eq("institutionid", id),
+      supabase.from("User").select("id", { count: "exact", head: true }).eq("institutionId", id).eq("role", "INSTITUTIONAL_ADMIN"),
+      supabase.from("User").select("id", { count: "exact", head: true }).eq("institutionId", id).eq("role", "TEACHER"),
+      supabase.from("User").select("id", { count: "exact", head: true }).eq("institutionId", id).eq("role", "PARENT"),
+      supabase.from("Student").select("id", { count: "exact", head: true }).eq("institutionId", id),
+      supabase.from("Course").select("id", { count: "exact", head: true }).eq("institutionId", id),
+      supabase.from("Grade").select("id", { count: "exact", head: true }).eq("institutionId", id),
     ])
 
     const admins = adminsRes.count ?? 0

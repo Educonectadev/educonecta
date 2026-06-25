@@ -15,7 +15,7 @@ export async function getServerSession(): Promise<Session | null> {
 
     const { data: user, error: userError } = await supabaseAdmin
       .from("User")
-      .select("id, email, name, role, institutionid")
+      .select("id, email, name, role, institutionId")
       .eq("email", authUser.email)
       .maybeSingle()
 
@@ -26,19 +26,19 @@ export async function getServerSession(): Promise<Session | null> {
     if (!user) return null
 
     let institutionName: string | null = null
-    if (user.institutionid) {
+    if (user.institutionId) {
       const { data: inst } = await supabaseAdmin
         .from("Institution")
         .select("name")
-        .eq("id", user.institutionid)
+        .eq("id", user.institutionId)
         .maybeSingle()
       institutionName = inst?.name ?? null
     }
 
     const [{ data: teacher }, { data: parent }, { data: admin }] = await Promise.all([
-      supabaseAdmin.from("Teacher").select("id").eq("userid", user.id).maybeSingle(),
-      supabaseAdmin.from("Parent").select("id").eq("userid", user.id).maybeSingle(),
-      supabaseAdmin.from("InstitutionalAdmin").select("id").eq("userid", user.id).maybeSingle(),
+      supabaseAdmin.from("Teacher").select("id").eq("userId", user.id).maybeSingle(),
+      supabaseAdmin.from("Parent").select("id").eq("userId", user.id).maybeSingle(),
+      supabaseAdmin.from("InstitutionalAdmin").select("id").eq("userId", user.id).maybeSingle(),
     ])
 
     return {
@@ -47,7 +47,7 @@ export async function getServerSession(): Promise<Session | null> {
         email: user.email,
         name: user.name,
         role: user.role,
-        institutionId: (user as any).institutionid ?? null,
+        institutionId: user.institutionId ?? null,
         institutionName,
         teacherId: teacher?.id ?? null,
         parentId: parent?.id ?? null,

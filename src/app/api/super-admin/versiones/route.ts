@@ -13,7 +13,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from("Version")
       .select("*")
-      .order("createdat", { ascending: false })
+      .order("createdAt", { ascending: false })
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(data)
@@ -38,12 +38,12 @@ export async function POST(req: Request) {
     const supabase = getSupabaseAdmin()
 
     if (isCurrent) {
-      await supabase.from("Version").update({ iscurrent: false }).neq("id", 0)
+      await supabase.from("Version").update({ isCurrent: false }).neq("id", 0)
     }
 
     const { data, error } = await supabase
       .from("Version")
-      .insert({ version, title, description, iscurrent: isCurrent ?? false })
+      .insert({ version, title, description, isCurrent: isCurrent ?? false })
       .select()
       .single()
 
@@ -70,7 +70,7 @@ export async function PUT(req: Request) {
     const supabase = getSupabaseAdmin()
 
     if (body.isCurrent) {
-      await supabase.from("Version").update({ iscurrent: false }).neq("id", 0)
+      await supabase.from("Version").update({ isCurrent: false }).neq("id", 0)
     }
 
     const { data, error } = await supabase
