@@ -13,13 +13,10 @@ export default function TimePickerField({ value, onChange, className = "" }: Tim
   useEffect(() => {
     const style = document.createElement("style")
     style.textContent = `
-      button:not([class*="react-wheel-time-picker"]) {
-        background-color: revert !important;
-      }
-      input:not([class*="react-wheel-time-picker"]) {
-        background-color: revert !important;
-        border: revert !important;
-      }
+      button.bg-black { background-color: #000 !important; }
+      button.bg-white { background-color: #fff !important; }
+      button.hover\\:bg-gray-800:hover { background-color: #1f2937 !important; }
+      button.hover\\:bg-gray-50:hover { background-color: #f9fafb !important; }
     `
     document.head.appendChild(style)
     return () => style.remove()
