@@ -13,8 +13,8 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-gray-200 pb-safe">
-      <div className="flex items-center justify-around max-w-lg mx-auto px-2 py-1">
+    <nav className="fixed bottom-3 left-3 right-3 z-50 md:hidden bg-white border border-gray-200 rounded-[50px] shadow-lg pb-2">
+      <div className="flex items-center justify-around px-2 pt-1">
         {items.map((item) => {
           const segments = item.href.split("/").filter(Boolean)
           const isActive = pathname === item.href || (segments.length > 2 && pathname.startsWith(item.href + "/"))
