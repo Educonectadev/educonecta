@@ -154,7 +154,7 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
         </div>
       )}
 
-      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Aula">
+      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Aula" size="md">
         <FormFields form={form} setForm={setForm} />
         <div className="flex gap-3 mt-8">
           <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
@@ -164,7 +164,7 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
         </div>
       </Modal>
 
-      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Aula">
+      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Aula" size="md">
         <FormFields form={form} setForm={setForm} />
         <div className="flex gap-3 mt-8">
           <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
