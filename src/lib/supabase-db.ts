@@ -8,12 +8,27 @@ export function toSupabaseTable(table: string): string {
 
 const TABLE_NAMES = ["Student", "Grade", "Section", "Teacher", "Course", "Parent", "User", "Institution", "CourseTeacher", "Schedule", "Homework", "HomeworkSubmission", "Attendance", "Tardiness", "GradeRecord", "Discipline", "Notification", "ParentStudent", "Communication", "InstitutionalAdmin", "Enrollment", "Subject", "Classroom"]
 
+// camelCase column names used across raw SQL queries that must be double-quoted
+// so PostgreSQL preserves their case (it folds unquoted identifiers to lowercase)
+const COLUMN_NAMES = [
+  "gradeId", "sectionId", "institutionId", "teacherId", "courseId",
+  "studentId", "parentId", "userId", "homeworkId",
+  "firstName", "lastName", "documentId", "isActive", "passwordHash",
+  "createdAt", "updatedAt", "academicYear", "isPresent", "minutesLate",
+  "isCurrent", "enrollmentDate", "dayOfWeek", "startTime", "endTime",
+  "speciality", "submitDate", "classroomId",
+]
+
 function quoteTableNames(sql: string): string {
-  const joined = TABLE_NAMES.join("|")
-  let result = sql.replace(new RegExp(`\\b(FROM|JOIN|INTO|UPDATE|TABLE|REFERENCES)\\s+(${joined})\\b`, "g"), '$1 "$2"')
-  // Quote column identifiers that contain uppercase letters (e.g. institutionId, firstName)
-  // but avoid already-quoted identifiers and string literals
-  result = result.replace(/(?<!["\w'])([a-z]+[A-Z][a-zA-Z0-9_]*)\b/g, '"$1"')
+  const tableJoined = TABLE_NAMES.join("|")
+  let result = sql.replace(
+    new RegExp(`\\b(FROM|JOIN|INTO|UPDATE|TABLE|REFERENCES)\\s+(${tableJoined})\\b`, "g"),
+    '$1 "$2"'
+  )
+  // Quote camelCase column names so Postgres treats them case-sensitively
+  for (const col of COLUMN_NAMES) {
+    result = result.replace(new RegExp(`\\b${col}\\b`, "g"), `"${col}"`)
+  }
   return result
 }
 
