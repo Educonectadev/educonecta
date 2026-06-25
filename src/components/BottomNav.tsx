@@ -22,14 +22,13 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
             <button
               key={item.href}
               onClick={() => router.push(item.href)}
-              className={`flex flex-col items-center gap-0.5 px-4 py-2 rounded-[50px] transition-all duration-200 ${
+              className={`flex items-center justify-center px-5 py-3 rounded-[50px] transition-all duration-200 ${
                 isActive
                   ? "bg-gray-100 text-gray-900"
                   : "text-gray-400 hover:text-gray-600"
               }`}
             >
               <span className="material-icons text-2xl">{item.icon}</span>
-              <span className="text-[10px] font-medium">{item.label}</span>
             </button>
           )
         })}
