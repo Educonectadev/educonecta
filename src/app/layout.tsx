@@ -2,7 +2,6 @@ import type { Metadata } from "next"
 import Provider from "@/components/Provider"
 import InstallPrompt from "@/components/InstallPrompt"
 import ToastProvider from "@/components/ToastProvider"
-import ThemeToggle from "@/components/ThemeToggle"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -49,9 +48,6 @@ export default function RootLayout({
           {children}
         </Provider>
         <InstallPrompt />
-        <div className="fixed bottom-6 right-6 z-50">
-          <ThemeToggle />
-        </div>
       </body>
     </html>
   )

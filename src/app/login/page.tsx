@@ -4,6 +4,7 @@ import { useState, FormEvent } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import IconClient from "@/components/IconClient"
+import ThemeToggle from "@/components/ThemeToggle"
 import { useSession } from "@/lib/auth-context"
 
 export default function LoginPage() {
@@ -32,11 +33,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
-      <div className="relative px-6 py-6 max-w-6xl mx-auto w-full">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-black">
+      <div className="relative px-6 py-6 max-w-6xl mx-auto w-full flex items-center justify-between">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-black transition-colors duration-200"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-zinc-500 hover:text-black dark:hover:text-white transition-colors duration-200"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M19 12H5" />
@@ -44,29 +45,30 @@ export default function LoginPage() {
           </svg>
           Volver
         </Link>
+        <ThemeToggle />
       </div>
 
       <main className="flex flex-1 items-center justify-center px-6 pb-20">
         <div className="w-full max-w-sm">
           <div className="text-center">
-            <div className="size-14 rounded-2xl bg-black flex items-center justify-center mx-auto">
-              <IconClient icon="lucide:graduation-cap" className="size-7 text-white" />
+            <div className="size-14 rounded-2xl bg-black dark:bg-white flex items-center justify-center mx-auto">
+              <IconClient icon="lucide:graduation-cap" className="size-7 text-white dark:text-black" />
             </div>
-            <h1 className="mt-6 text-2xl font-bold text-black tracking-tight">
+            <h1 className="mt-6 text-2xl font-bold text-black dark:text-white/90 tracking-tight">
               Iniciar Sesión
             </h1>
-            <p className="mt-1.5 text-sm text-gray-400">
+            <p className="mt-1.5 text-sm text-gray-400 dark:text-zinc-500">
               Ingresa tus credenciales para continuar
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-500 mb-1.5">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-500 dark:text-zinc-400 mb-1.5">
                 Correo electrónico
               </label>
               <div className="relative mt-1">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 dark:text-zinc-600 pointer-events-none">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="2" y="4" width="20" height="16" rx="2" />
                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
@@ -78,18 +80,18 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-[30px] border border-gray-200 pl-11 pr-5 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                  className="block w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 pl-11 pr-5 py-3 text-sm text-black dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
                   placeholder="correo@ejemplo.com"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-500 mb-1.5">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-500 dark:text-zinc-400 mb-1.5">
                 Contraseña
               </label>
               <div className="relative mt-1">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 pointer-events-none">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 dark:text-zinc-600 pointer-events-none">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                     <path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -101,13 +103,13 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-[30px] border border-gray-200 pl-11 pr-12 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                  className="block w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 pl-11 pr-12 py-3 text-sm text-black dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -128,7 +130,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-[30px] px-5 py-3">
+              <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-[30px] px-5 py-3">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
                   <circle cx="12" cy="12" r="10" />
                   <line x1="15" y1="9" x2="9" y2="15" />
@@ -141,7 +143,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-[25px] bg-black px-4 py-3.5 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 inline-flex items-center justify-center gap-2"
+              className="w-full rounded-[25px] bg-black dark:bg-white px-4 py-3.5 text-sm font-medium text-white dark:text-black hover:bg-gray-800 dark:hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 inline-flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -157,7 +159,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="mt-8 text-center text-sm text-gray-400">
+          <p className="mt-8 text-center text-sm text-gray-400 dark:text-zinc-500">
             ¿No tienes cuenta? Contacta a tu institución educativa.
           </p>
         </div>

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Card } from "@heroui/react"
 import IconClient from "@/components/IconClient"
 import AnimatedCounter from "@/components/AnimatedCounter"
+import ThemeToggle from "@/components/ThemeToggle"
 
 interface ImpactData {
   institutionCount: number
@@ -131,12 +132,20 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.3 }}
+          className="flex items-center gap-2"
         >
+          <ThemeToggle />
           <Link
             href="/login"
-            className="inline-block px-6 py-2.5 text-sm font-medium text-white bg-black dark:text-black dark:bg-white rounded-[30px] hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all duration-200"
+            className="inline-flex items-center justify-center size-10 sm:size-auto sm:px-6 sm:py-2.5 text-sm font-medium text-white bg-black dark:text-black dark:bg-white rounded-full sm:rounded-[30px] hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all duration-200"
+            aria-label="Iniciar Sesión"
           >
-            Iniciar Sesión
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:hidden">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+              <polyline points="10 17 15 12 10 7" />
+              <line x1="15" y1="12" x2="3" y2="12" />
+            </svg>
+            <span className="hidden sm:inline">Iniciar Sesión</span>
           </Link>
         </motion.div>
       </motion.header>
