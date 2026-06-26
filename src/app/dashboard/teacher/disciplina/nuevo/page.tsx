@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import Link from "next/link"
+import Modal from "@/components/Modal"
 
 interface Student {
   id: number
@@ -28,6 +28,7 @@ const disciplineTypes = [
 
 export default function NuevoDisciplinaPage() {
   const router = useRouter()
+  const [open, setOpen] = useState(true)
 
   const [courses, setCourses] = useState<CourseTeacher[]>([])
   const [students, setStudents] = useState<Student[]>([])
@@ -57,7 +58,12 @@ export default function NuevoDisciplinaPage() {
       .then(setStudents)
   }, [selectedCourse, courses])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  function close() {
+    setOpen(false)
+    router.push("/dashboard/teacher/disciplina")
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!studentId || !description) {
       setError("Completa los campos obligatorios.")
@@ -87,103 +93,99 @@ export default function NuevoDisciplinaPage() {
   }
 
   return (
-    <div className="max-w-2xl space-y-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Nuevo Registro Disciplinario</h1>
-          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">Registra una incidencia de un estudiante</p>
-        </div>
-        <Link
-          href="/dashboard/teacher/disciplina"
-          className="text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-        >
-          Cancelar
-        </Link>
+    <Modal open={open} onClose={close} title="Nuevo Registro Disciplinario" size="lg" scroll="inside">
+      <div className="space-y-4">
+        <p className="text-xs text-gray-500 dark:text-zinc-500">Registra una incidencia de un estudiante</p>
+
+        {error && (
+          <p className="text-sm border border-gray-100 dark:border-zinc-800 rounded-2xl p-4 bg-gray-50 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400">{error}</p>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Curso</label>
+            <select
+              value={selectedCourse}
+              onChange={(e) => setSelectedCourse(e.target.value)}
+              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+            >
+              <option value="">Seleccionar curso</option>
+              {courses.map((ct) => (
+                <option key={ct.id} value={ct.courseId}>
+                  {ct.course.name} — {ct.grade?.name ?? ""} / {ct.section?.name ?? ""}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Estudiante *</label>
+            <select
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+              required
+            >
+              <option value="">Seleccionar estudiante</option>
+              {students.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.firstName} {s.lastName}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Tipo *</label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+            >
+              {disciplineTypes.map((dt) => (
+                <option key={dt.value} value={dt.value}>
+                  {dt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Descripción *</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full rounded-[25px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+              rows={3}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Fecha *</label>
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+              required
+            />
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={close} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={submitting}
+              className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+            >
+              {submitting ? "Guardando..." : "Guardar Registro"}
+            </button>
+          </div>
+        </form>
       </div>
-
-      {error && (
-        <p className="text-sm border border-gray-100 dark:border-zinc-800 rounded-2xl p-4 bg-gray-50 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400">{error}</p>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Curso</label>
-          <select
-            value={selectedCourse}
-            onChange={(e) => setSelectedCourse(e.target.value)}
-            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-          >
-            <option value="">Seleccionar curso</option>
-            {courses.map((ct) => (
-              <option key={ct.id} value={ct.courseId}>
-                {ct.course.name} — {ct.grade?.name ?? ""} / {ct.section?.name ?? ""}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Estudiante *</label>
-          <select
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-            required
-          >
-            <option value="">Seleccionar estudiante</option>
-            {students.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.firstName} {s.lastName}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Tipo *</label>
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-          >
-            {disciplineTypes.map((dt) => (
-              <option key={dt.value} value={dt.value}>
-                {dt.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Descripción *</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-[25px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-            rows={4}
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Fecha *</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-            required
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={submitting}
-          className="btn-primary rounded-[30px] px-8 py-3 text-sm font-medium disabled:opacity-50"
-        >
-          {submitting ? "Guardando..." : "Guardar Registro"}
-        </button>
-      </form>
-    </div>
+    </Modal>
   )
 }
