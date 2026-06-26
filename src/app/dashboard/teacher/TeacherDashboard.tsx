@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import Modal from "@/components/Modal"
+import DataTable from "@/components/DataTable"
 
 interface CourseTeacher {
   id: number
