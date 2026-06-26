@@ -424,7 +424,7 @@ export default function ProfesoresList({
                   {t.user.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-800">{t.user.name}</p>
+                  <p className="text-sm font-medium text-gray-800 dark:text-white/90">{t.user.name}</p>
                   <p className="text-[11px] text-gray-400">{t.user.email}</p>
                 </div>
               </div>
