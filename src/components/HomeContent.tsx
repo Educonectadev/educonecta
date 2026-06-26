@@ -280,125 +280,144 @@ export default function HomeContent({ data }: { data: ImpactData }) {
               viewport={{ once: true, margin: "-60px" }}
               className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
             >
-              {impactCards.map((card, i) => (
-                <motion.div
-                  key={card.title}
-                  custom={i}
-                  variants={statCardVariants}
-                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                >
-                  <Card
-                    className={`flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}
+              {impactCards
+                .filter((_, i) => i === 0)
+                .map((card) => (
+                  <motion.div
+                    key={card.title}
+                    variants={statCardVariants}
+                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
                   >
-                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
-                      <IconClient icon={card.icon} className="size-6" />
-                    </div>
-                    <p className="mt-4 text-3xl font-bold text-black">
-                      <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
-                    </p>
-                    <p className="mt-2 text-sm font-semibold text-black">
-                      {card.title}
-                    </p>
-                    <p className="mt-2 text-xs text-gray-400 leading-relaxed max-w-[220px]">
-                      {card.description}
-                    </p>
-                  </Card>
-                </motion.div>
-              ))}
-            </motion.div>
+                    <Card className={`flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                      <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
+                        <IconClient icon={card.icon} className="size-6" />
+                      </div>
+                      <p className="mt-4 text-3xl font-bold text-black">
+                        <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
+                      </p>
+                      <p className="mt-2 text-sm font-semibold text-black">{card.title}</p>
+                      <p className="mt-2 text-xs text-gray-400 leading-relaxed max-w-[220px]">{card.description}</p>
+                    </Card>
+                  </motion.div>
+                ))}
 
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-60px" }}
-              variants={containerVariants}
-              className="mt-10 grid gap-6 sm:grid-cols-2"
-            >
-              <motion.div variants={itemVariants} whileHover={{ y: -4 }}>
-                <Card className="relative overflow-hidden border border-gray-100 rounded-[25px] gap-0">
+              <motion.div
+                variants={itemVariants}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="lg:col-span-2"
+              >
+                <Card className="relative overflow-hidden border border-gray-100 rounded-[25px] gap-0 h-full">
                   <div className="absolute inset-0">
-                    <img
-                      alt="Amazonía peruana"
-                      className="h-full w-full object-cover opacity-20"
-                      src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80"
-                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/70 via-emerald-800/50 to-black/40 z-10" />
+                    <img alt="Amazonía peruana" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80" />
                   </div>
-                  <div className="relative p-8">
-                    <div className="size-12 rounded-xl flex items-center justify-center bg-emerald-100 text-emerald-600">
+                  <div className="relative z-20 p-8 flex flex-col justify-end min-h-[280px]">
+                    <div className="size-12 rounded-xl flex items-center justify-center bg-white/20 backdrop-blur-sm text-white">
                       <IconClient icon="lucide:trees" className="size-6" />
                     </div>
-                    <p className="mt-4 text-lg font-bold text-black">
-                      Protección de la Amazonía peruana
+                    <p className="mt-4 text-xl font-bold text-white">Protección de la Amazonía peruana</p>
+                    <p className="mt-2 text-sm text-white/80 leading-relaxed max-w-lg">
+                      {data.institutionCount} instituciones activas evitan la tala de{" "}
+                      <strong className="text-emerald-300">{data.treesSaved.toLocaleString("es-PE")} árboles al año</strong>.
+                      Cada colegio digitalizado reduce la demanda de pulpa de madera y protege el pulmón verde del planeta.
                     </p>
-                    <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-                      La Amazonía peruana pierde más de <strong>150 mil hectáreas</strong> de bosque cada año.
-                      La industria del papel es una de las causas de esta deforestación.
-                      Con EduConecta, cada institución que se suma a la digitalización
-                      reduce significativamente su huella de papel, contribuyendo directamente
-                      a disminuir la demanda de pulpa de madera.
-                    </p>
-                    <p className="mt-3 text-sm text-gray-500 leading-relaxed">
-                      Si tu institución se une a las{" "}
-                      <strong>{data.institutionCount > 0 ? data.institutionCount : "más de 0"} instituciones activas</strong>,
-                      juntos podemos evitar la tala de{" "}
-                      <strong>{data.treesSaved.toLocaleString("es-PE")} árboles al año</strong>{" "}
-                      y preservar la selva peruana para las futuras generaciones.
-                    </p>
+                    <div className="mt-4 flex gap-4">
+                      <div>
+                        <p className="text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.treesSaved} suffix="" /></p>
+                        <p className="text-xs text-white/60">árboles/año</p>
+                      </div>
+                      <div className="w-px bg-white/20" />
+                      <div>
+                        <p className="text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.institutionCount} suffix="" /></p>
+                        <p className="text-xs text-white/60">instituciones</p>
+                      </div>
+                      <div className="w-px bg-white/20" />
+                      <div>
+                        <p className="text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.co2Saved} suffix="" /></p>
+                        <p className="text-xs text-white/60">kg CO₂/año</p>
+                      </div>
+                    </div>
                   </div>
                 </Card>
               </motion.div>
 
-              <motion.div variants={itemVariants} whileHover={{ y: -4 }}>
-                <Card className="relative overflow-hidden border border-gray-100 rounded-[25px] gap-0">
+              {impactCards
+                .filter((_, i) => i === 3)
+                .map((card) => (
+                  <motion.div
+                    key={card.title}
+                    variants={statCardVariants}
+                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  >
+                    <Card className={`flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                      <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
+                        <IconClient icon={card.icon} className="size-6" />
+                      </div>
+                      <p className="mt-4 text-3xl font-bold text-black">
+                        <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
+                      </p>
+                      <p className="mt-2 text-sm font-semibold text-black">{card.title}</p>
+                      <p className="mt-2 text-xs text-gray-400 leading-relaxed max-w-[220px]">{card.description}</p>
+                    </Card>
+                  </motion.div>
+                ))}
+
+              {impactCards
+                .filter((_, i) => i === 1)
+                .map((card) => (
+                  <motion.div
+                    key={card.title}
+                    variants={statCardVariants}
+                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  >
+                    <Card className={`flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                      <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
+                        <IconClient icon={card.icon} className="size-6" />
+                      </div>
+                      <p className="mt-4 text-3xl font-bold text-black">
+                        <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
+                      </p>
+                      <p className="mt-2 text-sm font-semibold text-black">{card.title}</p>
+                      <p className="mt-2 text-xs text-gray-400 leading-relaxed max-w-[220px]">{card.description}</p>
+                    </Card>
+                  </motion.div>
+                ))}
+
+              <motion.div
+                variants={itemVariants}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="lg:col-span-2"
+              >
+                <Card className="relative overflow-hidden border border-gray-100 rounded-[25px] gap-0 h-full">
                   <div className="absolute inset-0">
-                    <img
-                      alt="Escuela sostenible"
-                      className="h-full w-full object-cover opacity-15"
-                      src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80"
-                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-900/60 via-amber-800/40 to-black/30 z-10" />
+                    <img alt="Escuela sostenible" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" />
                   </div>
-                  <div className="relative p-8">
-                    <div className="size-12 rounded-xl flex items-center justify-center bg-amber-100 text-amber-600">
+                  <div className="relative z-20 p-8 flex flex-col justify-end min-h-[280px]">
+                    <div className="size-12 rounded-xl flex items-center justify-center bg-white/20 backdrop-blur-sm text-white">
                       <IconClient icon="lucide:recycle" className="size-6" />
                     </div>
-                    <p className="mt-4 text-lg font-bold text-black">
-                      Beneficios de la digitalización
-                    </p>
-                    <ul className="mt-4 space-y-4">
-                      <li className="flex gap-3">
-                        <IconClient icon="lucide:circle-check" className="size-5 shrink-0 text-emerald-500 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-black">Sin uso de papel</p>
-                          <p className="text-xs text-gray-400">Comunicados, calificaciones y asistencias 100% digitales.</p>
-                        </div>
-                      </li>
-                      <li className="flex gap-3">
-                        <IconClient icon="lucide:circle-check" className="size-5 shrink-0 text-emerald-500 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-black">Acceso desde cualquier lugar</p>
-                          <p className="text-xs text-gray-400">Padres y profesores consultan información sin imprimir.</p>
-                        </div>
-                      </li>
-                      <li className="flex gap-3">
-                        <IconClient icon="lucide:circle-check" className="size-5 shrink-0 text-emerald-500 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-black">Datos en tiempo real</p>
-                          <p className="text-xs text-gray-400">Reportes actualizados sin necesidad de fichas físicas.</p>
-                        </div>
-                      </li>
-                      <li className="flex gap-3">
-                        <IconClient icon="lucide:circle-check" className="size-5 shrink-0 text-emerald-500 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-black">Compromiso con el medio ambiente</p>
-                          <p className="text-xs text-gray-400">Cada institución digitalizada ayuda a conservar la Amazonía.</p>
-                        </div>
-                      </li>
-                    </ul>
-                    <div className="mt-6">
-                      <Link
-                        href="/login"
-                        className="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium text-white bg-black rounded-[25px] hover:bg-gray-800 transition-all duration-200"
-                      >
+                    <p className="mt-4 text-xl font-bold text-white">Beneficios de la digitalización</p>
+                    <div className="mt-3 grid grid-cols-2 gap-3 max-w-lg">
+                      <div className="flex items-center gap-2">
+                        <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
+                        <span className="text-sm text-white/90">Sin uso de papel</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
+                        <span className="text-sm text-white/90">Acceso desde cualquier lugar</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
+                        <span className="text-sm text-white/90">Datos en tiempo real</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
+                        <span className="text-sm text-white/90">Compromiso ambiental</span>
+                      </div>
+                    </div>
+                    <div className="mt-5">
+                      <Link href="/login" className="inline-flex items-center gap-2 px-5 py-2 text-sm font-medium text-white bg-white/20 backdrop-blur-sm rounded-[25px] hover:bg-white/30 transition-all duration-200">
                         Suma tu institución
                         <IconClient icon="lucide:arrow-right" className="size-4" />
                       </Link>
@@ -406,6 +425,27 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   </div>
                 </Card>
               </motion.div>
+
+              {impactCards
+                .filter((_, i) => i === 2)
+                .map((card) => (
+                  <motion.div
+                    key={card.title}
+                    variants={statCardVariants}
+                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  >
+                    <Card className={`flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                      <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
+                        <IconClient icon={card.icon} className="size-6" />
+                      </div>
+                      <p className="mt-4 text-3xl font-bold text-black">
+                        <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
+                      </p>
+                      <p className="mt-2 text-sm font-semibold text-black">{card.title}</p>
+                      <p className="mt-2 text-xs text-gray-400 leading-relaxed max-w-[220px]">{card.description}</p>
+                    </Card>
+                  </motion.div>
+                ))}
             </motion.div>
           </div>
         </motion.section>
