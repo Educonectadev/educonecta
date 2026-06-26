@@ -28,10 +28,21 @@ export function getSupabase(): SupabaseClient {
   return _supabase
 }
 
+const noopStorage = {
+  getItem: () => null,
+  setItem: () => {},
+  removeItem: () => {},
+}
+
 export function getSupabaseAdmin(): SupabaseClient {
   if (!_supabaseAdmin) {
     _supabaseAdmin = createClient(getUrl(), getServiceKey(), {
-      auth: { autoRefreshToken: false, persistSession: false },
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+        detectSessionInUrl: false,
+        storage: noopStorage,
+      },
     })
   }
   return _supabaseAdmin
