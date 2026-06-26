@@ -190,11 +190,12 @@ export default function TomarAsistenciaPage() {
           <select
             value={courseId ?? ""}
             onChange={onCourseChange}
-            className="w-full appearance-none rounded-[30px] border border-gray-300 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer [color-scheme:light] dark:[color-scheme:dark]"
+            className="w-full appearance-none rounded-[30px] border border-gray-300 px-5 py-3 text-sm !bg-white !text-[#111111] !border-gray-300 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 hover:bg-gray-50 transition-all cursor-pointer [color-scheme:light] dark:!bg-white dark:!text-[#111111] dark:!border-gray-300"
+            style={{ backgroundColor: "#ffffff", color: "#111111", borderColor: "#d1d5db" }}
           >
-            <option value="" className="bg-white text-gray-900 dark:bg-zinc-900 dark:text-white">Selecciona un curso...</option>
+            <option value="" className="bg-white text-[#111111]">Selecciona un curso...</option>
             {courses.map((ct) => (
-              <option key={ct.id} value={ct.courseId} className="bg-white text-gray-900 dark:bg-zinc-900 dark:text-white">
+              <option key={ct.id} value={ct.courseId} className="bg-white text-[#111111]">
                 {ct.course.name} — {ct.grade?.name ?? ""} / {ct.section?.name ?? ""}
               </option>
             ))}
