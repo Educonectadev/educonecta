@@ -24,7 +24,7 @@ const sizeMap: Record<string, string> = {
 export default function Modal({ open, onClose, title, children, size = "cover", scroll = "outside" }: ModalProps) {
   return (
     <HeroModal isOpen={open} onOpenChange={(v) => { if (!v) onClose() }}>
-      <HeroModal.Backdrop>
+      <HeroModal.Backdrop className="modal__backdrop--blur">
         <HeroModal.Container size={(sizeMap[size] || size) as any} scroll={scroll} className="overflow-x-hidden">
           <HeroModal.Dialog className="z-[60] overflow-x-hidden">
             <HeroModal.CloseTrigger />
