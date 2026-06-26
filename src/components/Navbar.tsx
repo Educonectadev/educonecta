@@ -8,7 +8,6 @@ import { useSession } from "@/lib/auth-context"
 import { themes } from "@/lib/themes"
 import ThemeToggle from "./ThemeToggle"
 import ParentProfileModal from "./ParentProfileModal"
-import Logo from "./Logo"
 
 export default function Navbar() {
   const { data: session, signOut } = useSession()
@@ -46,12 +45,9 @@ export default function Navbar() {
         <div className="flex items-center justify-between px-3 sm:px-5 md:px-8 py-3 md:py-4 max-w-6xl mx-auto w-full">
           <Link
             href="/"
-            className="flex items-center gap-2 hover:opacity-70 transition-opacity duration-200"
+            className="text-sm md:text-base font-semibold tracking-tight text-black dark:text-white hover:opacity-60 transition-opacity duration-200"
           >
-            <Logo className="size-8" />
-            <span className="text-sm md:text-base font-semibold tracking-tight text-black dark:text-white">
-              EduConecta
-            </span>
+            EduConecta
           </Link>
 
           <div className="flex items-center gap-2 text-black dark:text-white">

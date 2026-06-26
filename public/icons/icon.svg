@@ -1,6 +1,69 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="80" fill="#000"/>
-  <text x="256" y="280" font-family="Arial,sans-serif" font-size="280" font-weight="bold" text-anchor="middle" fill="white">EC</text>
-  <circle cx="400" cy="120" r="40" fill="#22c55e"/>
-  <path d="M385 115l10 10 20-20" stroke="white" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <linearGradient id="hat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <g transform="translate(0,-8)">
+    <path
+      d="M256 96 L408 142 L408 332 C408 348 392 360 376 360 L256 360 L256 96 Z"
+      fill="url(#page)"
+      stroke="#0f172a"
+      stroke-width="6"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M256 96 L104 142 L104 332 C104 348 120 360 136 360 L256 360 L256 96 Z"
+      fill="url(#page)"
+      stroke="#0f172a"
+      stroke-width="6"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M256 96 L256 360"
+      stroke="#0f172a"
+      stroke-width="6"
+    />
+
+    <g stroke="#94a3b8" stroke-width="6" stroke-linecap="round">
+      <line x1="148" y1="180" x2="220" y2="166"/>
+      <line x1="148" y1="220" x2="220" y2="206"/>
+      <line x1="148" y1="260" x2="220" y2="246"/>
+      <line x1="292" y1="166" x2="364" y2="180"/>
+      <line x1="292" y1="206" x2="364" y2="220"/>
+      <line x1="292" y1="246" x2="364" y2="260"/>
+    </g>
+
+    <g transform="translate(256,120)">
+      <ellipse cx="0" cy="0" rx="120" ry="22" fill="url(#hat)" stroke="#064e3b" stroke-width="5"/>
+      <path
+        d="M-100 -2 L-100 36 C-100 50 -56 60 0 60 C56 60 100 50 100 36 L100 -2"
+        fill="url(#hat)"
+        stroke="#064e3b"
+        stroke-width="5"
+        stroke-linejoin="round"
+      />
+      <ellipse cx="0" cy="-2" rx="120" ry="20" fill="none" stroke="#a7f3d0" stroke-width="2" opacity="0.6"/>
+      <circle cx="100" cy="-2" r="7" fill="#064e3b"/>
+      <path
+        d="M100 -2 L122 6"
+        stroke="#fbbf24"
+        stroke-width="5"
+        stroke-linecap="round"
+      />
+      <circle cx="124" cy="8" r="6" fill="#fbbf24"/>
+    </g>
+  </g>
 </svg>

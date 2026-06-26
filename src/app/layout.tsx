@@ -7,7 +7,15 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "EduConecta",
   description: "Plataforma de seguimiento escolar en tiempo real",
-  icons: { icon: "/icons/icon.svg", apple: "/icons/icon.svg" },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icons/icon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   appleWebApp: { capable: true, title: "EduConecta", statusBarStyle: "black-translucent" },
   other: {
     "mobile-web-app-capable": "yes",
@@ -41,7 +49,7 @@ export default function RootLayout({
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" precedence="default" />
-      <meta name="theme-color" content="#000000" />
+      <meta name="theme-color" content="#0f172a" />
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <Provider>
           <ToastProvider />
