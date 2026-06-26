@@ -62,12 +62,18 @@ export default async function HorariosPage() {
     section: s.section ? { id: s.section.id, name: s.section.name } : null,
   }))
 
+  const teachersList = (teachers || []).map((t: any) => ({
+    id: t.id,
+    name: t.user?.name ?? "Sin nombre",
+    speciality: t.speciality,
+  }))
+
   return (
     <HorariosList
       schedules={schedules as any}
       courses={courses as any}
       classrooms={classrooms as any}
-      teachers={(teachers || []) as any}
+      teachers={teachersList as any}
       grades={grades as any}
       sections={(sectionsData || []) as any}
       studentsWithParents={(studentsWithParents || []) as any}

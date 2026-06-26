@@ -151,7 +151,10 @@ export default function NotificationsToggle() {
       })
       const json = await res.json()
       if (res.ok) {
-        setMessage(`Enviadas: ${json.sent}/${json.total}. Revisa la barra de notificaciones o la pantalla bloqueada.`)
+        const msg = json.message
+          ? json.message
+          : `Enviadas: ${json.sent}/${json.total}. Revisa la barra de notificaciones o la pantalla bloqueada.`
+        setMessage(msg)
       } else {
         setMessage(json.error || "Error al enviar la prueba")
       }

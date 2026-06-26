@@ -1,6 +1,8 @@
 "use client"
 
 import Link from "next/link"
+import { useState } from "react"
+import Modal from "@/components/Modal"
 
 interface CourseTeacher {
   id: number
@@ -63,6 +65,8 @@ export default function TeacherDashboard({
   recentHomework: RecentHomework[]
   upcomingClasses: UpcomingClass[]
 }) {
+  const [coursesOpen, setCoursesOpen] = useState(false)
+
   const quickLinks = [
     { label: "Asistencia", href: "/dashboard/teacher/asistencia", icon: "fact_check" },
     { label: "Tareas", href: "/dashboard/teacher/tareas", icon: "assignment" },
@@ -78,6 +82,25 @@ export default function TeacherDashboard({
     { label: "Clases Hoy", value: stats.classesToday, icon: "schedule" },
     { label: "Cursos", value: stats.totalCourses, icon: "menu_book" },
   ]
+
+  const studentCountByCourse = new Map<string, number>()
+  for (const ct of courseTeachers) {
+    const key = `${ct.courseId}-${ct.gradeId ?? "x"}-${ct.sectionId ?? "x"}`
+    studentCountByCourse.set(key, (studentCountByCourse.get(key) ?? 0) + 0)
+  }
+  const scheduleByCourse = new Map<string, { day: string; time: string }[]>()
+  for (const c of upcomingClasses) {
+    const key = `${c.course.id}-${c.grade?.id ?? "x"}-${c.section?.id ?? "x"}`
+    const list = scheduleByCourse.get(key) ?? []
+    list.push({ day: dayLabels[c.dayOfWeek] ?? "—", time: `${c.startTime}-${c.endTime}` })
+    scheduleByCourse.set(key, list)
+  }
+  function scheduleLabel(ct: CourseTeacher) {
+    const key = `${ct.courseId}-${ct.gradeId ?? "x"}-${ct.sectionId ?? "x"}`
+    const list = scheduleByCourse.get(key) ?? []
+    if (list.length === 0) return "—"
+    return list.slice(0, 2).map((s) => `${s.day} ${s.time}`).join(", ") + (list.length > 2 ? "…" : "")
+  }
 
   return (
     <div className="space-y-8">
@@ -132,13 +155,16 @@ export default function TeacherDashboard({
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-6">
+        <div
+          onClick={() => setCoursesOpen(true)}
+          className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-6 cursor-pointer hover:shadow-lg transition-all duration-200"
+        >
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
               <span className="material-icons text-base text-gray-400 dark:text-zinc-500">menu_book</span>
               <h2 className="text-sm font-semibold text-gray-700 dark:text-zinc-300">Mis Cursos</h2>
             </div>
-            <span className="text-xs text-gray-400 dark:text-zinc-500">{courseTeachers.length} asignados</span>
+            <span className="text-xs text-gray-400 dark:text-zinc-500">{courseTeachers.length} asignados · Ver tabla →</span>
           </div>
           {courseTeachers.length === 0 ? (
             <p className="text-sm text-gray-400 dark:text-zinc-500 text-center py-6">No tienes cursos asignados.</p>
@@ -155,12 +181,6 @@ export default function TeacherDashboard({
                       <p className="text-[11px] text-gray-400 dark:text-zinc-500">{ct.grade?.name ?? "—"} / {ct.section?.name ?? "—"}</p>
                     </div>
                   </div>
-                  <Link
-                    href={`/dashboard/teacher/asistencia/tomar?courseId=${ct.courseId}&gradeId=${ct.gradeId ?? ""}&sectionId=${ct.sectionId ?? ""}`}
-                    className="text-xs text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white/90 transition-colors"
-                  >
-                    Tomar asistencia →
-                  </Link>
                 </div>
               ))}
             </div>
@@ -222,6 +242,64 @@ export default function TeacherDashboard({
           </div>
         </div>
       )}
+
+      <Modal
+        open={coursesOpen}
+        onClose={() => setCoursesOpen(false)}
+        title="Mis Cursos"
+        size="lg"
+        scroll="inside"
+        dialogClassName="max-w-6xl w-full"
+        bodyClassName="h-[85vh] overflow-y-auto"
+      >
+        <div className="space-y-4">
+          <div className="rounded-2xl border border-gray-200 dark:border-zinc-700 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 dark:bg-zinc-800/50 text-xs uppercase tracking-wider text-gray-500 dark:text-zinc-400">
+                <tr>
+                  <th className="px-4 py-3 text-left font-medium">Curso</th>
+                  <th className="px-4 py-3 text-left font-medium">Grado</th>
+                  <th className="px-4 py-3 text-left font-medium">Sección</th>
+                  <th className="px-4 py-3 text-left font-medium">Horario</th>
+                </tr>
+              </thead>
+              <tbody>
+                {courseTeachers.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-4 py-8 text-center text-gray-400 dark:text-zinc-500">
+                      No tienes cursos asignados.
+                    </td>
+                  </tr>
+                ) : (
+                  courseTeachers.map((ct) => (
+                    <tr key={ct.id} className="border-t border-gray-100 dark:border-zinc-800">
+                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white/90">{ct.course.name}</td>
+                      <td className="px-4 py-3 text-gray-600 dark:text-zinc-300">{ct.grade?.name ?? "—"}</td>
+                      <td className="px-4 py-3 text-gray-600 dark:text-zinc-300">{ct.section?.name ?? "—"}</td>
+                      <td className="px-4 py-3 text-gray-600 dark:text-zinc-300 text-xs">{scheduleLabel(ct)}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setCoursesOpen(false)}
+              className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-6 py-2.5 text-sm font-medium text-gray-700 dark:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
+            >
+              Cerrar
+            </button>
+            <Link
+              href="/dashboard/teacher/courses"
+              className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium"
+            >
+              Pantalla Completa
+            </Link>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

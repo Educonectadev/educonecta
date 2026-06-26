@@ -24,6 +24,7 @@ export async function POST(req: Request) {
       .from("PushSubscription")
       .select("endpoint, p256dh, auth, userId")
       .in("userId", targets)
+    console.log("[push/send] Suscripciones encontradas:", subs?.length ?? 0, subs)
 
     if (error) {
       console.error("[push/send] Error SELECT:", error)
@@ -32,8 +33,13 @@ export async function POST(req: Request) {
         { status: 500 },
       )
     }
-    console.log("[push/send] Suscripciones encontradas:", subs?.length ?? 0, subs)
-    if (!subs || subs.length === 0) return NextResponse.json({ sent: 0, total: 0 })
+    if (!subs || subs.length === 0) {
+      return NextResponse.json({
+        sent: 0,
+        total: 0,
+        message: "No hay dispositivos suscritos.",
+      })
+    }
 
     const payload = { title, body, url, icon, tag, data }
     const results = await Promise.all(
