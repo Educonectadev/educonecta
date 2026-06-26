@@ -149,8 +149,8 @@ export default function TomarAsistenciaPage() {
       } else {
         setMessage({ type: "err", text: json.message || json.error || "Error al guardar." })
       }
-    } catch (err: any) {
-      setMessage({ type: "err", text: err?.message || "Error de red." })
+    } catch (err: unknown) {
+      setMessage({ type: "err", text: err instanceof Error ? err.message : "Error de red." })
     } finally {
       setSubmitting(false)
     }
@@ -190,12 +190,11 @@ export default function TomarAsistenciaPage() {
           <select
             value={courseId ?? ""}
             onChange={onCourseChange}
-            className="w-full appearance-none rounded-[30px] border border-gray-300 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer"
-            style={{ colorScheme: "light" }}
+            className="w-full appearance-none rounded-[30px] border border-gray-300 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer [color-scheme:light] dark:[color-scheme:dark]"
           >
-            <option value="">Selecciona un curso...</option>
+            <option value="" className="bg-white text-gray-900 dark:bg-zinc-900 dark:text-white">Selecciona un curso...</option>
             {courses.map((ct) => (
-              <option key={ct.id} value={ct.courseId}>
+              <option key={ct.id} value={ct.courseId} className="bg-white text-gray-900 dark:bg-zinc-900 dark:text-white">
                 {ct.course.name} — {ct.grade?.name ?? ""} / {ct.section?.name ?? ""}
               </option>
             ))}
