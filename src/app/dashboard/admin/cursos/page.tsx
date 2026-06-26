@@ -42,10 +42,16 @@ export default async function CursosPage() {
           })
       : [],
     courseIds.length > 0
-      ? query<any>(
-          `SELECT courseId, COUNT(*) AS total FROM Schedule WHERE courseId IN (?) AND institutionId = ? GROUP BY courseId`,
-          [courseIds, institutionId],
-        )
+      ? (async () => {
+          const placeholders = courseIds.map(() => "?").join(",")
+          const rows = await query<any>(
+            `SELECT "courseId", COUNT(*) AS total FROM "Schedule"
+             WHERE "courseId" IN (${placeholders}) AND "institutionId" = ?
+             GROUP BY "courseId"`,
+            [...courseIds, institutionId],
+          )
+          return rows as any[]
+        })()
       : Promise.resolve([] as any[]),
     (async () => {
       if (grades.length === 0) return []
