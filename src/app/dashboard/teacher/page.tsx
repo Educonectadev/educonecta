@@ -65,8 +65,14 @@ export default async function TeacherDashboardPage() {
       )
       classesToday = result[0]?.total ?? 0
     }
-  } catch (e) {
-    error = e instanceof Error ? e.message : "Error inesperado"
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      error = e.message
+    } else if (e && typeof e === "object" && "message" in e) {
+      error = String((e as { message: unknown }).message)
+    } else {
+      error = "Error inesperado"
+    }
   }
 
   if (error) {
