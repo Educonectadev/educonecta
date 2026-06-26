@@ -379,11 +379,11 @@ export default function InstitutionModal({
             </div>
 
             {/* Director Admin */}
-            <div className="bg-gray-50 rounded-[25px] p-4 space-y-2.5">
+            <div className="bg-gray-50 dark:bg-zinc-900/50 rounded-[25px] p-4 space-y-2.5">
               <div className="flex items-center justify-between">
-                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Director(a) - Acceso al Sistema</h3>
+                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Director(a) - Acceso al Sistema</h3>
                 {!directorLoading && !directorUser && !showCreateDirector && (
-                  <button                 onClick={() => setShowCreateDirector(true)} className="text-[11px] font-medium text-black hover:text-black/60 transition-colors">Crear Acceso</button>
+                  <button                 onClick={() => setShowCreateDirector(true)} className="text-[11px] font-medium text-black dark:text-white hover:text-black/60 dark:hover:text-white/60 transition-colors">Crear Acceso</button>
                 )}
               </div>
               {directorLoading ? (
