@@ -1,6 +1,7 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react"
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from "react"
+import { usePathname } from "next/navigation"
 import { useTheme } from "./ThemeProvider"
 
 function getLuminance(hex: string): number {
@@ -26,29 +27,58 @@ export const useBrandColor = () => useContext(ctx)
 const STORAGE_KEY = "educonecta_brand_color"
 
 export default function BrandColorProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
   const { theme } = useTheme()
   const [brandColor, setBrandColorState] = useState("#000000")
+  const [ready, setReady] = useState(false)
+  const savedRef = useRef(false)
 
-  const applyColor = useCallback((color: string) => {
-    document.documentElement.style.setProperty("--brand-color", color)
-    document.documentElement.style.setProperty("--brand-text-color", getContrastText(color))
-  }, [])
-
-  const setBrandColor = useCallback((color: string) => {
-    setBrandColorState(color)
-    localStorage.setItem(STORAGE_KEY, color)
-    applyColor(color)
-  }, [applyColor])
+  const isDashboard = pathname?.startsWith("/dashboard")
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved) {
-      setBrandColorState(saved)
-      applyColor(saved)
-    } else {
-      applyColor("#000000")
+    async function load() {
+      try {
+        const res = await fetch("/api/user/brand-color")
+        if (res.ok) {
+          const { brandColor: serverColor } = await res.json()
+          if (serverColor) {
+            setBrandColorState(serverColor)
+            localStorage.setItem(STORAGE_KEY, serverColor)
+            setReady(true)
+            return
+          }
+        }
+      } catch {}
+      const local = localStorage.getItem(STORAGE_KEY)
+      if (local) {
+        setBrandColorState(local)
+      }
+      setReady(true)
     }
-  }, [theme, applyColor])
+    load()
+  }, [theme])
 
-  return <ctx.Provider value={{ brandColor, setBrandColor }}>{children}</ctx.Provider>
+  const setBrandColor = useCallback(async (color: string) => {
+    setBrandColorState(color)
+    localStorage.setItem(STORAGE_KEY, color)
+    try {
+      await fetch("/api/user/brand-color", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brandColor: color }),
+      })
+    } catch {}
+  }, [])
+
+  return (
+    <ctx.Provider value={{ brandColor, setBrandColor }}>
+      {isDashboard && ready ? (
+        <div style={{ "--brand-color": brandColor, "--brand-text-color": getContrastText(brandColor) } as React.CSSProperties}>
+          {children}
+        </div>
+      ) : (
+        children
+      )}
+    </ctx.Provider>
+  )
 }
