@@ -24,7 +24,11 @@ export async function POST(request: Request) {
     if (teacherRows.length === 0) return NextResponse.json({ error: "Profesor no encontrado" }, { status: 404 })
 
     const existing = await query(
-      "SELECT id FROM CourseTeacher WHERE courseId = ? AND teacherId = ? AND gradeId <=> ? AND sectionId <=> ?",
+      `SELECT id FROM "CourseTeacher"
+       WHERE "courseId" = ?
+         AND "teacherId" = ?
+         AND "gradeId" IS NOT DISTINCT FROM ?
+         AND "sectionId" IS NOT DISTINCT FROM ?`,
       [courseId, teacherId, gradeId ?? null, sectionId ?? null]
     )
     if (existing.length > 0) {
@@ -52,8 +56,16 @@ export async function POST(request: Request) {
       [insertId]
     )
     return NextResponse.json(ct[0], { status: 201 })
-  } catch {
-    return NextResponse.json({ error: "Error al asignar" }, { status: 500 })
+  } catch (error) {
+    console.error("[admin/course-teachers POST] error:", error)
+    return NextResponse.json(
+      {
+        error: "Error al asignar",
+        details: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : null,
+      },
+      { status: 500 },
+    )
   }
 }
 
@@ -70,14 +82,22 @@ export async function DELETE(request: Request) {
     if (!id) return NextResponse.json({ error: "ID requerido" }, { status: 400 })
 
     const ct = await query(
-      "SELECT ct.id FROM CourseTeacher ct JOIN Course c ON ct.courseId = c.id WHERE ct.id = ? AND c.institutionId = ?",
+      `SELECT ct.id FROM "CourseTeacher" ct JOIN "Course" c ON ct."courseId" = c.id WHERE ct.id = ? AND c."institutionId" = ?`,
       [id, institutionId]
     )
     if (ct.length === 0) return NextResponse.json({ error: "No encontrado" }, { status: 404 })
 
     await remove("CourseTeacher", { id })
     return NextResponse.json({ success: true })
-  } catch {
-    return NextResponse.json({ error: "Error al eliminar" }, { status: 500 })
+  } catch (error) {
+    console.error("[admin/course-teachers DELETE] error:", error)
+    return NextResponse.json(
+      {
+        error: "Error al eliminar",
+        details: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : null,
+      },
+      { status: 500 },
+    )
   }
 }

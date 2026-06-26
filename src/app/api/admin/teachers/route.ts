@@ -110,7 +110,11 @@ export async function POST(request: Request) {
       const gradeId = a.gradeId ? Number(a.gradeId) : null
       const sectionId = a.sectionId ? Number(a.sectionId) : null
       const exists = await query(
-        "SELECT id FROM CourseTeacher WHERE courseId = ? AND teacherId = ? AND gradeId <=> ? AND sectionId <=> ?",
+        `SELECT id FROM "CourseTeacher"
+         WHERE "courseId" = ?
+           AND "teacherId" = ?
+           AND "gradeId" IS NOT DISTINCT FROM ?
+           AND "sectionId" IS NOT DISTINCT FROM ?`,
         [courseId, teacherId, gradeId, sectionId]
       )
       if ((exists as any[]).length > 0) continue
