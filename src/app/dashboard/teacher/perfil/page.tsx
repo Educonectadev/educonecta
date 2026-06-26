@@ -144,7 +144,11 @@ export default async function TeacherPerfilPage() {
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {courses.map((c: any) => {
-              const lvl = (c.level || "").trim().toUpperCase()
+              const courseName: string | null = c.courseName ?? c.coursename ?? c["courseName"] ?? null
+              const gradeName: string | null = c.gradeName ?? c.gradename ?? null
+              const sectionName: string | null = c.sectionName ?? c.sectionname ?? null
+              const levelRaw: string = (c.level ?? "").toString().trim()
+              const lvl = levelRaw.toUpperCase()
               const levelStyle = lvl === "INICIAL"
                 ? "bg-pink-50 dark:bg-pink-950/30 text-pink-700 dark:text-pink-300"
                 : lvl === "PRIMARIA"
@@ -153,17 +157,22 @@ export default async function TeacherPerfilPage() {
                     ? "bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300"
                     : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
               const lvlLabel = lvl ? lvl.charAt(0) + lvl.slice(1).toLowerCase() : null
+              const subline = [gradeName, sectionName].filter(Boolean).join(" · ")
               return (
                 <div key={c.id} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-[20px] p-5">
                   <div className="flex items-start justify-between gap-2">
-                    <p className="font-semibold text-sm text-gray-900 dark:text-white/90">{c.courseName}</p>
+                    <p className="font-semibold text-sm text-gray-900 dark:text-white/90">
+                      {courseName ?? "Curso sin nombre"}
+                    </p>
                     {lvlLabel && (
                       <span className={`shrink-0 text-[10px] font-semibold uppercase tracking-wider rounded-full px-2 py-0.5 ${levelStyle}`}>
                         {lvlLabel}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{c.gradeName ?? "—"} · {c.sectionName ?? "—"}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {subline || "Grado y sección por asignar"}
+                  </p>
                 </div>
               )
             })}
