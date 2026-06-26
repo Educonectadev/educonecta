@@ -209,7 +209,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   variants={statCardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
-                  <Card className={`flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                  <Card className={`w-full flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
                     <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
@@ -227,7 +227,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               className="lg:col-span-2"
             >
-              <Card className="relative overflow-hidden border border-gray-100 rounded-[25px] gap-0 h-full">
+              <Card className="w-full relative overflow-hidden border border-gray-100 rounded-[25px] gap-0 h-full">
                 <div className="absolute inset-0">
                   <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/70 via-emerald-800/50 to-black/40 z-10" />
                   <img alt="Amazonía peruana" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80" />
@@ -270,7 +270,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   variants={statCardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
-                  <Card className={`flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                  <Card className={`w-full flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
                     <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
@@ -291,7 +291,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   variants={statCardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
-                  <Card className={`flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                  <Card className={`w-full flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
                     <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
@@ -309,7 +309,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               className="lg:col-span-2"
             >
-              <Card className="relative overflow-hidden border border-gray-100 rounded-[25px] gap-0 h-full">
+              <Card className="w-full relative overflow-hidden border border-gray-100 rounded-[25px] gap-0 h-full">
                 <div className="absolute inset-0">
                   <div className="absolute inset-0 bg-gradient-to-br from-amber-900/60 via-amber-800/40 to-black/30 z-10" />
                   <img alt="Escuela sostenible" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" />
@@ -355,7 +355,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   variants={statCardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
-                  <Card className={`flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                  <Card className={`w-full flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
                     <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
