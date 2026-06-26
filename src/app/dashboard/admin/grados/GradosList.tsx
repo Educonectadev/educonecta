@@ -155,27 +155,27 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
       </div>
 
       {grades.length === 0 ? (
-        <p className="text-sm text-gray-400">No hay grados registrados. Crea el primer grado.</p>
+        <p className="text-sm text-gray-400 dark:text-zinc-600">No hay grados registrados. Crea el primer grado.</p>
       ) : (
         <div className="space-y-4">
           {grades.map((grade) => (
-            <div key={grade.id} className="bg-gray-50 border border-gray-200 rounded-[25px] overflow-hidden">
-              <div className="flex items-center justify-between p-5 border-b border-gray-200">
+            <div key={grade.id} className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[25px] overflow-hidden">
+              <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-zinc-800">
                 <div>
-                  <span className="font-semibold text-[#1a1a1a]">{grade.name}</span>
-                  {grade.level && <span className="ml-2 text-xs text-gray-400">{grade.level}</span>}
-                  <span className="ml-3 text-xs text-gray-400">{grade.sections.length} secciones</span>
+                  <span className="font-semibold text-gray-900 dark:text-white/90">{grade.name}</span>
+                  {grade.level && <span className="ml-2 text-xs text-gray-400 dark:text-zinc-600">{grade.level}</span>}
+                  <span className="ml-3 text-xs text-gray-400 dark:text-zinc-600">{grade.sections.length} secciones</span>
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => openSectionCreate(grade)}
-                    className="text-xs text-gray-400 hover:text-black transition-all"
+                    className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white/90 transition-all"
                   >
                     + Sección
                   </button>
                   <button
                     onClick={() => openGradeEdit(grade)}
-                    className="text-xs text-gray-400 hover:text-black transition-all"
+                    className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white/90 transition-all"
                   >
                     Editar
                   </button>
@@ -188,17 +188,17 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
                 </div>
               </div>
               {grade.sections.length > 0 ? (
-                <div className="divide-y divide-gray-200">
+                <div className="divide-y divide-gray-200 dark:divide-zinc-800">
                   {grade.sections.map((s) => (
                     <div key={s.id} className="flex items-center justify-between px-5 py-3">
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-gray-600">Sección {s.name}</span>
-                        {s.capacity && <span className="text-xs text-gray-400">Capacidad: {s.capacity}</span>}
+                        <span className="text-sm font-medium text-gray-600 dark:text-zinc-400">Sección {s.name}</span>
+                        {s.capacity && <span className="text-xs text-gray-400 dark:text-zinc-600">Capacidad: {s.capacity}</span>}
                       </div>
                       <div className="flex gap-2">
                         <button
                           onClick={() => openSectionEdit(s)}
-                          className="text-xs text-gray-400 hover:text-black transition-all"
+                          className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white/90 transition-all"
                         >
                           Editar
                         </button>
@@ -213,7 +213,7 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
                   ))}
                 </div>
               ) : (
-                <p className="px-5 py-3 text-sm text-gray-400">Sin secciones</p>
+                <p className="px-5 py-3 text-sm text-gray-400 dark:text-zinc-600">Sin secciones</p>
               )}
             </div>
           ))}
