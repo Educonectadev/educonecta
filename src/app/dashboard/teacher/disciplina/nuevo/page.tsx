@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import Modal from "@/components/Modal"
+import Select from "@/components/Select"
 
 interface Student {
   id: number
@@ -104,50 +105,37 @@ export default function NuevoDisciplinaPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Curso</label>
-            <select
+            <Select
               value={selectedCourse}
-              onChange={(e) => setSelectedCourse(e.target.value)}
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-            >
-              <option value="">Seleccionar curso</option>
-              {courses.map((ct) => (
-                <option key={ct.id} value={ct.courseId}>
-                  {ct.course.name} — {ct.grade?.name ?? ""} / {ct.section?.name ?? ""}
-                </option>
-              ))}
-            </select>
+              onChange={setSelectedCourse}
+              options={courses.map((ct) => ({
+                value: String(ct.courseId),
+                label: `${ct.course.name} — ${ct.grade?.name ?? ""} / ${ct.section?.name ?? ""}`,
+              }))}
+              placeholder="Seleccionar curso"
+            />
           </div>
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Estudiante *</label>
-            <select
+            <Select
               value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-              required
-            >
-              <option value="">Seleccionar estudiante</option>
-              {students.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.firstName} {s.lastName}
-                </option>
-              ))}
-            </select>
+              onChange={setStudentId}
+              options={students.map((s) => ({
+                value: String(s.id),
+                label: `${s.firstName} ${s.lastName}`,
+              }))}
+              placeholder="Seleccionar estudiante"
+            />
           </div>
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Tipo *</label>
-            <select
+            <Select
               value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-            >
-              {disciplineTypes.map((dt) => (
-                <option key={dt.value} value={dt.value}>
-                  {dt.label}
-                </option>
-              ))}
-            </select>
+              onChange={setType}
+              options={disciplineTypes}
+            />
           </div>
 
           <div>

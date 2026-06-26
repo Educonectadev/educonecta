@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useEffect, useState, useMemo } from "react"
 import Modal from "@/components/Modal"
+import Select from "@/components/Select"
 
 interface Grade { id: number; name: string }
 interface Section { id: number; name: string; gradeId: number }
@@ -115,45 +116,32 @@ export default function NuevaTareaPage() {
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Curso *</label>
-            <select
+            <Select
               value={courseId}
-              onChange={(e) => setCourseId(e.target.value)}
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-              required
-            >
-              <option value="">Seleccionar curso</option>
-              {courses.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
+              onChange={setCourseId}
+              options={courses.map((c) => ({ value: String(c.id), label: c.name }))}
+              placeholder="Seleccionar curso"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Grado</label>
-              <select
+              <Select
                 value={gradeId}
-                onChange={(e) => { setGradeId(e.target.value); setSectionId("") }}
-                className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-              >
-                <option value="">Todos los grados</option>
-                {grades.map((g) => (
-                  <option key={g.id} value={g.id}>{g.name}</option>
-                ))}
-              </select>
+                onChange={(value) => { setGradeId(value); setSectionId("") }}
+                options={grades.map((g) => ({ value: String(g.id), label: g.name }))}
+                placeholder="Todos los grados"
+              />
             </div>
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Sección</label>
-              <select
+              <Select
                 value={sectionId}
-                onChange={(e) => setSectionId(e.target.value)}
-                className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-              >
-                <option value="">Todas las secciones</option>
-                {filteredSections.map((s) => (
-                  <option key={s.id} value={s.id}>{s.name}</option>
-                ))}
-              </select>
+                onChange={setSectionId}
+                options={filteredSections.map((s) => ({ value: String(s.id), label: s.name }))}
+                placeholder="Todas las secciones"
+              />
             </div>
           </div>
 

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import Modal from "@/components/Modal"
+import Select from "@/components/Select"
 
 interface Student {
   id: number
@@ -115,19 +116,15 @@ export default function RegistrarCalificacionesPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Curso *</label>
-            <select
+            <Select
               value={courseId}
-              onChange={(e) => setCourseId(e.target.value)}
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
-              required
-            >
-              <option value="">Seleccionar curso</option>
-              {courses.map((ct) => (
-                <option key={ct.id} value={ct.courseId}>
-                  {ct.course.name} — {ct.grade?.name ?? ""} / {ct.section?.name ?? ""}
-                </option>
-              ))}
-            </select>
+              onChange={setCourseId}
+              options={courses.map((ct) => ({
+                value: String(ct.courseId),
+                label: `${ct.course.name} — ${ct.grade?.name ?? ""} / ${ct.section?.name ?? ""}`,
+              }))}
+              placeholder="Seleccionar curso"
+            />
           </div>
 
           <div>

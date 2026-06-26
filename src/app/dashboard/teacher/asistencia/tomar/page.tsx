@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
+import Select from "@/components/Select"
 
 interface Student {
   id: number
@@ -95,8 +96,8 @@ export default function TomarAsistenciaPage() {
       .finally(() => setLoadingStudents(false))
   }, [gradeId, sectionId])
 
-  function onCourseChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const ct = courses.find((c) => c.courseId === Number(e.target.value))
+  function onCourseChange(value: string) {
+    const ct = courses.find((c) => c.courseId === Number(value))
     if (!ct) return
     const params = new URLSearchParams({
       courseId: String(ct.courseId),
@@ -187,19 +188,18 @@ export default function TomarAsistenciaPage() {
       <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-4 space-y-3">
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Curso</label>
-          <select
+          <Select
             value={courseId ?? ""}
             onChange={onCourseChange}
-            className="w-full appearance-none rounded-[30px] border border-gray-300 px-5 py-3 text-sm !bg-white !text-[#111111] !border-gray-300 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 hover:bg-gray-50 transition-all cursor-pointer [color-scheme:light] dark:!bg-white dark:!text-[#111111] dark:!border-gray-300"
-            style={{ backgroundColor: "#ffffff", color: "#111111", borderColor: "#d1d5db" }}
-          >
-            <option value="" className="bg-white text-[#111111]">Selecciona un curso...</option>
-            {courses.map((ct) => (
-              <option key={ct.id} value={ct.courseId} className="bg-white text-[#111111]">
-                {ct.course.name} — {ct.grade?.name ?? ""} / {ct.section?.name ?? ""}
-              </option>
-            ))}
-          </select>
+            options={[
+              { value: "", label: "Selecciona un curso..." },
+              ...courses.map((ct) => ({
+                value: String(ct.courseId),
+                label: `${ct.course.name} — ${ct.grade?.name ?? ""} / ${ct.section?.name ?? ""}`,
+              })),
+            ]}
+            placeholder="Selecciona un curso..."
+          />
         </div>
 
         {selected && (
