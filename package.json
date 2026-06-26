@@ -11,6 +11,7 @@
     "seed:supabase": "npx tsx scripts/seed-supabase.ts"
   },
   "dependencies": {
+    "@gravity-ui/icons": "^2.18.0",
     "@headlessui/react": "^2.2.10",
     "@heroui/react": "^3.2.1",
     "@heroui/styles": "^3.2.1",
