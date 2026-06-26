@@ -13,7 +13,7 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname()
 
   return (
-    <nav className="fixed bottom-3 left-3 right-3 z-50 md:hidden bg-white border border-gray-200 rounded-[50px] shadow-lg pb-2">
+    <nav className="fixed bottom-3 left-3 right-3 z-50 md:hidden bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-[50px] shadow-lg pb-2">
       <div className="flex items-center justify-around px-2 pt-1">
         {items.map((item) => {
           const segments = item.href.split("/").filter(Boolean)
@@ -24,8 +24,8 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
               onClick={() => router.push(item.href)}
               className={`flex flex-col items-center justify-center px-4 py-2 rounded-[50px] transition-all duration-200 min-w-0 ${
                 isActive
-                  ? "bg-gray-100 text-gray-900"
-                  : "text-gray-400 hover:text-gray-600"
+                  ? "bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-white/90"
+                  : "text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300"
               }`}
             >
               <span className="material-icons text-2xl">{item.icon}</span>

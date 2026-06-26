@@ -34,7 +34,7 @@ export default function AdminSidebar() {
               className={`flex items-center gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                 active
                   ? "bg-blue-600 text-white"
-                  : "text-gray-400 hover:bg-blue-600 hover:text-white"
+                  : "text-gray-400 dark:text-zinc-500 hover:bg-blue-600 hover:text-white"
               }`}
             >
               <span className={`material-icons ${active ? "opacity-100" : "opacity-40"}`}>{link.icon}</span>

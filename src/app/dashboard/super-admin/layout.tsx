@@ -22,7 +22,7 @@ export default async function SuperAdminLayout({ children }: { children: React.R
   if (!session || session.user.role !== "SUPER_ADMIN") redirect("/login")
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-black">
       <Navbar />
       <div className="flex flex-1 pt-14 md:pt-16">
         <SidebarNav links={sidebarLinks} label="Super Admin" theme="SUPER_ADMIN" />

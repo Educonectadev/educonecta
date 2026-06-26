@@ -32,7 +32,7 @@ export default function ParentShell({ children }: { children: React.ReactNode })
   return (
     <>
       <Navbar />
-      <div className="flex min-h-screen pt-14 md:pt-16">
+      <div className="flex min-h-screen pt-14 md:pt-16 bg-white dark:bg-black">
         <aside className="hidden w-56 shrink-0 md:block">
           <nav className="h-[calc(100dvh-3.5rem)] sticky top-14 flex flex-col gap-0.5 p-4">
             <p className="px-4 pb-3 pt-1 text-[10px] font-semibold uppercase tracking-widest text-amber-500">
@@ -48,7 +48,7 @@ export default function ParentShell({ children }: { children: React.ReactNode })
                   className={`flex items-center gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                     isActive
                       ? "bg-amber-500 text-white"
-                      : "text-gray-400 hover:bg-amber-500 hover:text-white"
+                      : "text-gray-400 dark:text-zinc-500 hover:bg-amber-500 hover:text-white"
                   }`}
                 >
                   <span className={`material-icons ${isActive ? "opacity-100" : "opacity-40"}`}>{link.icon}</span>
