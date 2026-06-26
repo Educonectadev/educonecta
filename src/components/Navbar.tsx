@@ -70,7 +70,7 @@ export default function Navbar() {
                     </Avatar>
                   </button>
                 </Dropdown.Trigger>
-                <Dropdown.Popover className="min-w-[240px]">
+                <Dropdown.Popover className="min-w-[240px] bg-white text-gray-900 dark:bg-zinc-900 dark:text-gray-100">
                   <div className="px-3 pt-3 pb-1 border-b border-gray-100 dark:border-zinc-800">
                     <div className="flex items-center gap-2">
                       <Avatar size="sm">
@@ -82,21 +82,21 @@ export default function Navbar() {
                         </Avatar.Fallback>
                       </Avatar>
                       <div className="flex flex-col gap-0">
-                        <p className="text-sm leading-5 font-medium text-black dark:text-white">{session.user.name}</p>
-                        <p className="text-xs leading-none text-gray-500 dark:text-zinc-400">{roleLabel[session.user.role] ?? session.user.role}</p>
+                        <p className="text-sm leading-5 font-medium text-gray-900 dark:text-white">{session.user.name}</p>
+                        <p className="text-xs leading-none text-gray-600 dark:text-zinc-400">{roleLabel[session.user.role] ?? session.user.role}</p>
                       </div>
                     </div>
                   </div>
-                  <Dropdown.Menu>
+                  <Dropdown.Menu className="bg-white text-gray-900 dark:bg-zinc-900 dark:text-gray-100">
                     {roleHasProfile && (
                       <Dropdown.Item
                         id="profile"
                         textValue="Perfil"
                         onAction={() => { window.location.href = profileHref }}
-                        className="text-black dark:text-white"
+                        className="text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-zinc-800"
                       >
                         <div className="flex w-full items-center justify-between gap-2">
-                          <Label className="text-black dark:text-white">Perfil</Label>
+                          <Label className="text-gray-900 dark:text-white">Perfil</Label>
                           <Gear className="size-4 text-gray-700 dark:text-white" />
                         </div>
                       </Dropdown.Item>
@@ -106,10 +106,10 @@ export default function Navbar() {
                         id="settings"
                         textValue="Configuración"
                         onAction={() => { window.location.href = configHref }}
-                        className="text-black dark:text-white"
+                        className="text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-zinc-800"
                       >
                         <div className="flex w-full items-center justify-between gap-2">
-                          <Label className="text-black dark:text-white">Configuración</Label>
+                          <Label className="text-gray-900 dark:text-white">Configuración</Label>
                           <Sliders className="size-4 text-gray-700 dark:text-white" />
                         </div>
                       </Dropdown.Item>
@@ -119,11 +119,11 @@ export default function Navbar() {
                       textValue="Cerrar Sesión"
                       variant="danger"
                       onAction={() => { signOut() }}
-                      className="text-danger"
+                      className="text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-zinc-800"
                     >
                       <div className="flex w-full items-center justify-between gap-2">
-                        <Label className="text-danger">Cerrar Sesión</Label>
-                        <ArrowRightFromSquare className="size-4 text-danger" />
+                        <Label className="text-gray-900 group-data-[danger=true]:text-danger dark:text-white">Cerrar Sesión</Label>
+                        <ArrowRightFromSquare className="size-4 text-gray-700 group-data-[danger=true]:text-danger dark:text-white" />
                       </div>
                     </Dropdown.Item>
                   </Dropdown.Menu>
