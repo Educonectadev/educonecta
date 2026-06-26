@@ -36,15 +36,7 @@ export default async function TeacherPerfilPage() {
   const t = teacher[0]
 
   const explicitLevels: string[] = Array.isArray(t?.assignedLevels) ? t.assignedLevels : []
-  const derivedLevels: string[] = Array.from(
-    new Set(
-      courses
-        .map((c: any) => (c.level || "").trim().toUpperCase())
-        .filter((lvl: string) => lvl.length > 0)
-    )
-  ) as string[]
-  const mergedLevels: string[] = Array.from(new Set([...explicitLevels, ...derivedLevels]))
-  const levelsToShow = mergedLevels
+  const levelsToShow = explicitLevels
     .map((lvl) => lvl.toUpperCase())
     .filter((lvl) => ["INICIAL", "PRIMARIA", "SECUNDARIA"].includes(lvl))
 
