@@ -35,7 +35,8 @@ export default async function TeacherDashboardPage() {
 
   let totalStudents: number
   if (gradeIds.length > 0) {
-    const r = await query<any[]>("SELECT COUNT(*) as total FROM Student WHERE institutionId = ? AND isActive = true AND gradeId IN (?)", [institutionId, gradeIds])
+    const placeholders = gradeIds.map(() => "?").join(",")
+    const r = await query<any[]>(`SELECT COUNT(*) as total FROM Student WHERE institutionId = ? AND isActive = true AND gradeId IN (${placeholders})`, [institutionId, ...gradeIds])
     totalStudents = r[0].total
   } else {
     const r = await query<any[]>("SELECT COUNT(*) as total FROM Student WHERE institutionId = ? AND isActive = true", [institutionId])
@@ -46,9 +47,11 @@ export default async function TeacherDashboardPage() {
   let classesTodayResult = [{ total: 0 }]
   
   if (courseTeachers.length > 0) {
+    const courseIds = courseTeachers.map((ct) => ct.courseId)
+    const placeholders = courseIds.map(() => "?").join(",")
     classesTodayResult = await query<any[]>(
-      "SELECT COUNT(*) as total FROM Schedule WHERE institutionId = ? AND dayOfWeek = ? AND courseId IN (?)",
-      [institutionId, today.getDay(), courseTeachers.map((ct) => ct.courseId)]
+      `SELECT COUNT(*) as total FROM Schedule WHERE institutionId = ? AND dayOfWeek = ? AND courseId IN (${placeholders})`,
+      [institutionId, today.getDay(), ...courseIds]
     )
   }
 

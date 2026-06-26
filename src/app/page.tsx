@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Card } from "@heroui/react"
 import IconClient from "@/components/IconClient"
 import { getSupabaseAdmin } from "@/lib/supabase"
 
@@ -166,9 +167,9 @@ export default async function Home() {
 
             <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {impactCards.map((card) => (
-                <div
+                <Card
                   key={card.title}
-                  className={`flex flex-col items-center text-center p-8 border border-gray-100 rounded-[25px] ${card.color}`}
+                  className={`flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}
                 >
                   <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
                     <IconClient icon={card.icon} className="size-6" />
@@ -177,18 +178,18 @@ export default async function Home() {
                     {card.value?.toLocaleString("es-PE")}
                     <span className="text-sm font-normal text-gray-400">{card.suffix}</span>
                   </p>
-                  <h3 className="mt-2 text-sm font-semibold text-black">
+                  <p className="mt-2 text-sm font-semibold text-black">
                     {card.title}
-                  </h3>
+                  </p>
                   <p className="mt-2 text-xs text-gray-400 leading-relaxed max-w-[220px]">
                     {card.description}
                   </p>
-                </div>
+                </Card>
               ))}
             </div>
 
             <div className="mt-10 grid gap-6 sm:grid-cols-2">
-              <div className="relative overflow-hidden rounded-[25px] border border-gray-100 bg-white">
+              <Card className="relative overflow-hidden border border-gray-100 rounded-[25px] gap-0">
                 <div className="absolute inset-0">
                   <img
                     alt="Amazonía peruana"
@@ -200,9 +201,9 @@ export default async function Home() {
                   <div className="size-12 rounded-xl flex items-center justify-center bg-emerald-100 text-emerald-600">
                     <IconClient icon="lucide:trees" className="size-6" />
                   </div>
-                  <h3 className="mt-4 text-lg font-bold text-black">
+                  <p className="mt-4 text-lg font-bold text-black">
                     Protección de la Amazonía peruana
-                  </h3>
+                  </p>
                   <p className="mt-3 text-sm text-gray-500 leading-relaxed">
                     La Amazonía peruana pierde más de <strong>150 mil hectáreas</strong> de bosque cada año.
                     La industria del papel es una de las causas de esta deforestación.
@@ -218,9 +219,9 @@ export default async function Home() {
                     y preservar la selva peruana para las futuras generaciones.
                   </p>
                 </div>
-              </div>
+              </Card>
 
-              <div className="relative overflow-hidden rounded-[25px] border border-gray-100 bg-white">
+              <Card className="relative overflow-hidden border border-gray-100 rounded-[25px] gap-0">
                 <div className="absolute inset-0">
                   <img
                     alt="Escuela sostenible"
@@ -232,9 +233,9 @@ export default async function Home() {
                   <div className="size-12 rounded-xl flex items-center justify-center bg-amber-100 text-amber-600">
                     <IconClient icon="lucide:recycle" className="size-6" />
                   </div>
-                  <h3 className="mt-4 text-lg font-bold text-black">
+                  <p className="mt-4 text-lg font-bold text-black">
                     Beneficios de la digitalización
-                  </h3>
+                  </p>
                   <ul className="mt-4 space-y-4">
                     <li className="flex gap-3">
                       <IconClient icon="lucide:circle-check" className="size-5 shrink-0 text-emerald-500 mt-0.5" />
@@ -275,7 +276,7 @@ export default async function Home() {
                     </Link>
                   </div>
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
         </section>
