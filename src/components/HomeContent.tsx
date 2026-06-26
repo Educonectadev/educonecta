@@ -43,8 +43,8 @@ const impactCards = [
     description: "Colegios que ya confían en EduConecta para su gestión escolar digital.",
     valueKey: "institutionCount" as const,
     suffix: "",
-    color: "bg-blue-50",
-    iconColor: "text-blue-600",
+    color: "bg-blue-50 dark:bg-blue-950/30",
+    iconColor: "text-blue-600 dark:text-blue-400",
   },
   {
     icon: "lucide:file",
@@ -52,8 +52,8 @@ const impactCards = [
     description: "Hojas de papel que se dejan de usar al digitalizar la gestión escolar.",
     valueKey: "paperSaved" as const,
     suffix: " hojas/mes",
-    color: "bg-amber-50",
-    iconColor: "text-amber-600",
+    color: "bg-amber-50 dark:bg-amber-950/30",
+    iconColor: "text-amber-600 dark:text-amber-400",
   },
   {
     icon: "lucide:trees",
@@ -61,8 +61,8 @@ const impactCards = [
     description: "Árboles que no necesitan ser talados gracias a la reducción del consumo de papel.",
     valueKey: "treesSaved" as const,
     suffix: " árboles/año",
-    color: "bg-emerald-50",
-    iconColor: "text-emerald-600",
+    color: "bg-emerald-50 dark:bg-emerald-950/30",
+    iconColor: "text-emerald-600 dark:text-emerald-400",
   },
   {
     icon: "lucide:globe",
@@ -70,8 +70,8 @@ const impactCards = [
     description: "Toneladas de dióxido de carbono que se dejan de emitir al reducir la producción de papel.",
     valueKey: "co2Saved" as const,
     suffix: " kg CO₂/año",
-    color: "bg-teal-50",
-    iconColor: "text-teal-600",
+    color: "bg-teal-50 dark:bg-teal-950/30",
+    iconColor: "text-teal-600 dark:text-teal-400",
   },
 ]
 
@@ -112,7 +112,7 @@ const statCardVariants = {
 
 export default function HomeContent({ data }: { data: ImpactData }) {
   return (
-    <div className="flex flex-col min-h-screen bg-white overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-white dark:bg-black overflow-x-hidden">
       <motion.header
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -123,7 +123,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.3 }}
-          className="text-lg font-bold tracking-tight text-black"
+          className="text-lg font-bold tracking-tight text-black dark:text-white/90"
         >
           EduConecta
         </motion.span>
@@ -134,7 +134,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
         >
           <Link
             href="/login"
-            className="inline-block px-6 py-2.5 text-sm font-medium text-white bg-black rounded-[30px] hover:bg-gray-800 transition-all duration-200"
+            className="inline-block px-6 py-2.5 text-sm font-medium text-white bg-black dark:text-black dark:bg-white rounded-[30px] hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all duration-200"
           >
             Iniciar Sesión
           </Link>
@@ -152,7 +152,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
             initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.6, delay: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl bg-gradient-to-r from-black via-emerald-800 to-black bg-clip-text text-transparent"
+            className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl bg-gradient-to-r from-black via-emerald-800 to-black dark:from-white dark:via-emerald-400 dark:to-white bg-clip-text text-transparent"
           >
             EduConecta
           </motion.h1>
@@ -160,7 +160,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.45 }}
-            className="mt-5 text-lg text-gray-400"
+            className="mt-5 text-lg text-gray-400 dark:text-zinc-500"
           >
             Seguimiento escolar en tiempo real
           </motion.p>
@@ -168,7 +168,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.6 }}
-            className="mt-5 text-base text-gray-600 max-w-xl leading-relaxed"
+            className="mt-5 text-base text-gray-600 dark:text-zinc-400 max-w-xl leading-relaxed"
           >
             Una plataforma integral que conecta a padres, profesores y
             administradores para facilitar el seguimiento académico y la
@@ -183,7 +183,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           >
             <Link
               href="/login"
-              className="mt-8 sm:mt-10 inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 text-base font-medium text-white bg-black rounded-[25px] hover:bg-gray-800 transition-all duration-200"
+              className="mt-8 sm:mt-10 inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 text-base font-medium text-white bg-black dark:text-black dark:bg-white rounded-[25px] hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all duration-200"
             >
               Comenzar ahora
               <motion.span
@@ -210,14 +210,14 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
                   <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
-                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
+                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
-                    <p className="mt-4 text-3xl font-bold text-black">
+                    <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
                       <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
                     </p>
-                    <p className="mt-2 text-sm font-semibold text-black">{card.title}</p>
-                    <p className="mt-2 text-xs text-gray-400 leading-relaxed max-w-[220px]">{card.description}</p>
+                    <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
+                    <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
                   </Card>
                 </motion.div>
               ))}
@@ -227,7 +227,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               className="lg:col-span-2"
             >
-              <Card className="w-full relative overflow-hidden border border-gray-100 rounded-[25px] gap-0 h-full">
+              <Card className="w-full relative overflow-hidden border border-gray-100 dark:border-zinc-800 rounded-[25px] gap-0 h-full">
                 <div className="absolute inset-0">
                   <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/70 via-emerald-800/50 to-black/40 z-10" />
                   <img alt="Amazonía peruana" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80" />
@@ -271,14 +271,14 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
                   <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
-                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
+                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
-                    <p className="mt-4 text-3xl font-bold text-black">
+                    <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
                       <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
                     </p>
-                    <p className="mt-2 text-sm font-semibold text-black">{card.title}</p>
-                    <p className="mt-2 text-xs text-gray-400 leading-relaxed max-w-[220px]">{card.description}</p>
+                    <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
+                    <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
                   </Card>
                 </motion.div>
               ))}
@@ -292,14 +292,14 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
                   <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
-                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
+                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
-                    <p className="mt-4 text-3xl font-bold text-black">
+                    <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
                       <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
                     </p>
-                    <p className="mt-2 text-sm font-semibold text-black">{card.title}</p>
-                    <p className="mt-2 text-xs text-gray-400 leading-relaxed max-w-[220px]">{card.description}</p>
+                    <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
+                    <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
                   </Card>
                 </motion.div>
               ))}
@@ -309,7 +309,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               className="lg:col-span-2"
             >
-              <Card className="w-full relative overflow-hidden border border-gray-100 rounded-[25px] gap-0 h-full">
+              <Card className="w-full relative overflow-hidden border border-gray-100 dark:border-zinc-800 rounded-[25px] gap-0 h-full">
                 <div className="absolute inset-0">
                   <div className="absolute inset-0 bg-gradient-to-br from-amber-900/60 via-amber-800/40 to-black/30 z-10" />
                   <img alt="Escuela sostenible" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" />
@@ -356,14 +356,14 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
                   <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
-                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
+                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
-                    <p className="mt-4 text-3xl font-bold text-black">
+                    <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
                       <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
                     </p>
-                    <p className="mt-2 text-sm font-semibold text-black">{card.title}</p>
-                    <p className="mt-2 text-xs text-gray-400 leading-relaxed max-w-[220px]">{card.description}</p>
+                    <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
+                    <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
                   </Card>
                 </motion.div>
               ))}
@@ -375,7 +375,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5 }}
-          className="border-t border-gray-100 bg-[#fafafa]"
+          className="border-t border-gray-100 dark:border-zinc-800 bg-[#fafafa] dark:bg-black"
         >
           <div className="max-w-5xl mx-auto px-6 py-16 sm:py-24">
             <motion.h2
@@ -383,7 +383,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4 }}
-              className="text-2xl font-bold text-center text-black tracking-tight"
+              className="text-2xl font-bold text-center text-black dark:text-white/90 tracking-tight"
             >
               ¿Por qué elegir EduConecta?
             </motion.h2>
@@ -399,15 +399,15 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   key={feature.title}
                   variants={cardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="flex flex-col items-center text-center p-5 sm:p-8 border border-gray-100 rounded-[25px] bg-white hover:shadow-sm hover:border-gray-200 transition-all duration-200"
+                  className="flex flex-col items-center text-center p-5 sm:p-8 border border-gray-100 dark:border-zinc-800 rounded-[25px] bg-white dark:bg-zinc-950 hover:shadow-sm dark:hover:shadow-white/5 hover:border-gray-200 dark:hover:border-zinc-700 transition-all duration-200"
                 >
-                  <div className="size-12 rounded-xl flex items-center justify-center bg-gray-50 text-gray-600 mb-4">
+                  <div className="size-12 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400 mb-4">
                     <IconClient icon={feature.icon} className="size-6" />
                   </div>
-                  <h3 className="text-base font-semibold text-black">
+                  <h3 className="text-base font-semibold text-black dark:text-white/90">
                     {feature.title}
                   </h3>
-                  <p className="mt-2 text-sm text-gray-400 leading-relaxed">
+                  <p className="mt-2 text-sm text-gray-400 dark:text-zinc-500 leading-relaxed">
                     {feature.description}
                   </p>
                 </motion.div>
@@ -423,7 +423,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
-        className="border-t border-gray-100 py-8 text-center text-sm text-gray-400"
+        className="border-t border-gray-100 dark:border-zinc-800 py-8 text-center text-sm text-gray-400 dark:text-zinc-500"
       >
         &copy; {new Date().getFullYear()} EduConecta. Todos los derechos reservados.
       </motion.footer>

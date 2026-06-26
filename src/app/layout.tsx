@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Provider from "@/components/Provider"
 import InstallPrompt from "@/components/InstallPrompt"
 import ToastProvider from "@/components/ToastProvider"
+import ThemeToggle from "@/components/ThemeToggle"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -25,6 +26,18 @@ export default function RootLayout({
     <html lang="es" className="h-full antialiased scrollbar-hide">
       <head>
         <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              try {
+                var theme = localStorage.getItem('theme');
+                if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  document.documentElement.classList.add('dark');
+                }
+              } catch(e) {}
+            })();
+          `
+        }} />
       </head>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -36,6 +49,9 @@ export default function RootLayout({
           {children}
         </Provider>
         <InstallPrompt />
+        <div className="fixed bottom-6 right-6 z-50">
+          <ThemeToggle />
+        </div>
       </body>
     </html>
   )
