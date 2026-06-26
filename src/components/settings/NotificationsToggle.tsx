@@ -107,7 +107,9 @@ export default function NotificationsToggle() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ subscription: sub.toJSON() }),
         })
-        if (!res.ok) throw new Error("No se pudo guardar la suscripción")
+        const json = await res.json().catch(() => ({}))
+        console.log("[push] subscribe response", res.status, json)
+        if (!res.ok) throw new Error(json.error || "No se pudo guardar la suscripción")
         setSubscribed(true)
         setMessage("Notificaciones activadas. Recibirás avisos en tiempo real.")
       } else {
