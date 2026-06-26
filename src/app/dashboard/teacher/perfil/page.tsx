@@ -126,20 +126,47 @@ export default async function TeacherPerfilPage() {
       </section>
 
       <section className="mb-8">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-3">Cursos Asignados</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Cursos Asignados</h2>
+          {courses.length > 0 && (
+            <a
+              href="/dashboard/teacher/courses"
+              className="text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:underline"
+            >
+              Ver tabla completa →
+            </a>
+          )}
+        </div>
         {courses.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-[25px] p-8 text-center text-sm">
             No tienes cursos asignados.
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {courses.map((c: any) => (
-              <div key={c.id} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-[20px] p-5">
-                <p className="font-semibold text-sm text-gray-900 dark:text-white/90">{c.courseName}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{c.gradeName ?? "—"} · {c.sectionName ?? "—"}</p>
-                {c.level && <p className="text-xs text-gray-500 dark:text-gray-400">{c.level}</p>}
-              </div>
-            ))}
+            {courses.map((c: any) => {
+              const lvl = (c.level || "").trim().toUpperCase()
+              const levelStyle = lvl === "INICIAL"
+                ? "bg-pink-50 dark:bg-pink-950/30 text-pink-700 dark:text-pink-300"
+                : lvl === "PRIMARIA"
+                  ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300"
+                  : lvl === "SECUNDARIA"
+                    ? "bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
+              const lvlLabel = lvl ? lvl.charAt(0) + lvl.slice(1).toLowerCase() : null
+              return (
+                <div key={c.id} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-[20px] p-5">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="font-semibold text-sm text-gray-900 dark:text-white/90">{c.courseName}</p>
+                    {lvlLabel && (
+                      <span className={`shrink-0 text-[10px] font-semibold uppercase tracking-wider rounded-full px-2 py-0.5 ${levelStyle}`}>
+                        {lvlLabel}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{c.gradeName ?? "—"} · {c.sectionName ?? "—"}</p>
+                </div>
+              )
+            })}
           </div>
         )}
       </section>
