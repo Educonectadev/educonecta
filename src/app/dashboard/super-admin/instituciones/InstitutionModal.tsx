@@ -195,7 +195,7 @@ export default function InstitutionModal({
             <Modal.Heading>
               <div className="flex items-center justify-between w-full gap-4">
                 <div className="min-w-0 flex-1">
-                  <span className="truncate block">
+                  <span className="truncate block text-gray-900 dark:text-white/90">
                     {editing ? "Editar Institución" : institution.name}
                   </span>
                   {!editing && <span className="text-xs text-gray-400 dark:text-zinc-500 font-normal mt-0.5 block">Código: {institution.code}</span>}
@@ -366,8 +366,8 @@ export default function InstitutionModal({
                 </div>
               ) : stats ? (
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-                  <StatCard value={stats.total} label="Total" color="text-gray-900" />
-                  <StatCard value={stats.admins} label="Admins" color="text-black" />
+                  <StatCard value={stats.total} label="Total" color="text-gray-900 dark:text-white/90" />
+                  <StatCard value={stats.admins} label="Admins" color="text-black dark:text-white" />
                   <StatCard value={stats.teachers} label="Docentes" color="text-emerald-600" />
                   <StatCard value={stats.parents} label="Padres" color="text-amber-600" />
                   <StatCard value={stats.students} label="Alumnos" color="text-violet-600" />

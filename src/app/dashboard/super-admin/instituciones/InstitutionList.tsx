@@ -63,7 +63,7 @@ export default function InstitutionList({ institutions: initial }: { institution
             render: (inst) => (
               <div>
                 <p className="font-medium text-gray-900 dark:text-white/90">{inst.name}</p>
-                <p className="text-xs text-gray-400">{inst.code}{inst.directorName ? <> · Dir. {inst.directorName}</> : ""}</p>
+                <p className="text-xs text-gray-400 dark:text-zinc-500">{inst.code}{inst.directorName ? <> · Dir. {inst.directorName}</> : ""}</p>
               </div>
             ),
           },
