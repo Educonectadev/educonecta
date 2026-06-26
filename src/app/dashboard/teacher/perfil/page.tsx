@@ -103,16 +103,16 @@ export default async function TeacherPerfilPage() {
       <section className="mb-8">
         <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-3">Cursos Asignados</h2>
         {courses.length === 0 ? (
-          <div className="bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[25px] p-8 text-center text-gray-400 dark:text-zinc-500 text-sm">
+          <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-[25px] p-8 text-center text-sm">
             No tienes cursos asignados.
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {courses.map((c: any) => (
-              <div key={c.id} className="bg-white dark:bg-black border border-gray-100 dark:border-zinc-800 rounded-[20px] p-5">
+              <div key={c.id} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-[20px] p-5">
                 <p className="font-semibold text-sm text-gray-900 dark:text-white/90">{c.courseName}</p>
-                <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">{c.gradeName ?? "—"} · {c.sectionName ?? "—"}</p>
-                {c.level && <p className="text-xs text-gray-400 dark:text-zinc-500">{c.level}</p>}
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{c.gradeName ?? "—"} · {c.sectionName ?? "—"}</p>
+                {c.level && <p className="text-xs text-gray-500 dark:text-gray-400">{c.level}</p>}
               </div>
             ))}
           </div>
