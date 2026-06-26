@@ -5,37 +5,53 @@
 -- Ejecutar en Supabase Dashboard → SQL Editor.
 -- ============================================================
 
--- Renombrar columnas (idempotente)
+-- Renombrar columnas (idempotente: solo si existe la minúscula y NO existe la camelCase)
 DO $$
 BEGIN
+  -- userid -> "userId"
   IF EXISTS (SELECT 1 FROM information_schema.columns
-             WHERE table_name = 'PushSubscription' AND column_name = 'userid') THEN
+             WHERE table_name = 'PushSubscription' AND column_name = 'userid')
+     AND NOT EXISTS (SELECT 1 FROM information_schema.columns
+                     WHERE table_name = 'PushSubscription' AND column_name = 'userId') THEN
     ALTER TABLE "PushSubscription" RENAME COLUMN userid TO "userId";
   END IF;
 
+  -- useragent -> "userAgent"
   IF EXISTS (SELECT 1 FROM information_schema.columns
-             WHERE table_name = 'PushSubscription' AND column_name = 'p256dh') THEN
-    ALTER TABLE "PushSubscription" RENAME COLUMN p256dh TO "p256dh";
-  END IF;
-
-  IF EXISTS (SELECT 1 FROM information_schema.columns
-             WHERE table_name = 'PushSubscription' AND column_name = 'auth') THEN
-    ALTER TABLE "PushSubscription" RENAME COLUMN auth TO "auth";
-  END IF;
-
-  IF EXISTS (SELECT 1 FROM information_schema.columns
-             WHERE table_name = 'PushSubscription' AND column_name = 'useragent') THEN
+             WHERE table_name = 'PushSubscription' AND column_name = 'useragent')
+     AND NOT EXISTS (SELECT 1 FROM information_schema.columns
+                     WHERE table_name = 'PushSubscription' AND column_name = 'userAgent') THEN
     ALTER TABLE "PushSubscription" RENAME COLUMN useragent TO "userAgent";
   END IF;
 
+  -- createdat -> "createdAt"
   IF EXISTS (SELECT 1 FROM information_schema.columns
-             WHERE table_name = 'PushSubscription' AND column_name = 'createdat') THEN
+             WHERE table_name = 'PushSubscription' AND column_name = 'createdat')
+     AND NOT EXISTS (SELECT 1 FROM information_schema.columns
+                     WHERE table_name = 'PushSubscription' AND column_name = 'createdAt') THEN
     ALTER TABLE "PushSubscription" RENAME COLUMN createdat TO "createdAt";
   END IF;
 
+  -- updatedat -> "updatedAt"
   IF EXISTS (SELECT 1 FROM information_schema.columns
-             WHERE table_name = 'PushSubscription' AND column_name = 'updatedat') THEN
+             WHERE table_name = 'PushSubscription' AND column_name = 'updatedat')
+     AND NOT EXISTS (SELECT 1 FROM information_schema.columns
+                     WHERE table_name = 'PushSubscription' AND column_name = 'updatedAt') THEN
     ALTER TABLE "PushSubscription" RENAME COLUMN updatedat TO "updatedAt";
+  END IF;
+END $$;
+
+-- p256dh y auth ya son palabras en minúscula; no necesitan rename.
+-- Pero como el código envía "p256dh" y "auth", aseguramos que existan con ese nombre.
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns
+                 WHERE table_name = 'PushSubscription' AND column_name = 'p256dh') THEN
+    -- Si por algún motivo la columna se llama distinto, intenta detectar
+    IF EXISTS (SELECT 1 FROM information_schema.columns
+               WHERE table_name = 'PushSubscription' AND column_name = 'p_256dh') THEN
+      ALTER TABLE "PushSubscription" RENAME COLUMN p_256dh TO "p256dh";
+    END IF;
   END IF;
 END $$;
 
