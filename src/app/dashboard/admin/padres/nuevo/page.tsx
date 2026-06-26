@@ -85,7 +85,7 @@ export default function NuevoPadrePage() {
 
   return (
     <div>
-      <h1 className="mb-8 text-2xl font-bold tracking-tight">Registrar Padre</h1>
+      <h1 className="mb-8 text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Registrar Padre</h1>
 
       <form onSubmit={handleSubmit} className="max-w-lg space-y-5">
         <div className="grid grid-cols-2 gap-4">

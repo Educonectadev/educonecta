@@ -105,7 +105,7 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Padres</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Padres</h1>
         <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] bg-black dark:bg-white px-6 py-2.5 text-sm font-medium text-white dark:text-black transition-all hover:bg-gray-800 dark:hover:bg-zinc-200 text-center">+ Registrar Padre</button>
       </div>
 

@@ -39,8 +39,8 @@ const shiftLabels: Record<string, string> = {
 function InfoRow({ label, value }: { label: string; value: string | null | undefined }) {
   return (
     <div>
-      <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">{label}</p>
-      <p className="text-sm text-[#1a1a1a]">{value ?? "—"}</p>
+      <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider">{label}</p>
+      <p className="text-sm text-gray-900 dark:text-white/90">{value ?? "—"}</p>
     </div>
   )
 }
@@ -71,11 +71,11 @@ export default function EditableInstitutionSection({ institution }: { institutio
         </button>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-[30px] p-6 space-y-6">
+      <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-[30px] p-6 space-y-6">
         {/* Info Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-gray-50 rounded-[25px] p-4 space-y-2.5">
-            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Información General</h3>
+          <div className="bg-gray-50 dark:bg-zinc-900/50 rounded-[25px] p-4 space-y-2.5">
+            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Información General</h3>
             <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
               <InfoRow label="Tipo" value={data.type === "private" ? "Privada" : "Pública"} />
               <InfoRow label="RUC" value={data.ruc} />
@@ -84,8 +84,8 @@ export default function EditableInstitutionSection({ institution }: { institutio
               <div className="col-span-2"><InfoRow label="Estado" value={data.isActive ? "Activo" : "Inactivo"} /></div>
             </div>
           </div>
-          <div className="bg-gray-50 rounded-[25px] p-4 space-y-2.5">
-            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Ubicación</h3>
+          <div className="bg-gray-50 dark:bg-zinc-900/50 rounded-[25px] p-4 space-y-2.5">
+            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Ubicación</h3>
             <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
               <div className="col-span-2"><InfoRow label="Dirección" value={data.address} /></div>
               <InfoRow label="Distrito" value={data.district} />
@@ -96,32 +96,32 @@ export default function EditableInstitutionSection({ institution }: { institutio
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-gray-50 rounded-[25px] p-4 space-y-2.5">
-            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Contacto</h3>
+          <div className="bg-gray-50 dark:bg-zinc-900/50 rounded-[25px] p-4 space-y-2.5">
+            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Contacto</h3>
             <InfoRow label="Email" value={data.email} />
             <InfoRow label="Teléfono" value={data.phone} />
             {data.website && <InfoRow label="Web" value={data.website} />}
           </div>
-          <div className="bg-gray-50 rounded-[25px] p-4 space-y-2.5">
-            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Configuración</h3>
+          <div className="bg-gray-50 dark:bg-zinc-900/50 rounded-[25px] p-4 space-y-2.5">
+            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Configuración</h3>
             {levels.length > 0 && (
               <div>
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">Niveles</p>
+                <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Niveles</p>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {levels.map((l) => (
-                    <span key={l} className="inline-block rounded-[30px] bg-white border border-gray-200 px-2.5 py-0.5 text-[11px] text-gray-600">{levelLabels[l] ?? l}</span>
+                    <span key={l} className="inline-block rounded-[30px] bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-2.5 py-0.5 text-[11px] text-gray-600 dark:text-zinc-300">{levelLabels[l] ?? l}</span>
                   ))}
                 </div>
               </div>
             )}
             {shiftList.length > 0 && (
               <div>
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">Turnos</p>
+                <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Turnos</p>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {shiftList.map((s: any) => {
                     const id = typeof s === "string" ? s : s.id
                     return (
-                      <span key={id} className="inline-block rounded-[30px] bg-white border border-gray-200 px-2.5 py-0.5 text-[11px] text-gray-600">{shiftLabels[id] ?? id}</span>
+                      <span key={id} className="inline-block rounded-[30px] bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-2.5 py-0.5 text-[11px] text-gray-600 dark:text-zinc-300">{shiftLabels[id] ?? id}</span>
                     )
                   })}
                 </div>
@@ -129,8 +129,8 @@ export default function EditableInstitutionSection({ institution }: { institutio
             )}
             {data.description && (
               <div>
-                <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">Descripción</p>
-                <p className="text-sm text-gray-600 mt-1 leading-relaxed">{data.description}</p>
+                <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Descripción</p>
+                <p className="text-sm text-gray-600 dark:text-zinc-300 mt-1 leading-relaxed">{data.description}</p>
               </div>
             )}
           </div>
@@ -144,7 +144,7 @@ export default function EditableInstitutionSection({ institution }: { institutio
             {data.type === "private" ? "Privada" : "Pública"}
           </span>
           <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium border ${
-            data.isActive ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-600 border-red-200"
+            data.isActive ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800" : "bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800"
           }`}>
             {data.isActive ? "Activo" : "Inactivo"}
           </span>

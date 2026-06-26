@@ -75,7 +75,7 @@ export default function NuevoProfesorPage() {
 
   return (
     <div>
-      <h1 className="mb-8 text-2xl font-bold tracking-tight">Registrar Profesor</h1>
+      <h1 className="mb-8 text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Registrar Profesor</h1>
 
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-8">
         {/* Datos Personales */}

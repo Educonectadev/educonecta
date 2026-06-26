@@ -293,7 +293,7 @@ export default function HorariosList({
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Horarios</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Horarios</h1>
         <div className="flex gap-2">
           <button onClick={handlePrint} className="rounded-[30px] border border-gray-200 px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all">
             Imprimir

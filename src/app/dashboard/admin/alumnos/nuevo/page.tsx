@@ -78,7 +78,7 @@ export default function NuevoAlumnoPage() {
 
   return (
     <div>
-      <h1 className="mb-8 text-2xl font-bold tracking-tight">Registrar Alumno</h1>
+      <h1 className="mb-8 text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Registrar Alumno</h1>
 
       <form onSubmit={handleSubmit} className="max-w-lg space-y-5">
         <div>

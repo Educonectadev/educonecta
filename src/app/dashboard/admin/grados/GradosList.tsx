@@ -143,7 +143,7 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Grados y Secciones</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Grados y Secciones</h1>
           <p className="mt-1 text-sm text-gray-500">Administra los grados y sus secciones</p>
         </div>
         <button
