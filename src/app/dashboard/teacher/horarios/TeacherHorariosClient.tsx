@@ -61,19 +61,19 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
   }
 
   return (
-    <>
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight dark:text-white">Mi Horario</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-zinc-500">Clases asignadas por día</p>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mi Horario</h1>
+          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">Clases asignadas por día</p>
         </div>
-        <button onClick={handlePrint} className="rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-2.5 text-sm font-medium text-gray-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-900 transition-all">
+        <button onClick={handlePrint} className="rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-2.5 text-sm font-medium text-gray-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">
           Imprimir
         </button>
       </div>
 
       {schedules.length === 0 ? (
-        <div className="bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[30px] p-12 text-center text-gray-500 dark:text-zinc-500">
+        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-12 text-center text-gray-400 dark:text-zinc-500 text-sm">
           No tienes horarios asignados.
         </div>
       ) : (
@@ -83,26 +83,26 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
             const morningScheds = dayScheds.filter((s) => s.shift === "MAÑANA")
             const eveningScheds = dayScheds.filter((s) => s.shift === "TARDE")
             return (
-              <div key={d} className="bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[30px] p-4">
-                <h3 className="font-bold text-sm mb-3 text-center dark:text-white">{dayLabels[d]}</h3>
+              <div key={d} className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-4">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-3 text-center">{dayLabels[d]}</h3>
                 {morningScheds.length === 0 && eveningScheds.length === 0 ? (
-                  <p className="text-xs text-gray-400 dark:text-zinc-600 text-center py-4">Sin clases</p>
+                  <p className="text-[11px] uppercase tracking-wider text-gray-300 dark:text-zinc-600 text-center py-4">Sin clases</p>
                 ) : (
                   <>
                     {morningScheds.length > 0 && (
                       <div className="mb-3">
-                        <p className="text-[10px] uppercase tracking-widest text-amber-600 dark:text-amber-400 font-semibold mb-2">MAÑANA</p>
+                        <p className="text-[10px] uppercase tracking-widest text-gray-400 dark:text-zinc-500 font-semibold mb-2">Mañana</p>
                         <div className="space-y-2">
                           {morningScheds.map((s) => (
                             <div
                               key={s.id}
                               onClick={() => setDetail(s)}
-                              className="bg-white dark:bg-zinc-900 rounded-[20px] p-3 border border-gray-100 dark:border-zinc-700 cursor-pointer hover:shadow-md dark:hover:shadow-zinc-900 transition-shadow"
+                              className="bg-gray-50 dark:bg-zinc-800 rounded-xl p-3 border border-gray-100 dark:border-zinc-700 cursor-pointer hover:shadow-sm dark:hover:shadow-black/20 transition-all"
                             >
-                              <p className="font-medium text-sm dark:text-white">{s.course.name}</p>
-                              <p className="text-xs text-gray-400 dark:text-zinc-500">{s.startTime} – {s.endTime}</p>
-                              <p className="text-xs text-gray-400 dark:text-zinc-500">{s.grade?.name ?? "—"} · {s.section?.name ?? "—"}</p>
-                              {s.classroom && <p className="text-xs text-gray-400 dark:text-zinc-500">Aula: {s.classroom}</p>}
+                              <p className="font-semibold text-xs text-gray-900 dark:text-white/90">{s.course.name}</p>
+                              <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-1">{s.startTime} – {s.endTime}</p>
+                              <p className="text-[11px] text-gray-400 dark:text-zinc-500">{s.grade?.name ?? "—"} · {s.section?.name ?? "—"}</p>
+                              {s.classroom && <p className="text-[11px] text-gray-400 dark:text-zinc-500">Aula: {s.classroom}</p>}
                             </div>
                           ))}
                         </div>
@@ -110,18 +110,18 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
                     )}
                     {eveningScheds.length > 0 && (
                       <div>
-                        <p className="text-[10px] uppercase tracking-widest text-blue-600 dark:text-blue-400 font-semibold mb-2">TARDE</p>
+                        <p className="text-[10px] uppercase tracking-widest text-gray-400 dark:text-zinc-500 font-semibold mb-2">Tarde</p>
                         <div className="space-y-2">
                           {eveningScheds.map((s) => (
                             <div
                               key={s.id}
                               onClick={() => setDetail(s)}
-                              className="bg-white dark:bg-zinc-900 rounded-[20px] p-3 border border-gray-100 dark:border-zinc-700 cursor-pointer hover:shadow-md dark:hover:shadow-zinc-900 transition-shadow"
+                              className="bg-gray-50 dark:bg-zinc-800 rounded-xl p-3 border border-gray-100 dark:border-zinc-700 cursor-pointer hover:shadow-sm dark:hover:shadow-black/20 transition-all"
                             >
-                              <p className="font-medium text-sm dark:text-white">{s.course.name}</p>
-                              <p className="text-xs text-gray-400 dark:text-zinc-500">{s.startTime} – {s.endTime}</p>
-                              <p className="text-xs text-gray-400 dark:text-zinc-500">{s.grade?.name ?? "—"} · {s.section?.name ?? "—"}</p>
-                              {s.classroom && <p className="text-xs text-gray-400 dark:text-zinc-500">Aula: {s.classroom}</p>}
+                              <p className="font-semibold text-xs text-gray-900 dark:text-white/90">{s.course.name}</p>
+                              <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-1">{s.startTime} – {s.endTime}</p>
+                              <p className="text-[11px] text-gray-400 dark:text-zinc-500">{s.grade?.name ?? "—"} · {s.section?.name ?? "—"}</p>
+                              {s.classroom && <p className="text-[11px] text-gray-400 dark:text-zinc-500">Aula: {s.classroom}</p>}
                             </div>
                           ))}
                         </div>
@@ -148,37 +148,37 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Día</p>
+                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Día</p>
                         <p className="font-medium dark:text-white">{dayLabels[detail.dayOfWeek]}</p>
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Turno</p>
+                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Turno</p>
                         <p className="font-medium dark:text-white">{detail.shift}</p>
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Inicio</p>
+                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Inicio</p>
                         <p className="font-medium dark:text-white">{detail.startTime}</p>
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Fin</p>
+                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Fin</p>
                         <p className="font-medium dark:text-white">{detail.endTime}</p>
                       </div>
                     </div>
                     <div className="border-t border-gray-100 dark:border-zinc-800 pt-4">
-                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Curso</p>
-                      <p className="font-medium text-lg dark:text-white">{detail.course.name}</p>
+                      <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Curso</p>
+                      <p className="font-semibold text-lg dark:text-white">{detail.course.name}</p>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Grado</p>
+                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Grado</p>
                         <p className="font-medium dark:text-white">{detail.grade?.name ?? "—"}</p>
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Sección</p>
+                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Sección</p>
                         <p className="font-medium dark:text-white">{detail.section?.name ?? "—"}</p>
                       </div>
                       <div>
-                        <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Aula</p>
+                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Aula</p>
                         <p className="font-medium dark:text-white">{detail.classroom ?? "—"}</p>
                       </div>
                     </div>
@@ -188,6 +188,6 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
           </Modal.Container>
         </Modal>
       )}
-    </>
+    </div>
   )
 }

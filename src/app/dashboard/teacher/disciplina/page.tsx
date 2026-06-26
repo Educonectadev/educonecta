@@ -30,43 +30,46 @@ export default async function DisciplinaPage() {
   }))
 
   return (
-    <div>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight dark:text-white">Disciplina</h1>
+    <div className="space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Disciplina</h1>
+          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">{records.length} registros</p>
+        </div>
         <Link
           href="/dashboard/teacher/disciplina/nuevo"
-          className="btn-primary px-6 py-2.5 rounded-[30px] text-sm font-medium text-center"
+          className="btn-primary rounded-[30px] px-6 py-2.5 text-sm font-medium text-center"
         >
           + Nuevo Registro
         </Link>
       </div>
 
       {records.length === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-zinc-500">No hay registros disciplinarios.</p>
+        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-12 text-center text-gray-400 dark:text-zinc-500 text-sm">
+          No hay registros disciplinarios.
+        </div>
       ) : (
-        <div className="grid gap-3">
+        <div className="space-y-3">
           {records.map((r: { id: number; type: string; description: string; date: Date; isResolved: boolean; student: { firstName: string; lastName: string } }) => (
-            <div key={r.id} className="bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[25px] p-6">
-              <div className="flex items-center justify-between">
-                <p className="font-medium dark:text-white">
+            <div key={r.id} className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-5 hover:border-gray-200 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/20 transition-all duration-200">
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <p className="font-semibold text-gray-900 dark:text-white/90">
                   {r.student.firstName} {r.student.lastName}
                 </p>
-                <span
-                  className={`text-xs font-medium px-3 py-1 rounded-[30px] border ${
-                    r.type === "suspension"
-                      ? "border-emerald-600 bg-emerald-600 text-white"
-                      : r.type === "warning"
-                      ? "border-emerald-600 text-emerald-600 dark:border-emerald-500 dark:text-emerald-400"
-                      : "border-gray-100 dark:border-zinc-700 text-gray-500 dark:text-zinc-400"
-                  }`}
-                >
+                <span className={`text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full shrink-0 ${
+                  r.type === "suspension"
+                    ? "bg-gray-900 text-white dark:bg-white dark:text-black"
+                    : r.type === "warning"
+                    ? "bg-gray-100 text-gray-700 dark:bg-zinc-800 dark:text-zinc-300"
+                    : "bg-gray-50 text-gray-500 dark:bg-zinc-800/50 dark:text-zinc-400 border border-gray-100 dark:border-zinc-700"
+                }`}>
                   {typeLabels[r.type] ?? r.type}
                 </span>
               </div>
-              <p className="text-sm text-gray-500 dark:text-zinc-400 mt-2 leading-relaxed">{r.description}</p>
-              <div className="flex items-center gap-3 mt-3 text-xs text-gray-500 dark:text-zinc-500">
+              <p className="text-sm text-gray-500 dark:text-zinc-400 leading-relaxed">{r.description}</p>
+              <div className="flex items-center gap-3 mt-3 text-xs text-gray-400 dark:text-zinc-500">
                 <span>{r.date.toLocaleDateString("es-ES")}</span>
-                {r.isResolved && <span className="text-emerald-600 dark:text-emerald-400 font-medium">Resuelto</span>}
+                {r.isResolved && <span className="text-gray-900 dark:text-white/90 font-medium">Resuelto</span>}
               </div>
             </div>
           ))}

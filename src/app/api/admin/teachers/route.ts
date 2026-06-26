@@ -102,6 +102,22 @@ export async function POST(request: Request) {
       emergencyPhone: emergencyContactPhone || null,
     })
 
+    const assignments = Array.isArray(body.assignments) ? body.assignments : []
+    const createdAssignments: { courseId: number; teacherId: number; gradeId: number | null; sectionId: number | null }[] = []
+    for (const a of assignments) {
+      if (!a?.courseId) continue
+      const courseId = Number(a.courseId)
+      const gradeId = a.gradeId ? Number(a.gradeId) : null
+      const sectionId = a.sectionId ? Number(a.sectionId) : null
+      const exists = await query(
+        "SELECT id FROM CourseTeacher WHERE courseId = ? AND teacherId = ? AND gradeId <=> ? AND sectionId <=> ?",
+        [courseId, teacherId, gradeId, sectionId]
+      )
+      if ((exists as any[]).length > 0) continue
+      await create("CourseTeacher", { courseId, teacherId, gradeId, sectionId })
+      createdAssignments.push({ courseId, teacherId, gradeId, sectionId })
+    }
+
     const teacher = await query(
       `SELECT t.*,
         jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user
@@ -111,7 +127,7 @@ export async function POST(request: Request) {
       [teacherId]
     )
 
-    return NextResponse.json(teacher[0], { status: 201 })
+    return NextResponse.json({ ...teacher[0], assignments: createdAssignments }, { status: 201 })
   } catch (e) {
     console.error("Error creating teacher:", e)
     return NextResponse.json({ error: "Error al crear profesor" }, { status: 500 })

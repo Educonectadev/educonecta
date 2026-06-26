@@ -25,42 +25,45 @@ export default async function ComunicadosPage() {
   }))
 
   return (
-    <div>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Comunicados</h1>
+    <div className="space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Comunicados</h1>
+          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">{communications.length} comunicados</p>
+        </div>
         <Link
           href="/dashboard/teacher/comunicados/nuevo"
-          className="bg-emerald-600 text-white px-6 py-2.5 rounded-[30px] text-sm font-medium hover:bg-emerald-700 transition-all text-center"
+          className="btn-primary rounded-[30px] px-6 py-2.5 text-sm font-medium text-center"
         >
           + Nuevo Comunicado
         </Link>
       </div>
 
       {communications.length === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-zinc-400">No hay comunicados.</p>
+        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-12 text-center text-gray-400 dark:text-zinc-500 text-sm">
+          No hay comunicados.
+        </div>
       ) : (
-        <div className="grid gap-3">
+        <div className="space-y-3">
           {communications.map((c: { id: number; title: string; content: string; priority: string; type: string; createdAt: Date; author: { name: string } }) => (
-            <div key={c.id} className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[25px] p-6">
-              <div className="flex items-center justify-between">
-                <p className="font-medium text-gray-900 dark:text-white/90">{c.title}</p>
-                <div className="flex gap-2">
-                  <span
-                    className={`text-xs font-medium px-3 py-1 rounded-[30px] border ${
-                      c.priority === "high"
-                        ? "border-emerald-600 bg-emerald-600 text-white"
-                        : "border-gray-200 dark:border-zinc-700 text-gray-500 dark:text-zinc-400"
-                    }`}
-                  >
+            <div key={c.id} className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-5 hover:border-gray-200 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/20 transition-all duration-200">
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <p className="font-semibold text-gray-900 dark:text-white/90">{c.title}</p>
+                <div className="flex gap-2 shrink-0">
+                  <span className={`text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                    c.priority === "high"
+                      ? "bg-gray-900 text-white dark:bg-white dark:text-black"
+                      : "bg-gray-100 text-gray-600 dark:bg-zinc-800 dark:text-zinc-400"
+                  }`}>
                     {c.priority === "high" ? "Importante" : "Normal"}
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-zinc-400 border border-gray-200 dark:border-zinc-700 rounded-[30px] px-3 py-1">
+                  <span className="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-gray-50 text-gray-500 dark:bg-zinc-800/50 dark:text-zinc-400 border border-gray-100 dark:border-zinc-700">
                     {c.type === "general" ? "General" : "Importante"}
                   </span>
                 </div>
               </div>
-              <p className="text-sm text-gray-500 dark:text-zinc-400 mt-2 leading-relaxed">{c.content}</p>
-              <p className="text-xs text-gray-500 dark:text-zinc-500 mt-3">
+              <p className="text-sm text-gray-500 dark:text-zinc-400 leading-relaxed">{c.content}</p>
+              <p className="text-xs text-gray-400 dark:text-zinc-500 mt-3">
                 {c.author.name} — {new Date(c.createdAt).toLocaleDateString("es-ES")}
               </p>
             </div>

@@ -1,7 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { getSupabaseAdmin } from "@/lib/supabase"
-import { findMany } from "@/lib/prisma"
+import { findMany, query } from "@/lib/prisma"
 import CursosList from "./CursosList"
 
 export default async function CursosPage() {
@@ -19,7 +19,7 @@ export default async function CursosPage() {
     }),
     supabase
       .from("Teacher")
-      .select("id, user:User(name)")
+      .select("id, user:User(name), speciality")
       .eq("institutionId", institutionId)
       .then(({ data, error }) => {
         if (error) throw error
@@ -30,17 +30,23 @@ export default async function CursosPage() {
 
   const courseIds = courses.map((c: any) => c.id)
 
-  const [courseTeachersData, sections] = await Promise.all([
+  const [courseTeachersData, scheduleCounts, sections] = await Promise.all([
     courseIds.length > 0
       ? supabase
           .from("CourseTeacher")
-          .select("*, teacher:Teacher(id, user:User(name)), grade:Grade(id, name), section:Section(id, name)")
+          .select("*, teacher:Teacher(id, user:User(name), speciality), grade:Grade(id, name), section:Section(id, name)")
           .in("courseId", courseIds)
           .then(({ data, error }) => {
             if (error) throw error
             return data ?? []
           })
       : [],
+    courseIds.length > 0
+      ? query<any>(
+          `SELECT courseId, COUNT(*) AS total FROM Schedule WHERE courseId IN (?) AND institutionId = ? GROUP BY courseId`,
+          [courseIds, institutionId],
+        )
+      : Promise.resolve([] as any[]),
     (async () => {
       if (grades.length === 0) return []
       const gradeIds = grades.map((g: any) => g.id)
@@ -53,6 +59,11 @@ export default async function CursosPage() {
     })(),
   ])
 
+  const scheduleMap = new Map<number, number>()
+  for (const row of scheduleCounts as any[]) {
+    scheduleMap.set(Number(row.courseId), Number(row.total))
+  }
+
   const courseMap = new Map<number, any>()
   for (const course of courses) {
     courseMap.set(course.id, {
@@ -61,6 +72,7 @@ export default async function CursosPage() {
       code: course.code,
       description: course.description,
       teachers: [],
+      scheduleCount: scheduleMap.get(course.id) ?? 0,
     })
   }
   for (const ct of courseTeachersData) {
@@ -75,7 +87,11 @@ export default async function CursosPage() {
     }
   }
   const coursesList = Array.from(courseMap.values())
-  const teachers = teachersData.map((t: any) => ({ id: t.id, user: { name: t.user.name } }))
+  const teachers = teachersData.map((t: any) => ({
+    id: t.id,
+    user: { name: t.user?.name ?? "—" },
+    speciality: t.speciality,
+  }))
 
   return <CursosList courses={coursesList as any} teachers={teachers as any} grades={grades as any} sections={sections as any} />
 }

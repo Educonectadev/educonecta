@@ -1,7 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { query } from "@/lib/prisma"
-import Link from "next/link"
+import { query, findOne } from "@/lib/prisma"
+import TeacherDashboard from "./TeacherDashboard"
 
 export default async function TeacherDashboardPage() {
   const session = await getServerSession()
@@ -11,9 +11,12 @@ export default async function TeacherDashboardPage() {
   const institutionId = session.user.institutionId
 
   let courseTeachers: any[] = []
+  let recentHomework: any[] = []
+  let upcomingClasses: any[] = []
   let totalStudents = 0
   let activeHomework = 0
   let classesToday = 0
+  let institutionName = ""
   let error: string | null = null
 
   try {
@@ -21,10 +24,35 @@ export default async function TeacherDashboardPage() {
       throw new Error("No se encontraron datos del profesor")
     }
 
-    const ctData = await query<any[]>(
-      "SELECT ct.*, c.id as c_id, c.name as c_name, g.id as g_id, g.name as g_name, sec.id as sec_id, sec.name as sec_name FROM CourseTeacher ct LEFT JOIN Course c ON c.id = ct.courseId LEFT JOIN Grade g ON g.id = ct.gradeId LEFT JOIN Section sec ON sec.id = ct.sectionId WHERE ct.teacherId = ?",
-      [teacherId]
-    )
+    const institution = await findOne("Institution", { id: institutionId })
+    institutionName = (institution as any)?.name ?? ""
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const [ctData, hwData, schedData, gradeCountResult] = await Promise.all([
+      query<any[]>(
+        "SELECT ct.*, c.id as c_id, c.name as c_name, g.id as g_id, g.name as g_name, sec.id as sec_id, sec.name as sec_name FROM CourseTeacher ct LEFT JOIN Course c ON c.id = ct.courseId LEFT JOIN Grade g ON g.id = ct.gradeId LEFT JOIN Section sec ON sec.id = ct.sectionId WHERE ct.teacherId = ?",
+        [teacherId]
+      ),
+      query<any[]>(
+        "SELECT h.*, c.id as c_id, c.name as c_name, g.id as g_id, g.name as g_name, sec.id as sec_id, sec.name as sec_name FROM Homework h LEFT JOIN Course c ON c.id = h.courseId LEFT JOIN Grade g ON g.id = h.gradeId LEFT JOIN Section sec ON sec.id = h.sectionId WHERE h.teacherId = ? ORDER BY h.createdAt DESC LIMIT 5",
+        [teacherId]
+      ),
+      query<any[]>(
+        `SELECT s.*, c.id as c_id, c.name as c_name, g.id as g_id, g.name as g_name, sec.id as sec_id, sec.name as sec_name, cl.name as cl_name
+         FROM Schedule s
+         LEFT JOIN Course c ON c.id = s.courseId
+         LEFT JOIN Grade g ON g.id = s.gradeId
+         LEFT JOIN Section sec ON sec.id = s.sectionId
+         LEFT JOIN Classroom cl ON cl.id = s.classroomId
+         WHERE s.teacherId = ? AND s.dayOfWeek >= ?
+         ORDER BY s.dayOfWeek ASC, s.startTime ASC
+         LIMIT 8`,
+        [teacherId, today.getDay() || 7]
+      ),
+      query<any[]>("SELECT COUNT(DISTINCT courseId) AS total FROM CourseTeacher WHERE teacherId = ?", [teacherId]),
+    ])
 
     courseTeachers = ctData.map((ct: any) => ({
       id: ct.id,
@@ -36,8 +64,25 @@ export default async function TeacherDashboardPage() {
       section: ct.sec_id ? { id: ct.sec_id, name: ct.sec_name } : null,
     }))
 
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
+    recentHomework = hwData.map((h: any) => ({
+      id: h.id,
+      title: h.title,
+      dueDate: h.dueDate,
+      course: { name: h.c_name },
+      grade: h.g_id ? { name: h.g_name } : null,
+      section: h.sec_id ? { name: h.sec_name } : null,
+    }))
+
+    upcomingClasses = schedData.map((s: any) => ({
+      id: s.id,
+      dayOfWeek: s.dayOfWeek,
+      startTime: typeof s.startTime === "string" ? s.startTime.slice(0, 5) : s.startTime,
+      endTime: typeof s.endTime === "string" ? s.endTime.slice(0, 5) : s.endTime,
+      course: { name: s.c_name },
+      grade: s.g_id ? { name: s.g_name } : null,
+      section: s.sec_id ? { name: s.sec_name } : null,
+      classroom: s.cl_name ?? s.classroom ?? null,
+    }))
 
     const gradeIds: number[] = []
     for (const ct of courseTeachers) {
@@ -59,9 +104,10 @@ export default async function TeacherDashboardPage() {
     if (courseTeachers.length > 0) {
       const courseIds = courseTeachers.map((ct: any) => ct.courseId)
       const placeholders = courseIds.map(() => "?").join(",")
+      const dow = today.getDay()
       const result = await query<any[]>(
         `SELECT COUNT(*) as total FROM Schedule WHERE institutionId = ? AND dayOfWeek = ? AND courseId IN (${placeholders})`,
-        [institutionId, today.getDay(), ...courseIds]
+        [institutionId, dow === 0 ? 7 : dow, ...courseIds]
       )
       classesToday = result[0]?.total ?? 0
     }
@@ -89,47 +135,18 @@ export default async function TeacherDashboardPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold tracking-tight mb-8">Panel del Profesor</h1>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-        <div className="bg-emerald-50 border border-emerald-200 rounded-[25px] p-6 hover:bg-emerald-100 transition-all duration-200">
-          <p className="text-xs uppercase tracking-widest text-emerald-500">Estudiantes</p>
-          <p className="text-3xl font-bold mt-2 text-emerald-900">{totalStudents}</p>
-        </div>
-        <div className="bg-emerald-50 border border-emerald-200 rounded-[25px] p-6 hover:bg-emerald-100 transition-all duration-200">
-          <p className="text-xs uppercase tracking-widest text-emerald-500">Tareas Activas</p>
-          <p className="text-3xl font-bold mt-2 text-emerald-900">{activeHomework}</p>
-        </div>
-        <div className="bg-emerald-50 border border-emerald-200 rounded-[25px] p-6 hover:bg-emerald-100 transition-all duration-200">
-          <p className="text-xs uppercase tracking-widest text-emerald-500">Clases Hoy</p>
-          <p className="text-3xl font-bold mt-2 text-emerald-900">{classesToday}</p>
-        </div>
-      </div>
-
-      <h2 className="text-lg font-semibold tracking-tight mb-4">Mis Cursos</h2>
-      {courseTeachers.length === 0 ? (
-        <p className="text-gray-500 text-sm">No tienes cursos asignados.</p>
-      ) : (
-        <div className="grid gap-3">
-          {courseTeachers.map((ct: any) => (
-            <div key={ct.id} className="bg-emerald-50 border border-emerald-200 rounded-[25px] p-5 flex items-center justify-between">
-              <div>
-                <p className="font-medium text-emerald-900">{ct.course.name}</p>
-                <p className="text-sm text-emerald-500">
-                  {ct.grade?.name ?? "—"} / {ct.section?.name ?? "—"}
-                </p>
-              </div>
-              <Link
-                href={`/profesor/asistencia/tomar?courseId=${ct.courseId}&gradeId=${ct.gradeId}&sectionId=${ct.sectionId}`}
-                className="text-sm text-emerald-500 hover:text-emerald-700 transition-colors"
-              >
-                Tomar Asistencia →
-              </Link>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <TeacherDashboard
+      teacherName={session.user.name}
+      institutionName={institutionName}
+      stats={{
+        totalStudents,
+        activeHomework,
+        classesToday,
+        totalCourses: courseTeachers.length,
+      }}
+      courseTeachers={courseTeachers}
+      recentHomework={recentHomework}
+      upcomingClasses={upcomingClasses}
+    />
   )
 }

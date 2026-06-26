@@ -26,29 +26,36 @@ export default async function TareasPage() {
   }))
 
   return (
-    <div>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight dark:text-white">Tareas</h1>
+    <div className="space-y-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Tareas</h1>
+          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">{homework.length} publicadas</p>
+        </div>
         <Link
           href="/dashboard/teacher/tareas/nueva"
-          className="btn-primary px-6 py-2.5 rounded-[30px] text-sm font-medium text-center"
+          className="btn-primary rounded-[30px] px-6 py-2.5 text-sm font-medium text-center"
         >
           + Nueva Tarea
         </Link>
       </div>
 
       {homework.length === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-zinc-500">No hay tareas publicadas.</p>
+        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-12 text-center text-gray-400 dark:text-zinc-500 text-sm">
+          No hay tareas publicadas.
+        </div>
       ) : (
         <div className="grid gap-3">
           {homework.map((h: { id: number; title: string; description: string | null; dueDate: Date; course: { name: string }; grade: { name: string } | null; section: { name: string } | null }) => (
-            <div key={h.id} className="bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[25px] p-6">
-              <p className="font-medium dark:text-white">{h.title}</p>
-              <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1.5">
+            <div key={h.id} className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-5 hover:border-gray-200 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/20 transition-all duration-200">
+              <div className="flex items-start justify-between gap-3 mb-2">
+                <p className="font-semibold text-gray-900 dark:text-white/90">{h.title}</p>
+                <span className="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-gray-50 text-gray-500 dark:bg-zinc-800/50 dark:text-zinc-400 border border-gray-100 dark:border-zinc-700 shrink-0">
+                  Vence {h.dueDate.toLocaleDateString("es-ES")}
+                </span>
+              </div>
+              <p className="text-xs text-gray-400 dark:text-zinc-500">
                 {h.course.name} — {h.grade?.name ?? "—"} / {h.section?.name ?? "—"}
-              </p>
-              <p className="text-xs text-gray-300 dark:text-zinc-600 mt-1.5">
-                Vence: {h.dueDate.toLocaleDateString("es-ES")}
               </p>
               {h.description && (
                 <p className="text-sm mt-3 text-gray-500 dark:text-zinc-400 leading-relaxed">{h.description}</p>

@@ -23,10 +23,15 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       if (dup.length > 0) return NextResponse.json({ error: "Nombre ya existe" }, { status: 409 })
     }
 
+    if (code && code !== course.code) {
+      const codeDup = await query("SELECT id FROM Course WHERE code = ? AND institutionId = ? AND id != ?", [code, institutionId, id])
+      if (codeDup.length > 0) return NextResponse.json({ error: "Código ya existe" }, { status: 409 })
+    }
+
     await update("Course", { id }, {
       name: name ?? course.name,
-      code: code !== undefined ? code : course.code,
-      description: description !== undefined ? description : course.description,
+      code: code !== undefined ? (code || null) : course.code,
+      description: description !== undefined ? (description || null) : course.description,
     })
 
     const updated = await query(

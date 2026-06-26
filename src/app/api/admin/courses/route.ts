@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "@/lib/auth"
-import { query, create } from "@/lib/prisma"
+import { query, create, remove } from "@/lib/prisma"
 
 export async function GET() {
   const session = await getServerSession()
@@ -47,15 +47,25 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { name, code, description } = body
+    const { name, code, description, initialAssignment } = body
 
     if (!name) {
       return NextResponse.json({ error: "Nombre del curso es requerido" }, { status: 400 })
+    }
+    if (name.trim().length < 2) {
+      return NextResponse.json({ error: "El nombre es muy corto" }, { status: 400 })
     }
 
     const existing = await query("SELECT id FROM Course WHERE name = ? AND institutionId = ?", [name, institutionId])
     if (existing.length > 0) {
       return NextResponse.json({ error: "Ya existe un curso con ese nombre en esta institución" }, { status: 409 })
+    }
+
+    if (code) {
+      const codeDup = await query("SELECT id FROM Course WHERE code = ? AND institutionId = ?", [code, institutionId])
+      if (codeDup.length > 0) {
+        return NextResponse.json({ error: "Ya existe un curso con ese código" }, { status: 409 })
+      }
     }
 
     const insertId = await create("Course", {
@@ -65,8 +75,32 @@ export async function POST(request: Request) {
       institutionId,
     })
 
+    let createdAssignmentId: number | null = null
+    if (initialAssignment?.teacherId) {
+      const teacherId = Number(initialAssignment.teacherId)
+      const teacherRows = await query("SELECT id FROM Teacher WHERE id = ? AND institutionId = ?", [teacherId, institutionId])
+      if (teacherRows.length === 0) {
+        await remove("Course", { id: insertId })
+        return NextResponse.json({ error: "Profesor no encontrado" }, { status: 404 })
+      }
+      const gradeId = initialAssignment.gradeId ? Number(initialAssignment.gradeId) : null
+      const sectionId = initialAssignment.sectionId ? Number(initialAssignment.sectionId) : null
+      const dup = await query(
+        "SELECT id FROM CourseTeacher WHERE courseId = ? AND teacherId = ? AND gradeId <=> ? AND sectionId <=> ?",
+        [insertId, teacherId, gradeId, sectionId],
+      )
+      if (dup.length === 0) {
+        createdAssignmentId = await create("CourseTeacher", {
+          courseId: insertId,
+          teacherId,
+          gradeId,
+          sectionId,
+        })
+      }
+    }
+
     const course = await query("SELECT * FROM Course WHERE id = ?", [insertId])
-    return NextResponse.json(course[0], { status: 201 })
+    return NextResponse.json({ ...course[0], initialAssignmentId: createdAssignmentId }, { status: 201 })
   } catch {
     return NextResponse.json({ error: "Error al crear curso" }, { status: 500 })
   }
