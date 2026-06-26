@@ -1,8 +1,8 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
-import Modal from "@/components/Modal"
+import { useEffect, useMemo, useState } from "react"
+import Link from "next/link"
 
 interface Student {
   id: number
@@ -20,208 +20,292 @@ interface CourseTeacher {
   section: { id: number; name: string } | null
 }
 
+type Status = "PRESENT" | "ABSENT" | "LATE"
+
+const statusOptions: { value: Status; label: string; emoji: string; active: string; idle: string }[] = [
+  { value: "PRESENT", label: "Presente", emoji: "🟢", active: "bg-emerald-100 text-emerald-700 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-700", idle: "border-gray-200 dark:border-zinc-700 text-gray-400 dark:text-zinc-500" },
+  { value: "ABSENT", label: "Ausente", emoji: "🔴", active: "bg-red-100 text-red-700 border-red-300 dark:bg-red-900/40 dark:text-red-200 dark:border-red-700", idle: "border-gray-200 dark:border-zinc-700 text-gray-400 dark:text-zinc-500" },
+  { value: "LATE", label: "Tardanza", emoji: "🟡", active: "bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-900/40 dark:text-amber-200 dark:border-amber-700", idle: "border-gray-200 dark:border-zinc-700 text-gray-400 dark:text-zinc-500" },
+]
+
+function formatDate(d: Date) {
+  return d.toLocaleDateString("es-PE", { day: "2-digit", month: "2-digit", year: "numeric" })
+}
+
 export default function TomarAsistenciaPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [open, setOpen] = useState(true)
-
   const [courses, setCourses] = useState<CourseTeacher[]>([])
   const [students, setStudents] = useState<Student[]>([])
-  const [attendance, setAttendance] = useState<Record<number, { isPresent: boolean; minutesLate: number }>>({})
+  const [status, setStatus] = useState<Record<number, Status>>({})
+  const [minutesLate, setMinutesLate] = useState<Record<number, number>>({})
+  const [loadingStudents, setLoadingStudents] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState<{ type: "ok" | "err"; text: string } | null>(null)
 
-  const selectedCourse = searchParams.get("courseId")
-  const selectedGrade = searchParams.get("gradeId")
-  const selectedSection = searchParams.get("sectionId")
+  const courseId = searchParams.get("courseId")
+  const gradeId = searchParams.get("gradeId")
+  const sectionId = searchParams.get("sectionId")
+
+  const selected = useMemo(
+    () => courses.find((c) => String(c.courseId) === courseId && String(c.gradeId ?? "") === (gradeId ?? "") && String(c.sectionId ?? "") === (sectionId ?? "")),
+    [courses, courseId, gradeId, sectionId],
+  )
 
   useEffect(() => {
     fetch("/api/teacher/courses")
       .then((r) => r.json())
       .then((data) => {
-        setCourses(data)
-        if (!selectedCourse && data.length > 0) {
-          const first = data[0]
-          router.replace(
-            `/dashboard/teacher/asistencia/tomar?courseId=${first.courseId}&gradeId=${first.gradeId ?? ""}&sectionId=${first.sectionId ?? ""}`
-          )
-        }
+        if (Array.isArray(data)) setCourses(data)
       })
-  }, [router, selectedCourse])
+  }, [])
 
   useEffect(() => {
-    if (selectedGrade && selectedSection) {
-      const params = new URLSearchParams({ gradeId: selectedGrade, sectionId: selectedSection })
-      fetch(`/api/teacher/courses/students?${params}`)
-        .then((r) => r.json())
-        .then((data) => {
-          setStudents(data)
-          const init: Record<number, { isPresent: boolean; minutesLate: number }> = {}
-          data.forEach((s: Student) => {
-            init[s.id] = { isPresent: true, minutesLate: 0 }
-          })
-          setAttendance(init)
+    setStudents([])
+    setStatus({})
+    setMinutesLate({})
+    setMessage(null)
+    if (!gradeId || !sectionId) return
+    setLoadingStudents(true)
+    const params = new URLSearchParams({ gradeId, sectionId })
+    fetch(`/api/teacher/courses/students?${params}`)
+      .then((r) => r.json())
+      .then((data) => {
+        const list = Array.isArray(data) ? data : []
+        setStudents(list)
+        const initStatus: Record<number, Status> = {}
+        const initMin: Record<number, number> = {}
+        list.forEach((s: Student) => {
+          initStatus[s.id] = "PRESENT"
+          initMin[s.id] = 0
         })
-    }
-  }, [selectedGrade, selectedSection])
+        setStatus(initStatus)
+        setMinutesLate(initMin)
+      })
+      .catch(() => setStudents([]))
+      .finally(() => setLoadingStudents(false))
+  }, [gradeId, sectionId])
 
-  function close() {
-    setOpen(false)
-    router.push("/dashboard/teacher/asistencia")
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!selectedCourse) return
-    setSubmitting(true)
-    setMessage("")
-
-    const records = Object.entries(attendance).map(([studentId, data]) => ({
-      studentId: Number(studentId),
-      isPresent: data.isPresent,
-      minutesLate: data.minutesLate,
-    }))
-
-    const res = await fetch("/api/teacher/attendance", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        courseId: Number(selectedCourse),
-        date: new Date().toISOString(),
-        records,
-      }),
+  function onCourseChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    const ct = courses.find((c) => c.courseId === Number(e.target.value))
+    if (!ct) return
+    const params = new URLSearchParams({
+      courseId: String(ct.courseId),
+      gradeId: String(ct.gradeId ?? ""),
+      sectionId: String(ct.sectionId ?? ""),
     })
+    router.replace(`/dashboard/teacher/asistencia/tomar?${params}`)
+  }
 
-    const result = await res.json()
-    setSubmitting(false)
-    if (result.success) {
-      setMessage("Asistencia registrada correctamente.")
-    } else {
-      setMessage("Error al registrar asistencia.")
+  function setStatusFor(studentId: number, value: Status) {
+    setStatus((prev) => ({ ...prev, [studentId]: value }))
+    if (value !== "LATE") {
+      setMinutesLate((prev) => ({ ...prev, [studentId]: 0 }))
+    } else if ((minutesLate[studentId] ?? 0) === 0) {
+      setMinutesLate((prev) => ({ ...prev, [studentId]: 5 }))
     }
   }
 
-  const setPresent = (studentId: number, present: boolean) => {
-    setAttendance((prev) => ({
-      ...prev,
-      [studentId]: { ...prev[studentId], isPresent: present },
-    }))
+  function markAllPresent() {
+    const next: Record<number, Status> = {}
+    students.forEach((s) => { next[s.id] = "PRESENT" })
+    setStatus(next)
+    setMinutesLate({})
   }
 
-  const updateMinutes = (studentId: number, minutes: number) => {
-    setAttendance((prev) => ({
-      ...prev,
-      [studentId]: { ...prev[studentId], minutesLate: Math.max(0, minutes) },
+  async function handleSubmit() {
+    if (!selected || students.length === 0) return
+    setSubmitting(true)
+    setMessage(null)
+    const records = students.map((s) => ({
+      studentId: s.id,
+      status: status[s.id] ?? "ABSENT",
+      minutesLate: status[s.id] === "LATE" ? Math.max(1, Number(minutesLate[s.id] ?? 0)) : 0,
     }))
+    try {
+      const res = await fetch("/api/teacher/attendance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          courseId: selected.courseId,
+          gradeId: selected.gradeId,
+          sectionId: selected.sectionId,
+          date: new Date().toISOString(),
+          records,
+        }),
+      })
+      const json = await res.json()
+      if (res.ok && json.success) {
+        setMessage({ type: "ok", text: `Asistencia guardada: ${json.count ?? records.length} registros.` })
+      } else {
+        setMessage({ type: "err", text: json.message || json.error || "Error al guardar." })
+      }
+    } catch (err: any) {
+      setMessage({ type: "err", text: err?.message || "Error de red." })
+    } finally {
+      setSubmitting(false)
+    }
   }
+
+  const counts = useMemo(() => {
+    const c = { PRESENT: 0, ABSENT: 0, LATE: 0 }
+    Object.values(status).forEach((v) => { c[v]++ })
+    return c
+  }, [status])
 
   return (
-    <Modal open={open} onClose={close} title="Tomar Asistencia" size="lg" scroll="inside">
-      <div className="space-y-4">
-        <p className="text-xs text-gray-500 dark:text-zinc-500">Marca presente, ausente o tardanza</p>
+    <div className="space-y-6 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div>
+        <Link href="/dashboard/teacher/asistencia" className="text-xs text-gray-500 dark:text-zinc-400 hover:underline">
+          ← Volver a Asistencia
+        </Link>
+        <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Tomar asistencia</h1>
+        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">
+          {selected ? (
+            <>
+              <span className="font-medium text-gray-700 dark:text-zinc-200">{selected.course.name}</span>
+              {" — "}
+              {selected.grade?.name ?? "—"} {selected.section?.name ?? ""}
+              {" · "}
+              Fecha: {formatDate(new Date())}
+            </>
+          ) : (
+            "Selecciona un curso para comenzar."
+          )}
+        </p>
+      </div>
 
-        {message && (
-          <p className="text-sm border border-gray-100 dark:border-zinc-800 rounded-2xl p-4 bg-gray-50 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400">{message}</p>
-        )}
+      <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-4 space-y-3">
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Curso</label>
+          <select
+            value={courseId ?? ""}
+            onChange={onCourseChange}
+            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+          >
+            <option value="">Selecciona un curso...</option>
+            {courses.map((ct) => (
+              <option key={ct.id} value={ct.courseId}>
+                {ct.course.name} — {ct.grade?.name ?? ""} / {ct.section?.name ?? ""}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Curso</label>
-            <select
-              value={selectedCourse ?? ""}
-              onChange={(e) => {
-                const ct = courses.find((c) => c.courseId === Number(e.target.value))
-                router.replace(
-                  `/dashboard/teacher/asistencia/tomar?courseId=${e.target.value}&gradeId=${ct?.gradeId ?? ""}&sectionId=${ct?.sectionId ?? ""}`
-                )
-              }}
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+        {selected && (
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={markAllPresent}
+              disabled={students.length === 0}
+              className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-4 py-2 text-xs font-medium text-gray-700 dark:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
-              {courses.map((ct) => (
-                <option key={ct.id} value={ct.courseId}>
-                  {ct.course.name} — {ct.grade?.name ?? ""} / {ct.section?.name ?? ""}
-                </option>
-              ))}
-            </select>
+              ✓ Marcar todos presentes
+            </button>
+            <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-zinc-400 ml-auto">
+              <span><span className="font-semibold text-emerald-600">{counts.PRESENT}</span> presentes</span>
+              <span><span className="font-semibold text-red-600">{counts.ABSENT}</span> ausentes</span>
+              <span><span className="font-semibold text-amber-600">{counts.LATE}</span> tardanzas</span>
+            </div>
           </div>
+        )}
+      </div>
 
-          {students.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-2">Estudiantes</p>
-              <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl overflow-hidden max-h-72 overflow-y-auto scrollbar-hide">
-                <div className="divide-y divide-gray-100 dark:divide-zinc-800">
-                  {students.map((s) => {
-                    const record = attendance[s.id]
-                    const isPresent = record?.isPresent ?? true
-                    return (
-                      <div key={s.id} className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-medium text-gray-500 dark:text-zinc-400 shrink-0">
+      {message && (
+        <p className={`text-sm rounded-2xl p-4 border ${message.type === "ok" ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-200 dark:border-emerald-800" : "bg-red-50 text-red-600 border-red-200 dark:bg-red-900/30 dark:text-red-200 dark:border-red-800"}`}>
+          {message.text}
+        </p>
+      )}
+
+      {selected && (
+        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl overflow-hidden">
+          {loadingStudents ? (
+            <p className="text-sm text-center text-gray-400 dark:text-zinc-500 py-8">Cargando estudiantes…</p>
+          ) : students.length === 0 ? (
+            <p className="text-sm text-center text-gray-400 dark:text-zinc-500 py-8">Este curso aún no tiene estudiantes matriculados.</p>
+          ) : (
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 dark:bg-zinc-800/50 text-xs uppercase tracking-wider text-gray-500 dark:text-zinc-400">
+                <tr>
+                  <th className="px-4 py-3 text-left font-medium">Alumno</th>
+                  <th className="px-4 py-3 text-left font-medium">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((s) => {
+                  const current = status[s.id] ?? "PRESENT"
+                  return (
+                    <tr key={s.id} className="border-t border-gray-100 dark:border-zinc-800">
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-zinc-800 text-[11px] font-medium text-gray-500 dark:text-zinc-400 flex items-center justify-center shrink-0">
                             {s.firstName.charAt(0)}{s.lastName.charAt(0)}
                           </div>
-                          <span className="text-sm text-gray-900 dark:text-white/90 truncate">
-                            {s.firstName} {s.lastName}
+                          <span className="font-medium text-gray-900 dark:text-white/90">
+                            {s.lastName}, {s.firstName}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <button
-                            type="button"
-                            onClick={() => setPresent(s.id, true)}
-                            className={`px-3 py-1.5 rounded-[30px] text-[11px] font-semibold uppercase tracking-wider transition-all duration-200 ${
-                              isPresent
-                                ? "bg-gray-900 text-white dark:bg-white dark:text-black"
-                                : "bg-gray-100 text-gray-500 dark:bg-zinc-800 dark:text-zinc-500 hover:bg-gray-200 dark:hover:bg-zinc-700"
-                            }`}
-                          >
-                            Presente
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setPresent(s.id, false)}
-                            className={`px-3 py-1.5 rounded-[30px] text-[11px] font-semibold uppercase tracking-wider transition-all duration-200 ${
-                              !isPresent
-                                ? "bg-gray-900 text-white dark:bg-white dark:text-black"
-                                : "bg-gray-100 text-gray-500 dark:bg-zinc-800 dark:text-zinc-500 hover:bg-gray-200 dark:hover:bg-zinc-700"
-                            }`}
-                          >
-                            Ausente
-                          </button>
-                          <div className="flex items-center gap-1.5 ml-1">
-                            <input
-                              type="number"
-                              min={0}
-                              value={record?.minutesLate ?? 0}
-                              onChange={(e) => updateMinutes(s.id, Number(e.target.value))}
-                              className="w-16 rounded-[30px] border border-gray-200 dark:border-zinc-800 px-3 py-1.5 text-xs text-center bg-white dark:bg-black text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all disabled:opacity-40"
-                              disabled={!isPresent}
-                            />
-                            <span className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500">min</span>
-                          </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          {statusOptions.map((opt) => {
+                            const isActive = current === opt.value
+                            return (
+                              <button
+                                key={opt.value}
+                                type="button"
+                                onClick={() => setStatusFor(s.id, opt.value)}
+                                className={`px-3 py-1.5 rounded-full border text-xs font-medium transition-all duration-150 flex items-center gap-1.5 ${
+                                  isActive ? opt.active : `bg-transparent ${opt.idle} hover:bg-gray-50 dark:hover:bg-zinc-800/50`
+                                }`}
+                                aria-pressed={isActive}
+                              >
+                                <span aria-hidden>{isActive ? opt.emoji : "⚪"}</span>
+                                <span>{opt.label}</span>
+                              </button>
+                            )
+                          })}
+                          {current === "LATE" && (
+                            <div className="flex items-center gap-1.5 ml-2">
+                              <input
+                                type="number"
+                                min={1}
+                                value={minutesLate[s.id] ?? 5}
+                                onChange={(e) => setMinutesLate((prev) => ({ ...prev, [s.id]: Number(e.target.value) }))}
+                                className="w-16 rounded-[30px] border border-gray-200 dark:border-zinc-700 px-3 py-1.5 text-xs text-center bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none transition-all"
+                              />
+                              <span className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500">min tarde</span>
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
           )}
+        </div>
+      )}
 
-          {students.length > 0 && (
-            <div className="flex gap-3 pt-2">
-              <button type="button" onClick={close} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">
-                Cancelar
-              </button>
-              <button
-                type="submit"
-                disabled={submitting}
-                className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
-              >
-                {submitting ? "Guardando..." : "Guardar Asistencia"}
-              </button>
-            </div>
-          )}
-        </form>
-      </div>
-    </Modal>
+      {selected && students.length > 0 && (
+        <div className="flex gap-3 sticky bottom-3">
+          <Link
+            href="/dashboard/teacher/asistencia"
+            className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-center text-gray-700 dark:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
+          >
+            Cancelar
+          </Link>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={submitting}
+            className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium disabled:opacity-50"
+          >
+            {submitting ? "Guardando..." : "Guardar asistencia"}
+          </button>
+        </div>
+      )}
+    </div>
   )
 }

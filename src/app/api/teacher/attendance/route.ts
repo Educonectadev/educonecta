@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "@/lib/auth"
-import { transaction } from "@/lib/prisma"
+import { getSupabaseAdmin } from "@/lib/supabase"
+
+type Status = "PRESENT" | "ABSENT" | "LATE"
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,45 +12,72 @@ export async function POST(req: NextRequest) {
     }
 
     const teacherId = session.user.teacherId!
-    const { courseId, date, records } = await req.json()
+    const { records, date } = await req.json()
 
-    if (!courseId || !date || !records || !Array.isArray(records)) {
+    if (!date || !Array.isArray(records) || records.length === 0) {
       return NextResponse.json({ success: false, message: "Datos incompletos" }, { status: 400 })
     }
 
-    const dateObj = new Date(date)
+    const dateOnly = String(date).slice(0, 10)
 
-    const results = await transaction(async (conn) => {
-      const c = conn as any
-      const out = []
-      for (const r of records) {
-        const [result] = await c.execute(
-          `INSERT INTO Attendance (studentId, teacherId, date, isPresent) VALUES (?, ?, ?, ?)
-           ON DUPLICATE KEY UPDATE isPresent = VALUES(isPresent), teacherId = VALUES(teacherId)`,
-          [r.studentId, teacherId, dateObj, r.isPresent]
+    const supabase = getSupabaseAdmin()
+
+    const attendanceRows = records
+      .filter((r: { status: Status }) => r.status === "PRESENT" || r.status === "ABSENT")
+      .map((r: { studentId: number; status: Status }) => ({
+        studentId: Number(r.studentId),
+        teacherId,
+        date: dateOnly,
+        isPresent: r.status === "PRESENT",
+      }))
+
+    const tardyRows = records
+      .filter((r: { status: Status; minutesLate?: number }) => r.status === "LATE")
+      .map((r: { studentId: number; minutesLate?: number }) => ({
+        studentId: Number(r.studentId),
+        teacherId,
+        date: dateOnly,
+        minutesLate: Math.max(1, Number(r.minutesLate ?? 5)),
+      }))
+
+    let attendanceCount = 0
+    if (attendanceRows.length > 0) {
+      const { error, count } = await supabase
+        .from("Attendance")
+        .upsert(attendanceRows, { onConflict: "studentId,date", count: "exact" })
+      if (error) {
+        console.error("[attendance] upsert error:", error)
+        return NextResponse.json(
+          { success: false, message: error.message, code: error.code, details: error.details },
+          { status: 500 },
         )
-        out.push(result)
       }
-      return out
-    })
-
-    const tardyRecords = records.filter((r: { minutesLate: number }) => r.minutesLate > 0)
-    if (tardyRecords.length > 0) {
-      await transaction(async (conn) => {
-        const c = conn as any
-        for (const r of tardyRecords) {
-          await c.execute(
-            `INSERT INTO Tardiness (studentId, teacherId, date, minutesLate) VALUES (?, ?, ?, ?)
-             ON DUPLICATE KEY UPDATE minutesLate = VALUES(minutesLate), teacherId = VALUES(teacherId)`,
-            [r.studentId, teacherId, dateObj, r.minutesLate]
-          )
-        }
-      })
+      attendanceCount = count ?? attendanceRows.length
     }
 
-    return NextResponse.json({ success: true, count: results.length })
+    if (tardyRows.length > 0) {
+      const { error, count } = await supabase
+        .from("Tardiness")
+        .upsert(tardyRows, { onConflict: "studentId,date", count: "exact" })
+      if (error) {
+        console.error("[attendance] tardiness upsert error:", error)
+        return NextResponse.json(
+          { success: false, message: error.message, code: error.code, details: error.details },
+          { status: 500 },
+        )
+      }
+      attendanceCount += count ?? tardyRows.length
+    }
+
+    return NextResponse.json({ success: true, count: attendanceCount })
   } catch (error) {
-    console.error("Error saving attendance:", error)
-    return NextResponse.json({ success: false, message: "Error interno" }, { status: 500 })
+    console.error("[attendance] POST error:", error)
+    return NextResponse.json(
+      {
+        success: false,
+        message: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 },
+    )
   }
 }

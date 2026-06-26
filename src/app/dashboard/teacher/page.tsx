@@ -74,12 +74,13 @@ export default async function TeacherDashboardPage() {
 
     upcomingClasses = schedData.map((s: any) => ({
       id: s.id,
+      courseId: s.courseId,
       dayOfWeek: s.dayOfWeek,
       startTime: typeof s.startTime === "string" ? s.startTime.slice(0, 5) : s.startTime,
       endTime: typeof s.endTime === "string" ? s.endTime.slice(0, 5) : s.endTime,
-      course: { name: s.c_name },
-      grade: s.g_id ? { name: s.g_name } : null,
-      section: s.sec_id ? { name: s.sec_name } : null,
+      course: { id: s.c_id, name: s.c_name },
+      grade: s.g_id ? { id: s.g_id, name: s.g_name } : null,
+      section: s.sec_id ? { id: s.sec_id, name: s.sec_name } : null,
       classroom: s.classroom ?? null,
     }))
 

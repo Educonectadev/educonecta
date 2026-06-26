@@ -35,9 +35,10 @@ interface UpcomingClass {
   dayOfWeek: number
   startTime: string
   endTime: string
-  course: { name: string }
-  grade: { name: string } | null
-  section: { name: string } | null
+  courseId: number
+  course: { id: number; name: string }
+  grade: { id: number; name: string } | null
+  section: { id: number; name: string } | null
   classroom: string | null
 }
 
@@ -90,7 +91,7 @@ export default function TeacherDashboard({
   }
   const scheduleByCourse = new Map<string, { day: string; time: string }[]>()
   for (const c of upcomingClasses) {
-    const key = `${c.course.id}-${c.grade?.id ?? "x"}-${c.section?.id ?? "x"}`
+    const key = `${c.courseId}-${c.grade?.id ?? "x"}-${c.section?.id ?? "x"}`
     const list = scheduleByCourse.get(key) ?? []
     list.push({ day: dayLabels[c.dayOfWeek] ?? "—", time: `${c.startTime}-${c.endTime}` })
     scheduleByCourse.set(key, list)
