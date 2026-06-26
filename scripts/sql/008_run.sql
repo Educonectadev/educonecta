@@ -1,14 +1,9 @@
--- Migration 008: Add assignedLevels to Teacher table (PostgreSQL/Supabase)
--- Stores the educational levels a teacher is assigned to:
---   INICIAL, PRIMARIA, SECUNDARIA
--- Stored as a text array; NULL means "not configured yet".
+-- scripts/sql/008_run.sql
+-- Ejecuta este script en el SQL editor de Supabase para aplicar la migración 008.
 
 ALTER TABLE "Teacher"
   ADD COLUMN IF NOT EXISTS "assignedLevels" TEXT[] DEFAULT NULL;
 
--- Backfill: derive assignedLevels from existing CourseTeacher + Grade.level.
--- Idempotent: only writes teachers that currently have NULL assignedLevels
--- but have at least one course assignment with a known grade level.
 UPDATE "Teacher" t
 SET "assignedLevels" = sub.levels
 FROM (
@@ -22,3 +17,15 @@ FROM (
 ) AS sub
 WHERE t.id = sub.tid
   AND (t."assignedLevels" IS NULL OR array_length(t."assignedLevels", 1) IS NULL);
+
+-- Verifica los niveles asignados por docente:
+SELECT
+  t.id,
+  u.name,
+  t."assignedLevels",
+  (SELECT ARRAY_AGG(DISTINCT UPPER(TRIM(g.level)))
+     FROM "CourseTeacher" ct JOIN "Grade" g ON g.id = ct."gradeId"
+     WHERE ct."teacherId" = t.id) AS derived_levels
+FROM "Teacher" t
+JOIN "User" u ON u.id = t."userId"
+ORDER BY u.name;
