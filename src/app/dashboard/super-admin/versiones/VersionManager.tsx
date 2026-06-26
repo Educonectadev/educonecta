@@ -137,7 +137,7 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
           <button
             type="submit"
             disabled={loading || !version.trim()}
-            className="flex-1 rounded-[30px] bg-black dark:bg-white text-white dark:text-black text-sm font-medium py-2.5 hover:bg-gray-800 dark:hover:bg-zinc-200 disabled:opacity-40 transition-all"
+            className="flex-1 rounded-[30px] btn-primary text-sm font-medium py-2.5"
           >
             {loading ? "Guardando..." : editing ? "Actualizar" : "Registrar"}
           </button>

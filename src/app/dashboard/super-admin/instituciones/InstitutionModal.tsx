@@ -211,7 +211,7 @@ export default function InstitutionModal({
                       </button>
                       <button
                         onClick={() => setEditing(true)}
-                        className="rounded-[30px] bg-black dark:bg-white px-5 py-2 text-xs font-medium text-white dark:text-black hover:bg-black/80 dark:hover:bg-zinc-200 transition-all"
+                        className="rounded-[30px] btn-primary px-5 py-2 text-xs font-medium"
                       >
                         Editar
                       </button>
@@ -344,7 +344,7 @@ export default function InstitutionModal({
               <button
                 type="submit"
                 disabled={loading}
-                className="rounded-[30px] bg-black dark:bg-white px-8 py-3 text-sm font-medium text-white dark:text-black hover:bg-black/80 dark:hover:bg-zinc-200 disabled:opacity-50 transition-all"
+                className="rounded-[30px] btn-primary px-8 py-3 text-sm font-medium"
               >
                 {loading ? "Guardando..." : "Guardar Cambios"}
               </button>
@@ -417,7 +417,7 @@ export default function InstitutionModal({
                     <button
                       onClick={handleCreateDirector}
                       disabled={directorSaving}
-                      className="rounded-[30px] bg-black dark:bg-white px-5 py-2 text-xs font-medium text-white dark:text-black hover:bg-black/80 dark:hover:bg-zinc-200 disabled:opacity-50 transition-all"
+                      className="rounded-[30px] btn-primary px-5 py-2 text-xs font-medium"
                     >
                       {directorSaving ? "Creando..." : "Crear Director"}
                     </button>

@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { getParentChildren, getChildrenGrades } from "@/lib/parent-data"
+import BrandColorPicker from "@/components/BrandColorPicker"
 
 export default async function PerfilPage() {
   const session = await getServerSession()
@@ -60,6 +61,10 @@ export default async function PerfilPage() {
             <p className="font-medium text-[#1a1a1a]">{session.user.institutionName ?? "—"}</p>
           </div>
         </div>
+      </section>
+
+      <section className="mb-8">
+        <BrandColorPicker />
       </section>
 
       {children.length === 0 && (

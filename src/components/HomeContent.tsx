@@ -137,7 +137,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           <ThemeToggle />
           <Link
             href="/login"
-            className="inline-flex items-center justify-center size-10 sm:size-auto sm:px-6 sm:py-2.5 text-sm font-medium text-white bg-black dark:text-black dark:bg-white rounded-full sm:rounded-[30px] hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all duration-200"
+            className="inline-flex items-center justify-center size-10 sm:size-auto sm:px-6 sm:py-2.5 text-sm font-medium btn-primary rounded-full sm:rounded-[30px] duration-200"
             aria-label="Iniciar Sesión"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:hidden">
@@ -192,7 +192,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           >
             <Link
               href="/login"
-              className="mt-8 sm:mt-10 inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 text-base font-medium text-white bg-black dark:text-black dark:bg-white rounded-[25px] hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all duration-200"
+              className="mt-8 sm:mt-10 inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 text-base font-medium btn-primary rounded-[25px] duration-200"
             >
               Comenzar ahora
               <motion.span

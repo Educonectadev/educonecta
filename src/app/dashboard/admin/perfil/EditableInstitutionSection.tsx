@@ -65,7 +65,7 @@ export default function EditableInstitutionSection({ institution }: { institutio
         <h2 className="text-xs font-semibold uppercase tracking-widest text-blue-500">Datos de la Institución</h2>
         <button
           onClick={() => setShowModal(true)}
-          className="rounded-[30px] bg-black dark:bg-white px-5 py-2 text-xs font-medium text-white dark:text-black hover:bg-black/80 dark:hover:bg-zinc-200 transition-all"
+          className="rounded-[30px] btn-primary px-5 py-2 text-xs font-medium"
         >
           Editar
         </button>

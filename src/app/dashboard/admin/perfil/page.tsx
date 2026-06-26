@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { findOne } from "@/lib/prisma"
 import { getSupabaseAdmin } from "@/lib/supabase"
 import EditableInstitutionSection from "./EditableInstitutionSection"
+import BrandColorPicker from "@/components/BrandColorPicker"
 
 export default async function AdminPerfilPage() {
   const session = await getServerSession()
@@ -59,6 +60,10 @@ export default async function AdminPerfilPage() {
 
       <section className="mb-8">
         <EditableInstitutionSection institution={institution as any} />
+      </section>
+
+      <section className="mb-8">
+        <BrandColorPicker />
       </section>
 
       <section>

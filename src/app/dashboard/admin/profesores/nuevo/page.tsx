@@ -179,7 +179,7 @@ export default function NuevoProfesorPage() {
 
         <div className="flex items-center gap-3 pt-2">
           <button type="submit" disabled={loading}
-            className="rounded-[30px] bg-black dark:bg-white px-8 py-3 text-sm font-medium text-white dark:text-black transition-all hover:bg-gray-800 dark:hover:bg-zinc-200 disabled:opacity-50">
+            className="rounded-[30px] btn-primary px-8 py-3 text-sm font-medium">
             {loading ? "Guardando..." : "Guardar"}
           </button>
           <Link href="/dashboard/admin/profesores"

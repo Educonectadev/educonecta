@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query, findOne } from "@/lib/prisma"
+import BrandColorPicker from "@/components/BrandColorPicker"
 
 export default async function TeacherPerfilPage() {
   const session = await getServerSession()
@@ -93,6 +94,10 @@ export default async function TeacherPerfilPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="mb-8">
+        <BrandColorPicker />
       </section>
 
       <section className="mb-8">

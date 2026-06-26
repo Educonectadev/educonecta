@@ -376,7 +376,7 @@ export default function NuevaInstitucionPage() {
             <button
               type="submit"
               disabled={loading}
-              className="rounded-[30px] bg-black dark:bg-white px-8 py-3 text-sm font-medium text-white dark:text-black hover:bg-black/80 dark:hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="rounded-[30px] btn-primary px-8 py-3 text-sm font-medium"
             >
               {loading ? "Guardando..." : "Guardar Institución"}
             </button>
