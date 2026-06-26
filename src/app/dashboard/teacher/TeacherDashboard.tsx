@@ -91,7 +91,9 @@ export default function TeacherDashboard({
   }
   const scheduleByCourse = new Map<string, { day: string; time: string }[]>()
   for (const c of upcomingClasses) {
-    const key = `${c.courseId}-${c.grade?.id ?? "x"}-${c.section?.id ?? "x"}`
+    const gradeId = (c as any).gradeId ?? c.grade?.id ?? "x"
+    const sectionId = (c as any).sectionId ?? c.section?.id ?? "x"
+    const key = `${c.courseId}-${gradeId}-${sectionId}`
     const list = scheduleByCourse.get(key) ?? []
     list.push({ day: dayLabels[c.dayOfWeek] ?? "—", time: `${c.startTime}-${c.endTime}` })
     scheduleByCourse.set(key, list)
