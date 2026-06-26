@@ -146,13 +146,13 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="flex flex-col items-center text-center px-6 pt-24 pb-24 max-w-6xl mx-auto"
+          className="flex flex-col items-center text-center px-6 pt-16 pb-16 sm:pt-24 sm:pb-24 max-w-6xl mx-auto"
         >
           <motion.h1
             initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.6, delay: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-5xl font-bold tracking-tight sm:text-6xl bg-gradient-to-r from-black via-emerald-800 to-black bg-clip-text text-transparent"
+            className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl bg-gradient-to-r from-black via-emerald-800 to-black bg-clip-text text-transparent"
           >
             EduConecta
           </motion.h1>
@@ -183,7 +183,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           >
             <Link
               href="/login"
-              className="mt-10 inline-flex items-center gap-2 px-10 py-3.5 text-base font-medium text-white bg-black rounded-[25px] hover:bg-gray-800 transition-all duration-200"
+              className="mt-8 sm:mt-10 inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 text-base font-medium text-white bg-black rounded-[25px] hover:bg-gray-800 transition-all duration-200"
             >
               Comenzar ahora
               <motion.span
@@ -199,7 +199,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="mt-16 w-full grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-left"
+            className="mt-12 sm:mt-16 w-full grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-left"
           >
             {impactCards
               .filter((_, i) => i === 0)
@@ -209,7 +209,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   variants={statCardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
-                  <Card className={`w-full flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                  <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
                     <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
@@ -232,7 +232,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/70 via-emerald-800/50 to-black/40 z-10" />
                   <img alt="Amazonía peruana" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80" />
                 </div>
-                <div className="relative z-20 p-8 flex flex-col justify-end min-h-[280px]">
+                <div className="relative z-20 p-5 sm:p-8 flex flex-col justify-end min-h-[200px] sm:min-h-[280px]">
                   <div className="size-12 rounded-xl flex items-center justify-center bg-white/20 backdrop-blur-sm text-white">
                     <IconClient icon="lucide:trees" className="size-6" />
                   </div>
@@ -242,19 +242,19 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                     <strong className="text-emerald-300">{data.treesSaved.toLocaleString("es-PE")} árboles al año</strong>.
                     Cada colegio digitalizado reduce la demanda de pulpa de madera y protege el pulmón verde del planeta.
                   </p>
-                  <div className="mt-4 flex gap-4">
+                  <div className="mt-4 flex gap-3 sm:gap-4">
                     <div>
-                      <p className="text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.treesSaved} suffix="" /></p>
+                      <p className="text-xl sm:text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.treesSaved} suffix="" /></p>
                       <p className="text-xs text-white/60">árboles/año</p>
                     </div>
                     <div className="w-px bg-white/20" />
                     <div>
-                      <p className="text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.institutionCount} suffix="" /></p>
+                      <p className="text-xl sm:text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.institutionCount} suffix="" /></p>
                       <p className="text-xs text-white/60">instituciones</p>
                     </div>
                     <div className="w-px bg-white/20" />
                     <div>
-                      <p className="text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.co2Saved} suffix="" /></p>
+                      <p className="text-xl sm:text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.co2Saved} suffix="" /></p>
                       <p className="text-xs text-white/60">kg CO₂/año</p>
                     </div>
                   </div>
@@ -270,7 +270,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   variants={statCardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
-                  <Card className={`w-full flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                  <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
                     <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
@@ -291,7 +291,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   variants={statCardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
-                  <Card className={`w-full flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                  <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
                     <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
@@ -314,12 +314,12 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   <div className="absolute inset-0 bg-gradient-to-br from-amber-900/60 via-amber-800/40 to-black/30 z-10" />
                   <img alt="Escuela sostenible" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" />
                 </div>
-                <div className="relative z-20 p-8 flex flex-col justify-end min-h-[280px]">
+                <div className="relative z-20 p-5 sm:p-8 flex flex-col justify-end min-h-[200px] sm:min-h-[280px]">
                   <div className="size-12 rounded-xl flex items-center justify-center bg-white/20 backdrop-blur-sm text-white">
                     <IconClient icon="lucide:recycle" className="size-6" />
                   </div>
                   <p className="mt-4 text-xl font-bold text-white">Beneficios de la digitalización</p>
-                  <div className="mt-3 grid grid-cols-2 gap-3 max-w-lg">
+                  <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg">
                     <div className="flex items-center gap-2">
                       <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
                       <span className="text-sm text-white/90">Sin uso de papel</span>
@@ -355,7 +355,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   variants={statCardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                 >
-                  <Card className={`w-full flex-col items-center text-center p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                  <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
                     <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60`}>
                       <IconClient icon={card.icon} className="size-6" />
                     </div>
@@ -377,7 +377,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           transition={{ duration: 0.5 }}
           className="border-t border-gray-100 bg-[#fafafa]"
         >
-          <div className="max-w-5xl mx-auto px-6 py-24">
+          <div className="max-w-5xl mx-auto px-6 py-16 sm:py-24">
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -392,14 +392,14 @@ export default function HomeContent({ data }: { data: ImpactData }) {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-40px" }}
-              className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+              className="mt-10 sm:mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
             >
               {features.map((feature) => (
                 <motion.div
                   key={feature.title}
                   variants={cardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="flex flex-col items-center text-center p-8 border border-gray-100 rounded-[25px] bg-white hover:shadow-sm hover:border-gray-200 transition-all duration-200"
+                  className="flex flex-col items-center text-center p-5 sm:p-8 border border-gray-100 rounded-[25px] bg-white hover:shadow-sm hover:border-gray-200 transition-all duration-200"
                 >
                   <div className="size-12 rounded-xl flex items-center justify-center bg-gray-50 text-gray-600 mb-4">
                     <IconClient icon={feature.icon} className="size-6" />
