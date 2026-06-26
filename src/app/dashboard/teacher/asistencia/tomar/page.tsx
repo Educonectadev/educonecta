@@ -68,9 +68,15 @@ export default function TomarAsistenciaPage() {
     if (!gradeId || !sectionId) return
     setLoadingStudents(true)
     const params = new URLSearchParams({ gradeId, sectionId })
+    console.log("[TomarAsistencia] Cargando estudiantes:", { gradeId, sectionId, url: `/api/teacher/courses/students?${params}` })
     fetch(`/api/teacher/courses/students?${params}`)
-      .then((r) => r.json())
+      .then((r) => {
+        console.log("[TomarAsistencia] Response status:", r.status)
+        return r.json()
+      })
       .then((data) => {
+        console.log("[TomarAsistencia] Estudiantes encontrados:", Array.isArray(data) ? data.length : 0)
+        console.log("[TomarAsistencia] Estudiantes:", data)
         const list = Array.isArray(data) ? data : []
         setStudents(list)
         const initStatus: Record<number, Status> = {}
@@ -82,7 +88,10 @@ export default function TomarAsistenciaPage() {
         setStatus(initStatus)
         setMinutesLate(initMin)
       })
-      .catch(() => setStudents([]))
+      .catch((err) => {
+        console.error("[TomarAsistencia] Error cargando estudiantes:", err)
+        setStudents([])
+      })
       .finally(() => setLoadingStudents(false))
   }, [gradeId, sectionId])
 
@@ -175,13 +184,14 @@ export default function TomarAsistenciaPage() {
         </p>
       </div>
 
-      <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-4 space-y-3">
+      <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl p-4 space-y-3">
         <div>
           <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Curso</label>
           <select
             value={courseId ?? ""}
             onChange={onCourseChange}
-            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+            className="w-full appearance-none rounded-[30px] border border-gray-300 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all cursor-pointer"
+            style={{ colorScheme: "light" }}
           >
             <option value="">Selecciona un curso...</option>
             {courses.map((ct) => (
@@ -198,7 +208,7 @@ export default function TomarAsistenciaPage() {
               type="button"
               onClick={markAllPresent}
               disabled={students.length === 0}
-              className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-4 py-2 text-xs font-medium text-gray-700 dark:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="rounded-[30px] bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-200 disabled:text-gray-400 text-white px-5 py-2 text-xs font-semibold transition-all shadow-sm disabled:shadow-none"
             >
               ✓ Marcar todos presentes
             </button>
@@ -218,11 +228,17 @@ export default function TomarAsistenciaPage() {
       )}
 
       {selected && (
-        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl overflow-hidden">
+        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl overflow-hidden">
           {loadingStudents ? (
-            <p className="text-sm text-center text-gray-400 dark:text-zinc-500 py-8">Cargando estudiantes…</p>
+            <p className="text-sm text-center text-gray-500 dark:text-zinc-500 py-8">Cargando estudiantes…</p>
           ) : students.length === 0 ? (
-            <p className="text-sm text-center text-gray-400 dark:text-zinc-500 py-8">Este curso aún no tiene estudiantes matriculados.</p>
+            <div className="text-center py-10 px-4">
+              <span className="material-icons text-4xl text-gray-300 dark:text-zinc-600 mb-2">school</span>
+              <p className="text-sm font-medium text-gray-700 dark:text-zinc-300">Este curso no tiene estudiantes matriculados.</p>
+              <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">
+                Verifica que el grado y sección tengan alumnos activos en la base de datos.
+              </p>
+            </div>
           ) : (
             <table className="w-full text-sm">
               <thead className="bg-gray-50 dark:bg-zinc-800/50 text-xs uppercase tracking-wider text-gray-500 dark:text-zinc-400">
