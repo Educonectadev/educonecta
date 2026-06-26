@@ -47,6 +47,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
+    console.log("[admin/courses POST] Datos recibidos:", body)
     const { name, code, description, initialAssignment } = body
 
     if (!name) {
@@ -68,12 +69,14 @@ export async function POST(request: Request) {
       }
     }
 
+    console.log("[admin/courses POST] Insertando Course")
     const insertId = await create("Course", {
       name,
       code: code || null,
       description: description || null,
       institutionId,
     })
+    console.log("[admin/courses POST] Curso creado id:", insertId)
 
     let createdAssignmentId: number | null = null
     if (initialAssignment?.teacherId) {
@@ -86,22 +89,36 @@ export async function POST(request: Request) {
       const gradeId = initialAssignment.gradeId ? Number(initialAssignment.gradeId) : null
       const sectionId = initialAssignment.sectionId ? Number(initialAssignment.sectionId) : null
       const dup = await query(
-        "SELECT id FROM CourseTeacher WHERE courseId = ? AND teacherId = ? AND gradeId <=> ? AND sectionId <=> ?",
+        `SELECT id FROM "CourseTeacher"
+         WHERE "courseId" = ?
+           AND "teacherId" = ?
+           AND "gradeId" IS NOT DISTINCT FROM ?
+           AND "sectionId" IS NOT DISTINCT FROM ?`,
         [insertId, teacherId, gradeId, sectionId],
       )
       if (dup.length === 0) {
+        console.log("[admin/courses POST] Insertando CourseTeacher", { insertId, teacherId, gradeId, sectionId })
         createdAssignmentId = await create("CourseTeacher", {
           courseId: insertId,
           teacherId,
           gradeId,
           sectionId,
         })
+        console.log("[admin/courses POST] CourseTeacher creado id:", createdAssignmentId)
       }
     }
 
     const course = await query("SELECT * FROM Course WHERE id = ?", [insertId])
+    console.log("[admin/courses POST] Curso final:", course[0])
     return NextResponse.json({ ...course[0], initialAssignmentId: createdAssignmentId }, { status: 201 })
-  } catch {
-    return NextResponse.json({ error: "Error al crear curso" }, { status: 500 })
+  } catch (error) {
+    console.error("[admin/courses POST] Error creando curso:", error)
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : null,
+      },
+      { status: 500 },
+    )
   }
 }
