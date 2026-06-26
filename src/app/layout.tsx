@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className="h-full antialiased">
+    <html lang="es" className="h-full antialiased scrollbar-hide">
       <head>
         <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
       </head>
