@@ -37,6 +37,8 @@ interface UpcomingClass {
   startTime: string
   endTime: string
   courseId: number
+  gradeId: number | null
+  sectionId: number | null
   course: { id: number; name: string }
   grade: { id: number; name: string } | null
   section: { id: number; name: string } | null
@@ -92,8 +94,8 @@ export default function TeacherDashboard({
   }
   const scheduleByCourse = new Map<string, { day: string; time: string }[]>()
   for (const c of upcomingClasses) {
-    const gradeId = (c as any).gradeId ?? c.grade?.id ?? "x"
-    const sectionId = (c as any).sectionId ?? c.section?.id ?? "x"
+    const gradeId = c.gradeId ?? c.grade?.id ?? "x"
+    const sectionId = c.sectionId ?? c.section?.id ?? "x"
     const key = `${c.courseId}-${gradeId}-${sectionId}`
     const list = scheduleByCourse.get(key) ?? []
     list.push({ day: dayLabels[c.dayOfWeek] ?? "—", time: `${c.startTime}-${c.endTime}` })
@@ -257,36 +259,48 @@ export default function TeacherDashboard({
         bodyClassName="h-[85vh] overflow-y-auto"
       >
         <div className="space-y-4">
-          <div className="rounded-2xl border border-gray-200 dark:border-zinc-700 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 dark:bg-zinc-800/50 text-xs uppercase tracking-wider text-gray-500 dark:text-zinc-400">
-                <tr>
-                  <th className="px-4 py-3 text-left font-medium">Curso</th>
-                  <th className="px-4 py-3 text-left font-medium">Grado</th>
-                  <th className="px-4 py-3 text-left font-medium">Sección</th>
-                  <th className="px-4 py-3 text-left font-medium">Horario</th>
-                </tr>
-              </thead>
-              <tbody>
-                {courseTeachers.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="px-4 py-8 text-center text-gray-400 dark:text-zinc-500">
-                      No tienes cursos asignados.
-                    </td>
-                  </tr>
-                ) : (
-                  courseTeachers.map((ct) => (
-                    <tr key={ct.id} className="border-t border-gray-100 dark:border-zinc-800">
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white/90">{ct.course.name}</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-zinc-300">{ct.grade?.name ?? "—"}</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-zinc-300">{ct.section?.name ?? "—"}</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-zinc-300 text-xs">{scheduleLabel(ct)}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            data={courseTeachers.map((ct) => ({
+              id: ct.id,
+              courseName: ct.course.name,
+              courseCode: ct.course.id,
+              grade: ct.grade?.name ?? null,
+              section: ct.section?.name ?? null,
+              schedule: scheduleLabel(ct),
+            }))}
+            emptyMessage="No tienes cursos asignados."
+            columns={[
+              {
+                key: "courseName",
+                label: "Curso",
+                sortable: true,
+                render: (r) => (
+                  <div>
+                    <p className="text-sm font-medium text-gray-800 dark:text-white/90">{r.courseName}</p>
+                    <p className="text-[11px] text-gray-400">Código: {r.courseCode}</p>
+                  </div>
+                ),
+              },
+              {
+                key: "grade",
+                label: "Grado",
+                sortable: false,
+                render: (r) => <span className="text-sm text-gray-600 dark:text-zinc-300">{r.grade ?? "—"}</span>,
+              },
+              {
+                key: "section",
+                label: "Sección",
+                sortable: false,
+                render: (r) => <span className="text-sm text-gray-600 dark:text-zinc-300">{r.section ?? "—"}</span>,
+              },
+              {
+                key: "schedule",
+                label: "Horario",
+                sortable: false,
+                render: (r) => <span className="text-xs text-gray-500 dark:text-zinc-400">{r.schedule}</span>,
+              },
+            ]}
+          />
           <div className="flex justify-end gap-3 pt-2">
             <button
               type="button"
