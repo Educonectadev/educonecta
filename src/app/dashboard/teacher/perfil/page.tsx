@@ -15,7 +15,7 @@ export default async function TeacherPerfilPage() {
   )
 
   const teacher = await query<any[]>(
-    `SELECT t.*, i.name AS institutionName
+    `SELECT t.*, i.name AS "institutionName"
      FROM Teacher t
      LEFT JOIN Institution i ON t.institutionId = i.id
      WHERE t.id = ?`,
