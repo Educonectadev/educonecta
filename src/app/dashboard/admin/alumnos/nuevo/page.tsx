@@ -149,7 +149,7 @@ export default function NuevoAlumnoPage() {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-[30px] bg-black px-8 py-3 text-sm font-medium text-white transition-all hover:bg-gray-800 disabled:opacity-50"
+            className="rounded-[30px] bg-black dark:bg-white px-8 py-3 text-sm font-medium text-white dark:text-black transition-all hover:bg-gray-800 dark:hover:bg-zinc-200 disabled:opacity-50"
           >
             {loading ? "Guardando..." : "Guardar"}
           </button>

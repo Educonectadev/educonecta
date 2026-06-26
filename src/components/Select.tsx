@@ -28,12 +28,12 @@ export default function Select({ value, onChange, options, placeholder = "Selecc
             <div className="fixed inset-0 bg-black/40 z-40 max-[640px]:block hidden" />
           )}
           <ListboxButton
-            className={`w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm text-left
-              focus:border-black focus:outline-none focus:ring-1 focus:ring-black
+            className={`w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 px-4 py-2.5 text-sm text-left bg-white dark:bg-zinc-800
+              focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white
               transition-all cursor-pointer
               flex items-center justify-between gap-2
-              ${disabled ? "opacity-50 cursor-not-allowed" : "hover:border-gray-300"}
-              ${value ? "text-black" : "text-gray-400"}`}
+              ${disabled ? "opacity-50 cursor-not-allowed" : "hover:border-gray-300 dark:hover:border-zinc-600"}
+              ${value ? "text-gray-900 dark:text-white/90" : "text-gray-400 dark:text-zinc-500"}`}
           >
             <span className="truncate">{selected ? selected.label : placeholder}</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
@@ -52,13 +52,13 @@ export default function Select({ value, onChange, options, placeholder = "Selecc
             <ListboxOptions
               anchor="bottom"
               data-react-aria-top-layer=""
-              className="z-50 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg
+              className="z-50 mt-1.5 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl shadow-lg dark:shadow-black/50
                 max-h-60 overflow-y-auto scrollbar-hide p-1.5 min-w-[var(--button-width)]
                 max-[640px]:!fixed max-[640px]:!inset-x-4 max-[640px]:!top-1/2 max-[640px]:!-translate-y-1/2
                 max-[640px]:max-h-[60vh] max-[640px]:!w-auto max-[640px]:!m-0"
             >
               {options.length === 0 ? (
-                <div className="px-3 py-2 text-sm text-gray-400 text-center">Sin opciones</div>
+                <div className="px-3 py-2 text-sm text-gray-400 dark:text-zinc-500 text-center">Sin opciones</div>
               ) : (
                 options.map((opt) => (
                   <ListboxOption
@@ -66,7 +66,7 @@ export default function Select({ value, onChange, options, placeholder = "Selecc
                     value={opt.value}
                     className={({ focus, selected }) =>
                       `flex items-center gap-2 px-3 py-2 rounded-[10px] text-sm cursor-pointer transition-colors
-                      ${selected ? "bg-black text-white" : `${focus ? "bg-gray-100" : ""} text-black`}`}
+                      ${selected ? "bg-black dark:bg-white text-white dark:text-black" : `${focus ? "bg-gray-100 dark:bg-zinc-700" : ""} text-gray-900 dark:text-white/90`}`}
                   >
                     {({ selected }) => (
                       <>

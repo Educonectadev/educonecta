@@ -51,23 +51,23 @@ export default function InstallPrompt() {
 
   return (
     <div className="fixed bottom-24 left-4 right-4 z-50 mx-auto max-w-md animate-fade-in">
-      <div className="bg-white rounded-[25px] border border-gray-200 shadow-xl p-5 flex items-center gap-4">
-        <div className="w-12 h-12 bg-black rounded-[15px] flex items-center justify-center shrink-0">
-          <span className="text-white font-bold text-sm">EC</span>
+      <div className="bg-white dark:bg-zinc-900 rounded-[25px] border border-gray-200 dark:border-zinc-800 shadow-xl dark:shadow-black/50 p-5 flex items-center gap-4">
+        <div className="w-12 h-12 bg-black dark:bg-white rounded-[15px] flex items-center justify-center shrink-0">
+          <span className="text-white dark:text-black font-bold text-sm">EC</span>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold">Instala EduConecta</p>
-          <p className="text-xs text-gray-500">Accede rápido desde tu pantalla de inicio</p>
+          <p className="text-sm font-semibold text-gray-900 dark:text-white/90">Instala EduConecta</p>
+          <p className="text-xs text-gray-500 dark:text-zinc-400">Accede rápido desde tu pantalla de inicio</p>
         </div>
         <button
           onClick={handleInstall}
-          className="rounded-[30px] bg-black text-white px-4 py-2 text-xs font-medium hover:bg-gray-800 transition-all shrink-0"
+          className="rounded-[30px] bg-black dark:bg-white text-white dark:text-black px-4 py-2 text-xs font-medium hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all shrink-0"
         >
           Instalar
         </button>
         <button
           onClick={() => setDismissed(true)}
-          className="text-gray-400 hover:text-black transition-all shrink-0"
+          className="text-gray-400 dark:text-zinc-500 hover:text-black dark:hover:text-white transition-all shrink-0"
           aria-label="Cerrar"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -16,7 +16,7 @@ export default async function InstitucionesPage() {
         <h1 className="text-2xl font-bold tracking-tight">Instituciones</h1>
         <Link
           href="/dashboard/super-admin/instituciones/nueva"
-          className="rounded-[30px] bg-black px-6 py-2.5 text-sm font-medium text-white hover:bg-black/80 transition-all text-center"
+          className="rounded-[30px] bg-black dark:bg-white px-6 py-2.5 text-sm font-medium text-white dark:text-black hover:bg-black/80 dark:hover:bg-zinc-200 transition-all text-center"
         >
           + Registrar Institución
         </Link>

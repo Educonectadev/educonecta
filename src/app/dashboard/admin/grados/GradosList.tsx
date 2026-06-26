@@ -148,7 +148,7 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
         </div>
         <button
           onClick={() => { setModal("create-grade"); setForm({ name: "", level: "", capacity: "", defaultShift: "" }); setError("") }}
-          className="bg-black text-white px-5 py-2 rounded-[30px] text-sm font-medium hover:bg-gray-800 transition-all"
+          className="bg-black dark:bg-white text-white dark:text-black px-5 py-2 rounded-[30px] text-sm font-medium hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all"
         >
           + Nuevo Grado
         </button>
@@ -284,7 +284,7 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
             {error && <p className="text-xs text-red-500">{error}</p>}
             <div className="flex gap-3 justify-end pt-2">
               <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-black transition-all">Cancelar</button>
-              <button type="submit" disabled={loading} className="bg-black text-white px-5 py-2 rounded-[30px] text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">{loading ? "..." : "Guardar"}</button>
+              <button type="submit" disabled={loading} className="bg-black dark:bg-white text-white dark:text-black px-5 py-2 rounded-[30px] text-sm font-medium hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all disabled:opacity-50">{loading ? "..." : "Guardar"}</button>
             </div>
           </form>
         )}

@@ -17,9 +17,9 @@ export default async function VersionesPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-gray-900">Versiones del Sistema</h1>
-        <p className="text-sm text-gray-500 mt-1">Registra y gestiona las versiones lanzadas de EduConecta</p>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Versiones del Sistema</h1>
+        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Registra y gestiona las versiones lanzadas de EduConecta</p>
       </div>
       <VersionManager versiones={versiones ?? []} />
     </div>

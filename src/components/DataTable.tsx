@@ -50,22 +50,22 @@ export default function DataTable<T extends { id: number }>({
 
   if (data.length === 0) {
     return (
-      <div className="bg-white border border-gray-100 rounded-2xl p-12 text-center">
-        <span className="material-icons text-4xl text-gray-300 mb-3">inbox</span>
-        <p className="text-sm text-gray-400">{emptyMessage}</p>
+      <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-12 text-center">
+        <span className="material-icons text-4xl text-gray-300 dark:text-zinc-600 mb-3">inbox</span>
+        <p className="text-sm text-gray-400 dark:text-zinc-500">{emptyMessage}</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
+    <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl overflow-hidden">
       {renderCard && (
         <div className="grid gap-3 md:hidden p-4">
           {sorted.map((item) => (
             <div
               key={item.id}
               onClick={() => onRowClick?.(item)}
-              className={`bg-white border border-gray-200 rounded-[25px] p-5 space-y-3 ${onRowClick ? "cursor-pointer" : ""}`}
+              className={`bg-white dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-700 rounded-[25px] p-5 space-y-3 ${onRowClick ? "cursor-pointer" : ""}`}
             >
               {renderCard(item)}
             </div>
@@ -75,15 +75,15 @@ export default function DataTable<T extends { id: number }>({
       <div className={`overflow-x-auto ${renderCard ? "hidden md:block" : ""}`}>
         <table className="w-full min-w-[600px]">
           <thead>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-gray-100 dark:border-zinc-800">
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={`text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5 ${col.width || ""}`}
+                  className={`text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5 ${col.width || ""}`}
                 >
                   {col.sortable ? (
                     <button
-                      className="flex items-center gap-1 hover:text-gray-600 transition-colors"
+                      className="flex items-center gap-1 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
                       onClick={() =>
                         setSortDescriptor({
                           column: col.key,
@@ -110,7 +110,7 @@ export default function DataTable<T extends { id: number }>({
                 </th>
               ))}
               {(onEdit || onDelete) && (
-                <th className="text-right text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5 w-24">
+                <th className="text-right text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5 w-24">
                   Acciones
                 </th>
               )}
@@ -118,7 +118,7 @@ export default function DataTable<T extends { id: number }>({
           </thead>
           <tbody>
             {sorted.map((item) => (
-              <tr key={item.id} className={`border-b border-gray-50 hover:bg-gray-50/50 transition-colors last:border-b-0 ${onRowClick ? "cursor-pointer" : ""}`} onClick={() => onRowClick?.(item)}>
+              <tr key={item.id} className={`border-b border-gray-50 dark:border-zinc-800/50 hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors last:border-b-0 ${onRowClick ? "cursor-pointer" : ""}`} onClick={() => onRowClick?.(item)}>
                 {columns.map((col) => (
                   <td key={col.key} className="px-4 py-3 text-sm">
                     {col.render

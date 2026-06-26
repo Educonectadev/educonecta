@@ -172,15 +172,15 @@ export default function InstitutionModal({
     return institution.shifts.split(",").filter(Boolean).map((id) => ({ id }))
   })()
 
-  const labelClass = "block text-sm font-medium text-gray-500 mb-1.5"
-  const inputClass = "w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all bg-white"
+  const labelClass = "block text-sm font-medium text-gray-500 dark:text-zinc-400 mb-1.5"
+  const inputClass = "w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 px-5 py-3 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all bg-white dark:bg-zinc-800"
   const selectClass = inputClass
 
   function StatCard({ value, label, color }: { value: string | number; label: string; color: string }) {
     return (
-      <div className="bg-white rounded-[25px] border border-gray-100 p-4 text-center">
+      <div className="bg-white dark:bg-zinc-800 rounded-[25px] border border-gray-100 dark:border-zinc-700 p-4 text-center">
         <p className={`text-2xl font-bold ${color}`}>{value}</p>
-        <p className="text-[11px] text-gray-400 mt-0.5 uppercase tracking-wider">{label}</p>
+        <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-0.5 uppercase tracking-wider">{label}</p>
       </div>
     )
   }
@@ -198,20 +198,20 @@ export default function InstitutionModal({
                   <span className="truncate block">
                     {editing ? "Editar Institución" : institution.name}
                   </span>
-                  {!editing && <span className="text-xs text-gray-400 font-normal mt-0.5 block">Código: {institution.code}</span>}
+                  {!editing && <span className="text-xs text-gray-400 dark:text-zinc-500 font-normal mt-0.5 block">Código: {institution.code}</span>}
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   {!editing ? (
                     <>
                       <button
                         onClick={() => setShowDeleteConfirm(true)}
-                        className="rounded-[30px] border border-red-200 px-4 py-2 text-xs font-medium text-red-500 hover:bg-red-50 transition-all"
+                        className="rounded-[30px] border border-red-200 dark:border-red-800 px-4 py-2 text-xs font-medium text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all"
                       >
                         Eliminar
                       </button>
                       <button
                         onClick={() => setEditing(true)}
-                        className="rounded-[30px] bg-black px-5 py-2 text-xs font-medium text-white hover:bg-black/80 transition-all"
+                        className="rounded-[30px] bg-black dark:bg-white px-5 py-2 text-xs font-medium text-white dark:text-black hover:bg-black/80 dark:hover:bg-zinc-200 transition-all"
                       >
                         Editar
                       </button>
@@ -219,7 +219,7 @@ export default function InstitutionModal({
                   ) : (
                     <button
                       onClick={() => { setEditing(false); setForm({ ...institution }); setError("") }}
-                      className="text-sm text-gray-400 hover:text-black transition-colors"
+                      className="text-sm text-gray-400 dark:text-zinc-500 hover:text-black dark:hover:text-white transition-colors"
                     >
                       Cancelar
                     </button>
@@ -337,14 +337,14 @@ export default function InstitutionModal({
             </div>
 
             {error && (
-              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-[30px] px-5 py-3">{error}</p>
+              <p className="text-sm text-red-600 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-[30px] px-5 py-3">{error}</p>
             )}
 
             <div className="flex gap-3 pt-2">
               <button
                 type="submit"
                 disabled={loading}
-                className="rounded-[30px] bg-black px-8 py-3 text-sm font-medium text-white hover:bg-black/80 disabled:opacity-50 transition-all"
+                className="rounded-[30px] bg-black dark:bg-white px-8 py-3 text-sm font-medium text-white dark:text-black hover:bg-black/80 dark:hover:bg-zinc-200 disabled:opacity-50 transition-all"
               >
                 {loading ? "Guardando..." : "Guardar Cambios"}
               </button>
@@ -354,13 +354,13 @@ export default function InstitutionModal({
           <div className="p-6 space-y-6">
             {/* Stats Grid */}
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Usuarios y Recursos</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-3">Usuarios y Recursos</h3>
               {statsLoading ? (
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
                   {[...Array(6)].map((_, i) => (
-                    <div key={i} className="bg-gray-50 rounded-[25px] p-4 animate-pulse">
-                      <div className="h-6 w-10 bg-gray-200 rounded mx-auto mb-2" />
-                      <div className="h-3 w-14 bg-gray-200 rounded mx-auto" />
+                    <div key={i} className="bg-gray-50 dark:bg-zinc-800 rounded-[25px] p-4 animate-pulse">
+                      <div className="h-6 w-10 bg-gray-200 dark:bg-zinc-700 rounded mx-auto mb-2" />
+                      <div className="h-3 w-14 bg-gray-200 dark:bg-zinc-700 rounded mx-auto" />
                     </div>
                   ))}
                 </div>
@@ -387,57 +387,57 @@ export default function InstitutionModal({
                 )}
               </div>
               {directorLoading ? (
-                <div className="h-10 bg-gray-200/60 rounded-[20px] animate-pulse" />
+                <div className="h-10 bg-gray-200/60 dark:bg-zinc-700/60 rounded-[20px] animate-pulse" />
               ) : directorUser ? (
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-[#1a1a1a]">{directorUser.name}</p>
-                    <p className="text-xs text-gray-400">{directorUser.email}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white/90">{directorUser.name}</p>
+                    <p className="text-xs text-gray-400 dark:text-zinc-500">{directorUser.email}</p>
                   </div>
-                  <span className="text-[11px] text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-[30px] px-3 py-1 font-medium">Acceso creado</span>
+                  <span className="text-[11px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-[30px] px-3 py-1 font-medium">Acceso creado</span>
                 </div>
               ) : showCreateDirector ? (
                 <div className="space-y-3">
                   <div>
-                    <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Nombre</p>
-                    <input type="text" value={directorForm.name} onChange={(e) => setDirectorForm((p) => ({ ...p, name: e.target.value }))} className="w-full rounded-[20px] border border-gray-200 px-4 py-2.5 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all bg-white" placeholder="Nombre del director" />
+                    <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-1">Nombre</p>
+                    <input type="text" value={directorForm.name} onChange={(e) => setDirectorForm((p) => ({ ...p, name: e.target.value }))} className="w-full rounded-[20px] border border-gray-200 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all bg-white dark:bg-zinc-800" placeholder="Nombre del director" />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Email *</p>
-                      <input type="email" value={directorForm.email} onChange={(e) => setDirectorForm((p) => ({ ...p, email: e.target.value }))} className="w-full rounded-[20px] border border-gray-200 px-4 py-2.5 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all bg-white" placeholder="director@colegio.pe" />
+                      <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-1">Email *</p>
+                      <input type="email" value={directorForm.email} onChange={(e) => setDirectorForm((p) => ({ ...p, email: e.target.value }))} className="w-full rounded-[20px] border border-gray-200 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all bg-white dark:bg-zinc-800" placeholder="director@colegio.pe" />
                     </div>
                     <div>
-                      <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider mb-1">Contraseña *</p>
-                      <input type="password" value={directorForm.password} onChange={(e) => setDirectorForm((p) => ({ ...p, password: e.target.value }))} className="w-full rounded-[20px] border border-gray-200 px-4 py-2.5 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all bg-white" placeholder="••••••" />
+                      <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-1">Contraseña *</p>
+                      <input type="password" value={directorForm.password} onChange={(e) => setDirectorForm((p) => ({ ...p, password: e.target.value }))} className="w-full rounded-[20px] border border-gray-200 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all bg-white dark:bg-zinc-800" placeholder="••••••" />
                     </div>
                   </div>
-                  {directorError && <p className="text-xs text-red-600">{directorError}</p>}
+                  {directorError && <p className="text-xs text-red-600 dark:text-red-400">{directorError}</p>}
                   <div className="flex gap-2">
                     <button
                       onClick={handleCreateDirector}
                       disabled={directorSaving}
-                      className="rounded-[30px] bg-black px-5 py-2 text-xs font-medium text-white hover:bg-black/80 disabled:opacity-50 transition-all"
+                      className="rounded-[30px] bg-black dark:bg-white px-5 py-2 text-xs font-medium text-white dark:text-black hover:bg-black/80 dark:hover:bg-zinc-200 disabled:opacity-50 transition-all"
                     >
                       {directorSaving ? "Creando..." : "Crear Director"}
                     </button>
                     <button
                       onClick={() => { setShowCreateDirector(false); setDirectorError("") }}
-                      className="text-xs text-gray-400 hover:text-black transition-colors"
+                      className="text-xs text-gray-400 dark:text-zinc-500 hover:text-black dark:hover:text-white transition-colors"
                     >
                       Cancelar
                     </button>
                   </div>
                 </div>
               ) : (
-                <p className="text-sm text-gray-400">Sin acceso configurado</p>
+                <p className="text-sm text-gray-400 dark:text-zinc-500">Sin acceso configurado</p>
               )}
             </div>
 
             {/* Info Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-gray-50 rounded-[25px] p-4 space-y-2.5">
-                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Información General</h3>
+              <div className="bg-gray-50 dark:bg-zinc-900/50 rounded-[25px] p-4 space-y-2.5">
+                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Información General</h3>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
                   <InfoRow label="Tipo" value={institution.type === "private" ? "Privada" : "Pública"} />
                   <InfoRow label="RUC" value={institution.ruc} />
@@ -446,8 +446,8 @@ export default function InstitutionModal({
                   <div className="col-span-2"><InfoRow label="Estado" value={institution.isActive ? "Activo" : "Inactivo"} /></div>
                 </div>
               </div>
-              <div className="bg-gray-50 rounded-[25px] p-4 space-y-2.5">
-                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Ubicación</h3>
+              <div className="bg-gray-50 dark:bg-zinc-900/50 rounded-[25px] p-4 space-y-2.5">
+                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Ubicación</h3>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
                   <div className="col-span-2"><InfoRow label="Dirección" value={institution.address} /></div>
                   <InfoRow label="Distrito" value={institution.district} />
@@ -458,34 +458,34 @@ export default function InstitutionModal({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-gray-50 rounded-[25px] p-4 space-y-2.5">
-                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Contacto</h3>
+              <div className="bg-gray-50 dark:bg-zinc-900/50 rounded-[25px] p-4 space-y-2.5">
+                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Contacto</h3>
                 <InfoRow label="Email" value={institution.email} />
                 <InfoRow label="Teléfono" value={institution.phone} />
                 {institution.website && <InfoRow label="Web" value={institution.website} />}
               </div>
-              <div className="bg-gray-50 rounded-[25px] p-4 space-y-2.5">
-                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">Configuración</h3>
+              <div className="bg-gray-50 dark:bg-zinc-900/50 rounded-[25px] p-4 space-y-2.5">
+                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Configuración</h3>
                 {levels.length > 0 && (
                   <div>
-                    <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">Niveles</p>
+                    <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Niveles</p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {levels.map((l) => (
-                        <span key={l} className="inline-block rounded-[30px] bg-white border border-gray-200 px-2.5 py-0.5 text-[11px] text-gray-600">{levelLabels[l] ?? l}</span>
+                        <span key={l} className="inline-block rounded-[30px] bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-2.5 py-0.5 text-[11px] text-gray-600 dark:text-zinc-300">{levelLabels[l] ?? l}</span>
                       ))}
                     </div>
                   </div>
                 )}
                 {shiftList.length > 0 && (
                   <div>
-                    <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">Turnos</p>
+                    <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Turnos</p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {shiftList.map((s: any) => {
                         const id = typeof s === "string" ? s : s.id
                         const label = shiftLabels[id] ?? id
                         const times = !s.start ? "" : `${s.start} - ${s.end}`
                         return (
-                          <span key={id} className="inline-block rounded-[30px] bg-white border border-gray-200 px-2.5 py-0.5 text-[11px] text-gray-600">
+                          <span key={id} className="inline-block rounded-[30px] bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-2.5 py-0.5 text-[11px] text-gray-600 dark:text-zinc-300">
                             {label}{times ? ` (${times})` : ""}
                           </span>
                         )
@@ -495,8 +495,8 @@ export default function InstitutionModal({
                 )}
                 {institution.description && (
                   <div>
-                    <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">Descripción</p>
-                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">{institution.description}</p>
+                    <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Descripción</p>
+                    <p className="text-sm text-gray-600 dark:text-zinc-300 mt-1 leading-relaxed">{institution.description}</p>
                   </div>
                 )}
               </div>
@@ -505,22 +505,22 @@ export default function InstitutionModal({
             {/* Badges row */}
             <div className="flex flex-wrap gap-1.5">
               <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium ${
-                institution.type === "private" ? "bg-black text-white" : "bg-black/5 text-black/60"
+                institution.type === "private" ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black/60 dark:text-zinc-400"
               }`}>
                 {institution.type === "private" ? "Privada" : "Pública"}
               </span>
               <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium border ${
-                institution.isActive ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-red-50 text-red-600 border-red-200"
+                institution.isActive ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800" : "bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800"
               }`}>
                 {institution.isActive ? "Activo" : "Inactivo"}
               </span>
               {stats && (
-                <span className="inline-block rounded-[30px] bg-gray-100 text-gray-600 px-3 py-1 text-[11px] font-medium">
+                <span className="inline-block rounded-[30px] bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-300 px-3 py-1 text-[11px] font-medium">
                   {stats.total} usuarios
                 </span>
               )}
               {stats && (
-                <span className="inline-block rounded-[30px] bg-gray-100 text-gray-600 px-3 py-1 text-[11px] font-medium">
+                <span className="inline-block rounded-[30px] bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-300 px-3 py-1 text-[11px] font-medium">
                   {stats.courses} cursos · {stats.grades} grados
                 </span>
               )}
@@ -529,12 +529,12 @@ export default function InstitutionModal({
         )}
 
         {showDeleteConfirm && (
-          <div className="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm rounded-xl flex items-center justify-center p-6">
-            <div className="bg-white border border-red-200 rounded-[25px] shadow-xl p-6 max-w-sm w-full space-y-4 text-center">
-              <div className="w-12 h-12 mx-auto rounded-full bg-red-50 flex items-center justify-center text-red-500 text-xl">!</div>
+          <div className="absolute inset-0 z-20 bg-white/80 dark:bg-black/80 backdrop-blur-sm rounded-xl flex items-center justify-center p-6">
+            <div className="bg-white dark:bg-zinc-900 border border-red-200 dark:border-red-800 rounded-[25px] shadow-xl dark:shadow-black/50 p-6 max-w-sm w-full space-y-4 text-center">
+              <div className="w-12 h-12 mx-auto rounded-full bg-red-50 dark:bg-red-950/30 flex items-center justify-center text-red-500 dark:text-red-400 text-xl">!</div>
               <div>
-                <h3 className="text-sm font-bold text-red-800">¿Eliminar institución?</h3>
-                <p className="text-xs text-gray-500 mt-1">Se eliminarán todos los usuarios, cursos, grados y datos asociados. Esta acción no se puede deshacer.</p>
+                <h3 className="text-sm font-bold text-red-800 dark:text-red-300">¿Eliminar institución?</h3>
+                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">Se eliminarán todos los usuarios, cursos, grados y datos asociados. Esta acción no se puede deshacer.</p>
               </div>
               <div className="flex gap-2 justify-center">
                 <button
@@ -547,7 +547,7 @@ export default function InstitutionModal({
                 <button
                   onClick={() => setShowDeleteConfirm(false)}
                   disabled={deleting}
-                  className="rounded-[30px] border border-gray-200 bg-white px-6 py-2.5 text-xs font-medium text-gray-500 hover:bg-gray-50 transition-all"
+                  className="rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-6 py-2.5 text-xs font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all"
                 >
                   Cancelar
                 </button>
@@ -566,8 +566,8 @@ export default function InstitutionModal({
 function InfoRow({ label, value }: { label: string; value: string | null | undefined }) {
   return (
     <div>
-      <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wider">{label}</p>
-      <p className="text-sm text-[#1a1a1a]">{value ?? "—"}</p>
+      <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider">{label}</p>
+      <p className="text-sm text-gray-900 dark:text-white/90">{value ?? "—"}</p>
     </div>
   )
 }

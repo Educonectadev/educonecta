@@ -65,7 +65,7 @@ export default function EditableInstitutionSection({ institution }: { institutio
         <h2 className="text-xs font-semibold uppercase tracking-widest text-blue-500">Datos de la Institución</h2>
         <button
           onClick={() => setShowModal(true)}
-          className="rounded-[30px] bg-black px-5 py-2 text-xs font-medium text-white hover:bg-black/80 transition-all"
+          className="rounded-[30px] bg-black dark:bg-white px-5 py-2 text-xs font-medium text-white dark:text-black hover:bg-black/80 dark:hover:bg-zinc-200 transition-all"
         >
           Editar
         </button>
@@ -139,7 +139,7 @@ export default function EditableInstitutionSection({ institution }: { institutio
         {/* Badges */}
         <div className="flex flex-wrap gap-1.5">
           <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium ${
-            data.type === "private" ? "bg-black text-white" : "bg-black/5 text-black/60"
+            data.type === "private" ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black/60 dark:text-zinc-400"
           }`}>
             {data.type === "private" ? "Privada" : "Pública"}
           </span>

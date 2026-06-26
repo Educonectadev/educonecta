@@ -10,7 +10,7 @@ export default function UnauthorizedPage() {
       </p>
       <Link
         href="/dashboard"
-        className="mt-8 rounded-md bg-black px-6 py-2 text-sm font-medium text-white hover:bg-gray-800 transition-colors"
+        className="mt-8 rounded-md bg-black dark:bg-white px-6 py-2 text-sm font-medium text-white dark:text-black hover:bg-gray-800 dark:hover:bg-zinc-200 transition-colors"
       >
         Volver al inicio
       </Link>

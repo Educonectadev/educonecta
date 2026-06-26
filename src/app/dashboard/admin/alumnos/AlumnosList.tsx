@@ -118,7 +118,7 @@ export default function AlumnosList({
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
         <h1 className="text-2xl font-bold tracking-tight">Alumnos</h1>
-        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] bg-black px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-gray-800 text-center">
+        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] bg-black dark:bg-white px-6 py-2.5 text-sm font-medium text-white dark:text-black transition-all hover:bg-gray-800 dark:hover:bg-zinc-200 text-center">
           + Registrar Alumno
         </button>
       </div>
@@ -198,7 +198,7 @@ export default function AlumnosList({
         </div>
         <div className="flex gap-3 mt-8">
           <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.documentId} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+          <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.documentId} className="flex-1 rounded-[30px] bg-black dark:bg-white text-white dark:text-black py-2.5 text-sm font-medium hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all disabled:opacity-50">
             {loading ? "Guardando..." : "Registrar"}
           </button>
         </div>
@@ -239,7 +239,7 @@ export default function AlumnosList({
         </div>
         <div className="flex gap-3 mt-8">
           <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] bg-black dark:bg-white text-white dark:text-black py-2.5 text-sm font-medium hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all disabled:opacity-50">
             {loading ? "Guardando..." : "Guardar"}
           </button>
         </div>

@@ -301,7 +301,7 @@ export default function HorariosList({
           <button onClick={() => { setShowJornada(true); setJornadaDay("1"); setJornadaShift("MAÑANA"); setBlocks([emptyBlock(), emptyBlock(), emptyBlock()]) }} className="rounded-[30px] border border-gray-200 px-5 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all">
             + Crear Jornada
           </button>
-          <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] bg-black px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-gray-800">
+          <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] bg-black dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-black transition-all hover:bg-gray-800 dark:hover:bg-zinc-200">
             + Nuevo Horario
           </button>
         </div>
@@ -438,7 +438,7 @@ export default function HorariosList({
             </div>
             <div className="flex gap-3 mt-8">
               <button onClick={() => { setDetail(null); openEdit(detail) }} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Editar</button>
-              <button onClick={() => setDetail(null)} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all">Cerrar</button>
+              <button onClick={() => setDetail(null)} className="flex-1 rounded-[30px] bg-black dark:bg-white text-white dark:text-black py-2.5 text-sm font-medium hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all">Cerrar</button>
             </div>
           </>
         )}
@@ -520,7 +520,7 @@ export default function HorariosList({
         </div>
         <div className="flex gap-3 mt-8">
           <button onClick={() => { setShowCreate(false); setEditing(null) }} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={showCreate ? handleCreate : handleSave} disabled={loading || !form.courseId} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+          <button onClick={showCreate ? handleCreate : handleSave} disabled={loading || !form.courseId} className="flex-1 rounded-[30px] bg-black dark:bg-white text-white dark:text-black py-2.5 text-sm font-medium hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all disabled:opacity-50">
             {loading ? "Guardando..." : showCreate ? "Crear" : "Guardar"}
           </button>
         </div>
@@ -582,7 +582,7 @@ export default function HorariosList({
 
         <div className="flex gap-3 mt-6">
           <button onClick={() => setShowJornada(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleCreateJornada} disabled={loading || blocks.every((b) => !b.courseId)} className="flex-1 rounded-[30px] bg-black text-white py-2.5 text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-50">
+          <button onClick={handleCreateJornada} disabled={loading || blocks.every((b) => !b.courseId)} className="flex-1 rounded-[30px] bg-black dark:bg-white text-white dark:text-black py-2.5 text-sm font-medium hover:bg-gray-800 dark:hover:bg-zinc-200 transition-all disabled:opacity-50">
             {loading ? "Guardando..." : "Guardar Jornada"}
           </button>
         </div>

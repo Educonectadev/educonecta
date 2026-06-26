@@ -45,7 +45,7 @@ export default function TimePickerField({ value, onChange, className = "" }: Tim
         ref={triggerRef}
         type="button"
         onClick={() => setOpen(true)}
-        className={`w-full rounded-[30px] border border-gray-200 bg-white px-4 py-2.5 text-sm text-black focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all text-left ${className}`}
+        className={`w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all text-left ${className}`}
       >
         {value || "Seleccionar hora"}
       </button>

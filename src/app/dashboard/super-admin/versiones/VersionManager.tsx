@@ -88,46 +88,47 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-[1fr_2fr]">
-      <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-xl p-5 space-y-4 h-fit">
-        <h2 className="text-sm font-semibold text-gray-700">{editing ? "Editar Versión" : "Nueva Versión"}</h2>
+    <div className="grid gap-6 md:grid-cols-[1fr_2fr] items-start">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-[25px] p-6 space-y-5">
+        <h2 className="text-sm font-semibold text-gray-700 dark:text-zinc-300">{editing ? "Editar Versión" : "Nueva Versión"}</h2>
 
         <div>
-          <label className="text-xs font-medium text-gray-500 block mb-1">Versión *</label>
+          <label className="text-xs font-medium text-gray-500 dark:text-zinc-400 block mb-1.5">Versión *</label>
           <input
             value={version}
             onChange={(e) => setVersion(e.target.value)}
             placeholder="v1.0.0"
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
           />
         </div>
 
         <div>
-          <label className="text-xs font-medium text-gray-500 block mb-1">Título</label>
+          <label className="text-xs font-medium text-gray-500 dark:text-zinc-400 block mb-1.5">Título</label>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Lanzamiento inicial"
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black/10"
+            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
           />
         </div>
 
         <div>
-          <label className="text-xs font-medium text-gray-500 block mb-1">Descripción</label>
+          <label className="text-xs font-medium text-gray-500 dark:text-zinc-400 block mb-1.5">Descripción</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Novedades de esta versión..."
             rows={3}
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black/10 resize-none"
+            className="w-full rounded-[20px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all resize-none"
           />
         </div>
 
-        <label className="flex items-center gap-2 text-sm text-gray-600">
+        <label className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-zinc-400 cursor-pointer select-none">
           <input
             type="checkbox"
             checked={isCurrent}
             onChange={(e) => setIsCurrent(e.target.checked)}
+            className="accent-black dark:accent-white"
           />
           Marcar como versión actual
         </label>
@@ -136,12 +137,12 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
           <button
             type="submit"
             disabled={loading || !version.trim()}
-            className="flex-1 bg-black text-white text-sm font-medium rounded-lg py-2 hover:bg-gray-800 disabled:opacity-40 transition-all"
+            className="flex-1 rounded-[30px] bg-black dark:bg-white text-white dark:text-black text-sm font-medium py-2.5 hover:bg-gray-800 dark:hover:bg-zinc-200 disabled:opacity-40 transition-all"
           >
             {loading ? "Guardando..." : editing ? "Actualizar" : "Registrar"}
           </button>
           {editing && (
-            <button type="button" onClick={handleCancel} className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700">
+            <button type="button" onClick={handleCancel} className="px-5 py-2.5 text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200 transition-colors">
               Cancelar
             </button>
           )}
@@ -150,34 +151,34 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
 
       <div className="space-y-3">
         {versiones.length === 0 && (
-          <p className="text-sm text-gray-400 text-center py-12">No hay versiones registradas</p>
+          <p className="text-sm text-gray-400 dark:text-zinc-500 text-center py-12">No hay versiones registradas</p>
         )}
         {versiones.map((v) => (
-          <div key={v.id} className={`bg-white border rounded-xl p-4 ${v.isCurrent ? "border-black ring-1 ring-black/10" : "border-gray-200"}`}>
+          <div key={v.id} className={`bg-white dark:bg-zinc-900 border rounded-[25px] p-5 ${v.isCurrent ? "border-black dark:border-white ring-1 ring-black/10 dark:ring-white/10" : "border-gray-200 dark:border-zinc-800"}`}>
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-gray-900">{v.version}</span>
+                <span className="text-lg font-bold text-gray-900 dark:text-white/90">{v.version}</span>
                 {v.isCurrent && (
-                  <span className="text-[10px] font-semibold uppercase bg-black text-white px-2 py-0.5 rounded-full">Actual</span>
+                  <span className="text-[10px] font-semibold uppercase bg-black dark:bg-white text-white dark:text-black px-2 py-0.5 rounded-full">Actual</span>
                 )}
               </div>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => handleEdit(v)} className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1">
+                <button onClick={() => handleEdit(v)} className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 px-2 py-1 transition-colors">
                   Editar
                 </button>
                 {!v.isCurrent && (
-                  <button onClick={() => handleSetCurrent(v)} className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1">
+                  <button onClick={() => handleSetCurrent(v)} className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 px-2 py-1 transition-colors">
                     Marcar actual
                   </button>
                 )}
-                <button onClick={() => handleDelete(v.id)} className="text-xs text-red-400 hover:text-red-600 px-2 py-1">
+                <button onClick={() => handleDelete(v.id)} className="text-xs text-red-400 hover:text-red-600 px-2 py-1 transition-colors">
                   Eliminar
                 </button>
               </div>
             </div>
-            {v.title && <p className="text-sm font-medium text-gray-700 mt-1">{v.title}</p>}
-            {v.description && <p className="text-sm text-gray-500 mt-0.5 whitespace-pre-line">{v.description}</p>}
-            <p className="text-[10px] text-gray-400 mt-2">
+            {v.title && <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mt-1">{v.title}</p>}
+            {v.description && <p className="text-sm text-gray-500 dark:text-zinc-400 mt-0.5 whitespace-pre-line">{v.description}</p>}
+            <p className="text-[10px] text-gray-400 dark:text-zinc-500 mt-2">
               {new Date(v.createdAt).toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })}
             </p>
           </div>
