@@ -139,7 +139,7 @@ export default function AlumnosList({
                   {s.firstName.charAt(0)}{s.lastName.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-800">{s.firstName} {s.lastName}</p>
+                  <p className="text-sm font-medium text-gray-800 dark:text-white/90">{s.firstName} {s.lastName}</p>
                   <p className="text-[11px] text-gray-400">{s.email || "—"}</p>
                 </div>
               </div>
