@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import { Avatar, Dropdown, Label } from "@heroui/react"
-import { ArrowRightFromSquare, Gear, Persons } from "@gravity-ui/icons"
+import { ArrowRightFromSquare, Gear, Sliders } from "@gravity-ui/icons"
 import { useSession } from "@/lib/auth-context"
 import { themes } from "@/lib/themes"
 import ThemeToggle from "./ThemeToggle"
@@ -26,33 +26,36 @@ export default function Navbar() {
     ? session.user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
     : "?"
 
-  const showProfileItem =
-    session?.user?.role === "PARENT" ||
-    session?.user?.role === "TEACHER" ||
-    session?.user?.role === "INSTITUTIONAL_ADMIN"
+  const roleHasProfile = !!session?.user && ["PARENT", "TEACHER", "INSTITUTIONAL_ADMIN"].includes(session.user.role)
 
   const profileHref =
-    session?.user?.role === "PARENT" ? "/padre/perfil" :
-    session?.user?.role === "TEACHER" ? "/profesor/perfil" :
-    "/admin/perfil"
+    session?.user?.role === "PARENT" ? "/dashboard/parent/perfil" :
+    session?.user?.role === "TEACHER" ? "/dashboard/teacher/perfil" :
+    "/dashboard/admin/perfil"
+
+  const configHref =
+    session?.user?.role === "PARENT" ? "/dashboard/parent/configuracion" :
+    session?.user?.role === "TEACHER" ? "/dashboard/teacher/configuracion" :
+    session?.user?.role === "INSTITUTIONAL_ADMIN" ? "/dashboard/admin/configuracion" :
+    "/dashboard/super-admin/configuracion"
 
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-b border-gray-100 dark:border-zinc-800">
-        <div className="flex items-center justify-between px-5 md:px-8 py-3 md:py-4 max-w-6xl mx-auto w-full text-gray-900 dark:text-white/90">
-          <Link href="/" className="text-sm md:text-base font-semibold tracking-tight text-gray-900 dark:text-white/90 hover:opacity-60 transition-opacity duration-200">
+        <div className="flex items-center justify-between px-5 md:px-8 py-3 md:py-4 max-w-6xl mx-auto w-full">
+          <Link href="/" className="text-sm md:text-base font-semibold tracking-tight text-gray-900 dark:text-white hover:opacity-60 transition-opacity duration-200">
             EduConecta
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-gray-900 dark:text-white">
             <ThemeToggle />
             {session?.user && (
               <Dropdown>
-                <Dropdown.Trigger className="rounded-full">
-                  <button className="flex items-center gap-2 rounded-full px-2 py-1 md:px-3 md:py-1.5 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all duration-200">
+                <Dropdown.Trigger className="rounded-full outline-none">
+                  <button className="flex items-center gap-2 rounded-full px-2 py-1 md:px-3 md:py-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all duration-200 text-gray-900 dark:text-white">
                     <span className="hidden md:block text-right text-sm leading-tight">
-                      <p className="font-medium text-gray-900 dark:text-white/90">{session.user.name}</p>
-                      <p className="text-[10px] text-gray-400 dark:text-zinc-500">{roleLabel[session.user.role] ?? session.user.role}</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{session.user.name}</p>
+                      <p className="text-[10px] text-gray-500 dark:text-zinc-400">{roleLabel[session.user.role] ?? session.user.role}</p>
                     </span>
                     <Avatar size="sm">
                       <Avatar.Fallback
@@ -64,8 +67,8 @@ export default function Navbar() {
                     </Avatar>
                   </button>
                 </Dropdown.Trigger>
-                <Dropdown.Popover>
-                  <div className="px-3 pt-3 pb-1">
+                <Dropdown.Popover className="min-w-[240px]">
+                  <div className="px-3 pt-3 pb-1 border-b border-gray-100 dark:border-zinc-800">
                     <div className="flex items-center gap-2">
                       <Avatar size="sm">
                         <Avatar.Fallback
@@ -76,29 +79,35 @@ export default function Navbar() {
                         </Avatar.Fallback>
                       </Avatar>
                       <div className="flex flex-col gap-0">
-                        <p className="text-sm leading-5 font-medium text-gray-900 dark:text-white/90">{session.user.name}</p>
-                        <p className="text-xs leading-none text-gray-400 dark:text-zinc-500">{roleLabel[session.user.role] ?? session.user.role}</p>
+                        <p className="text-sm leading-5 font-medium text-gray-900 dark:text-white">{session.user.name}</p>
+                        <p className="text-xs leading-none text-gray-500 dark:text-zinc-400">{roleLabel[session.user.role] ?? session.user.role}</p>
                       </div>
                     </div>
                   </div>
                   <Dropdown.Menu>
-                    {showProfileItem && (
+                    {roleHasProfile && (
                       <Dropdown.Item
                         id="profile"
                         textValue="Perfil"
                         onAction={() => { window.location.href = profileHref }}
+                        className="text-gray-900 dark:text-white"
                       >
                         <div className="flex w-full items-center justify-between gap-2">
-                          <Label>Perfil</Label>
-                          <Gear className="size-3.5 text-muted" />
+                          <Label className="text-gray-900 dark:text-white">Perfil</Label>
+                          <Gear className="size-4 text-gray-700 dark:text-white" />
                         </div>
                       </Dropdown.Item>
                     )}
-                    {showProfileItem && (
-                      <Dropdown.Item id="settings" textValue="Configuración">
+                    {roleHasProfile && (
+                      <Dropdown.Item
+                        id="settings"
+                        textValue="Configuración"
+                        onAction={() => { window.location.href = configHref }}
+                        className="text-gray-900 dark:text-white"
+                      >
                         <div className="flex w-full items-center justify-between gap-2">
-                          <Label>Configuración</Label>
-                          <Persons className="size-3.5 text-muted" />
+                          <Label className="text-gray-900 dark:text-white">Configuración</Label>
+                          <Sliders className="size-4 text-gray-700 dark:text-white" />
                         </div>
                       </Dropdown.Item>
                     )}
@@ -107,10 +116,11 @@ export default function Navbar() {
                       textValue="Cerrar Sesión"
                       variant="danger"
                       onAction={() => { signOut() }}
+                      className="text-danger dark:text-danger"
                     >
                       <div className="flex w-full items-center justify-between gap-2">
-                        <Label>Cerrar Sesión</Label>
-                        <ArrowRightFromSquare className="size-3.5 text-danger" />
+                        <Label className="text-danger">Cerrar Sesión</Label>
+                        <ArrowRightFromSquare className="size-4 text-danger" />
                       </div>
                     </Dropdown.Item>
                   </Dropdown.Menu>
