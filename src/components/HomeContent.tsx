@@ -112,7 +112,7 @@ const statCardVariants = {
 
 export default function HomeContent({ data }: { data: ImpactData }) {
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-white overflow-x-hidden">
       <motion.header
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
