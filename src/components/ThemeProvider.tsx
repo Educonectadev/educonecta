@@ -39,6 +39,15 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     setThemeState(initial)
     applyTheme(initial)
     setMounted(true)
+
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "theme" && (e.newValue === "light" || e.newValue === "dark")) {
+        setThemeState(e.newValue)
+        applyTheme(e.newValue)
+      }
+    }
+    window.addEventListener("storage", onStorage)
+    return () => window.removeEventListener("storage", onStorage)
   }, [])
 
   const toggle = () => {
