@@ -79,47 +79,47 @@ export default function NuevaTareaPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Nueva Tarea</h1>
+        <h1 className="text-2xl font-bold tracking-tight dark:text-white">Nueva Tarea</h1>
         <Link
           href="/dashboard/teacher/tareas"
-          className="text-sm text-gray-400 hover:text-black transition-colors"
+          className="text-sm text-gray-400 hover:text-black dark:hover:text-white transition-colors"
         >
           Cancelar
         </Link>
       </div>
 
       {error && (
-        <p className="mb-6 text-sm border border-gray-100 rounded-[30px] p-4 bg-gray-50 text-gray-600">{error}</p>
+        <p className="mb-6 text-sm border border-gray-100 dark:border-zinc-800 rounded-[30px] p-4 bg-gray-50 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400">{error}</p>
       )}
 
       <form onSubmit={handleSubmit} className="max-w-lg space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-500 mb-1.5">Título *</label>
+          <label className="block text-sm font-medium text-gray-500 dark:text-zinc-500 mb-1.5">Título *</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full border border-gray-200 rounded-[30px] px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="w-full border border-gray-200 dark:border-zinc-800 rounded-[30px] px-5 py-3 text-sm bg-white dark:bg-black text-black dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-500 mb-1.5">Descripción</label>
+          <label className="block text-sm font-medium text-gray-500 dark:text-zinc-500 mb-1.5">Descripción</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full border border-gray-200 rounded-[30px] px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="w-full border border-gray-200 dark:border-zinc-800 rounded-[30px] px-5 py-3 text-sm bg-white dark:bg-black text-black dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
             rows={4}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-500 mb-1.5">Curso *</label>
+          <label className="block text-sm font-medium text-gray-500 dark:text-zinc-500 mb-1.5">Curso *</label>
           <select
             value={courseId}
             onChange={(e) => setCourseId(e.target.value)}
-            className="w-full border border-gray-200 rounded-[30px] px-5 py-3 text-sm bg-white focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="w-full border border-gray-200 dark:border-zinc-800 rounded-[30px] px-5 py-3 text-sm bg-white dark:bg-black text-black dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
             required
           >
             <option value="">Seleccionar curso</option>
@@ -131,11 +131,11 @@ export default function NuevaTareaPage() {
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-1.5">Grado</label>
+            <label className="block text-sm font-medium text-gray-500 dark:text-zinc-500 mb-1.5">Grado</label>
             <select
               value={gradeId}
               onChange={(e) => { setGradeId(e.target.value); setSectionId("") }}
-              className="w-full border border-gray-200 rounded-[30px] px-5 py-3 text-sm bg-white focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+              className="w-full border border-gray-200 dark:border-zinc-800 rounded-[30px] px-5 py-3 text-sm bg-white dark:bg-black text-black dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
             >
               <option value="">Todos los grados</option>
               {grades.map((g) => (
@@ -144,11 +144,11 @@ export default function NuevaTareaPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-1.5">Sección</label>
+            <label className="block text-sm font-medium text-gray-500 dark:text-zinc-500 mb-1.5">Sección</label>
             <select
               value={sectionId}
               onChange={(e) => setSectionId(e.target.value)}
-              className="w-full border border-gray-200 rounded-[30px] px-5 py-3 text-sm bg-white focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+              className="w-full border border-gray-200 dark:border-zinc-800 rounded-[30px] px-5 py-3 text-sm bg-white dark:bg-black text-black dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
             >
               <option value="">Todas las secciones</option>
               {filteredSections.map((s) => (
@@ -159,12 +159,12 @@ export default function NuevaTareaPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-500 mb-1.5">Fecha de Entrega *</label>
+          <label className="block text-sm font-medium text-gray-500 dark:text-zinc-500 mb-1.5">Fecha de Entrega *</label>
           <input
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
-            className="w-full border border-gray-200 rounded-[30px] px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="w-full border border-gray-200 dark:border-zinc-800 rounded-[30px] px-5 py-3 text-sm bg-white dark:bg-black text-black dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
             required
           />
         </div>
@@ -172,7 +172,7 @@ export default function NuevaTareaPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="bg-emerald-600 text-white px-8 py-3 rounded-[25px] text-sm font-medium hover:bg-emerald-700 transition-all disabled:opacity-50"
+          className="btn-primary px-8 py-3 rounded-[25px] text-sm font-medium disabled:opacity-50"
         >
           {submitting ? "Guardando..." : "Publicar Tarea"}
         </button>

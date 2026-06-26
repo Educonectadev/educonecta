@@ -39,55 +39,55 @@ export default async function AsistenciaPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight mb-8">Asistencia</h1>
+      <h1 className="text-2xl font-bold tracking-tight mb-8 dark:text-white">Asistencia</h1>
 
-      <h2 className="text-lg font-semibold tracking-tight mb-4">Tomar Asistencia</h2>
+      <h2 className="text-lg font-semibold tracking-tight mb-4 dark:text-white">Tomar Asistencia</h2>
       <div className="grid gap-3 mb-10">
         {courseTeachers.map((ct: { id: number; courseId: number; gradeId: number | null; sectionId: number | null; course: { name: string }; grade: { name: string } | null; section: { name: string } | null }) => (
           <Link
             key={ct.id}
             href={`/dashboard/teacher/asistencia/tomar?courseId=${ct.courseId}&gradeId=${ct.gradeId}&sectionId=${ct.sectionId}`}
-            className="bg-gray-50 border border-gray-200 rounded-[25px] p-5 block hover:bg-gray-100 transition-all"
+            className="bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[25px] p-5 block hover:bg-gray-100 dark:hover:bg-zinc-900 transition-all"
           >
-            <p className="font-medium">{ct.course.name}</p>
-            <p className="text-sm text-gray-500">
+            <p className="font-medium dark:text-white">{ct.course.name}</p>
+            <p className="text-sm text-gray-500 dark:text-zinc-400">
               {ct.grade?.name ?? "—"} / {ct.section?.name ?? "—"}
             </p>
           </Link>
         ))}
       </div>
 
-      <h2 className="text-lg font-semibold tracking-tight mb-4">Registros Recientes</h2>
+      <h2 className="text-lg font-semibold tracking-tight mb-4 dark:text-white">Registros Recientes</h2>
       {recentAttendance.length === 0 ? (
-        <p className="text-sm text-gray-500">Sin registros.</p>
+        <p className="text-sm text-gray-500 dark:text-zinc-500">Sin registros.</p>
       ) : (
-        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden">
+        <div className="bg-white dark:bg-black border border-gray-100 dark:border-zinc-800 rounded-2xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="hidden md:table-header-group border-b border-gray-100">
+            <thead className="hidden md:table-header-group border-b border-gray-100 dark:border-zinc-800">
               <tr className="text-left">
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">Estudiante</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">Fecha</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">Presente</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-4 py-3.5">Nota</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5">Estudiante</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5">Fecha</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5">Presente</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5">Nota</th>
               </tr>
             </thead>
             <tbody>
               {recentAttendance.map((a: { id: number; date: Date; isPresent: boolean; note: string | null; student: { firstName: string; lastName: string } }) => (
-                <tr key={a.id} className="flex flex-col md:table-row border border-gray-100 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 hover:bg-gray-50/50 transition-colors">
-                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Estudiante</span>
+                <tr key={a.id} className="flex flex-col md:table-row border border-gray-100 dark:border-zinc-800/50 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 hover:bg-gray-50/50 dark:hover:bg-zinc-900/50 transition-colors">
+                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 dark:text-white">
+                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Estudiante</span>
                     <span>{a.student.firstName} {a.student.lastName}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-600">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Fecha</span>
+                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-600 dark:text-zinc-400">
+                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Fecha</span>
                     <span>{a.date.toLocaleDateString("es-ES")}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Presente</span>
+                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 dark:text-white">
+                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Presente</span>
                     <span>{a.isPresent ? "Sí" : "No"}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-500">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Nota</span>
+                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-500 dark:text-zinc-400">
+                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Nota</span>
                     <span>{a.note ?? "—"}</span>
                   </td>
                 </tr>

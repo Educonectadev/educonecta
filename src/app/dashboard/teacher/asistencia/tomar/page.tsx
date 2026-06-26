@@ -112,22 +112,22 @@ export default function TomarAsistenciaPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Tomar Asistencia</h1>
+        <h1 className="text-2xl font-bold tracking-tight dark:text-white">Tomar Asistencia</h1>
         <Link
           href="/dashboard/teacher/asistencia"
-          className="text-sm text-gray-500 hover:text-black transition-colors"
+          className="text-sm text-gray-500 hover:text-black dark:hover:text-white transition-colors"
         >
           Volver
         </Link>
       </div>
 
       {message && (
-        <p className="mb-6 text-sm border border-gray-200 rounded-[25px] p-4 bg-gray-50 text-gray-600">{message}</p>
+        <p className="mb-6 text-sm border border-gray-200 dark:border-zinc-800 rounded-[25px] p-4 bg-gray-50 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400">{message}</p>
       )}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-500 mb-1.5">Curso</label>
+          <label className="block text-sm font-medium text-gray-500 dark:text-zinc-500 mb-1.5">Curso</label>
           <select
             value={selectedCourse ?? ""}
             onChange={(e) => {
@@ -136,7 +136,7 @@ export default function TomarAsistenciaPage() {
                 `/dashboard/teacher/asistencia/tomar?courseId=${e.target.value}&gradeId=${ct?.gradeId ?? ""}&sectionId=${ct?.sectionId ?? ""}`
               )
             }}
-            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm bg-white focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-black text-black dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
           >
             {courses.map((ct) => (
               <option key={ct.id} value={ct.courseId}>
@@ -152,9 +152,9 @@ export default function TomarAsistenciaPage() {
               const record = attendance[s.id]
               const isPresent = record?.isPresent ?? true
               return (
-                <div key={s.id} className="bg-gray-50 border border-gray-200 rounded-[25px] p-4">
+                <div key={s.id} className="bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[25px] p-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-[#1a1a1a]">{s.firstName} {s.lastName}</span>
+                    <span className="text-sm font-medium text-[#1a1a1a] dark:text-white">{s.firstName} {s.lastName}</span>
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
@@ -184,10 +184,10 @@ export default function TomarAsistenciaPage() {
                           min={0}
                           value={record?.minutesLate ?? 0}
                           onChange={(e) => updateMinutes(s.id, Number(e.target.value))}
-                          className="w-16 rounded-[30px] border border-gray-200 px-3 py-1.5 text-xs text-center focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                          className="w-16 rounded-[30px] border border-gray-200 dark:border-zinc-800 px-3 py-1.5 text-xs text-center bg-white dark:bg-black text-black dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
                           disabled={!isPresent}
                         />
-                        <span className="text-xs text-gray-400">min</span>
+                        <span className="text-xs text-gray-400 dark:text-zinc-500">min</span>
                       </div>
                     </div>
                   </div>
@@ -201,7 +201,7 @@ export default function TomarAsistenciaPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="bg-emerald-600 text-white px-8 py-3 rounded-[25px] text-sm font-medium hover:bg-emerald-700 transition-all disabled:opacity-50"
+            className="btn-primary px-8 py-3 rounded-[25px] text-sm font-medium disabled:opacity-50"
           >
             {submitting ? "Guardando..." : "Guardar Asistencia"}
           </button>

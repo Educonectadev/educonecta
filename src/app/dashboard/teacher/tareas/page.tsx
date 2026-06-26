@@ -28,30 +28,30 @@ export default async function TareasPage() {
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight">Tareas</h1>
+        <h1 className="text-2xl font-bold tracking-tight dark:text-white">Tareas</h1>
         <Link
           href="/dashboard/teacher/tareas/nueva"
-          className="bg-emerald-600 text-white px-6 py-2.5 rounded-[30px] text-sm font-medium hover:bg-emerald-700 transition-all text-center"
+          className="btn-primary px-6 py-2.5 rounded-[30px] text-sm font-medium text-center"
         >
           + Nueva Tarea
         </Link>
       </div>
 
       {homework.length === 0 ? (
-        <p className="text-sm text-gray-500">No hay tareas publicadas.</p>
+        <p className="text-sm text-gray-500 dark:text-zinc-500">No hay tareas publicadas.</p>
       ) : (
         <div className="grid gap-3">
           {homework.map((h: { id: number; title: string; description: string | null; dueDate: Date; course: { name: string }; grade: { name: string } | null; section: { name: string } | null }) => (
-            <div key={h.id} className="bg-gray-50 border border-gray-200 rounded-[25px] p-6">
-              <p className="font-medium">{h.title}</p>
-              <p className="text-sm text-gray-500 mt-1.5">
+            <div key={h.id} className="bg-gray-50 dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[25px] p-6">
+              <p className="font-medium dark:text-white">{h.title}</p>
+              <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1.5">
                 {h.course.name} — {h.grade?.name ?? "—"} / {h.section?.name ?? "—"}
               </p>
-              <p className="text-xs text-gray-300 mt-1.5">
+              <p className="text-xs text-gray-300 dark:text-zinc-600 mt-1.5">
                 Vence: {h.dueDate.toLocaleDateString("es-ES")}
               </p>
               {h.description && (
-                <p className="text-sm mt-3 text-gray-500 leading-relaxed">{h.description}</p>
+                <p className="text-sm mt-3 text-gray-500 dark:text-zinc-400 leading-relaxed">{h.description}</p>
               )}
             </div>
           ))}
