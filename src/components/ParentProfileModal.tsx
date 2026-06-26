@@ -41,12 +41,12 @@ export default function ParentProfileModal({ onClose }: { onClose: () => void })
     <Modal isOpen onOpenChange={(v) => { if (!v) onClose() }}>
       <Modal.Backdrop />
       <Modal.Container size="cover" scroll="outside">
-        <Modal.Dialog className="z-[60]">
+        <Modal.Dialog className="z-[60] bg-white text-gray-900">
           <Modal.CloseTrigger />
           <Modal.Header>
-            <Modal.Heading>Mi Perfil</Modal.Heading>
+            <Modal.Heading className="text-gray-900">Mi Perfil</Modal.Heading>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="text-gray-900">
             {loading && <p className="text-center text-gray-400 py-8">Cargando...</p>}
             {error && <p className="text-center text-red-500 py-8">{error}</p>}
 
