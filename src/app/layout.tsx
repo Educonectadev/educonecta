@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Provider from "@/components/Provider"
 import InstallPrompt from "@/components/InstallPrompt"
+import PushBootstrap from "@/components/PushBootstrap"
 import ToastProvider from "@/components/ToastProvider"
 import "./globals.css"
 
@@ -51,6 +52,7 @@ export default function RootLayout({
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" precedence="default" />
       <meta name="theme-color" content="#0f172a" />
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
+        <PushBootstrap />
         <Provider>
           <ToastProvider />
           {children}

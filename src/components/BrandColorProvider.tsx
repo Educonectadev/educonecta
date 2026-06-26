@@ -1,8 +1,7 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, useCallback, useRef } from "react"
-import { usePathname } from "next/navigation"
-import { useTheme } from "./ThemeProvider"
+import { createContext, useContext, useEffect, useState, useCallback } from "react"
+import { useSession } from "@/lib/auth-context"
 
 function getLuminance(hex: string): number {
   const c = hex.replace("#", "")
@@ -19,60 +18,72 @@ function getContrastText(bgHex: string): string {
 interface BrandColorContext {
   brandColor: string
   setBrandColor: (color: string) => void
+  ready: boolean
 }
 
-const ctx = createContext<BrandColorContext>({ brandColor: "#000000", setBrandColor: () => {} })
+const DEFAULT_BY_ROLE: Record<string, string> = {
+  SUPER_ADMIN: "#0f172a",
+  INSTITUTIONAL_ADMIN: "#2563eb",
+  TEACHER: "#059669",
+  PARENT: "#d97706",
+}
+
+const ctx = createContext<BrandColorContext>({
+  brandColor: "#000000",
+  setBrandColor: () => {},
+  ready: false,
+})
 export const useBrandColor = () => useContext(ctx)
 
 const STORAGE_KEY = "educonecta_brand_color"
 
 export default function BrandColorProvider({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  const { theme } = useTheme()
-  const [brandColor, setBrandColorState] = useState("#000000")
+  const { data: session } = useSession()
+  const [brandColor, setBrandColorState] = useState<string>("#000000")
   const [ready, setReady] = useState(false)
-  const savedRef = useRef(false)
-
-  const isDashboard = pathname?.startsWith("/dashboard")
 
   useEffect(() => {
+    let cancelled = false
     async function load() {
       try {
-        const res = await fetch("/api/user/brand-color")
-        if (res.ok) {
-          const { brandColor: serverColor } = await res.json()
-          if (serverColor) {
-            setBrandColorState(serverColor)
-            localStorage.setItem(STORAGE_KEY, serverColor)
-            setReady(true)
-            return
+        if (session?.user?.id) {
+          const res = await fetch("/api/user/brand-color", { cache: "no-store" })
+          if (res.ok) {
+            const { brandColor: serverColor } = await res.json()
+            if (serverColor && !cancelled) {
+              setBrandColorState(serverColor)
+              try { localStorage.setItem(STORAGE_KEY, serverColor) } catch {}
+              setReady(true)
+              return
+            }
           }
         }
       } catch {}
-      const local = localStorage.getItem(STORAGE_KEY)
-      if (local) {
-        setBrandColorState(local)
-      }
+      if (cancelled) return
+      try {
+        const local = localStorage.getItem(STORAGE_KEY)
+        if (local) setBrandColorState(local)
+      } catch {}
+      const fallback = (session?.user?.role && DEFAULT_BY_ROLE[session.user.role]) || "#000000"
+      setBrandColorState((current) => current && current !== "#000000" ? current : (localStorage.getItem(STORAGE_KEY) || fallback))
       setReady(true)
     }
     load()
-  }, [theme])
+    return () => { cancelled = true }
+  }, [session?.user?.id, session?.user?.role])
 
   useEffect(() => {
-    if (!isDashboard || !ready) {
-      const root = document.documentElement
-      root.style.removeProperty("--brand-color")
-      root.style.removeProperty("--brand-text-color")
-      return
-    }
     const root = document.documentElement
     root.style.setProperty("--brand-color", brandColor)
     root.style.setProperty("--brand-text-color", getContrastText(brandColor))
-  }, [brandColor, isDashboard, ready])
+    if (ready) {
+      try { localStorage.setItem(STORAGE_KEY, brandColor) } catch {}
+    }
+  }, [brandColor, ready])
 
   const setBrandColor = useCallback(async (color: string) => {
     setBrandColorState(color)
-    localStorage.setItem(STORAGE_KEY, color)
+    try { localStorage.setItem(STORAGE_KEY, color) } catch {}
     try {
       await fetch("/api/user/brand-color", {
         method: "PUT",
@@ -83,7 +94,7 @@ export default function BrandColorProvider({ children }: { children: React.React
   }, [])
 
   return (
-    <ctx.Provider value={{ brandColor, setBrandColor }}>
+    <ctx.Provider value={{ brandColor, setBrandColor, ready }}>
       {children}
     </ctx.Provider>
   )

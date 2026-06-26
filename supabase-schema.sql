@@ -339,6 +339,22 @@ CREATE TABLE "Notification" (
 CREATE INDEX idx_notification_user ON "Notification"(userId);
 CREATE INDEX idx_notification_read ON "Notification"(userId, isRead);
 
+-- ── PushSubscription ── suscripciones Web Push por usuario/dispositivo
+CREATE TABLE "PushSubscription" (
+  id SERIAL PRIMARY KEY,
+  userId INT NOT NULL REFERENCES "User"(id) ON DELETE CASCADE,
+  endpoint TEXT NOT NULL UNIQUE,
+  p256dh TEXT NOT NULL,
+  auth TEXT NOT NULL,
+  userAgent TEXT,
+  createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_push_sub_user ON "PushSubscription"(userId);
+
+CREATE TRIGGER update_PushSubscription_updatedAt BEFORE UPDATE ON "PushSubscription" FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 -- ── NotificationRead ──
 CREATE TABLE "NotificationRead" (
   id SERIAL PRIMARY KEY,

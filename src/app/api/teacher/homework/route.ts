@@ -66,6 +66,20 @@ export async function POST(req: NextRequest) {
 
     const homework = await findOne("Homework", { id: insertId })
 
+    try {
+      const { broadcastHomeworkToParents } = await import("@/lib/push-events")
+      await broadcastHomeworkToParents({
+        teacherId,
+        courseId,
+        gradeId: gradeId ?? null,
+        sectionId: sectionId ?? null,
+        title,
+        dueDate,
+      })
+    } catch (err) {
+      console.error("[homework push]", err)
+    }
+
     return NextResponse.json({ success: true, data: homework })
   } catch (error) {
     console.error("Error creating homework:", error)
