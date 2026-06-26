@@ -75,6 +75,68 @@ input, textarea, select {
   color: var(--foreground);
 }
 
+/* Force user dropdown (Navbar) to follow the current theme explicitly.
+   HeroUI Popover/Menu/Item use CSS vars (--surface, --surface-foreground, --default, etc.).
+   We override those only inside our dropdown so it never relies on portal inheritance. */
+.user-dropdown {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid #e5e7eb !important;
+}
+.dark .user-dropdown {
+  background-color: #18181b !important;
+  color: #f5f5f5 !important;
+  border-color: #27272a !important;
+}
+.user-dropdown [data-slot="label"],
+.user-dropdown [data-slot="title"] {
+  color: inherit !important;
+}
+.user-dropdown [data-slot="list-item"],
+.user-dropdown [role="menuitem"] {
+  color: #1f2937 !important;
+}
+.user-dropdown [data-slot="list-item"]:hover,
+.user-dropdown [role="menuitem"]:hover,
+.user-dropdown [data-slot="list-item"][data-hovered="true"],
+.user-dropdown [role="menuitem"][data-hovered="true"] {
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+}
+.dark .user-dropdown [data-slot="list-item"],
+.dark .user-dropdown [role="menuitem"] {
+  color: #e5e7eb !important;
+}
+.dark .user-dropdown [data-slot="list-item"]:hover,
+.dark .user-dropdown [role="menuitem"]:hover,
+.dark .user-dropdown [data-slot="list-item"][data-hovered="true"],
+.dark .user-dropdown [role="menuitem"][data-hovered="true"] {
+  background-color: #27272a !important;
+  color: #ffffff !important;
+}
+.user-dropdown [data-slot="list-item"][data-danger="true"],
+.user-dropdown [role="menuitem"][data-danger="true"] {
+  color: #dc2626 !important;
+}
+.user-dropdown [data-slot="list-item"][data-danger="true"]:hover,
+.user-dropdown [role="menuitem"][data-danger="true"]:hover,
+.user-dropdown [data-slot="list-item"][data-danger="true"][data-hovered="true"],
+.user-dropdown [role="menuitem"][data-danger="true"][data-hovered="true"] {
+  background-color: #fef2f2 !important;
+  color: #dc2626 !important;
+}
+.dark .user-dropdown [data-slot="list-item"][data-danger="true"],
+.dark .user-dropdown [role="menuitem"][data-danger="true"] {
+  color: #f87171 !important;
+}
+.dark .user-dropdown [data-slot="list-item"][data-danger="true"]:hover,
+.dark .user-dropdown [role="menuitem"][data-danger="true"]:hover,
+.dark .user-dropdown [data-slot="list-item"][data-danger="true"][data-hovered="true"],
+.dark .user-dropdown [role="menuitem"][data-danger="true"][data-hovered="true"] {
+  background-color: rgba(127, 29, 29, 0.2) !important;
+  color: #f87171 !important;
+}
+
 ::selection {
   background: var(--foreground);
   color: var(--background);
