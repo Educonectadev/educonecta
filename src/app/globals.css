@@ -12,6 +12,7 @@
   --radius-lg: 50px;
   --radius-sm: 30px;
   --brand-color: #000000;
+  --brand-text-color: #ffffff;
 
   /* HeroUI theme overrides */
   --default-foreground: #000000;
@@ -181,7 +182,7 @@ input[type="checkbox"]:checked::after {
 
 .btn-primary {
   background-color: var(--brand-color) !important;
-  color: white !important;
+  color: var(--brand-text-color) !important;
   transition: all 0.15s ease;
 }
 .btn-primary:hover {

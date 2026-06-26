@@ -24,10 +24,10 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
               onClick={() => router.push(item.href)}
               className={`flex flex-col items-center justify-center px-4 py-2 rounded-[50px] transition-all duration-200 min-w-0 ${
                 isActive
-                  ? "text-white"
+                  ? ""
                   : "text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300"
               }`}
-              style={isActive ? { backgroundColor: "var(--brand-color)" } : undefined}
+              style={isActive ? { backgroundColor: "var(--brand-color)", color: "var(--brand-text-color)" } : undefined}
             >
               <span className="material-icons text-2xl">{item.icon}</span>
               <span className="text-[10px] leading-tight mt-0.5 whitespace-nowrap">{item.label}</span>
