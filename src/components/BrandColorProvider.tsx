@@ -58,6 +58,18 @@ export default function BrandColorProvider({ children }: { children: React.React
     load()
   }, [theme])
 
+  useEffect(() => {
+    if (!isDashboard || !ready) {
+      const root = document.documentElement
+      root.style.removeProperty("--brand-color")
+      root.style.removeProperty("--brand-text-color")
+      return
+    }
+    const root = document.documentElement
+    root.style.setProperty("--brand-color", brandColor)
+    root.style.setProperty("--brand-text-color", getContrastText(brandColor))
+  }, [brandColor, isDashboard, ready])
+
   const setBrandColor = useCallback(async (color: string) => {
     setBrandColorState(color)
     localStorage.setItem(STORAGE_KEY, color)
@@ -72,13 +84,7 @@ export default function BrandColorProvider({ children }: { children: React.React
 
   return (
     <ctx.Provider value={{ brandColor, setBrandColor }}>
-      {isDashboard && ready ? (
-        <div style={{ "--brand-color": brandColor, "--brand-text-color": getContrastText(brandColor) } as React.CSSProperties}>
-          {children}
-        </div>
-      ) : (
-        children
-      )}
+      {children}
     </ctx.Provider>
   )
 }
