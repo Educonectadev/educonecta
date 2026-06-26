@@ -179,6 +179,9 @@ CREATE TABLE "Schedule" (
   classroom VARCHAR(255),
   shift VARCHAR(50) NOT NULL DEFAULT 'MAÑANA',
   courseId INT NOT NULL REFERENCES "Course"(id) ON DELETE CASCADE,
+  teacherId INT REFERENCES "Teacher"(id) ON DELETE SET NULL,
+  gradeId INT REFERENCES "Grade"(id) ON DELETE SET NULL,
+  sectionId INT REFERENCES "Section"(id) ON DELETE SET NULL,
   institutionId INT NOT NULL REFERENCES "Institution"(id) ON DELETE CASCADE,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -186,6 +189,9 @@ CREATE TABLE "Schedule" (
 
 CREATE INDEX idx_schedule_course ON "Schedule"(courseId);
 CREATE INDEX idx_schedule_institution ON "Schedule"(institutionId);
+CREATE INDEX idx_schedule_teacher ON "Schedule"(teacherId);
+CREATE INDEX idx_schedule_grade ON "Schedule"(gradeId);
+CREATE INDEX idx_schedule_section ON "Schedule"(sectionId);
 
 -- ── Enrollment ──
 CREATE TABLE "Enrollment" (

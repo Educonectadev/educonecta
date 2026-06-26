@@ -74,23 +74,35 @@ interface SchedulePushArgs {
   dayOfWeek: number
   startTime: string
   endTime: string
+  teacherId?: number | null
 }
 
 const DAYS_ES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
 
 export async function broadcastScheduleToTeachers(args: SchedulePushArgs) {
-  const { courseId, institutionId, dayOfWeek, startTime, endTime } = args
+  const { courseId, institutionId, dayOfWeek, startTime, endTime, teacherId } = args
 
   let rows: { userId: number; name: string }[] = []
   try {
-    rows = await query<any[]>(
-      `SELECT t.userId, u.name
-       FROM CourseTeacher ct
-       INNER JOIN Teacher t ON t.id = ct.teacherId
-       INNER JOIN User u ON u.id = t.userId
-       WHERE ct.courseId = ? AND t.institutionId = ? AND u.isActive = TRUE`,
-      [courseId, institutionId],
-    )
+    if (teacherId) {
+      rows = await query<any[]>(
+        `SELECT t.userId, u.name
+         FROM Teacher t
+         INNER JOIN User u ON u.id = t.userId
+         WHERE t.id = ? AND t.institutionId = ? AND u.isActive = TRUE`,
+        [teacherId, institutionId],
+      )
+    }
+    if (rows.length === 0) {
+      rows = await query<any[]>(
+        `SELECT DISTINCT t.userId, u.name
+         FROM CourseTeacher ct
+         INNER JOIN Teacher t ON t.id = ct.teacherId
+         INNER JOIN User u ON u.id = t.userId
+         WHERE ct.courseId = ? AND t.institutionId = ? AND u.isActive = TRUE`,
+        [courseId, institutionId],
+      )
+    }
   } catch (err) {
     console.error("[push-events] no se pudieron obtener los profesores del curso:", err)
     return { sent: 0, total: 0 }

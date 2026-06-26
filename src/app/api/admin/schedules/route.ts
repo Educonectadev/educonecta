@@ -71,6 +71,7 @@ export async function POST(request: Request) {
         dayOfWeek,
         startTime,
         endTime,
+        teacherId: teacherId || null,
       })
     } catch (err) {
       console.error("[schedule push]", err)

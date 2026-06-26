@@ -35,6 +35,20 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       sectionId: sectionId !== undefined ? (sectionId || null) : schedule.sectionId,
     })
 
+    try {
+      const { broadcastScheduleToTeachers } = await import("@/lib/push-events")
+      await broadcastScheduleToTeachers({
+        courseId: courseId ?? schedule.courseId,
+        institutionId,
+        dayOfWeek: dayOfWeek ?? schedule.dayOfWeek,
+        startTime: startTime ?? schedule.startTime,
+        endTime: endTime ?? schedule.endTime,
+        teacherId: teacherId !== undefined ? (teacherId || null) : schedule.teacherId,
+      })
+    } catch (err) {
+      console.error("[schedule push PUT]", err)
+    }
+
     const updated = await query(
       `SELECT s.*,
         jsonb_build_object('id', c.id, 'name', c.name, 'code', c.code) AS course,
