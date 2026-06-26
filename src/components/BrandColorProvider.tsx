@@ -4,7 +4,8 @@ import { createContext, useContext, useEffect, useState, useCallback } from "rea
 import { useSession } from "@/lib/auth-context"
 
 function getLuminance(hex: string): number {
-  const c = hex.replace("#", "")
+  const c = (hex || "").replace("#", "")
+  if (c.length < 6) return 0
   const r = parseInt(c.substring(0, 2), 16) / 255
   const g = parseInt(c.substring(2, 4), 16) / 255
   const b = parseInt(c.substring(4, 6), 16) / 255
@@ -13,6 +14,13 @@ function getLuminance(hex: string): number {
 
 function getContrastText(bgHex: string): string {
   return getLuminance(bgHex) > 0.5 ? "#000000" : "#ffffff"
+}
+
+function normalizeHex(input: string | null | undefined, fallback: string): string {
+  if (!input || typeof input !== "string") return fallback
+  const v = input.trim()
+  if (!/^#?[0-9a-fA-F]{6}$/.test(v)) return fallback
+  return v.startsWith("#") ? v.toLowerCase() : `#${v.toLowerCase()}`
 }
 
 interface BrandColorContext {
@@ -28,8 +36,10 @@ const DEFAULT_BY_ROLE: Record<string, string> = {
   PARENT: "#d97706",
 }
 
+const SAFE_FALLBACK = "#000000"
+
 const ctx = createContext<BrandColorContext>({
-  brandColor: "#000000",
+  brandColor: SAFE_FALLBACK,
   setBrandColor: () => {},
   ready: false,
 })
@@ -39,33 +49,36 @@ const STORAGE_KEY = "educonecta_brand_color"
 
 export default function BrandColorProvider({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession()
-  const [brandColor, setBrandColorState] = useState<string>("#000000")
+  const [brandColor, setBrandColorState] = useState<string>(SAFE_FALLBACK)
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
     let cancelled = false
     async function load() {
+      const fallback = (session?.user?.role && DEFAULT_BY_ROLE[session.user.role]) || SAFE_FALLBACK
+      let resolved: string | null = null
       try {
         if (session?.user?.id) {
           const res = await fetch("/api/user/brand-color", { cache: "no-store" })
           if (res.ok) {
             const { brandColor: serverColor } = await res.json()
-            if (serverColor && !cancelled) {
-              setBrandColorState(serverColor)
-              try { localStorage.setItem(STORAGE_KEY, serverColor) } catch {}
-              setReady(true)
-              return
-            }
+            resolved = normalizeHex(serverColor, fallback)
           }
         }
       } catch {}
       if (cancelled) return
-      try {
-        const local = localStorage.getItem(STORAGE_KEY)
-        if (local) setBrandColorState(local)
-      } catch {}
-      const fallback = (session?.user?.role && DEFAULT_BY_ROLE[session.user.role]) || "#000000"
-      setBrandColorState((current) => current && current !== "#000000" ? current : (localStorage.getItem(STORAGE_KEY) || fallback))
+      if (!resolved) {
+        try {
+          const local = localStorage.getItem(STORAGE_KEY)
+          resolved = normalizeHex(local, fallback)
+        } catch {
+          resolved = fallback
+        }
+      }
+      if (!resolved || getLuminance(resolved) > 0.92) {
+        resolved = fallback
+      }
+      setBrandColorState(resolved)
       setReady(true)
     }
     load()
@@ -82,13 +95,14 @@ export default function BrandColorProvider({ children }: { children: React.React
   }, [brandColor, ready])
 
   const setBrandColor = useCallback(async (color: string) => {
-    setBrandColorState(color)
-    try { localStorage.setItem(STORAGE_KEY, color) } catch {}
+    const normalized = normalizeHex(color, SAFE_FALLBACK)
+    setBrandColorState(normalized)
+    try { localStorage.setItem(STORAGE_KEY, normalized) } catch {}
     try {
       await fetch("/api/user/brand-color", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ brandColor: color }),
+        body: JSON.stringify({ brandColor: normalized }),
       })
     } catch {}
   }, [])

@@ -183,7 +183,8 @@ input[type="checkbox"]:checked::after {
 
 .btn-primary {
   background-color: var(--brand-color) !important;
-  color: var(--brand-text-color) !important;
+  color: var(--brand-text-color, #ffffff) !important;
+  border-color: var(--brand-color) !important;
   transition: all 0.15s ease;
 }
 .btn-primary:hover {
