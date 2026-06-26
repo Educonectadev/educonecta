@@ -40,12 +40,11 @@ export default async function TeacherDashboardPage() {
         [teacherId]
       ),
       query<any[]>(
-        `SELECT s.*, c.id as c_id, c.name as c_name, g.id as g_id, g.name as g_name, sec.id as sec_id, sec.name as sec_name, cl.name as cl_name
+        `SELECT s.*, c.id as c_id, c.name as c_name, g.id as g_id, g.name as g_name, sec.id as sec_id, sec.name as sec_name
          FROM Schedule s
          LEFT JOIN Course c ON c.id = s.courseId
          LEFT JOIN Grade g ON g.id = s.gradeId
          LEFT JOIN Section sec ON sec.id = s.sectionId
-         LEFT JOIN Classroom cl ON cl.id = s.classroomId
          WHERE s.teacherId = ? AND s.dayOfWeek >= ?
          ORDER BY s.dayOfWeek ASC, s.startTime ASC
          LIMIT 8`,
@@ -81,7 +80,7 @@ export default async function TeacherDashboardPage() {
       course: { name: s.c_name },
       grade: s.g_id ? { name: s.g_name } : null,
       section: s.sec_id ? { name: s.sec_name } : null,
-      classroom: s.cl_name ?? s.classroom ?? null,
+      classroom: s.classroom ?? null,
     }))
 
     const gradeIds: number[] = []
