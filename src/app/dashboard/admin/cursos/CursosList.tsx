@@ -351,26 +351,45 @@ export default function CursosList({
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-500 mb-1">Código</label>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <input
                     value={form.code}
                     onChange={(e) => { setForm({ ...form, code: e.target.value }); setAutoCode(false) }}
-                    className={`flex-1 rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${codeError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-black focus:ring-black"}`}
+                    className={`w-full sm:flex-1 rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${codeError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-black focus:ring-black"}`}
                     placeholder="MAT"
                   />
-                  <label className="flex items-center gap-1 text-xs text-gray-500 whitespace-nowrap">
-                    <input
-                      type="checkbox"
-                      checked={autoCode}
-                      onChange={(e) => {
-                        setAutoCode(e.target.checked)
-                        if (e.target.checked && form.name.trim()) {
-                          setForm({ ...form, code: generateCode(form.name) })
-                        }
-                      }}
-                    />
-                    Auto
-                  </label>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={autoCode}
+                    onClick={() => {
+                      const next = !autoCode
+                      setAutoCode(next)
+                      if (next && form.name.trim()) {
+                        setForm({ ...form, code: generateCode(form.name) })
+                      }
+                    }}
+                    className={`inline-flex items-center justify-between sm:justify-start gap-2 shrink-0 rounded-full border px-3 py-2 text-xs font-medium transition-all duration-150 active:scale-95 ${
+                      autoCode
+                        ? "bg-black text-white border-black"
+                        : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span
+                        className={`relative inline-block w-8 h-[18px] rounded-full transition-colors duration-200 ${
+                          autoCode ? "bg-white/30" : "bg-gray-300"
+                        }`}
+                      >
+                        <span
+                          className={`absolute top-[2px] size-3.5 rounded-full bg-white shadow transition-all duration-200 ${
+                            autoCode ? "left-[16px]" : "left-[2px]"
+                          }`}
+                        />
+                      </span>
+                      <span>Auto</span>
+                    </span>
+                  </button>
                 </div>
                 {codeError && <p className="text-xs text-red-500 mt-1">{codeError}</p>}
               </div>

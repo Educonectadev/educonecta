@@ -8,6 +8,7 @@ import { useSession } from "@/lib/auth-context"
 import { themes } from "@/lib/themes"
 import ThemeToggle from "./ThemeToggle"
 import ParentProfileModal from "./ParentProfileModal"
+import Logo from "./Logo"
 
 export default function Navbar() {
   const { data: session, signOut } = useSession()
@@ -42,19 +43,25 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-b border-gray-100 dark:border-zinc-800">
-        <div className="flex items-center justify-between px-5 md:px-8 py-3 md:py-4 max-w-6xl mx-auto w-full">
-          <Link href="/" className="text-sm md:text-base font-semibold tracking-tight text-gray-900 dark:text-white hover:opacity-60 transition-opacity duration-200">
-            EduConecta
+        <div className="flex items-center justify-between px-3 sm:px-5 md:px-8 py-3 md:py-4 max-w-6xl mx-auto w-full">
+          <Link
+            href="/"
+            className="flex items-center gap-2 hover:opacity-70 transition-opacity duration-200"
+          >
+            <Logo className="size-8" />
+            <span className="text-sm md:text-base font-semibold tracking-tight text-black dark:text-white">
+              EduConecta
+            </span>
           </Link>
 
-          <div className="flex items-center gap-2 text-gray-900 dark:text-white">
+          <div className="flex items-center gap-2 text-black dark:text-white">
             <ThemeToggle />
             {session?.user && (
               <Dropdown>
                 <Dropdown.Trigger className="rounded-full outline-none">
-                  <button className="flex items-center gap-2 rounded-full px-2 py-1 md:px-3 md:py-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all duration-200 text-gray-900 dark:text-white">
+                  <button className="flex items-center gap-2 rounded-full px-2 py-1 md:px-3 md:py-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all duration-200 text-black dark:text-white">
                     <span className="hidden md:block text-right text-sm leading-tight">
-                      <p className="font-medium text-gray-900 dark:text-white">{session.user.name}</p>
+                      <p className="font-medium text-black dark:text-white">{session.user.name}</p>
                       <p className="text-[10px] text-gray-500 dark:text-zinc-400">{roleLabel[session.user.role] ?? session.user.role}</p>
                     </span>
                     <Avatar size="sm">
@@ -79,7 +86,7 @@ export default function Navbar() {
                         </Avatar.Fallback>
                       </Avatar>
                       <div className="flex flex-col gap-0">
-                        <p className="text-sm leading-5 font-medium text-gray-900 dark:text-white">{session.user.name}</p>
+                        <p className="text-sm leading-5 font-medium text-black dark:text-white">{session.user.name}</p>
                         <p className="text-xs leading-none text-gray-500 dark:text-zinc-400">{roleLabel[session.user.role] ?? session.user.role}</p>
                       </div>
                     </div>
@@ -90,10 +97,10 @@ export default function Navbar() {
                         id="profile"
                         textValue="Perfil"
                         onAction={() => { window.location.href = profileHref }}
-                        className="text-gray-900 dark:text-white"
+                        className="text-black dark:text-white"
                       >
                         <div className="flex w-full items-center justify-between gap-2">
-                          <Label className="text-gray-900 dark:text-white">Perfil</Label>
+                          <Label className="text-black dark:text-white">Perfil</Label>
                           <Gear className="size-4 text-gray-700 dark:text-white" />
                         </div>
                       </Dropdown.Item>
@@ -103,10 +110,10 @@ export default function Navbar() {
                         id="settings"
                         textValue="Configuración"
                         onAction={() => { window.location.href = configHref }}
-                        className="text-gray-900 dark:text-white"
+                        className="text-black dark:text-white"
                       >
                         <div className="flex w-full items-center justify-between gap-2">
-                          <Label className="text-gray-900 dark:text-white">Configuración</Label>
+                          <Label className="text-black dark:text-white">Configuración</Label>
                           <Sliders className="size-4 text-gray-700 dark:text-white" />
                         </div>
                       </Dropdown.Item>
@@ -116,7 +123,7 @@ export default function Navbar() {
                       textValue="Cerrar Sesión"
                       variant="danger"
                       onAction={() => { signOut() }}
-                      className="text-danger dark:text-danger"
+                      className="text-danger"
                     >
                       <div className="flex w-full items-center justify-between gap-2">
                         <Label className="text-danger">Cerrar Sesión</Label>
