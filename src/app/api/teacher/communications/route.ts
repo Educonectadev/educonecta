@@ -67,6 +67,17 @@ export async function POST(req: NextRequest) {
       institutionId,
     })
 
+    try {
+      const { broadcastCommunicationToParents } = await import("@/lib/push-events")
+      await broadcastCommunicationToParents({
+        institutionId,
+        teacherId,
+        title,
+      })
+    } catch (err) {
+      console.error("[communication push]", err)
+    }
+
     const communication = await findOne("Communication", { id: insertId })
 
     return NextResponse.json({ success: true, data: communication })

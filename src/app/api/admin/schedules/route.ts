@@ -63,6 +63,19 @@ export async function POST(request: Request) {
       institutionId,
     })
 
+    try {
+      const { broadcastScheduleToTeachers } = await import("@/lib/push-events")
+      await broadcastScheduleToTeachers({
+        courseId,
+        institutionId,
+        dayOfWeek,
+        startTime,
+        endTime,
+      })
+    } catch (err) {
+      console.error("[schedule push]", err)
+    }
+
     const schedule = await query(
       `SELECT s.*,
         jsonb_build_object('id', c.id, 'name', c.name, 'code', c.code) AS course,
