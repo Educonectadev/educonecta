@@ -137,6 +137,27 @@ input, textarea, select {
   color: #f87171 !important;
 }
 
+/* Force user name & role in navbar header to be visible in light mode */
+.user-name {
+  color: #111827 !important;
+}
+.dark .user-name {
+  color: #ffffff !important;
+}
+.user-name > span:first-child {
+  color: #111827 !important;
+  font-weight: 600 !important;
+}
+.dark .user-name > span:first-child {
+  color: #ffffff !important;
+}
+.user-name > span:last-child {
+  color: #6b7280 !important;
+}
+.dark .user-name > span:last-child {
+  color: #a1a1aa !important;
+}
+
 ::selection {
   background: var(--foreground);
   color: var(--background);

@@ -55,10 +55,10 @@ export default function Navbar() {
             {session?.user && (
               <Dropdown>
                 <Dropdown.Trigger className="rounded-full outline-none">
-                  <button className="flex items-center gap-2 rounded-full px-2 py-1 md:px-3 md:py-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all duration-200 text-black dark:text-white">
-                    <span className="hidden md:block text-right text-sm leading-tight">
-                      <p className="font-medium text-black dark:text-white">{session.user.name}</p>
-                      <p className="text-[10px] text-gray-500 dark:text-zinc-400">{roleLabel[session.user.role] ?? session.user.role}</p>
+                  <button className="flex items-center gap-2 rounded-full px-2 py-1 md:px-3 md:py-1.5 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all duration-200">
+                    <span className="user-name hidden md:flex md:flex-col md:items-end md:leading-tight">
+                      <span className="text-sm font-semibold text-gray-900 dark:text-white">{session.user.name}</span>
+                      <span className="text-[10px] text-gray-500 dark:text-zinc-400">{roleLabel[session.user.role] ?? session.user.role}</span>
                     </span>
                     <Avatar size="sm">
                       <Avatar.Fallback
