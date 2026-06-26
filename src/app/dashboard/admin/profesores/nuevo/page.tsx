@@ -8,6 +8,11 @@ import Select from "@/components/Select"
 
 const educationLevels = ["Bachiller", "Titulado", "Magíster", "Doctor"]
 const contractTypes = ["Tiempo completo", "Medio tiempo", "Por horas", "CAS"]
+const assignedLevelOptions = [
+  { value: "INICIAL", label: "Inicial" },
+  { value: "PRIMARIA", label: "Primaria" },
+  { value: "SECUNDARIA", label: "Secundaria" },
+] as const
 
 export default function NuevoProfesorPage() {
   const router = useRouter()
@@ -27,7 +32,22 @@ export default function NuevoProfesorPage() {
       .replace(/^\.|\.$/g, "")
   }
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    firstName: string
+    lastName: string
+    password: string
+    phone: string
+    speciality: string
+    documentId: string
+    professionalTitle: string
+    educationLevel: string
+    hireDate: string
+    contractType: string
+    address: string
+    emergencyContactName: string
+    emergencyContactPhone: string
+    assignedLevels: string[]
+  }>({
     firstName: "",
     lastName: "",
     password: "",
@@ -41,6 +61,7 @@ export default function NuevoProfesorPage() {
     address: "",
     emergencyContactName: "",
     emergencyContactPhone: "",
+    assignedLevels: [],
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -136,6 +157,39 @@ export default function NuevoProfesorPage() {
             <label className="mb-1.5 block text-sm font-medium text-gray-500">Fecha de Contratación</label>
             <input type="date" name="hireDate" value={form.hireDate} onChange={handleChange}
               className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+          </div>
+        </div>
+
+        {/* Niveles Asignados */}
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">Niveles Asignados</p>
+          <p className="text-xs text-gray-400 mb-3">Selecciona los niveles educativos en los que el profesor dicta clases.</p>
+          <div className="flex flex-wrap gap-2">
+            {assignedLevelOptions.map((opt) => {
+              const selected = form.assignedLevels.includes(opt.value)
+              return (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() =>
+                    setForm((prev) => ({
+                      ...prev,
+                      assignedLevels: selected
+                        ? prev.assignedLevels.filter((v) => v !== opt.value)
+                        : [...prev.assignedLevels, opt.value],
+                    }))
+                  }
+                  className={
+                    "rounded-full px-5 py-2 text-sm font-medium border transition-all " +
+                    (selected
+                      ? "bg-emerald-500 border-emerald-500 text-white"
+                      : "bg-white border-gray-200 text-gray-500 hover:border-emerald-300")
+                  }
+                >
+                  {opt.label}
+                </button>
+              )
+            })}
           </div>
         </div>
 

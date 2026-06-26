@@ -18,6 +18,7 @@ interface Teacher {
   address: string | null
   emergencyContactName: string | null
   emergencyContactPhone: string | null
+  assignedLevels: string[]
   user: { id: number; name: string; email: string; phone: string | null }
 }
 
@@ -45,6 +46,7 @@ interface FormState {
   address: string
   emergencyContactName: string
   emergencyContactPhone: string
+  assignedLevels: string[]
   assignments: Assignment[]
 }
 
@@ -54,11 +56,17 @@ const emptyForm: FormState = {
   firstName: "", lastName: "", password: "", phone: "", speciality: "",
   documentId: "", professionalTitle: "", educationLevel: "", hireDate: "",
   contractType: "", address: "", emergencyContactName: "", emergencyContactPhone: "",
+  assignedLevels: [],
   assignments: [emptyAssignment()],
 }
 
 const educationLevels = ["Bachiller", "Titulado", "Magíster", "Doctor"]
 const contractTypes = ["Tiempo completo", "Medio tiempo", "Por horas", "CAS"]
+const assignedLevelOptions = [
+  { value: "INICIAL", label: "Inicial" },
+  { value: "PRIMARIA", label: "Primaria" },
+  { value: "SECUNDARIA", label: "Secundaria" },
+] as const
 
 function previewEmail(firstName: string, lastName: string) {
   if (!firstName || !lastName) return ""
@@ -78,7 +86,7 @@ const TeacherFormFields = memo(function TeacherFormFields({
   passwordRequired,
 }: {
   form: FormState
-  setField: (field: keyof FormState, value: string) => void
+  setField: (field: keyof FormState, value: string | string[]) => void
   setAssignment: (idx: number, key: keyof Assignment, value: string) => void
   addAssignment: () => void
   removeAssignment: (idx: number) => void
@@ -144,6 +152,36 @@ const TeacherFormFields = memo(function TeacherFormFields({
         <div className="mt-3">
           <label className="block text-xs font-medium text-gray-500 mb-1">Fecha de Contratación</label>
           <input type="date" value={form.hireDate} onChange={(e) => setField("hireDate", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+        </div>
+      </div>
+
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Niveles Asignados</p>
+        <p className="text-xs text-gray-400 mb-3">Selecciona los niveles educativos en los que el profesor dicta clases.</p>
+        <div className="flex flex-wrap gap-2">
+          {assignedLevelOptions.map((opt) => {
+            const selected = form.assignedLevels.includes(opt.value)
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => {
+                  const next = selected
+                    ? form.assignedLevels.filter((v) => v !== opt.value)
+                    : [...form.assignedLevels, opt.value]
+                  setField("assignedLevels", next)
+                }}
+                className={
+                  "rounded-full px-4 py-1.5 text-xs font-medium border transition-all " +
+                  (selected
+                    ? "bg-emerald-500 border-emerald-500 text-white"
+                    : "bg-white border-gray-200 text-gray-500 hover:border-emerald-300")
+                }
+              >
+                {opt.label}
+              </button>
+            )
+          })}
         </div>
       </div>
 
@@ -292,11 +330,12 @@ export default function ProfesoresList({
       address: t.address ?? "",
       emergencyContactName: t.emergencyContactName ?? "",
       emergencyContactPhone: t.emergencyContactPhone ?? "",
+      assignedLevels: Array.isArray(t.assignedLevels) ? t.assignedLevels : [],
       assignments: [emptyAssignment()],
     })
   }
 
-  const setField = useCallback((field: keyof FormState, value: string) => {
+  const setField = useCallback((field: keyof FormState, value: string | string[]) => {
     setForm((prev) => ({ ...prev, [field]: value as any }))
   }, [])
 
@@ -444,8 +483,25 @@ export default function ProfesoresList({
           },
           {
             key: "educationLevel",
-            label: "Nivel",
+            label: "Estudios",
             render: (t) => (t.educationLevel || t.professionalTitle) ? <span className="text-xs bg-amber-50 text-amber-700 rounded-full px-2.5 py-0.5">{t.educationLevel || t.professionalTitle}</span> : <span className="text-xs text-gray-400">—</span>,
+          },
+          {
+            key: "assignedLevels",
+            label: "Niveles",
+            render: (t) => t.assignedLevels && t.assignedLevels.length > 0 ? (
+              <div className="flex flex-wrap gap-1">
+                {t.assignedLevels.map((lvl) => {
+                  const colors: Record<string, string> = {
+                    INICIAL: "bg-pink-50 text-pink-700",
+                    PRIMARIA: "bg-emerald-50 text-emerald-700",
+                    SECUNDARIA: "bg-indigo-50 text-indigo-700",
+                  }
+                  const label = lvl.charAt(0) + lvl.slice(1).toLowerCase()
+                  return <span key={lvl} className={`text-xs rounded-full px-2.5 py-0.5 ${colors[lvl] ?? "bg-gray-100 text-gray-600"}`}>{label}</span>
+                })}
+              </div>
+            ) : <span className="text-xs text-gray-400">—</span>,
           },
         ]}
       />

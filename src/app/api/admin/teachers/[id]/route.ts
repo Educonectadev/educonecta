@@ -23,7 +23,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   try {
     const body = await request.json()
-    const { firstName, lastName, password, phone, speciality, documentId, professionalTitle, educationLevel, hireDate, address, contractType, emergencyContactName, emergencyContactPhone } = body
+    const { firstName, lastName, password, phone, speciality, documentId, professionalTitle, educationLevel, hireDate, address, contractType, emergencyContactName, emergencyContactPhone, assignedLevels } = body
 
     const userData: Record<string, unknown> = {}
     if (firstName || lastName) {
@@ -55,6 +55,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       contractType: contractType !== undefined ? contractType : (teacher as any).contractType,
       emergencyContact: emergencyContactName !== undefined ? emergencyContactName : (teacher as any).emergencyContact,
       emergencyPhone: emergencyContactPhone !== undefined ? emergencyContactPhone : (teacher as any).emergencyPhone,
+      assignedLevels: assignedLevels !== undefined
+        ? (Array.isArray(assignedLevels) && assignedLevels.length > 0 ? assignedLevels : null)
+        : (teacher as any).assignedLevels ?? null,
     })
 
     const updated = await query(

@@ -40,6 +40,7 @@ export default async function ProfesoresPage() {
     address: t.address,
     emergencyContactName: t.emergencyContact,
     emergencyContactPhone: t.emergencyPhone,
+    assignedLevels: t.assignedLevels ?? [],
     user: t.user,
   }))
 

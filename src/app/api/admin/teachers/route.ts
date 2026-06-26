@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { firstName, lastName, password, phone, speciality, documentId, professionalTitle, educationLevel, hireDate, address, contractType, emergencyContactName, emergencyContactPhone } = body
+    const { firstName, lastName, password, phone, speciality, documentId, professionalTitle, educationLevel, hireDate, address, contractType, emergencyContactName, emergencyContactPhone, assignedLevels } = body
 
     if (!firstName || !lastName || !password) {
       return NextResponse.json({ error: "Nombres, apellidos y contraseña son requeridos" }, { status: 400 })
@@ -100,6 +100,7 @@ export async function POST(request: Request) {
       contractType: contractType || null,
       emergencyContact: emergencyContactName || null,
       emergencyPhone: emergencyContactPhone || null,
+      assignedLevels: Array.isArray(assignedLevels) && assignedLevels.length > 0 ? assignedLevels : null,
     })
 
     const assignments = Array.isArray(body.assignments) ? body.assignments : []

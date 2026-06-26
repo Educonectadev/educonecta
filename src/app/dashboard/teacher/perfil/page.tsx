@@ -35,6 +35,25 @@ export default async function TeacherPerfilPage() {
 
   const t = teacher[0]
 
+  const explicitLevels: string[] = Array.isArray(t?.assignedLevels) ? t.assignedLevels : []
+  const derivedLevels: string[] = Array.from(
+    new Set(
+      courses
+        .map((c: any) => (c.level || "").trim().toUpperCase())
+        .filter((lvl: string) => lvl.length > 0)
+    )
+  ) as string[]
+  const mergedLevels: string[] = Array.from(new Set([...explicitLevels, ...derivedLevels]))
+  const levelsToShow = mergedLevels
+    .map((lvl) => lvl.toUpperCase())
+    .filter((lvl) => ["INICIAL", "PRIMARIA", "SECUNDARIA"].includes(lvl))
+
+  const levelStyles: Record<string, { bg: string; text: string }> = {
+    INICIAL: { bg: "bg-pink-50 dark:bg-pink-950/30", text: "text-pink-700 dark:text-pink-300" },
+    PRIMARIA: { bg: "bg-emerald-50 dark:bg-emerald-950/30", text: "text-emerald-700 dark:text-emerald-300" },
+    SECUNDARIA: { bg: "bg-indigo-50 dark:bg-indigo-950/30", text: "text-indigo-700 dark:text-indigo-300" },
+  }
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
@@ -42,6 +61,20 @@ export default async function TeacherPerfilPage() {
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mi Perfil</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Información personal y cursos asignados</p>
         </div>
+        {levelsToShow.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Niveles:</span>
+            {levelsToShow.map((lvl) => {
+              const style = levelStyles[lvl] ?? { bg: "bg-gray-100 dark:bg-gray-800", text: "text-gray-700 dark:text-gray-300" }
+              const label = lvl.charAt(0) + lvl.slice(1).toLowerCase()
+              return (
+                <span key={lvl} className={`text-xs font-medium rounded-full px-3 py-1 ${style.bg} ${style.text}`}>
+                  {label}
+                </span>
+              )
+            })}
+          </div>
+        )}
       </div>
 
       <section className="mb-8">
