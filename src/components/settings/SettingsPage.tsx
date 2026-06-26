@@ -1,5 +1,5 @@
 import BrandColorPicker from "@/components/BrandColorPicker"
-import ThemeSwitcher from "./ThemeSwitcher"
+import NotificationsToggle from "./NotificationsToggle"
 import AccountInfo from "./AccountInfo"
 
 interface SettingsPageProps {
@@ -31,10 +31,8 @@ export default function SettingsPage({
       </div>
 
       <section className="mb-8">
-        <h2 className={`text-xs font-semibold uppercase tracking-widest ${accent} mb-3`}>Apariencia</h2>
-        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-[25px] p-6">
-          <ThemeSwitcher />
-        </div>
+        <h2 className={`text-xs font-semibold uppercase tracking-widest ${accent} mb-3`}>Notificaciones</h2>
+        <NotificationsToggle />
       </section>
 
       <section className="mb-8">
