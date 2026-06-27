@@ -6,6 +6,7 @@ import { Card } from "@heroui/react"
 import IconClient from "@/components/IconClient"
 import AnimatedCounter from "@/components/AnimatedCounter"
 import ThemeToggle from "@/components/ThemeToggle"
+import SiteFooter from "@/components/SiteFooter"
 
 interface ImpactData {
   institutionCount: number
@@ -427,15 +428,14 @@ export default function HomeContent({ data }: { data: ImpactData }) {
 
       </main>
 
-      <motion.footer
+      <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
-        className="border-t border-gray-100 dark:border-zinc-800 py-8 text-center text-sm text-gray-400 dark:text-zinc-500"
       >
-        &copy; {new Date().getFullYear()} EduConecta. Todos los derechos reservados.
-      </motion.footer>
+        <SiteFooter />
+      </motion.div>
     </div>
   )
 }
