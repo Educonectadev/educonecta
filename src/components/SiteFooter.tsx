@@ -15,9 +15,9 @@ const securityLinks: FooterLink[] = [
 ]
 
 const productLinks: FooterLink[] = [
-  { href: "/#features", label: "Funcionalidades" },
+  { href: "/funcionalidades", label: "Funcionalidades" },
   { href: "/planes", label: "Planes" },
-  { href: "/#contact", label: "Contacto" },
+  { href: "/contacto", label: "Contacto" },
 ]
 
 export default function SiteFooter() {
