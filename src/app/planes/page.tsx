@@ -172,18 +172,18 @@ function PlanCard({ plan }: { plan: Plan }) {
       <p
         className={
           "text-xs font-semibold uppercase tracking-widest " +
-          (plan.highlight ? "text-emerald-700 dark:text-emerald-400" : "text-gray-400 dark:text-zinc-500")
+          (plan.highlight ? "text-emerald-700 dark:text-emerald-400" : "text-gray-400 dark:text-white")
         }
       >
         {plan.name}
       </p>
       <div className="mt-3 flex items-baseline gap-1">
-        <span className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white/90">
+        <span className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
           {plan.parentPrice}
         </span>
-        <span className="text-sm text-gray-500 dark:text-zinc-400">/ familia / mes</span>
+        <span className="text-sm text-gray-500 dark:text-white">/ familia / mes</span>
       </div>
-      <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400">{plan.tagline}</p>
+      <p className="mt-2 text-sm text-gray-500 dark:text-white">{plan.tagline}</p>
 
       <Link
         href="/login"
@@ -216,7 +216,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             ) : (
               <svg
                 aria-hidden
-                className="size-5 shrink-0 text-gray-300 dark:text-zinc-600"
+                className="size-5 shrink-0 text-gray-300 dark:text-white/60"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -231,8 +231,8 @@ function PlanCard({ plan }: { plan: Plan }) {
             <span
               className={
                 f.included
-                  ? "text-gray-700 dark:text-zinc-200"
-                  : "text-gray-400 dark:text-zinc-600 line-through decoration-gray-300 dark:decoration-zinc-700"
+                  ? "text-gray-700 dark:text-white"
+                  : "text-gray-400 dark:text-white/60 line-through decoration-gray-300 dark:decoration-white/40"
               }
             >
               {f.label}
