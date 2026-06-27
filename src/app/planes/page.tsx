@@ -86,7 +86,7 @@ export default function PlanesPage() {
           </Link>
           <Link
             href="/login"
-            className="text-sm font-medium text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+            className="text-sm font-medium text-gray-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200"
           >
             Iniciar sesión
           </Link>
@@ -141,7 +141,7 @@ export default function PlanesPage() {
             </p>
             <Link
               href="/login"
-              className="mt-6 inline-block rounded-[30px] bg-gray-900 dark:bg-white px-8 py-3 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100 transition-all"
+              className="mt-6 inline-block rounded-[30px] bg-emerald-600 px-8 py-3 text-sm font-medium text-white hover:bg-emerald-700 transition-colors duration-200"
             >
               Crear cuenta
             </Link>
@@ -188,10 +188,10 @@ function PlanCard({ plan }: { plan: Plan }) {
       <Link
         href="/login"
         className={
-          "mt-6 block w-full text-center rounded-[30px] py-3 text-sm font-medium transition-all " +
+          "mt-6 block w-full text-center rounded-[30px] py-3 text-sm font-medium transition-colors duration-200 " +
           (plan.highlight
-            ? "bg-emerald-500 text-white hover:bg-emerald-600"
-            : "bg-gray-900 text-white hover:bg-black dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100")
+            ? "bg-emerald-600 text-white hover:bg-emerald-700"
+            : "bg-emerald-600 text-white hover:bg-emerald-700")
         }
       >
         Crear cuenta
