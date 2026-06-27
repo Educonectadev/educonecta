@@ -16,7 +16,7 @@ const securityLinks: FooterLink[] = [
 
 const productLinks: FooterLink[] = [
   { href: "/#features", label: "Funcionalidades" },
-  { href: "/#pricing", label: "Planes" },
+  { href: "/planes", label: "Planes" },
   { href: "/#contact", label: "Contacto" },
 ]
 
