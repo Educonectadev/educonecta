@@ -5,29 +5,23 @@ import SiteFooter from "@/components/SiteFooter"
 export const metadata: Metadata = {
   title: "Planes — EduConecta",
   description:
-    "Elige el plan ideal para tu institución educativa. Esencial, Profesional e Institucional.",
+    "Modelos de aporte para tu colegio. S/ 2 mensuales por familia, plan activado por el equipo EduConecta.",
 }
 
 interface Plan {
   name: string
-  price: string
-  period: string
   tagline: string
   highlight: boolean
-  ctaLabel: string
-  ctaHref: string
+  parentPrice: string
   features: { label: string; included: boolean }[]
 }
 
 const plans: Plan[] = [
   {
     name: "Esencial",
-    price: "S/ 0",
-    period: "Para siempre",
-    tagline: "Empieza gratis con lo básico.",
+    tagline: "Para colegios que recién empiezan a digitalizarse.",
     highlight: false,
-    ctaLabel: "Crear cuenta gratis",
-    ctaHref: "/login",
+    parentPrice: "S/ 2",
     features: [
       { label: "Hasta 50 estudiantes", included: true },
       { label: "Registro de asistencia", included: true },
@@ -44,12 +38,9 @@ const plans: Plan[] = [
   },
   {
     name: "Profesional",
-    price: "S/ 149",
-    period: "por mes",
-    tagline: "La opción más popular entre colegios.",
+    tagline: "El más usado por colegios en crecimiento.",
     highlight: true,
-    ctaLabel: "Contratar Profesional",
-    ctaHref: "/login",
+    parentPrice: "S/ 2",
     features: [
       { label: "Hasta 500 estudiantes", included: true },
       { label: "Registro de asistencia", included: true },
@@ -66,12 +57,9 @@ const plans: Plan[] = [
   },
   {
     name: "Institucional",
-    price: "S/ 399",
-    period: "por mes",
     tagline: "Para redes educativas y colegios grandes.",
     highlight: false,
-    ctaLabel: "Hablar con ventas",
-    ctaHref: "/login",
+    parentPrice: "S/ 2",
     features: [
       { label: "Estudiantes ilimitados", included: true },
       { label: "Registro de asistencia", included: true },
@@ -86,19 +74,6 @@ const plans: Plan[] = [
       { label: "Multi-sede", included: true },
     ],
   },
-]
-
-const comparisonRows = [
-  { label: "Estudiantes incluidos", esencial: "50", profesional: "500", institucional: "Ilimitados" },
-  { label: "Asistencia y calificaciones", esencial: true, profesional: true, institucional: true },
-  { label: "Tareas y comunicados", esencial: true, profesional: true, institucional: true },
-  { label: "Horarios", esencial: true, profesional: true, institucional: true },
-  { label: "Notificaciones push", esencial: false, profesional: true, institucional: true },
-  { label: "Módulo de disciplina", esencial: false, profesional: true, institucional: true },
-  { label: "Reportes y exportación", esencial: false, profesional: true, institucional: true },
-  { label: "Soporte prioritario", esencial: false, profesional: false, institucional: true },
-  { label: "Dominio personalizado", esencial: false, profesional: false, institucional: true },
-  { label: "Multi-sede", esencial: false, profesional: false, institucional: true },
 ]
 
 export default function PlanesPage() {
@@ -119,17 +94,27 @@ export default function PlanesPage() {
       </header>
 
       <main className="flex-1">
-        <section className="max-w-6xl mx-auto px-6 pt-16 pb-10 text-center">
+        <section className="max-w-4xl mx-auto px-6 pt-16 pb-10 text-center">
           <p className="text-xs font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
-            Planes y precios
+            Planes y aporte
           </p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-gray-900 dark:text-white/90">
-            Elige el plan ideal para tu colegio
+            S/ 2 al mes por familia
           </h1>
           <p className="mt-4 text-base text-gray-500 dark:text-zinc-400 max-w-2xl mx-auto">
-            Empieza gratis y crece cuando lo necesites. Sin contratos forzosos, sin
-            instalaciones complicadas.
+            Cada padre de familia aporta <strong className="text-gray-700 dark:text-zinc-200">S/ 2 mensuales</strong>.
+            El colegio recauda el total entre sus familias y nos lo transfiere. Nosotros
+            activamos el plan correspondiente cuando confirmamos el pago.
           </p>
+
+          <div className="mt-8 inline-flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-gray-100 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800/40 px-5 py-4 text-xs text-gray-500 dark:text-zinc-400">
+            <span className="font-semibold text-gray-700 dark:text-zinc-200">¿Cómo funciona?</span>
+            <span>1. La familia paga S/ 2 al colegio</span>
+            <span aria-hidden>·</span>
+            <span>2. El colegio transfiere el total</span>
+            <span aria-hidden>·</span>
+            <span>3. Activamos el plan desde nuestro panel</span>
+          </div>
         </section>
 
         <section className="max-w-6xl mx-auto px-6 pb-16">
@@ -140,62 +125,26 @@ export default function PlanesPage() {
           </div>
 
           <p className="mt-8 text-center text-xs text-gray-400 dark:text-zinc-500">
-            Los precios no incluyen IGV. Facturamos en soles peruanos.
+            El monto mensual que paga el colegio depende de la cantidad de familias
+            aportantes. No hay costo fijo de plataforma.
           </p>
-        </section>
-
-        <section className="max-w-6xl mx-auto px-6 pb-20">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90 text-center">
-            Compara planes en detalle
-          </h2>
-          <div className="mt-8 overflow-x-auto rounded-2xl border border-gray-100 dark:border-zinc-800">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-gray-50 dark:bg-zinc-800/40">
-                  <th className="text-left px-5 py-4 font-semibold text-gray-700 dark:text-zinc-200">
-                    Funcionalidad
-                  </th>
-                  <th className="px-5 py-4 font-semibold text-gray-700 dark:text-zinc-200">Esencial</th>
-                  <th className="px-5 py-4 font-semibold text-emerald-700 dark:text-emerald-400">
-                    Profesional
-                  </th>
-                  <th className="px-5 py-4 font-semibold text-gray-700 dark:text-zinc-200">Institucional</th>
-                </tr>
-              </thead>
-              <tbody>
-                {comparisonRows.map((row, idx) => (
-                  <tr
-                    key={row.label}
-                    className={
-                      idx % 2 === 0
-                        ? "bg-white dark:bg-zinc-900"
-                        : "bg-gray-50/50 dark:bg-zinc-800/20"
-                    }
-                  >
-                    <td className="px-5 py-3 text-gray-700 dark:text-zinc-300">{row.label}</td>
-                    <Cell value={row.esencial} />
-                    <Cell value={row.profesional} highlight />
-                    <Cell value={row.institucional} />
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </section>
 
         <section className="border-t border-gray-100 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800/30">
           <div className="max-w-3xl mx-auto px-6 py-16 text-center">
             <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">
-              ¿Necesitas algo a medida?
+              ¿Listo para activar EduConecta en tu colegio?
             </h2>
             <p className="mt-3 text-sm text-gray-500 dark:text-zinc-400">
-              Si tu colegio tiene más de 2,000 estudiantes o varias sedes, podemos armar un
-              plan personalizado. Escríbenos a{" "}
-              <a className="underline" href="mailto:ventas@educonecta.pe">
-                ventas@educonecta.pe
-              </a>
-              .
+              Crea una cuenta y nuestro equipo se pondrá en contacto para coordinar el
+              aporte y activar el plan que mejor se ajuste a tu comunidad educativa.
             </p>
+            <Link
+              href="/login"
+              className="mt-6 inline-block rounded-[30px] bg-gray-900 dark:bg-white px-8 py-3 text-sm font-medium text-white dark:text-gray-900 hover:bg-black dark:hover:bg-gray-100 transition-all"
+            >
+              Crear cuenta
+            </Link>
           </div>
         </section>
       </main>
@@ -230,14 +179,14 @@ function PlanCard({ plan }: { plan: Plan }) {
       </p>
       <div className="mt-3 flex items-baseline gap-1">
         <span className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white/90">
-          {plan.price}
+          {plan.parentPrice}
         </span>
-        <span className="text-sm text-gray-500 dark:text-zinc-400">{plan.period}</span>
+        <span className="text-sm text-gray-500 dark:text-zinc-400">/ familia / mes</span>
       </div>
       <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400">{plan.tagline}</p>
 
       <Link
-        href={plan.ctaHref}
+        href="/login"
         className={
           "mt-6 block w-full text-center rounded-[30px] py-3 text-sm font-medium transition-all " +
           (plan.highlight
@@ -245,7 +194,7 @@ function PlanCard({ plan }: { plan: Plan }) {
             : "bg-gray-900 text-white hover:bg-black dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100")
         }
       >
-        {plan.ctaLabel}
+        Crear cuenta
       </Link>
 
       <ul className="mt-6 space-y-2.5">
@@ -292,33 +241,5 @@ function PlanCard({ plan }: { plan: Plan }) {
         ))}
       </ul>
     </div>
-  )
-}
-
-function Cell({ value, highlight }: { value: string | boolean; highlight?: boolean }) {
-  if (typeof value === "boolean") {
-    return (
-      <td className={"px-5 py-3 text-center " + (highlight ? "bg-emerald-50/30 dark:bg-emerald-950/10" : "")}>
-        {value ? (
-          <span className="inline-flex size-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400">
-            <svg className="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-          </span>
-        ) : (
-          <span className="inline-flex size-6 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-zinc-800 dark:text-zinc-600">
-            <svg className="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </span>
-        )}
-      </td>
-    )
-  }
-  return (
-    <td className={"px-5 py-3 text-center text-gray-700 dark:text-zinc-300 " + (highlight ? "bg-emerald-50/30 dark:bg-emerald-950/10 font-semibold" : "")}>
-      {value}
-    </td>
   )
 }

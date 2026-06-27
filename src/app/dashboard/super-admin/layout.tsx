@@ -7,13 +7,14 @@ import SidebarNav from "@/components/SidebarNav"
 const sidebarLinks = [
   { href: "/dashboard/super-admin", label: "Dashboard", icon: "dashboard" },
   { href: "/dashboard/super-admin/instituciones", label: "Instituciones", icon: "account_balance" },
+  { href: "/dashboard/super-admin/planes", label: "Planes", icon: "card_membership" },
   { href: "/dashboard/super-admin/versiones", label: "Versiones", icon: "history" },
 ]
 
 const bottomNavItems = [
   { href: "/dashboard/super-admin", label: "Inicio", icon: "home" },
   { href: "/dashboard/super-admin/instituciones", label: "Instituciones", icon: "account_balance" },
-  { href: "/dashboard/super-admin/versiones", label: "Versiones", icon: "history" },
+  { href: "/dashboard/super-admin/planes", label: "Planes", icon: "card_membership" },
 ]
 
 export default async function SuperAdminLayout({ children }: { children: React.ReactNode }) {
