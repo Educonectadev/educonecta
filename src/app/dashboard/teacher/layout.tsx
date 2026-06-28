@@ -9,6 +9,7 @@ const sidebarLinks = [
   { href: "/dashboard/teacher/perfil", label: "Perfil", icon: "person" },
   { href: "/dashboard/teacher/horarios", label: "Horarios", icon: "calendar_month" },
   { href: "/dashboard/teacher/asistencia", label: "Asistencia", icon: "fact_check" },
+  { href: "/dashboard/teacher/asistencia/qr", label: "QR pendientes", icon: "qr_code_scanner" },
   { href: "/dashboard/teacher/tareas", label: "Tareas", icon: "assignment" },
   { href: "/dashboard/teacher/calificaciones", label: "Calificaciones", icon: "grade" },
   { href: "/dashboard/teacher/disciplina", label: "Disciplina", icon: "gavel" },

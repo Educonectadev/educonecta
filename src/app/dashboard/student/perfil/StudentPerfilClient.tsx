@@ -47,6 +47,10 @@ export default function StudentPerfilClient({ student, email }: { student: any; 
     window.open(`/api/student/constancia?${params.toString()}`, "_blank")
   }
 
+  function descargarCarnet() {
+    window.open("/api/student/carnet", "_blank")
+  }
+
   return (
     <div className="space-y-8 max-w-3xl">
       <div>
@@ -122,6 +126,20 @@ export default function StudentPerfilClient({ student, email }: { student: any; 
             {loading ? "Guardando…" : "Cambiar contraseña"}
           </button>
         </form>
+      </section>
+
+      <section className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
+        <h2 className="text-base font-semibold text-gray-900 dark:text-white/90">Carnet digital</h2>
+        <p className="mt-1 text-xs text-gray-400 dark:text-zinc-500">Imprime o comparte tu carnet con QR para tomar asistencia al instante.</p>
+        <button
+          onClick={descargarCarnet}
+          className="mt-4 inline-flex items-center gap-2 rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-5 py-2.5 text-sm font-medium text-gray-800 dark:text-zinc-200 hover:border-violet-300 hover:text-violet-600 transition-colors duration-200"
+        >
+          <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" /><rect x="18" y="18" width="3" height="3" />
+          </svg>
+          Descargar carnet
+        </button>
       </section>
 
       <section className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
