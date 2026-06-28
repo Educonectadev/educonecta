@@ -26,7 +26,7 @@ export default function SiteFooter() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-white"
+      className="border-t border-gray-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 transition-colors"
     >
       <h2 id="footer-heading" className="sr-only">
         Pie de página
@@ -35,16 +35,16 @@ export default function SiteFooter() {
       <div className="max-w-6xl mx-auto px-6 py-10">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 items-start">
           <div className="space-y-2">
-            <p className="text-sm font-bold tracking-tight text-gray-900 dark:text-white/90">
+            <p className="text-sm font-bold tracking-tight text-gray-900 dark:text-white">
               EduConecta
             </p>
-            <p className="text-xs text-gray-500 dark:text-zinc-500 max-w-xs leading-relaxed">
+            <p className="text-xs text-gray-500 dark:text-zinc-400 max-w-xs leading-relaxed">
               Plataforma educativa para instituciones, docentes, estudiantes y familias.
             </p>
           </div>
 
           <div className="space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-500 dark:text-zinc-400">
               Seguridad y Políticas
             </p>
             <ul className="space-y-1.5">
@@ -52,7 +52,7 @@ export default function SiteFooter() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-xs text-gray-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200"
+                    className="text-xs text-gray-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200"
                   >
                     {l.label}
                   </Link>
@@ -62,7 +62,7 @@ export default function SiteFooter() {
           </div>
 
           <div className="space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-500 dark:text-zinc-400">
               Producto
             </p>
             <ul className="space-y-1.5">
@@ -70,7 +70,7 @@ export default function SiteFooter() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-xs text-gray-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200"
+                    className="text-xs text-gray-600 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200"
                   >
                     {l.label}
                   </Link>
@@ -80,12 +80,12 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-gray-100 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-[11px] text-gray-400 dark:text-zinc-500">
+        <div className="mt-8 pt-6 border-t border-gray-200 dark:border-zinc-800 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className="text-[11px] text-gray-500 dark:text-zinc-400">
             © {year} EduConecta. Todos los derechos reservados.
           </p>
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 text-[11px] text-gray-400 dark:text-zinc-500">
+            <span className="inline-flex items-center gap-1.5 text-[11px] text-gray-500 dark:text-zinc-400">
               <span
                 aria-hidden
                 className="size-1.5 rounded-full bg-emerald-500"
