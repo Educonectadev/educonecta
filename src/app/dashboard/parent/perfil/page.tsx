@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { getParentChildren, getChildrenGrades } from "@/lib/parent-data"
 import BrandColorPicker from "@/components/BrandColorPicker"
 import ParentDownloads from "@/components/ParentDownloads"
+import ChangePasswordForm from "@/components/ChangePasswordForm"
 
 export default async function PerfilPage() {
   const session = await getServerSession()
@@ -67,6 +68,10 @@ export default async function PerfilPage() {
 
       <section className="mb-8">
         <BrandColorPicker />
+      </section>
+
+      <section className="mb-8 max-w-md">
+        <ChangePasswordForm apiEndpoint="/api/parent/password" />
       </section>
 
       {children.length === 0 && (

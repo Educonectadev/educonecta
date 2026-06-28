@@ -2,6 +2,7 @@ import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
 import BrandColorPicker from "@/components/BrandColorPicker"
+import ChangePasswordForm from "@/components/ChangePasswordForm"
 
 export default async function TeacherPerfilPage() {
   const session = await getServerSession()
@@ -123,6 +124,10 @@ export default async function TeacherPerfilPage() {
 
       <section className="mb-8">
         <BrandColorPicker />
+      </section>
+
+      <section className="mb-8 max-w-md">
+        <ChangePasswordForm apiEndpoint="/api/teacher/password" />
       </section>
 
       <section className="mb-8">
