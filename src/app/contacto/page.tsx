@@ -139,7 +139,7 @@ export default function ContactoPage() {
             </aside>
 
             <div className="lg:col-span-3">
-              <div className="rounded-3xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-800 p-6 sm:p-8">
+              <div className="rounded-3xl border border-gray-100 dark:border-zinc-800 bg-white p-6 sm:p-8">
                 {submitted ? (
                   <div className="text-center py-8 space-y-4">
                     <div className="inline-flex size-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400">
@@ -173,7 +173,7 @@ export default function ContactoPage() {
                         <input
                           value={form.institutionName}
                           onChange={(e) => update("institutionName", e.target.value)}
-                          className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+                          className="w-full rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
                           placeholder="Colegio San Martín"
                         />
                       </div>
@@ -183,7 +183,7 @@ export default function ContactoPage() {
                           required
                           value={form.directorName}
                           onChange={(e) => update("directorName", e.target.value)}
-                          className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+                          className="w-full rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
                           placeholder="Juan Pérez"
                         />
                       </div>
@@ -197,7 +197,7 @@ export default function ContactoPage() {
                           type="email"
                           value={form.email}
                           onChange={(e) => update("email", e.target.value)}
-                          className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+                          className="w-full rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
                           placeholder="tucorreo@gmail.com"
                         />
                       </div>
@@ -207,7 +207,7 @@ export default function ContactoPage() {
                           type="tel"
                           value={form.phone}
                           onChange={(e) => update("phone", e.target.value)}
-                          className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+                          className="w-full rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
                           placeholder="987654321"
                         />
                       </div>
@@ -220,7 +220,7 @@ export default function ContactoPage() {
                         rows={5}
                         value={form.message}
                         onChange={(e) => update("message", e.target.value)}
-                        className="w-full rounded-2xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors resize-none"
+                        className="w-full rounded-2xl border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors resize-none"
                         placeholder="¿En qué podemos ayudarte?"
                       />
                     </div>
@@ -278,7 +278,7 @@ function ContactCard({
   external?: boolean
 }) {
   const inner = (
-    <div className="flex items-start gap-3 rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-800 p-4 transition-colors duration-200 hover:border-emerald-300 dark:hover:border-emerald-700">
+    <div className="flex items-start gap-3 rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white p-4 transition-colors duration-200 hover:border-emerald-300 dark:hover:border-emerald-700">
       <div className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400">
         <span className="material-icons text-xl">{icon}</span>
       </div>

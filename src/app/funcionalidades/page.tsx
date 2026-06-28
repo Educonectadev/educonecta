@@ -222,7 +222,7 @@ export default function FuncionalidadesPage() {
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/planes"
-                className="rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-6 py-3 text-sm font-medium text-gray-800 dark:text-zinc-200 hover:border-emerald-300 hover:text-emerald-600 transition-colors duration-200"
+                className="rounded-[30px] border border-gray-200 bg-white px-6 py-3 text-sm font-medium text-gray-800 hover:border-emerald-300 hover:text-emerald-600 transition-colors duration-200"
               >
                 Ver planes
               </Link>

@@ -26,7 +26,7 @@ export default function SiteFooter() {
   return (
     <footer
       aria-labelledby="footer-heading"
-      className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900"
+      className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-white"
     >
       <h2 id="footer-heading" className="sr-only">
         Pie de página
