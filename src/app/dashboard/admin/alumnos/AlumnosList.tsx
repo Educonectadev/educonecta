@@ -34,9 +34,21 @@ export default function AlumnosList({
   const [editing, setEditing] = useState<Student | null>(null)
   const [deleting, setDeleting] = useState<Student | null>(null)
   const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState({ firstName: "", lastName: "", documentId: "", email: "", phone: "", gradeId: "", sectionId: "" })
+  const [createdCredentials, setCreatedCredentials] = useState<{ email: string; tempPassword: string; name: string } | null>(null)
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    documentId: "",
+    email: "",
+    phone: "",
+    gradeId: "",
+    sectionId: "",
+    createAccount: false,
+  })
 
-  function resetForm() { setForm({ firstName: "", lastName: "", documentId: "", email: "", phone: "", gradeId: "", sectionId: "" }) }
+  function resetForm() {
+    setForm({ firstName: "", lastName: "", documentId: "", email: "", phone: "", gradeId: "", sectionId: "", createAccount: false })
+  }
 
   function openEdit(s: Student) {
     setEditing(s)
@@ -48,10 +60,15 @@ export default function AlumnosList({
       phone: "",
       gradeId: s.grade?.id?.toString() ?? "",
       sectionId: s.section?.id?.toString() ?? "",
+      createAccount: false,
     })
   }
 
   async function handleCreate() {
+    if (!form.email.trim() && form.createAccount) {
+      toast.danger("Para crear cuenta necesitas el email del alumno.")
+      return
+    }
     setLoading(true)
     const res = await fetch("/api/admin/students", {
       method: "POST",
@@ -63,15 +80,25 @@ export default function AlumnosList({
         email: form.email || null,
         gradeId: form.gradeId ? Number(form.gradeId) : null,
         sectionId: form.sectionId ? Number(form.sectionId) : null,
+        createAccount: form.createAccount,
       }),
     })
+    const data = await res.json().catch(() => ({}))
     setLoading(false)
     if (res.ok) {
       setShowCreate(false)
+      if (data?.tempPassword) {
+        setCreatedCredentials({
+          email: form.email,
+          tempPassword: data.tempPassword,
+          name: `${form.firstName} ${form.lastName}`,
+        })
+      } else {
+        setCreatedCredentials(null)
+      }
       resetForm()
       router.refresh()
     } else {
-      const data = await res.json()
       toast.danger(data.error || "Error al registrar alumno")
     }
   }
@@ -195,6 +222,22 @@ export default function AlumnosList({
               <Select value={form.sectionId} onChange={(val) => setForm({...form, sectionId: val})} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Sin sección" />
             </div>
           </div>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={form.createAccount}
+              onChange={(e) => setForm({ ...form, createAccount: e.target.checked })}
+              className="size-4"
+            />
+            <span className="text-xs text-gray-600">
+              Crear cuenta de acceso para que el alumno entre a su portal.
+            </span>
+          </label>
+          {form.createAccount && !form.email.trim() && (
+            <p className="text-[11px] text-amber-600 dark:text-amber-400">
+              Ingresa el email del alumno para crear la cuenta.
+            </p>
+          )}
         </div>
         <div className="flex gap-3 mt-8">
           <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
@@ -202,6 +245,35 @@ export default function AlumnosList({
             {loading ? "Guardando..." : "Registrar"}
           </button>
         </div>
+      </Modal>
+
+      <Modal open={!!createdCredentials} onClose={() => setCreatedCredentials(null)} title="Cuenta creada" size="md">
+        {createdCredentials && (
+          <div className="space-y-4">
+            <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 p-4 text-sm">
+              <p className="text-emerald-700 dark:text-emerald-300 font-semibold">Cuenta creada para {createdCredentials.name}</p>
+              <p className="mt-2 text-xs text-emerald-700/80 dark:text-emerald-300/80">
+                Entrega estas credenciales al alumno. Le recomendamos cambiar la contraseña al primer ingreso desde su portal.
+              </p>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <p className="text-[11px] uppercase tracking-widest text-gray-400 dark:text-zinc-500">Email</p>
+                <p className="text-sm font-mono text-gray-900 dark:text-white/90">{createdCredentials.email}</p>
+              </div>
+              <div>
+                <p className="text-[11px] uppercase tracking-widest text-gray-400 dark:text-zinc-500">Contraseña temporal</p>
+                <p className="text-sm font-mono text-gray-900 dark:text-white/90 select-all bg-gray-50 dark:bg-zinc-800 rounded-[20px] px-4 py-2 inline-block">{createdCredentials.tempPassword}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setCreatedCredentials(null)}
+              className="w-full rounded-[30px] bg-emerald-600 hover:bg-emerald-700 transition-colors duration-200 py-2.5 text-sm font-medium text-white"
+            >
+              Entendido
+            </button>
+          </div>
+        )}
       </Modal>
 
       <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Alumno" size="md" scroll="inside">

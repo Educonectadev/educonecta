@@ -80,4 +80,20 @@ export const themes: Record<string, RoleTheme> = {
     avatar: "bg-amber-500",
     accent: "text-amber-500",
   },
+  STUDENT: {
+    sidebar: {
+      activeBg: "bg-violet-600",
+      activeText: "text-white",
+      hoverBg: "hover:bg-violet-600",
+      hoverText: "hover:text-white",
+      labelColor: "text-violet-500",
+    },
+    card: {
+      bg: "bg-violet-50 dark:bg-violet-950/30",
+      border: "border-violet-200 dark:border-violet-900",
+      hoverBg: "hover:bg-violet-100 dark:hover:bg-violet-900/50",
+    },
+    avatar: "bg-violet-600",
+    accent: "text-violet-600",
+  },
 }

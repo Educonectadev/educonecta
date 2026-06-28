@@ -35,10 +35,11 @@ export async function getServerSession(): Promise<Session | null> {
       institutionName = inst?.name ?? null
     }
 
-    const [{ data: teacher }, { data: parent }, { data: admin }] = await Promise.all([
+    const [{ data: teacher }, { data: parent }, { data: admin }, { data: student }] = await Promise.all([
       supabaseAdmin.from("Teacher").select("id").eq("userId", user.id).maybeSingle(),
       supabaseAdmin.from("Parent").select("id").eq("userId", user.id).maybeSingle(),
       supabaseAdmin.from("InstitutionalAdmin").select("id").eq("userId", user.id).maybeSingle(),
+      supabaseAdmin.from("Student").select("id").eq("userId", user.id).maybeSingle(),
     ])
 
     return {
@@ -52,6 +53,7 @@ export async function getServerSession(): Promise<Session | null> {
         teacherId: teacher?.id ?? null,
         parentId: parent?.id ?? null,
         adminId: admin?.id ?? null,
+        studentId: student?.id ?? null,
       },
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     }

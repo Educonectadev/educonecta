@@ -1,0 +1,39 @@
+import { getServerSession } from "@/lib/auth"
+import { redirect } from "next/navigation"
+import Navbar from "@/components/Navbar"
+import BottomNav from "@/components/BottomNav"
+import SidebarNav from "@/components/SidebarNav"
+
+const sidebarLinks = [
+  { href: "/dashboard/student", label: "Inicio", icon: "dashboard" },
+  { href: "/dashboard/student/cursos", label: "Mis cursos", icon: "menu_book" },
+  { href: "/dashboard/student/tareas", label: "Mis tareas", icon: "assignment" },
+  { href: "/dashboard/student/calificaciones", label: "Calificaciones", icon: "grade" },
+  { href: "/dashboard/student/asistencia", label: "Asistencia", icon: "fact_check" },
+  { href: "/dashboard/student/comunicados", label: "Comunicados", icon: "mail" },
+  { href: "/dashboard/student/perfil", label: "Mi perfil", icon: "person" },
+]
+
+const bottomNavItems = [
+  { href: "/dashboard/student", label: "Inicio", icon: "home" },
+  { href: "/dashboard/student/tareas", label: "Tareas", icon: "assignment" },
+  { href: "/dashboard/student/calificaciones", label: "Notas", icon: "grade" },
+  { href: "/dashboard/student/comunicados", label: "Avisos", icon: "mail" },
+]
+
+export default async function StudentLayout({ children }: { children: React.ReactNode }) {
+  const session = await getServerSession()
+
+  if (!session || session.user.role !== "STUDENT") redirect("/login")
+
+  return (
+    <div className="min-h-screen flex flex-col bg-white dark:bg-black">
+      <Navbar />
+      <div className="flex flex-1 pt-14 md:pt-16">
+        <SidebarNav links={sidebarLinks as any} label="Estudiante" theme="STUDENT" />
+        <main className="flex-1 p-4 pb-20 md:p-8 md:pb-8">{children}</main>
+      </div>
+      <BottomNav items={bottomNavItems} />
+    </div>
+  )
+}
