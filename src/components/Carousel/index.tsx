@@ -8,23 +8,66 @@ export interface CarouselImage {
   alt?: string | null
 }
 
-interface Props {
+interface CarouselProps {
   images: CarouselImage[]
+  /** Tamaño del carrusel. `lg` = flechas grandes + dots enmarcados; `md` = compactos. */
+  size?: "md" | "lg"
   autoPlay?: boolean
   intervalMs?: number
   className?: string
   aspectClass?: string
   rounded?: string
+  /** Si true, los dots son "framed" (rectángulos con el activo lleno). */
+  framedDots?: boolean
+}
+
+/* Iconos ChevronLeft / ChevronRight (sustitutos de @untitledui/icons). */
+function ChevronLeft({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="m15 18-6-6 6-6" />
+    </svg>
+  )
+}
+
+function ChevronRight({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  )
 }
 
 export default function Carousel({
   images,
+  size = "lg",
   autoPlay = false,
   intervalMs = 5000,
   className = "",
   aspectClass = "aspect-[16/9]",
   rounded = "rounded-2xl",
-}: Props) {
+  framedDots = false,
+}: CarouselProps) {
   const [index, setIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const total = images.length
@@ -75,6 +118,13 @@ export default function Carousel({
     return () => el.removeEventListener("keydown", handler)
   }, [next, prev])
 
+  // Tamaños según variant.
+  const arrowSize = size === "lg" ? "size-11" : "size-9"
+  const arrowPadding = size === "lg" ? "p-2" : "p-1.5"
+  const iconSize = size === "lg" ? "size-6" : "size-5"
+  const dotActiveWidth = size === "lg" ? "w-6" : "w-5"
+  const dotSize = size === "lg" ? "size-2" : "size-1.5"
+
   if (total === 0) {
     return (
       <div
@@ -122,39 +172,105 @@ export default function Carousel({
             type="button"
             onClick={prev}
             aria-label="Anterior"
-            className="absolute top-1/2 left-2 sm:left-4 z-10 -translate-y-1/2 inline-flex items-center justify-center size-9 sm:size-11 rounded-full bg-white/90 dark:bg-zinc-900/80 backdrop-blur text-gray-800 dark:text-zinc-200 hover:bg-white dark:hover:bg-zinc-800 shadow-sm transition-colors duration-200"
+            className={`absolute top-1/2 ${size === "lg" ? "left-5" : "left-4"} z-10 -translate-y-1/2 inline-flex items-center justify-center ${arrowSize} ${arrowPadding} cursor-pointer rounded-full bg-white/90 dark:bg-zinc-900/80 backdrop-blur text-gray-700 dark:text-zinc-200 hover:bg-white dark:hover:bg-zinc-800 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50`}
           >
-            <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
+            <ChevronLeft className={iconSize} />
           </button>
           <button
             type="button"
             onClick={next}
             aria-label="Siguiente"
-            className="absolute top-1/2 right-2 sm:right-4 z-10 -translate-y-1/2 inline-flex items-center justify-center size-9 sm:size-11 rounded-full bg-white/90 dark:bg-zinc-900/80 backdrop-blur text-gray-800 dark:text-zinc-200 hover:bg-white dark:hover:bg-zinc-800 shadow-sm transition-colors duration-200"
+            className={`absolute top-1/2 ${size === "lg" ? "right-5" : "right-4"} z-10 -translate-y-1/2 inline-flex items-center justify-center ${arrowSize} ${arrowPadding} cursor-pointer rounded-full bg-white/90 dark:bg-zinc-900/80 backdrop-blur text-gray-700 dark:text-zinc-200 hover:bg-white dark:hover:bg-zinc-800 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50`}
           >
-            <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
+            <ChevronRight className={iconSize} />
           </button>
 
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 inline-flex items-center gap-1.5 rounded-full bg-black/30 dark:bg-black/50 px-2.5 py-1.5 backdrop-blur-sm">
-            {images.map((img, i) => (
-              <button
-                key={img.id}
-                type="button"
-                onClick={() => go(i)}
-                aria-label={`Ir a imagen ${i + 1}`}
-                className={
-                  "size-1.5 sm:size-2 rounded-full transition-all duration-200 " +
-                  (i === index ? "bg-white w-4 sm:w-5" : "bg-white/50 hover:bg-white/80")
-                }
-              />
-            ))}
+          <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5`}>
+            {framedDots ? (
+              images.map((img, i) => (
+                <button
+                  key={img.id}
+                  type="button"
+                  onClick={() => go(i)}
+                  aria-label={`Ir a imagen ${i + 1}`}
+                  className={
+                    "h-1.5 rounded-full transition-all duration-200 " +
+                    (i === index
+                      ? `bg-gray-800 dark:bg-white ${dotActiveWidth}`
+                      : `w-3 bg-gray-300 dark:bg-zinc-600 hover:bg-gray-400 dark:hover:bg-zinc-500`)
+                  }
+                />
+              ))
+            ) : (
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-black/30 dark:bg-black/50 px-2.5 py-1.5 backdrop-blur-sm">
+                {images.map((img, i) => (
+                  <button
+                    key={img.id}
+                    type="button"
+                    onClick={() => go(i)}
+                    aria-label={`Ir a imagen ${i + 1}`}
+                    className={
+                      `${dotSize} rounded-full transition-all duration-200 ` +
+                      (i === index ? `bg-white ${dotActiveWidth}` : "bg-white/50 hover:bg-white/80")
+                    }
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}
     </div>
   )
 }
+
+/* Componentes exportados con la API estilo UntitledUI para uso directo. */
+export const CarouselMd = ({
+  images,
+  autoPlay,
+  intervalMs,
+  className,
+  aspectClass,
+}: {
+  images: CarouselImage[]
+  autoPlay?: boolean
+  intervalMs?: number
+  className?: string
+  aspectClass?: string
+}) => (
+  <Carousel
+    images={images}
+    size="md"
+    framedDots
+    rounded="rounded-xl"
+    autoPlay={autoPlay}
+    intervalMs={intervalMs}
+    className={className}
+    aspectClass={aspectClass}
+  />
+)
+
+export const CarouselLg = ({
+  images,
+  autoPlay,
+  intervalMs,
+  className,
+  aspectClass,
+}: {
+  images: CarouselImage[]
+  autoPlay?: boolean
+  intervalMs?: number
+  className?: string
+  aspectClass?: string
+}) => (
+  <Carousel
+    images={images}
+    size="lg"
+    framedDots
+    rounded="rounded-xl"
+    autoPlay={autoPlay}
+    intervalMs={intervalMs}
+    className={className}
+    aspectClass={aspectClass}
+  />
+)

@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import Carousel from "@/components/Carousel"
+import { CarouselLg } from "@/components/Carousel"
 
 interface Stat {
   label: string
@@ -98,7 +98,7 @@ export default function AdminDashboard({
               Editar imágenes →
             </Link>
           </div>
-          <Carousel
+          <CarouselLg
             images={carouselImages!}
             autoPlay
             intervalMs={6000}
