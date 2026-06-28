@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import Carousel from "@/components/Carousel"
 
 interface Stat {
   label: string
@@ -25,6 +26,12 @@ interface RecentTeacher {
   speciality: string | null
 }
 
+interface CarouselImg {
+  id: number
+  url: string
+  alt: string | null
+}
+
 export default function AdminDashboard({
   stats,
   recentStudents,
@@ -34,6 +41,7 @@ export default function AdminDashboard({
   totalParents,
   totalCourses,
   institutionName,
+  carouselImages,
 }: {
   stats: Stat[]
   recentStudents: RecentStudent[]
@@ -43,6 +51,7 @@ export default function AdminDashboard({
   totalParents: number
   totalCourses: number
   institutionName?: string
+  carouselImages?: CarouselImg[]
 }) {
   const quickLinks = [
     { label: "Alumnos", href: "/dashboard/admin/alumnos", count: totalStudents, icon: "group" },
@@ -73,6 +82,30 @@ export default function AdminDashboard({
           <p className="mt-1 text-sm text-white/60">Panel de Administración</p>
         </div>
       </div>
+
+      {/* Carrusel del colegio */}
+      {(carouselImages ?? []).length > 0 && (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="material-icons text-base text-gray-400 dark:text-zinc-500">imagesmode</span>
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500">Tu colegio</h2>
+            </div>
+            <Link
+              href="/dashboard/admin/perfil/carrusel"
+              className="text-xs text-gray-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+            >
+              Editar imágenes →
+            </Link>
+          </div>
+          <Carousel
+            images={carouselImages!}
+            autoPlay
+            intervalMs={6000}
+            aspectClass="aspect-[16/9] sm:aspect-[21/9]"
+          />
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

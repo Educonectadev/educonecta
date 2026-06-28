@@ -9,7 +9,7 @@ export default async function AdminDashboardPage() {
 
   const institutionId = session.user.institutionId!
   let studentCount = 0, teacherCount = 0, parentCount = 0, courseCount = 0
-  let students: any[] = [], teachers: any[] = []
+  let students: any[] = [], teachers: any[] = [], carouselImages: any[] = []
   let institutionName = ""
 
   try {
@@ -43,6 +43,11 @@ export default async function AdminDashboardPage() {
          LIMIT 5`,
         [institutionId]
       ),
+      query(
+        `SELECT id, url, alt FROM "InstitutionCarouselImage"
+         WHERE "institutionId" = ? ORDER BY "order" ASC, "createdAt" ASC LIMIT 12`,
+        [institutionId]
+      ),
     ])
 
     if (results[0].status === "fulfilled") studentCount = results[0].value
@@ -57,6 +62,8 @@ export default async function AdminDashboardPage() {
     else console.error("students query failed:", results[4].reason)
     if (results[5].status === "fulfilled") teachers = results[5].value
     else console.error("teachers query failed:", results[5].reason)
+    if (results[6].status === "fulfilled") carouselImages = results[6].value
+    else console.error("carousel query failed:", results[6].reason)
   } catch (e) {
     console.error("Dashboard data fetch failed:", e)
   }
@@ -78,6 +85,7 @@ export default async function AdminDashboardPage() {
       totalParents={parentCount}
       totalCourses={courseCount}
       institutionName={institutionName}
+      carouselImages={carouselImages as any[]}
     />
   )
 }
