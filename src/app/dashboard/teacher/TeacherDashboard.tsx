@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useState } from "react"
 import Modal from "@/components/Modal"
 import DataTable from "@/components/DataTable"
+import { UnreadChatCount } from "@/components/UnreadChatCount"
 
 interface CourseTeacher {
   id: number
@@ -76,8 +77,8 @@ export default function TeacherDashboard({
     { label: "Tareas", href: "/dashboard/teacher/tareas", icon: "assignment" },
     { label: "Notas", href: "/dashboard/teacher/calificaciones", icon: "grade" },
     { label: "Disciplina", href: "/dashboard/teacher/disciplina", icon: "gavel" },
+    { label: "Mensajes", href: "/dashboard/teacher/mensajes", icon: "chat" },
     { label: "Comunicados", href: "/dashboard/teacher/comunicados", icon: "mail" },
-    { label: "Horarios", href: "/dashboard/teacher/horarios", icon: "calendar_month" },
   ]
 
   const statCards = [
@@ -149,8 +150,9 @@ export default function TeacherDashboard({
             <Link
               key={l.label}
               href={l.href}
-              className="group flex flex-col items-center justify-center gap-2 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-4 hover:border-gray-200 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/20 transition-all duration-200 min-h-[100px]"
+              className="relative group flex flex-col items-center justify-center gap-2 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-4 hover:border-gray-200 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/20 transition-all duration-200 min-h-[100px]"
             >
+              {l.label === "Mensajes" && <UnreadChatCount role="TEACHER" />}
               <div className="w-10 h-10 rounded-xl bg-gray-50 dark:bg-zinc-800 flex items-center justify-center group-hover:bg-gray-100 dark:group-hover:bg-zinc-700 transition-colors">
                 <span className="material-icons text-xl text-gray-500 dark:text-zinc-400">{l.icon}</span>
               </div>
