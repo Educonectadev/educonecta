@@ -97,7 +97,10 @@ export default async function AsistenciaPage() {
                 </tr>
               </thead>
               <tbody>
-                {recentAttendance.map((a: { id: number; date: Date; isPresent: boolean; note: string | null; student: { firstName: string; lastName: string } }) => (
+                {recentAttendance.map((a: { id: number; date: string | Date; isPresent: boolean; note: string | null; student: { firstName: string; lastName: string } }) => {
+                  const dateStr = typeof a.date === "string" ? a.date : a.date.toISOString().substring(0, 10)
+                  const dateObj = new Date(dateStr)
+                  return (
                   <tr key={a.id} className="flex flex-col md:table-row border border-gray-100 dark:border-zinc-800/50 md:border-0 rounded-2xl p-4 md:p-0 mb-3 md:mb-0 hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
                     <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-900 dark:text-white/90 font-medium">
                       <span className="md:hidden text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500">Estudiante</span>
@@ -105,7 +108,7 @@ export default async function AsistenciaPage() {
                     </td>
                     <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-600 dark:text-zinc-400">
                       <span className="md:hidden text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500">Fecha</span>
-                      <span>{a.date.toLocaleDateString("es-ES")}</span>
+                      <span>{dateObj.toLocaleDateString("es-ES")}</span>
                     </td>
                     <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
                       <span className="md:hidden text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500">Presente</span>
@@ -122,7 +125,8 @@ export default async function AsistenciaPage() {
                       <span>{a.note ?? "—"}</span>
                     </td>
                   </tr>
-                ))}
+                  )
+                })}
               </tbody>
             </table>
           </div>
