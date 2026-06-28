@@ -34,8 +34,9 @@ CREATE TABLE "User" (
   email VARCHAR(255) NOT NULL UNIQUE,
   passwordHash VARCHAR(255) NOT NULL,
   name VARCHAR(255) NOT NULL,
-  role VARCHAR(50) NOT NULL CHECK (role IN ('SUPER_ADMIN', 'INSTITUTIONAL_ADMIN', 'TEACHER', 'PARENT')),
+  role VARCHAR(50) NOT NULL CHECK (role IN ('SUPER_ADMIN', 'INSTITUTIONAL_ADMIN', 'TEACHER', 'PARENT', 'STUDENT')),
   phone VARCHAR(255),
+  brandColor VARCHAR(9) DEFAULT '#000000',
   isActive BOOLEAN NOT NULL DEFAULT TRUE,
   createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -136,10 +137,11 @@ CREATE INDEX idx_student_document ON "Student"(documentId);
 
 -- ── ParentStudent (many-to-many) ──
 CREATE TABLE "ParentStudent" (
+  id SERIAL PRIMARY KEY,
   parentId INT NOT NULL REFERENCES "Parent"(id) ON DELETE CASCADE,
   studentId INT NOT NULL REFERENCES "Student"(id) ON DELETE CASCADE,
   relationship VARCHAR(255),
-  PRIMARY KEY (parentId, studentId)
+  UNIQUE (parentId, studentId)
 );
 
 CREATE INDEX idx_parent_student_student ON "ParentStudent"(studentId);

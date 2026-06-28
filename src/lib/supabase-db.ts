@@ -99,13 +99,36 @@ export async function create(
   table: string,
   data: Record<string, unknown>,
 ): Promise<number> {
-  const { data: inserted, error } = await getSupabaseAdmin()
-    .from(table)
-    .insert(data as any)
-    .select("id")
-    .single()
+  // Si la tabla no tiene columna 'id' (PK compuesta), hacemos un insert
+  // sin pedir el id de retorno. Devolvemos 0 como sentinel para que el
+  // caller use la PK compuesta cuando la necesite.
+  const hasIdColumn = await tableHasIdColumn(table)
+  let q = getSupabaseAdmin().from(table).insert(data as any)
+  if (hasIdColumn) {
+    const { data: inserted, error } = await q.select("id").single()
+    if (error) throw error
+    return (inserted as any).id
+  }
+  const { error } = await q
   if (error) throw error
-  return (inserted as any).id
+  return 0
+}
+
+const idColumnCache = new Map<string, boolean>()
+async function tableHasIdColumn(table: string): Promise<boolean> {
+  if (idColumnCache.has(table)) return idColumnCache.get(table)!
+  try {
+    const { error } = await getSupabaseAdmin().from(table).select("id").limit(1)
+    // PGRST204 / "does not exist" → la columna no existe
+    if (error && (error.code === "PGRST204" || /does not exist/i.test(error.message ?? ""))) {
+      idColumnCache.set(table, false)
+      return false
+    }
+    idColumnCache.set(table, true)
+    return true
+  } catch {
+    return true
+  }
 }
 
 export async function update(

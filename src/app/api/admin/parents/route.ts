@@ -35,21 +35,35 @@ export async function GET() {
 
   const institutionId = session.user.institutionId!
   const parents = await query(
-    `SELECT p.*,
-      jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user,
-      COALESCE(
-        JSON_ARRAYAGG(
-          jsonb_build_object('id', ps.id, 'parentId', ps.parentId, 'studentId', ps.studentId, 'student', jsonb_build_object('id', st.id, 'firstName', st.firstName, 'lastName', st.lastName, 'documentId', st.documentId))
-        ),
-        JSON_ARRAY()
-      ) AS children
-    FROM Parent p
-    JOIN User u ON p.userId = u.id
-    LEFT JOIN ParentStudent ps ON ps.parentId = p.id
-    LEFT JOIN Student st ON ps.studentId = st.id
-    WHERE p.institutionId = ?
-    GROUP BY p.id
-    ORDER BY p.createdAt DESC`,
+    `SELECT p.id,
+            p."userId",
+            p."institutionId",
+            p."occupation",
+            p."createdAt",
+            p."updatedAt",
+            jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user,
+            COALESCE(
+              JSON_AGG(
+                jsonb_build_object(
+                  'parentId', ps."parentId",
+                  'studentId', ps."studentId",
+                  'student', jsonb_build_object(
+                    'id', st.id,
+                    'firstName', st."firstName",
+                    'lastName', st."lastName",
+                    'documentId', st."documentId"
+                  )
+                )
+              ) FILTER (WHERE ps."parentId" IS NOT NULL),
+              JSON_ARRAY()
+            ) AS children
+     FROM "Parent" p
+     JOIN "User" u ON p."userId" = u.id
+     LEFT JOIN "ParentStudent" ps ON ps."parentId" = p.id
+     LEFT JOIN "Student" st ON ps."studentId" = st.id
+     WHERE p."institutionId" = ?
+     GROUP BY p.id, u.id
+     ORDER BY p."createdAt" DESC`,
     [institutionId]
   )
 
@@ -109,25 +123,41 @@ export async function POST(request: Request) {
     }
 
     const parent = await query(
-      `SELECT p.*,
-        jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user,
-        COALESCE(
-          JSON_ARRAYAGG(
-            jsonb_build_object('id', ps.id, 'parentId', ps.parentId, 'studentId', ps.studentId, 'student', jsonb_build_object('id', st.id, 'firstName', st.firstName, 'lastName', st.lastName, 'documentId', st.documentId))
-          ),
-          JSON_ARRAY()
-        ) AS children
-      FROM Parent p
-      JOIN User u ON p.userId = u.id
-      LEFT JOIN ParentStudent ps ON ps.parentId = p.id
-      LEFT JOIN Student st ON ps.studentId = st.id
-      WHERE p.id = ?
-      GROUP BY p.id`,
+      `SELECT p.id,
+              p."userId",
+              p."institutionId",
+              p."occupation",
+              p."createdAt",
+              p."updatedAt",
+              jsonb_build_object('id', u.id, 'name', u.name, 'email', u.email, 'phone', u.phone) AS user,
+              COALESCE(
+                JSON_AGG(
+                  jsonb_build_object(
+                    'parentId', ps."parentId",
+                    'studentId', ps."studentId",
+                    'student', jsonb_build_object(
+                      'id', st.id,
+                      'firstName', st."firstName",
+                      'lastName', st."lastName",
+                      'documentId', st."documentId"
+                    )
+                  )
+                ) FILTER (WHERE ps."parentId" IS NOT NULL),
+                JSON_ARRAY()
+              ) AS children
+       FROM "Parent" p
+       JOIN "User" u ON p."userId" = u.id
+       LEFT JOIN "ParentStudent" ps ON ps."parentId" = p.id
+       LEFT JOIN "Student" st ON ps."studentId" = st.id
+       WHERE p.id = ?
+       GROUP BY p.id, u.id`,
       [parentId]
     )
 
     return NextResponse.json(parent[0], { status: 201 })
-  } catch {
-    return NextResponse.json({ error: "Error al crear padre" }, { status: 500 })
+  } catch (e: any) {
+    console.error("[admin/parents POST]", e?.message ?? e)
+    const msg = e?.message ?? "Error al crear padre"
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }
