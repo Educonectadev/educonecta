@@ -196,14 +196,24 @@ export default function ParentMessagesClient({
                       }
                     }}
                     placeholder="Escribe un mensaje…"
-                    className="flex-1 rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-colors"
+                    className="flex-1 min-w-0 rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-colors"
                   />
                   <button
                     onClick={send}
                     disabled={sending || !draft.trim()}
-                    className="rounded-[30px] bg-amber-500 hover:bg-amber-600 transition-colors duration-200 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50"
+                    aria-label="Enviar mensaje"
+                    className="shrink-0 inline-flex items-center justify-center size-11 rounded-full bg-amber-500 hover:bg-amber-600 transition-colors duration-200 text-white disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    {sending ? "…" : "Enviar"}
+                    {sending ? (
+                      <svg className="size-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <circle cx="12" cy="12" r="9" strokeDasharray="42" strokeDashoffset="14" />
+                      </svg>
+                    ) : (
+                      <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 2 11 13" />
+                        <path d="m22 2-7 20-4-9-9-4 20-7Z" />
+                      </svg>
+                    )}
                   </button>
                 </div>
               </>
