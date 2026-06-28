@@ -1,0 +1,218 @@
+"use client"
+
+import { useEffect, useRef, useState } from "react"
+
+interface Parent {
+  userId: number
+  name: string
+  studentId: number
+  studentName: string
+}
+interface Message {
+  id: number
+  parentUserId: number
+  teacherUserId: number
+  studentId: number | null
+  fromRole: "PARENT" | "TEACHER"
+  fromName: string | null
+  body: string
+  createdAt: string
+}
+
+export default function TeacherMessagesClient({
+  parents,
+  lastMessages,
+  teacherUserId,
+  teacherName,
+}: {
+  parents: Parent[]
+  lastMessages: Message[]
+  teacherUserId: number
+  teacherName: string
+}) {
+  const [selected, setSelected] = useState<Parent | null>(parents[0] ?? null)
+  const [messages, setMessages] = useState<Message[]>([])
+  const [draft, setDraft] = useState("")
+  const [sending, setSending] = useState(false)
+  const endRef = useRef<HTMLDivElement | null>(null)
+  const lastServerTime = useRef<string>(new Date().toISOString())
+
+  const byParent = new Map<number, Message>()
+  for (const m of lastMessages) {
+    if (!byParent.has(m.parentUserId)) byParent.set(m.parentUserId, m)
+  }
+
+  async function load(p: Parent) {
+    setMessages([])
+    try {
+      const res = await fetch(`/api/messages/parent-teacher?parentUserId=${p.userId}`)
+      if (!res.ok) return
+      const data = await res.json()
+      const list: Message[] = data.messages ?? []
+      setMessages(list)
+      if (list.length > 0) lastServerTime.current = list[list.length - 1].createdAt
+    } catch {}
+  }
+
+  useEffect(() => {
+    if (selected) load(selected)
+  }, [selected])
+
+  useEffect(() => {
+    if (!selected) return
+    let cancelled = false
+    const t = setInterval(async () => {
+      try {
+        const res = await fetch(
+          `/api/messages/parent-teacher?parentUserId=${selected.userId}&since=${encodeURIComponent(lastServerTime.current)}`
+        )
+        if (!res.ok) return
+        const data = await res.json()
+        if (cancelled) return
+        const newOnes: Message[] = data.messages ?? []
+        if (newOnes.length > 0) {
+          setMessages((prev) => {
+            const ids = new Set(prev.map((m) => m.id))
+            return [...prev, ...newOnes.filter((m) => !ids.has(m.id))]
+          })
+          lastServerTime.current = newOnes[newOnes.length - 1].createdAt
+        }
+      } catch {}
+    }, 5000)
+    return () => {
+      cancelled = true
+      clearInterval(t)
+    }
+  }, [selected])
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages])
+
+  async function send() {
+    if (!selected) return
+    const text = draft.trim()
+    if (!text) return
+    setSending(true)
+    try {
+      const res = await fetch("/api/messages/parent-teacher", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ parentUserId: selected.userId, studentId: selected.studentId, body: text }),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setMessages((prev) => [...prev, data.message])
+        setDraft("")
+        lastServerTime.current = data.message.createdAt
+      }
+    } finally {
+      setSending(false)
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mensajes</h1>
+        <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Conversación directa con los padres de tus estudiantes.</p>
+      </div>
+
+      {parents.length === 0 ? (
+        <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-10 text-center text-sm text-gray-400">
+          Aún no tienes apoderados para chatear.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <aside className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
+            <ul className="divide-y divide-gray-100 dark:divide-zinc-800 max-h-[60vh] md:max-h-[70vh] overflow-y-auto">
+              {parents.map((p) => {
+                const last = byParent.get(p.userId)
+                const active = selected?.userId === p.userId
+                return (
+                  <li key={p.userId}>
+                    <button
+                      onClick={() => setSelected(p)}
+                      className={
+                        "w-full text-left p-4 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors " +
+                        (active ? "bg-emerald-50 dark:bg-emerald-950/30" : "")
+                      }
+                    >
+                      <p className="text-sm font-medium text-gray-900 dark:text-white/90 truncate">{p.name}</p>
+                      <p className="text-[11px] text-gray-500 dark:text-zinc-400 truncate">{p.studentName}</p>
+                      <p className="mt-0.5 text-xs text-gray-400 dark:text-zinc-500 truncate">
+                        {last ? last.body : "Sin mensajes aún"}
+                      </p>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          </aside>
+
+          <section className="md:col-span-2 rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col h-[70vh]">
+            {selected ? (
+              <>
+                <header className="px-5 py-3 border-b border-gray-100 dark:border-zinc-800">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white/90">{selected.name}</p>
+                  <p className="text-[11px] text-gray-400 dark:text-zinc-500">Apoderado de {selected.studentName}</p>
+                </header>
+                <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                  {messages.length === 0 ? (
+                    <p className="text-xs text-center text-gray-400 dark:text-zinc-500 py-10">
+                      Escribe abajo para iniciar la conversación.
+                    </p>
+                  ) : (
+                    messages.map((m) => (
+                      <div key={m.id} className={"flex " + (m.fromRole === "TEACHER" ? "justify-end" : "justify-start")}>
+                        <div
+                          className={
+                            "max-w-[75%] rounded-2xl px-3 py-2 text-sm " +
+                            (m.fromRole === "TEACHER"
+                              ? "bg-emerald-600 text-white"
+                              : "bg-gray-100 text-gray-800 dark:bg-zinc-800 dark:text-zinc-100")
+                          }
+                        >
+                          <p className="whitespace-pre-wrap break-words">{m.body}</p>
+                          <p className={"mt-1 text-[10px] " + (m.fromRole === "TEACHER" ? "text-emerald-100" : "text-gray-400")}>
+                            {new Date(m.createdAt).toLocaleString("es-PE", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" })}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                  <div ref={endRef} />
+                </div>
+                <div className="p-3 border-t border-gray-100 dark:border-zinc-800 flex gap-2">
+                  <input
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault()
+                        send()
+                      }
+                    }}
+                    placeholder="Escribe un mensaje…"
+                    className="flex-1 rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+                  />
+                  <button
+                    onClick={send}
+                    disabled={sending || !draft.trim()}
+                    className="rounded-[30px] bg-emerald-600 hover:bg-emerald-700 transition-colors duration-200 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50"
+                  >
+                    {sending ? "…" : "Enviar"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="flex-1 flex items-center justify-center text-sm text-gray-400">
+                Selecciona un apoderado
+              </div>
+            )}
+          </section>
+        </div>
+      )}
+    </div>
+  )
+}

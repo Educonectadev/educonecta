@@ -11,7 +11,7 @@ const bottomLinks = [
   { href: "/dashboard/parent/tareas", label: "Tareas", icon: "assignment" },
   { href: "/dashboard/parent/calificaciones", label: "Notas", icon: "grade" },
   { href: "/dashboard/parent/asistencia", label: "Asistencia", icon: "fact_check" },
-  { href: "/dashboard/parent/comunicados", label: "Mensajes", icon: "mail" },
+  { href: "/dashboard/parent/mensajes", label: "Chat", icon: "chat" },
 ]
 
 const sidebarLinks = [
@@ -22,6 +22,7 @@ const sidebarLinks = [
   { href: "/dashboard/parent/asistencia", label: "Asistencia", icon: "fact_check" },
   { href: "/dashboard/parent/horarios", label: "Horarios", icon: "calendar_month" },
   { href: "/dashboard/parent/disciplina", label: "Disciplina", icon: "gavel" },
+  { href: "/dashboard/parent/mensajes", label: "Chat con docentes", icon: "chat" },
   { href: "/dashboard/parent/comunicados", label: "Comunicados", icon: "mail" },
   { href: "/dashboard/parent/notificaciones", label: "Notificaciones", icon: "notifications" },
 ]

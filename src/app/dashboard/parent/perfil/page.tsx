@@ -2,6 +2,7 @@ import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { getParentChildren, getChildrenGrades } from "@/lib/parent-data"
 import BrandColorPicker from "@/components/BrandColorPicker"
+import ParentDownloads from "@/components/ParentDownloads"
 
 export default async function PerfilPage() {
   const session = await getServerSession()
@@ -39,6 +40,7 @@ export default async function PerfilPage() {
           <h1 className="text-2xl font-bold tracking-tight">Mi Perfil</h1>
           <p className="mt-1 text-sm text-gray-500">Información personal y rendimiento académico de tus hijos</p>
         </div>
+        {children.length > 0 && <ParentDownloads />}
       </div>
 
       <section className="mb-8">
@@ -84,7 +86,7 @@ export default async function PerfilPage() {
 
           return (
             <section key={child.id} className="bg-white border border-gray-100 rounded-[25px] p-6">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-4 gap-3">
                 <div>
                   <h2 className="text-lg font-semibold">{child.firstName} {child.lastName}</h2>
                   <p className="text-sm text-gray-400">
@@ -92,13 +94,16 @@ export default async function PerfilPage() {
                     {child.grade?.level ? ` · ${child.grade.level}` : ""}
                   </p>
                 </div>
-                {passes !== null && (
-                  <span className={`text-sm font-bold px-4 py-1.5 rounded-full ${
-                    passes ? "bg-green-50 text-green-600 border border-green-200" : "bg-red-50 text-red-500 border border-red-200"
-                  }`}>
-                    {passes ? "Sí pasa" : "No pasa"}
-                  </span>
-                )}
+                <div className="flex items-center gap-3">
+                  {passes !== null && (
+                    <span className={`text-sm font-bold px-4 py-1.5 rounded-full ${
+                      passes ? "bg-green-50 text-green-600 border border-green-200" : "bg-red-50 text-red-500 border border-red-200"
+                    }`}>
+                      {passes ? "Sí pasa" : "No pasa"}
+                    </span>
+                  )}
+                  <ParentDownloads studentId={child.id} />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm mb-5">

@@ -13,6 +13,7 @@ const sidebarLinks = [
   { href: "/dashboard/teacher/tareas", label: "Tareas", icon: "assignment" },
   { href: "/dashboard/teacher/calificaciones", label: "Calificaciones", icon: "grade" },
   { href: "/dashboard/teacher/disciplina", label: "Disciplina", icon: "gavel" },
+  { href: "/dashboard/teacher/mensajes", label: "Mensajes", icon: "chat" },
   { href: "/dashboard/teacher/comunicados", label: "Comunicados", icon: "mail" },
 ]
 
