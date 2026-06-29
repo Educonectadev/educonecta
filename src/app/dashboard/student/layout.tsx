@@ -19,6 +19,9 @@ const bottomNavItems = [
   { href: "/dashboard/student/tareas", label: "Tareas", icon: "assignment" },
   { href: "/dashboard/student/calificaciones", label: "Notas", icon: "grade" },
   { href: "/dashboard/student/comunicados", label: "Avisos", icon: "mail" },
+  { href: "/dashboard/student/cursos", label: "Cursos", icon: "book", overflow: true },
+  { href: "/dashboard/student/perfil", label: "Perfil", icon: "person", overflow: true },
+  { href: "/dashboard/student/asistencia", label: "Asistencia", icon: "fact_check", overflow: true },
 ]
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {

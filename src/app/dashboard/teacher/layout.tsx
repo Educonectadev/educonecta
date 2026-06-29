@@ -25,6 +25,9 @@ const bottomNavItems = [
   { href: "/dashboard/teacher/perfil", label: "Perfil", icon: "person", overflow: true },
   { href: "/dashboard/teacher/horarios", label: "Horarios", icon: "calendar_month", overflow: true },
   { href: "/dashboard/teacher/asistencia", label: "Asistencia", icon: "fact_check", overflow: true },
+  { href: "/dashboard/teacher/disciplina", label: "Disciplina", icon: "gavel", overflow: true },
+  { href: "/dashboard/teacher/courses", label: "Cursos", icon: "book", overflow: true },
+  { href: "/dashboard/teacher/configuracion", label: "Configuración", icon: "settings", overflow: true },
 ]
 
 export default async function TeacherLayout({ children }: { children: React.ReactNode }) {

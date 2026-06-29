@@ -12,6 +12,11 @@ const bottomLinks = [
   { href: "/dashboard/parent/mensajes", label: "Chat", icon: "chat" },
   { href: "/dashboard/parent/horarios", label: "Horarios", icon: "calendar_month", overflow: true },
   { href: "/dashboard/parent/asistencia", label: "Asistencia", icon: "fact_check", overflow: true },
+  { href: "/dashboard/parent/perfil", label: "Perfil", icon: "person", overflow: true },
+  { href: "/dashboard/parent/disciplina", label: "Disciplina", icon: "gavel", overflow: true },
+  { href: "/dashboard/parent/comunicados", label: "Comunicados", icon: "mail", overflow: true },
+  { href: "/dashboard/parent/notificaciones", label: "Notificaciones", icon: "notifications", overflow: true },
+  { href: "/dashboard/parent/configuracion", label: "Configuración", icon: "settings", overflow: true },
 ]
 
 const sidebarLinks = [
