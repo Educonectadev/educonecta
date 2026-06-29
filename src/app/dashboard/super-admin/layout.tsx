@@ -3,7 +3,6 @@ import { redirect } from "next/navigation"
 import Navbar from "@/components/Navbar"
 import BottomNav from "@/components/BottomNav"
 import SuperAdminSidebar from "@/components/SuperAdminSidebar"
-import DashboardContent from "@/components/DashboardContent"
 import SolicitudesBadge from "@/components/SolicitudesBadge"
 import TourDashboardShell from "@/lib/tour/TourDashboardShell"
 
@@ -33,16 +32,14 @@ export default async function SuperAdminLayout({ children }: { children: React.R
 
   return (
     <TourDashboardShell role="SUPER_ADMIN">
-      <div className="min-h-dvh overflow-x-hidden bg-[color:var(--background)]">
+      <div className="sa-shell">
         <Navbar />
-        <div className="flex pt-14 md:pt-16">
-          <SuperAdminSidebar links={sidebarLinks as any} label="Super Admin" />
-          <DashboardContent>
-            <main className="px-4 pb-24 md:px-8 md:pb-10 max-w-[1400px] mx-auto w-full">
-              {children}
-            </main>
-          </DashboardContent>
-        </div>
+        <SuperAdminSidebar links={sidebarLinks as any} label="Super Admin" />
+        <main className="sa-main">
+          <div className="sa-main-inner">
+            {children}
+          </div>
+        </main>
         <BottomNav items={bottomNavItems} />
       </div>
     </TourDashboardShell>

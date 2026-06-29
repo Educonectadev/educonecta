@@ -689,30 +689,87 @@ input[type="checkbox"]:checked::after {
   border: 1px solid var(--surface-border);
 }
 
-/* ── Sidebar pill rail ────────────────────────────────────────────── */
-.sa-rail {
+/* ── Shell + fixed sidebar layout (super-admin) ────────────────────── */
+/* Single source of scroll: <main class="sa-main">. The sidebar is fully
+   fixed at viewport height and never scrolls with the page. */
+.sa-shell {
+  min-height: 100dvh;
+  background-color: var(--background);
+  overflow-x: hidden;
+}
+
+.sa-sidebar {
+  display: none;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+  width: 268px;
+  padding: 16px 14px;
+  background-color: var(--background);
+  /* push the rail below the fixed top navbar */
+  padding-top: 80px;
+  pointer-events: auto;
+}
+@media (min-width: 768px) {
+  .sa-sidebar {
+    display: block;
+  }
+}
+
+.sa-sidebar-rail {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   background-color: var(--surface-2);
   border: 1px solid var(--surface-border);
   border-radius: 28px;
   padding: 0.6rem;
   box-shadow: var(--surface-shadow);
+  overflow: hidden;
 }
-.dark .sa-rail {
+.dark .sa-sidebar-rail {
   background-color: rgba(20, 20, 24, 0.7);
   backdrop-filter: blur(14px);
 }
+
+.sa-sidebar-rail > nav {
+  min-height: 0;
+}
+
+.sa-sidebar-footer {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.sa-sidebar-status {
+  padding: 12px;
+  font-size: 11px;
+  line-height: 1.35;
+}
+.sa-sidebar-status-title {
+  font-size: 11px;
+}
+.sa-sidebar-status-text {
+  color: var(--muted-foreground);
+}
+
+/* Item */
 .sa-rail-item {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.7rem 0.95rem;
+  gap: 12px;
+  padding: 10px 14px;
   border-radius: var(--radius-pill);
-  color: var(--muted);
-  font-size: 0.875rem;
+  color: var(--muted-foreground);
+  font-size: 13.5px;
   font-weight: 500;
+  letter-spacing: -0.01em;
   cursor: pointer;
   transition: color 0.2s ease, background-color 0.2s ease;
+  white-space: nowrap;
 }
 .sa-rail-item:hover {
   background-color: var(--surface-3);
@@ -721,18 +778,86 @@ input[type="checkbox"]:checked::after {
 .sa-rail-item[data-active="true"] {
   background-color: var(--neon);
   color: #0a0a0c;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 6px 18px var(--neon-glow-soft);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 6px 18px var(--neon-glow-soft);
 }
+.sa-rail-item[data-active="true"] .sa-rail-icon {
+  background-color: rgba(0, 0, 0, 0.18);
+  color: #0a0a0c;
+}
+
+/* Inside the sidebar nav: full width, label visible at all times */
+.sa-sidebar .sa-rail-item {
+  width: 100%;
+}
+.sa-sidebar .sa-rail-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
 .sa-rail-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
   flex-shrink: 0;
   background-color: rgba(255, 255, 255, 0.06);
   color: inherit;
+  transition: background-color 0.2s ease;
+}
+.dark .sa-rail-icon {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Main column — the only scroller */
+.sa-main {
+  padding-top: 64px; /* navbar height */
+  padding-bottom: 96px; /* bottom-nav safe area on mobile */
+  min-height: 100dvh;
+  height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--background);
+}
+@media (min-width: 768px) {
+  .sa-main {
+    padding-top: 72px; /* navbar taller on md+ */
+    padding-bottom: 24px;
+    margin-left: 268px; /* reserve space for fixed sidebar */
+  }
+}
+.sa-main-inner {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+}
+/* Subtle scrollbar in dark, sleek in light */
+.sa-main::-webkit-scrollbar { width: 10px; height: 10px; }
+.sa-main::-webkit-scrollbar-track { background: transparent; }
+.sa-main::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.sa-main::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.28);
+  background-clip: padding-box;
+}
+.dark .sa-main::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  background-clip: padding-box;
+}
+.dark .sa-main::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+  background-clip: padding-box;
 }
 
 /* ── Ring / circular indicator ────────────────────────────────────── */
