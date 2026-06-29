@@ -1,7 +1,9 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { query, findOne } from "@/lib/prisma"
+import { query } from "@/lib/prisma"
 import TeacherDashboard from "./TeacherDashboard"
+
+export const dynamic = "force-dynamic"
 
 export default async function TeacherDashboardPage() {
   const session = await getServerSession()
@@ -16,7 +18,7 @@ export default async function TeacherDashboardPage() {
   let totalStudents = 0
   let activeHomework = 0
   let classesToday = 0
-  let institutionName = ""
+  const institutionName = session.user.institutionName ?? ""
   let error: string | null = null
 
   try {
@@ -24,93 +26,100 @@ export default async function TeacherDashboardPage() {
       throw new Error("No se encontraron datos del profesor")
     }
 
-    const institution = await findOne("Institution", { id: institutionId })
-    institutionName = (institution as any)?.name ?? ""
-
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
-    const [ctData, hwData, schedData, gradeCountResult] = await Promise.all([
+    const [ctData, hwData, schedData] = await Promise.all([
       query<any[]>(
-        "SELECT ct.*, c.id as c_id, c.name as c_name, g.id as g_id, g.name as g_name, sec.id as sec_id, sec.name as sec_name FROM CourseTeacher ct LEFT JOIN Course c ON c.id = ct.courseId LEFT JOIN Grade g ON g.id = ct.gradeId LEFT JOIN Section sec ON sec.id = ct.sectionId WHERE ct.teacherId = ?",
+        "SELECT ct.id, ct.\"courseId\", ct.\"gradeId\", ct.\"sectionId\", c.name AS \"courseName\", g.name AS \"gradeName\", sec.name AS \"sectionName\" FROM \"CourseTeacher\" ct LEFT JOIN \"Course\" c ON c.id = ct.\"courseId\" LEFT JOIN \"Grade\" g ON g.id = ct.\"gradeId\" LEFT JOIN \"Section\" sec ON sec.id = ct.\"sectionId\" WHERE ct.\"teacherId\" = ?",
         [teacherId]
       ),
       query<any[]>(
-        "SELECT h.*, c.id as c_id, c.name as c_name, g.id as g_id, g.name as g_name, sec.id as sec_id, sec.name as sec_name FROM Homework h LEFT JOIN Course c ON c.id = h.courseId LEFT JOIN Grade g ON g.id = h.gradeId LEFT JOIN Section sec ON sec.id = h.sectionId WHERE h.teacherId = ? ORDER BY h.createdAt DESC LIMIT 5",
+        "SELECT h.id, h.title, h.\"dueDate\", c.name AS \"courseName\", g.name AS \"gradeName\", sec.name AS \"sectionName\" FROM \"Homework\" h LEFT JOIN \"Course\" c ON c.id = h.\"courseId\" LEFT JOIN \"Grade\" g ON g.id = h.\"gradeId\" LEFT JOIN \"Section\" sec ON sec.id = h.\"sectionId\" WHERE h.\"teacherId\" = ? ORDER BY h.\"createdAt\" DESC LIMIT 5",
         [teacherId]
       ),
       query<any[]>(
-        `SELECT s.*, c.id as c_id, c.name as c_name, g.id as g_id, g.name as g_name, sec.id as sec_id, sec.name as sec_name
-         FROM Schedule s
-         LEFT JOIN Course c ON c.id = s.courseId
-         LEFT JOIN Grade g ON g.id = s.gradeId
-         LEFT JOIN Section sec ON sec.id = s.sectionId
-         WHERE s.teacherId = ? AND s.dayOfWeek >= ?
-         ORDER BY s.dayOfWeek ASC, s.startTime ASC
+        `SELECT s.id, s.\"dayOfWeek\", s.\"startTime\", s.\"endTime\", s.\"courseId\", s.\"classroom\",
+                c.name AS \"courseName\"
+         FROM "Schedule" s
+         LEFT JOIN "Course" c ON c.id = s."courseId"
+         WHERE s."teacherId" = ? AND s."dayOfWeek" >= ?
+         ORDER BY s."dayOfWeek" ASC, s."startTime" ASC
          LIMIT 8`,
         [teacherId, today.getDay() || 7]
       ),
-      query<any[]>("SELECT COUNT(DISTINCT courseId) AS total FROM CourseTeacher WHERE teacherId = ?", [teacherId]),
     ])
 
-    courseTeachers = ctData.map((ct: any) => ({
+    courseTeachers = (ctData as any[]).map((ct) => ({
       id: ct.id,
       courseId: ct.courseId,
       gradeId: ct.gradeId,
       sectionId: ct.sectionId,
-      course: { id: ct.c_id, name: ct.c_name },
-      grade: ct.g_id ? { id: ct.g_id, name: ct.g_name } : null,
-      section: ct.sec_id ? { id: ct.sec_id, name: ct.sec_name } : null,
+      course: { id: ct.courseId, name: ct.courseName },
+      grade: ct.gradeName ? { name: ct.gradeName } : null,
+      section: ct.sectionName ? { name: ct.sectionName } : null,
     }))
 
-    recentHomework = hwData.map((h: any) => ({
+    recentHomework = (hwData as any[]).map((h) => ({
       id: h.id,
       title: h.title,
       dueDate: h.dueDate,
-      course: { name: h.c_name },
-      grade: h.g_id ? { name: h.g_name } : null,
-      section: h.sec_id ? { name: h.sec_name } : null,
+      course: { name: h.courseName },
+      grade: h.gradeName ? { name: h.gradeName } : null,
+      section: h.sectionName ? { name: h.sectionName } : null,
     }))
 
-    upcomingClasses = schedData.map((s: any) => ({
+    upcomingClasses = (schedData as any[]).map((s) => ({
       id: s.id,
       courseId: s.courseId,
       dayOfWeek: s.dayOfWeek,
       startTime: typeof s.startTime === "string" ? s.startTime.slice(0, 5) : s.startTime,
       endTime: typeof s.endTime === "string" ? s.endTime.slice(0, 5) : s.endTime,
-      course: { id: s.c_id, name: s.c_name },
-      grade: s.g_id ? { id: s.g_id, name: s.g_name } : null,
-      section: s.sec_id ? { id: s.sec_id, name: s.sec_name } : null,
+      course: { id: s.courseId, name: s.courseName },
+      grade: null,
+      section: null,
       classroom: s.classroom ?? null,
     }))
 
-    const gradeIds: number[] = []
-    for (const ct of courseTeachers) {
-      if (ct.gradeId != null) gradeIds.push(ct.gradeId)
-    }
+    // Stats agregadas en una sola query.
+    const gradeIds = courseTeachers
+      .map((ct) => ct.gradeId)
+      .filter((x): x is number => x != null)
+    const today0 = today.toISOString().substring(0, 10)
+
+    let statsSql = `
+      SELECT
+        (SELECT COUNT(*)::int FROM "Homework" WHERE "teacherId" = ? AND "dueDate" >= ?) AS "activeHomework",
+        (SELECT COUNT(*)::int FROM "Schedule" WHERE "teacherId" = ? AND "dayOfWeek" = ?) AS "classesToday"
+    `
+    const statsParams: any[] = [teacherId, today, today.getDay() || 7]
 
     if (gradeIds.length > 0) {
-      const placeholders = gradeIds.map(() => "?").join(",")
-      const r = await query<any[]>(`SELECT COUNT(*) as total FROM Student WHERE institutionId = ? AND isActive = true AND gradeId IN (${placeholders})`, [institutionId, ...gradeIds])
-      totalStudents = r[0]?.total ?? 0
+      const placeholders = gradeIds.map((_, i) => `$${i + 4}`).join(",")
+      statsSql = `
+        SELECT
+          (SELECT COUNT(*)::int FROM "Homework" WHERE "teacherId" = ? AND "dueDate" >= ?) AS "activeHomework",
+          (SELECT COUNT(*)::int FROM "Schedule" WHERE "teacherId" = ? AND "dayOfWeek" = ?) AS "classesToday",
+          (SELECT COUNT(DISTINCT s.id)::int
+             FROM "Student" s
+             WHERE s."institutionId" = ? AND s."isActive" = TRUE
+               AND s."gradeId" IN (${placeholders})) AS "totalStudents"
+      `
+      statsParams.push(...gradeIds)
     } else {
-      const r = await query<any[]>("SELECT COUNT(*) as total FROM Student WHERE institutionId = ? AND isActive = true", [institutionId])
-      totalStudents = r[0]?.total ?? 0
+      statsSql = `
+        SELECT
+          (SELECT COUNT(*)::int FROM "Homework" WHERE "teacherId" = ? AND "dueDate" >= ?) AS "activeHomework",
+          (SELECT COUNT(*)::int FROM "Schedule" WHERE "teacherId" = ? AND "dayOfWeek" = ?) AS "classesToday",
+          (SELECT COUNT(*)::int FROM "Student" WHERE "institutionId" = ? AND "isActive" = TRUE) AS "totalStudents"
+      `
     }
 
-    const activeHw = await query<any[]>("SELECT COUNT(*) as total FROM Homework WHERE teacherId = ? AND dueDate >= ?", [teacherId, today])
-    activeHomework = activeHw[0]?.total ?? 0
-
-    if (courseTeachers.length > 0) {
-      const courseIds = courseTeachers.map((ct: any) => ct.courseId)
-      const placeholders = courseIds.map(() => "?").join(",")
-      const dow = today.getDay()
-      const result = await query<any[]>(
-        `SELECT COUNT(*) as total FROM Schedule WHERE institutionId = ? AND dayOfWeek = ? AND courseId IN (${placeholders})`,
-        [institutionId, dow === 0 ? 7 : dow, ...courseIds]
-      )
-      classesToday = result[0]?.total ?? 0
-    }
+    const statsRows = await query<any[]>(statsSql, statsParams).catch(() => [])
+    const srow = (statsRows as any[])[0] ?? {}
+    activeHomework = Number(srow.activeHomework ?? 0)
+    classesToday = Number(srow.classesToday ?? 0)
+    totalStudents = Number(srow.totalStudents ?? 0)
   } catch (e: unknown) {
     if (e instanceof Error) {
       error = e.message

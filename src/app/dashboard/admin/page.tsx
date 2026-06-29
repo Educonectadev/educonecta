@@ -1,7 +1,9 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import { count, query, findOne } from "@/lib/prisma"
+import { query } from "@/lib/prisma"
 import AdminDashboard from "./AdminDashboard"
+
+export const dynamic = "force-dynamic"
 
 export default async function AdminDashboardPage() {
   const session = await getServerSession()
@@ -13,57 +15,65 @@ export default async function AdminDashboardPage() {
   let institutionName = ""
 
   try {
-    const institution = await findOne("Institution", { id: institutionId })
-    institutionName = (institution as any)?.name ?? ""
-
-    const results = await Promise.allSettled([
-      count("Student", { institutionId }),
-      count("Teacher", { institutionId }),
-      count("Parent", { institutionId }),
-      count("Course", { institutionId }),
-      query(
-        `SELECT s.id, s.firstName, s.lastName, s.documentId,
-                jsonb_build_object('name', g.name) AS grade,
-                jsonb_build_object('name', sec.name) AS section
+    // Una sola query en lugar de 7: institution + 4 counts + 3 listas en 2 round-trips.
+    const [bundle, recentStudents, recentTeachers, carousel] = await Promise.all([
+      query<any[]>(
+        `SELECT
+           (SELECT name FROM "Institution" WHERE id = ?) AS "institutionName",
+           (SELECT COUNT(*)::int FROM "Student"  WHERE "institutionId" = ?) AS "studentCount",
+           (SELECT COUNT(*)::int FROM "Teacher"  WHERE "institutionId" = ?) AS "teacherCount",
+           (SELECT COUNT(*)::int FROM "Parent"   WHERE "institutionId" = ?) AS "parentCount",
+           (SELECT COUNT(*)::int FROM "Course"   WHERE "institutionId" = ?) AS "courseCount"`,
+        [institutionId]
+      ).catch(() => []),
+      query<any[]>(
+        `SELECT s.id, s."firstName", s."lastName", s."documentId",
+                g.name AS "gradeName", sec.name AS "sectionName"
          FROM Student s
-         LEFT JOIN Grade g ON s.gradeId = g.id
-         LEFT JOIN Section sec ON s.sectionId = sec.id
-         WHERE s.institutionId = ?
-         ORDER BY s.createdAt DESC
+         LEFT JOIN Grade g ON s."gradeId" = g.id
+         LEFT JOIN Section sec ON s."sectionId" = sec.id
+         WHERE s."institutionId" = ?
+         ORDER BY s."createdAt" DESC
          LIMIT 5`,
         [institutionId]
-      ),
-      query(
-        `SELECT t.id, t.speciality,
-                jsonb_build_object('name', u.name, 'email', u.email) AS "user"
+      ).catch(() => []),
+      query<any[]>(
+        `SELECT t.id, t.speciality, u.name AS "teacherName", u.email AS "teacherEmail"
          FROM Teacher t
-         JOIN "User" u ON t.userId = u.id
-         WHERE t.institutionId = ?
-         ORDER BY t.createdAt DESC
+         JOIN "User" u ON u.id = t."userId"
+         WHERE t."institutionId" = ?
+         ORDER BY t."createdAt" DESC
          LIMIT 5`,
         [institutionId]
-      ),
-      query(
+      ).catch(() => []),
+      query<any[]>(
         `SELECT id, url, alt FROM "InstitutionCarouselImage"
          WHERE "institutionId" = ? ORDER BY "order" ASC, "createdAt" ASC LIMIT 12`,
         [institutionId]
-      ),
+      ).catch(() => []),
     ])
 
-    if (results[0].status === "fulfilled") studentCount = results[0].value
-    else console.error("studentCount failed:", results[0].reason)
-    if (results[1].status === "fulfilled") teacherCount = results[1].value
-    else console.error("teacherCount failed:", results[1].reason)
-    if (results[2].status === "fulfilled") parentCount = results[2].value
-    else console.error("parentCount failed:", results[2].reason)
-    if (results[3].status === "fulfilled") courseCount = results[3].value
-    else console.error("courseCount failed:", results[3].reason)
-    if (results[4].status === "fulfilled") students = results[4].value
-    else console.error("students query failed:", results[4].reason)
-    if (results[5].status === "fulfilled") teachers = results[5].value
-    else console.error("teachers query failed:", results[5].reason)
-    if (results[6].status === "fulfilled") carouselImages = results[6].value
-    else console.error("carousel query failed:", results[6].reason)
+    const row = (bundle as any[])[0] ?? {}
+    institutionName = row.institutionName ?? ""
+    studentCount = Number(row.studentCount ?? 0)
+    teacherCount = Number(row.teacherCount ?? 0)
+    parentCount = Number(row.parentCount ?? 0)
+    courseCount = Number(row.courseCount ?? 0)
+
+    students = (recentStudents as any[]).map((s) => ({
+      id: s.id,
+      firstName: s.firstName,
+      lastName: s.lastName,
+      documentId: s.documentId,
+      grade: s.gradeName ? { name: s.gradeName } : null,
+      section: s.sectionName ? { name: s.sectionName } : null,
+    }))
+    teachers = (recentTeachers as any[]).map((t) => ({
+      id: t.id,
+      speciality: t.speciality,
+      user: { name: t.teacherName, email: t.teacherEmail },
+    }))
+    carouselImages = carousel as any[]
   } catch (e) {
     console.error("Dashboard data fetch failed:", e)
   }
