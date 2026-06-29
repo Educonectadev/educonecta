@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion, AnimatePresence, type Variants } from "framer-motion"
-import { Plus, Trash2, Calendar, Pencil } from "lucide-react"
+import { Calendar } from "lucide-react"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
+import DataTable from "@/components/DataTable"
 
 type Period = {
   id: number
@@ -21,16 +21,6 @@ const typeLabels: Record<string, string> = {
   bimester: "Bimestre",
   trimester: "Trimestre",
   semester: "Semestre",
-}
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06 } },
-}
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] } },
 }
 
 export default function AcademicPeriodsList() {
@@ -102,13 +92,8 @@ export default function AcademicPeriodsList() {
   }
 
   return (
-    <motion.div
-      className="space-y-4"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
           <Calendar className="w-5 h-5 text-emerald-500" />
           Períodos Académicos
@@ -117,63 +102,53 @@ export default function AcademicPeriodsList() {
           onClick={() => { resetForm(); setEditing(null); setShowForm(true) }}
           className="rounded-[30px] btn-primary inline-flex items-center gap-2 px-5 py-2 text-sm font-medium"
         >
-          <Plus className="w-4 h-4" />
           Nuevo período
         </button>
-      </motion.div>
+      </div>
 
-      <motion.div variants={itemVariants} className="space-y-2">
-        {periods.length === 0 && (
-          <p className="text-sm text-gray-400 dark:text-zinc-500 text-center py-8">
-            No hay períodos académicos. Crea el primero.
-          </p>
-        )}
-        <AnimatePresence>
-          {periods.map((p) => (
-            <motion.div
-              key={p.id}
-              layout
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.25 }}
-              onClick={() => setDetail(p)}
-              className="flex items-center justify-between rounded-[30px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 px-5 py-4 hover:border-gray-300 dark:hover:border-zinc-700 transition-colors cursor-pointer"
-            >
-              <div className="flex items-center gap-4 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
-                  <Calendar className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+      <DataTable
+        data={periods}
+        emptyMessage="No hay períodos académicos. Crea el primero."
+        onEdit={openEdit}
+        onDelete={(p) => setDeleting(p)}
+        onRowClick={(p) => setDetail(p)}
+        columns={[
+          {
+            key: "name",
+            label: "Período",
+            sortable: true,
+            render: (p) => (
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
+                  <Calendar className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{p.name}</p>
-                  <p className="text-xs text-gray-400 dark:text-zinc-500 mt-0.5">
-                    {typeLabels[p.type] ?? p.type} · {p.academicYear} · {p.startDate} → {p.endDate}
+                <div>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{p.name}</p>
+                  <p className="text-[11px] text-gray-400 dark:text-zinc-500">
+                    {typeLabels[p.type] ?? p.type} · {p.startDate} → {p.endDate}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 shrink-0 ml-4">
-                <button
-                  onClick={() => openEdit(p)}
-                  className="text-gray-400 dark:text-zinc-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
-                  title="Editar"
-                >
-                  <Pencil className="w-4 h-4" />
-                </button>
-                <span className="text-[11px] text-gray-400 dark:text-zinc-600 font-medium bg-gray-100 dark:bg-zinc-800 rounded-full px-2.5 py-1">
-                  #{p.order}
-                </span>
-                <button
-                  onClick={() => setDeleting(p)}
-                  className="text-gray-400 dark:text-zinc-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                  title="Eliminar"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+            ),
+          },
+          {
+            key: "academicYear",
+            label: "Año",
+            sortable: true,
+            render: (p) => <span className="text-sm text-gray-500">{p.academicYear}</span>,
+          },
+          {
+            key: "order",
+            label: "Orden",
+            sortable: true,
+            render: (p) => (
+              <span className="text-[11px] text-gray-400 dark:text-zinc-600 font-medium bg-gray-100 dark:bg-zinc-800 rounded-full px-2.5 py-1">
+                #{p.order}
+              </span>
+            ),
+          },
+        ]}
+      />
 
       <Modal open={showForm} onClose={() => { setShowForm(false); setEditing(null) }} title={editing ? "Editar período académico" : "Nuevo período académico"} size="md" scroll="inside">
         <div className="space-y-4">
@@ -318,6 +293,6 @@ export default function AcademicPeriodsList() {
           </button>
         </div>
       </Modal>
-    </motion.div>
+    </div>
   )
 }

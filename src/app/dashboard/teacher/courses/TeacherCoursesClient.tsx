@@ -125,23 +125,6 @@ export default function TeacherCoursesClient({
       <DataTable
         data={rows}
         emptyMessage="No tienes cursos asignados."
-        renderCard={(r) => (
-          <div className="space-y-2">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="text-sm font-medium text-gray-800 dark:text-white/90">{r.course.name}</p>
-                {r.course.code && <p className="text-[11px] text-gray-400">Código: {r.course.code}</p>}
-              </div>
-              <div className="flex gap-1.5">
-                <span className="text-[11px] bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">{r.scheduleCount} hor.</span>
-                <span className="text-[11px] bg-blue-50 text-blue-700 rounded-full px-2 py-0.5">{r.studentCount} est.</span>
-              </div>
-            </div>
-            <p className="text-[11px] text-gray-500 dark:text-zinc-400">
-              {r.grade?.name ?? "—"} · {r.section?.name ?? "—"}
-            </p>
-          </div>
-        )}
         columns={[
           {
             key: "course",

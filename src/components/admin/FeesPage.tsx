@@ -1,11 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { motion, AnimatePresence, type Variants } from "framer-motion"
-import { Plus, DollarSign, Pencil, Trash2 } from "lucide-react"
+import { Plus, DollarSign } from "lucide-react"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
+import DataTable from "@/components/DataTable"
 
 type Fee = {
   id: number
@@ -23,16 +22,6 @@ const typeLabels: Record<string, string> = {
   enrollment: "Matrícula",
   apafa: "APAFA",
   other: "Otro",
-}
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06 } },
-}
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] } },
 }
 
 function FormFields({
@@ -116,10 +105,9 @@ function FormFields({
 }
 
 export default function FeesPage() {
-  const router = useRouter()
   const [fees, setFees] = useState<Fee[]>([])
-  const [showCreate, setShowCreate] = useState(false)
   const [editing, setEditing] = useState<Fee | null>(null)
+  const [showForm, setShowForm] = useState(false)
   const [deleting, setDeleting] = useState<Fee | null>(null)
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
@@ -143,11 +131,6 @@ export default function FeesPage() {
     setForm({ name: "", description: "", amount: 0, type: "pension", dueDay: 10, academicYear: String(new Date().getFullYear()) })
   }
 
-  function openNew() {
-    resetForm()
-    setShowCreate(true)
-  }
-
   function openEdit(fee: Fee) {
     setEditing(fee)
     setForm({
@@ -158,39 +141,24 @@ export default function FeesPage() {
       dueDay: fee.dueDay,
       academicYear: fee.academicYear,
     })
-  }
-
-  async function handleCreate() {
-    setLoading(true)
-    try {
-      const res = await fetch("/api/admin/fees", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      })
-      if (!res.ok) throw new Error("Error al crear")
-      toast.success("Cuota creada correctamente")
-      setShowCreate(false)
-      resetForm()
-      load()
-    } catch {
-      toast.danger("Error al crear la cuota")
-    }
-    setLoading(false)
+    setShowForm(true)
   }
 
   async function handleSave() {
-    if (!editing) return
     setLoading(true)
     try {
+      const isEdit = !!editing
+      const body = isEdit ? { id: editing!.id, ...form } : form
       const res = await fetch("/api/admin/fees", {
-        method: "PUT",
+        method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: editing.id, ...form }),
+        body: JSON.stringify(body),
       })
       if (!res.ok) throw new Error("Error al guardar")
-      toast.success("Cuota actualizada")
+      toast.success(isEdit ? "Cuota actualizada" : "Cuota creada")
+      setShowForm(false)
       setEditing(null)
+      resetForm()
       load()
     } catch {
       toast.danger("Error al guardar la cuota")
@@ -214,112 +182,95 @@ export default function FeesPage() {
   }
 
   return (
-    <motion.div
-      className="max-w-3xl mx-auto p-6 space-y-6"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <motion.div variants={itemVariants} className="flex items-center justify-between">
+    <div className="max-w-3xl mx-auto p-6 space-y-6">
+      <div className="flex items-center justify-between">
         <h1 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white">
           <DollarSign className="w-6 h-6 text-emerald-500" />
           Cuotas y Pensiones
         </h1>
         <button
-          onClick={openNew}
+          onClick={() => { resetForm(); setEditing(null); setShowForm(true) }}
           className="rounded-[30px] btn-primary inline-flex items-center gap-2 px-6 py-2.5 text-sm font-medium"
         >
           <Plus className="w-4 h-4" />
           Nueva cuota
         </button>
-      </motion.div>
+      </div>
 
-      <motion.div variants={itemVariants} className="space-y-2">
-        {fees.length === 0 && (
-          <p className="text-sm text-gray-400 dark:text-zinc-500 text-center py-12">
-            No hay cuotas registradas. Crea la primera.
-          </p>
-        )}
-        <AnimatePresence>
-          {fees.map((fee) => (
-            <motion.div
-              key={fee.id}
-              layout
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.25 }}
-              className="flex items-center justify-between rounded-[30px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 px-5 py-4 hover:border-gray-300 dark:hover:border-zinc-700 transition-colors"
-            >
-              <div className="flex items-center gap-4 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
-                  <DollarSign className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+      <DataTable
+        data={fees}
+        emptyMessage="No hay cuotas registradas. Crea la primera."
+        onEdit={openEdit}
+        onDelete={(f) => setDeleting(f)}
+        columns={[
+          {
+            key: "name",
+            label: "Cuota",
+            sortable: true,
+            render: (f) => (
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
+                  <DollarSign className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{fee.name}</p>
-                  <p className="text-xs text-gray-400 dark:text-zinc-500 mt-0.5">
-                    {typeLabels[fee.type]} · S/ {fee.amount.toFixed(2)} · Vence día {fee.dueDay}
-                  </p>
+                <div>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{f.name}</p>
+                  {f.description && <p className="text-[11px] text-gray-400">{f.description}</p>}
                 </div>
               </div>
-              <div className="flex items-center gap-3 shrink-0 ml-4">
-                <span className="text-[11px] text-gray-400 dark:text-zinc-600 font-medium bg-gray-100 dark:bg-zinc-800 rounded-full px-2.5 py-1">
-                  {fee.academicYear}
-                </span>
-                <button
-                  onClick={() => openEdit(fee)}
-                  className="text-gray-400 dark:text-zinc-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-                  title="Editar"
-                >
-                  <Pencil className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setDeleting(fee)}
-                  className="text-gray-400 dark:text-zinc-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                  title="Eliminar"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+            ),
+          },
+          {
+            key: "type",
+            label: "Tipo",
+            sortable: true,
+            render: (f) => (
+              <span className="text-xs bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400 rounded-full px-2.5 py-1">
+                {typeLabels[f.type] ?? f.type}
+              </span>
+            ),
+          },
+          {
+            key: "amount",
+            label: "Monto",
+            sortable: true,
+            render: (f) => (
+              <span className="text-sm font-medium text-gray-900 dark:text-white">S/ {f.amount.toFixed(2)}</span>
+            ),
+          },
+          {
+            key: "dueDay",
+            label: "Vence",
+            sortable: true,
+            render: (f) => <span className="text-sm text-gray-500">Día {f.dueDay}</span>,
+          },
+          {
+            key: "academicYear",
+            label: "Año",
+            sortable: true,
+            render: (f) => (
+              <span className="text-[11px] text-gray-400 dark:text-zinc-600 font-medium bg-gray-100 dark:bg-zinc-800 rounded-full px-2.5 py-1">
+                {f.academicYear}
+              </span>
+            ),
+          },
+        ]}
+      />
 
-      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Nueva cuota" size="md" scroll="inside">
+      <Modal open={showForm} onClose={() => { setShowForm(false); setEditing(null) }} title={editing ? "Editar cuota" : "Nueva cuota"} size="md" scroll="inside">
         <FormFields form={form} setForm={setForm} />
         <div className="flex gap-3 mt-8">
           <button
-            onClick={() => setShowCreate(false)}
-            className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={handleCreate}
-            disabled={loading || !form.name}
-            className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium disabled:opacity-40"
-          >
-            {loading ? "Creando..." : "Crear cuota"}
-          </button>
-        </div>
-      </Modal>
-
-      <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar cuota" size="md" scroll="inside">
-        <FormFields form={form} setForm={setForm} />
-        <div className="flex gap-3 mt-8">
-          <button
-            onClick={() => setEditing(null)}
+            onClick={() => { setShowForm(false); setEditing(null) }}
             className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
           >
             Cancelar
           </button>
           <button
             onClick={handleSave}
-            disabled={loading}
+            disabled={loading || !form.name}
             className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium disabled:opacity-40"
           >
-            {loading ? "Guardando..." : "Guardar cambios"}
+            {loading ? "Guardando..." : editing ? "Guardar cambios" : "Crear cuota"}
           </button>
         </div>
       </Modal>
@@ -345,6 +296,6 @@ export default function FeesPage() {
           </button>
         </div>
       </Modal>
-    </motion.div>
+    </div>
   )
 }
