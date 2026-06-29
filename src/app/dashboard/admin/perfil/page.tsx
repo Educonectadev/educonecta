@@ -5,6 +5,7 @@ import { findOne } from "@/lib/prisma"
 import { getSupabaseAdmin } from "@/lib/supabase"
 import EditableInstitutionSection from "./EditableInstitutionSection"
 import BrandColorPicker from "@/components/BrandColorPicker"
+import StatsGrid from "./StatsGrid"
 
 export default async function AdminPerfilPage() {
   const session = await getServerSession()
@@ -78,21 +79,14 @@ export default async function AdminPerfilPage() {
 
       <section>
         <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-3">Estadísticas</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {[
-            { label: "Estudiantes", value: studentRes.count },
-            { label: "Docentes", value: teacherRes.count },
-            { label: "Cursos", value: courseRes.count },
-            { label: "Grados", value: gradeRes.count },
-            { label: "Secciones", value: sectionRes.count },
-            { label: "Horarios", value: scheduleRes.count },
-          ].map((s) => (
-            <div key={s.label} className="bg-gray-50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800 rounded-[20px] p-5 text-center">
-              <p className="text-2xl font-bold text-gray-900 dark:text-white/90">{s.value ?? 0}</p>
-              <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">{s.label}</p>
-            </div>
-          ))}
-        </div>
+        <StatsGrid stats={[
+          { label: "Estudiantes", value: studentRes.count },
+          { label: "Docentes", value: teacherRes.count },
+          { label: "Cursos", value: courseRes.count },
+          { label: "Grados", value: gradeRes.count },
+          { label: "Secciones", value: sectionRes.count },
+          { label: "Horarios", value: scheduleRes.count },
+        ]} />
       </section>
     </div>
   )
