@@ -89,7 +89,7 @@ export default function PlanesPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-zinc-900">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-black">
       <header className="border-b border-gray-100 dark:border-zinc-800">
         <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
           <Link href="/" className="text-lg font-bold tracking-tight text-gray-900 dark:text-white/90">

@@ -126,7 +126,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
   ]
 
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-zinc-950 overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-white dark:bg-black overflow-x-hidden">
       <motion.header
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -472,7 +472,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5 }}
-          className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-950"
+          className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-black"
         >
           <div className="max-w-5xl mx-auto px-6 py-16 sm:py-24">
             <motion.h2
@@ -500,7 +500,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   key={feature.title}
                   variants={cardVariants}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="flex flex-col items-center text-center p-5 sm:p-8 border border-gray-100 dark:border-zinc-800 rounded-[25px] bg-white dark:bg-zinc-950 hover:shadow-sm dark:hover:shadow-white/5 hover:border-gray-200 dark:hover:border-zinc-700 transition-all duration-200"
+                  className="flex flex-col items-center text-center p-5 sm:p-8 border border-gray-100 dark:border-zinc-800 rounded-[25px] bg-white dark:bg-zinc-900 hover:shadow-sm dark:hover:shadow-white/5 hover:border-gray-200 dark:hover:border-zinc-700 transition-all duration-200"
                 >
                   <div className="size-12 rounded-xl flex items-center justify-center bg-gray-50 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400 mb-4">
                     <IconClient icon={feature.icon} className="size-6" />
@@ -522,7 +522,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5 }}
-          className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-950"
+          className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-black"
         >
           <div className="max-w-5xl mx-auto px-6 py-16 sm:py-24 text-center">
             <motion.h2
