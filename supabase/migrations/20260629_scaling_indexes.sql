@@ -1,9 +1,9 @@
 -- =============================================================
 -- EduConecta: Migration for national-scale performance
--- Adds missing columns, indexes, and storage
+-- Run this in Supabase SQL Editor
 -- =============================================================
 
--- 0. ADD MISSING COLUMNS (columns defined in schema but missing in deployed DB)
+-- 0. ADD MISSING COLUMNS (defined in schema but missing in deployed DB)
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'Institution' AND column_name = 'isActive') THEN
@@ -19,11 +19,6 @@ BEGIN
     ALTER TABLE "Teacher" ADD COLUMN "isActive" BOOLEAN NOT NULL DEFAULT TRUE;
   END IF;
 END $$;
-
--- Drop any partial indexes that may have been partially created
-DROP INDEX IF EXISTS idx_user_active;
-DROP INDEX IF EXISTS idx_student_active;
-DROP INDEX IF EXISTS idx_notification_unread;
 
 -- 1. COMPOSITE INDEXES (institutionId + commonly queried column)
 CREATE INDEX IF NOT EXISTS idx_user_role_inst ON "User"(role, "institutionId");
@@ -50,60 +45,3 @@ CREATE INDEX IF NOT EXISTS idx_enrollment_student_year ON "Enrollment"("studentI
 CREATE INDEX IF NOT EXISTS idx_course_teacher_course ON "CourseTeacher"("courseId", "teacherId");
 CREATE INDEX IF NOT EXISTS idx_homework_teacher_due ON "Homework"("teacherId", "dueDate");
 CREATE INDEX IF NOT EXISTS idx_notification_user_created ON "Notification"("userId", "createdAt" DESC);
-
--- 4. SUPABASE STORAGE BUCKET for institution files
-INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-VALUES (
-  'institution-files',
-  'institution-files',
-  false,
-  52428800,
-  ARRAY[
-    'image/jpeg', 'image/png', 'image/webp', 'image/gif',
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-excel',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'text/plain'
-  ]
-)
-ON CONFLICT (id) DO NOTHING;
-
--- Storage RLS: users can only access files from their institution
-CREATE OR REPLACE FUNCTION storage.is_same_institution(bucket_id text, file_path text)
-RETURNS boolean AS $$
-DECLARE
-  user_inst_id int;
-  file_inst_id int;
-BEGIN
-  file_inst_id := split_part(file_path, '/', 1)::int;
-  SELECT "institutionId" INTO user_inst_id
-  FROM "User"
-  WHERE id = auth.uid();
-  RETURN COALESCE(user_inst_id = file_inst_id OR EXISTS (
-    SELECT 1 FROM "User" WHERE id = auth.uid() AND role = 'SUPER_ADMIN'
-  ), false);
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
-CREATE POLICY "users_can_read_own_institution_files"
-ON storage.objects FOR SELECT
-USING (
-  bucket_id = 'institution-files'
-  AND storage.is_same_institution(bucket_id, name)
-);
-
-CREATE POLICY "users_can_insert_own_institution_files"
-ON storage.objects FOR INSERT
-WITH CHECK (
-  bucket_id = 'institution-files'
-  AND storage.is_same_institution(bucket_id, name)
-);
-
-CREATE POLICY "users_can_delete_own_institution_files"
-ON storage.objects FOR DELETE
-USING (
-  bucket_id = 'institution-files'
-  AND storage.is_same_institution(bucket_id, name)
-);
