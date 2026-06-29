@@ -92,7 +92,10 @@ export default function DataTable<T extends { id: number }>({
           </Table.Header>
           <Table.Body
             renderEmptyState={() => (
-              <EmptyState className="flex h-full w-full flex-col items-center justify-center gap-4 text-center py-12">
+              <EmptyState
+                aria-label="Sin resultados"
+                className="flex h-full w-full flex-col items-center justify-center gap-4 text-center py-12"
+              >
                 <Icon
                   className="size-8 text-zinc-300 dark:text-zinc-600"
                   icon="gravity-ui:tray"
@@ -123,12 +126,24 @@ export default function DataTable<T extends { id: number }>({
                   <Table.Cell>
                     <div className="flex items-center justify-end gap-1">
                       {onEdit && (
-                        <Button isIconOnly size="sm" variant="tertiary" onPress={() => onEdit(item)}>
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          variant="tertiary"
+                          aria-label="Editar"
+                          onPress={() => onEdit(item)}
+                        >
                           <Icon className="size-4" icon="gravity-ui:pencil" />
                         </Button>
                       )}
                       {onDelete && (
-                        <Button isIconOnly size="sm" variant="danger-soft" onPress={() => onDelete(item)}>
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          variant="danger-soft"
+                          aria-label="Eliminar"
+                          onPress={() => onDelete(item)}
+                        >
                           <Icon className="size-4" icon="gravity-ui:trash-bin" />
                         </Button>
                       )}
