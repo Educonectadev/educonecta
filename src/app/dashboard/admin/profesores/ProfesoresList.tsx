@@ -459,12 +459,12 @@ export default function ProfesoresList({
             sortable: true,
             render: (t) => (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center text-xs font-medium text-gray-600 shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 dark:from-zinc-700 dark:to-zinc-800 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-zinc-200 shrink-0">
                   {t.user.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-800 dark:text-white/90">{t.user.name}</p>
-                  <p className="text-[11px] text-gray-400">{t.user.email}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{t.user.name}</p>
+                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">{t.user.email}</p>
                 </div>
               </div>
             ),
@@ -473,18 +473,18 @@ export default function ProfesoresList({
             key: "speciality",
             label: "Especialidad",
             sortable: true,
-            render: (t) => t.speciality ? <span className="text-xs bg-blue-50 text-blue-700 rounded-full px-2.5 py-0.5">{t.speciality}</span> : <span className="text-xs text-gray-400">—</span>,
+            render: (t) => t.speciality ? <span className="badge-blue text-xs rounded-full px-2.5 py-0.5 border">{t.speciality}</span> : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
           },
           {
             key: "contractType",
             label: "Contrato",
             sortable: true,
-            render: (t) => t.contractType ? <span className="text-xs bg-gray-100 text-gray-600 rounded-full px-2.5 py-0.5">{t.contractType}</span> : <span className="text-xs text-gray-400">—</span>,
+            render: (t) => t.contractType ? <span className="badge-gray text-xs rounded-full px-2.5 py-0.5 border">{t.contractType}</span> : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
           },
           {
             key: "educationLevel",
             label: "Estudios",
-            render: (t) => (t.educationLevel || t.professionalTitle) ? <span className="text-xs bg-amber-50 text-amber-700 rounded-full px-2.5 py-0.5">{t.educationLevel || t.professionalTitle}</span> : <span className="text-xs text-gray-400">—</span>,
+            render: (t) => (t.educationLevel || t.professionalTitle) ? <span className="badge-amber text-xs rounded-full px-2.5 py-0.5 border">{t.educationLevel || t.professionalTitle}</span> : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
           },
           {
             key: "assignedLevels",
@@ -492,16 +492,16 @@ export default function ProfesoresList({
             render: (t) => t.assignedLevels && t.assignedLevels.length > 0 ? (
               <div className="flex flex-wrap gap-1">
                 {t.assignedLevels.map((lvl) => {
-                  const colors: Record<string, string> = {
-                    INICIAL: "bg-pink-50 text-pink-700",
-                    PRIMARIA: "bg-emerald-50 text-emerald-700",
-                    SECUNDARIA: "bg-indigo-50 text-indigo-700",
+                  const badgeClass: Record<string, string> = {
+                    INICIAL: "badge-pink",
+                    PRIMARIA: "badge-emerald",
+                    SECUNDARIA: "badge-indigo",
                   }
                   const label = lvl.charAt(0) + lvl.slice(1).toLowerCase()
-                  return <span key={lvl} className={`text-xs rounded-full px-2.5 py-0.5 ${colors[lvl] ?? "bg-gray-100 text-gray-600"}`}>{label}</span>
+                  return <span key={lvl} className={`text-xs rounded-full px-2.5 py-0.5 border ${badgeClass[lvl] ?? "badge-gray"}`}>{label}</span>
                 })}
               </div>
-            ) : <span className="text-xs text-gray-400">—</span>,
+            ) : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
           },
         ]}
       />

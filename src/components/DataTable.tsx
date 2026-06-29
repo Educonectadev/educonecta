@@ -93,8 +93,13 @@ export default function DataTable<T extends { id: number }>({
           <Table.Body
             renderEmptyState={() => (
               <EmptyState className="flex h-full w-full flex-col items-center justify-center gap-4 text-center py-12">
-                <Icon className="size-8 text-gray-300" icon="gravity-ui:tray" />
-                <span className="text-sm text-gray-400">{emptyMessage}</span>
+                <Icon
+                  className="size-8 text-zinc-300 dark:text-zinc-600"
+                  icon="gravity-ui:tray"
+                />
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                  {emptyMessage}
+                </span>
               </EmptyState>
             )}
           >

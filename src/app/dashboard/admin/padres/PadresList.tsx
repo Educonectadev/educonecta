@@ -121,12 +121,12 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
             sortable: true,
             render: (p) => (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-500 shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-zinc-300 shrink-0">
                   {p.user.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-800">{p.user.name}</p>
-                  <p className="text-[11px] text-gray-400">{p.user.email}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{p.user.name}</p>
+                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">{p.user.email}</p>
                 </div>
               </div>
             ),
@@ -134,16 +134,16 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
           {
             key: "phone",
             label: "Teléfono",
-            render: (p) => p.user.phone ? <span className="text-sm text-gray-500">{p.user.phone}</span> : <span className="text-sm text-gray-300">—</span>,
+            render: (p) => p.user.phone ? <span className="text-sm text-gray-700 dark:text-zinc-300">{p.user.phone}</span> : <span className="text-sm text-gray-400 dark:text-zinc-600">—</span>,
           },
           {
             key: "childrenCount",
             label: "Hijos",
             render: (p) => (
               <div>
-                <span className="text-sm font-medium text-gray-700">{p.children.length}</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-white/90">{p.children.length}</span>
                 {p.children.length > 0 && (
-                  <div className="text-[11px] text-gray-400 mt-0.5">
+                  <div className="text-[11px] text-gray-500 dark:text-zinc-400 mt-0.5">
                     {p.children.map((c) => c.student.firstName).join(", ")}
                   </div>
                 )}

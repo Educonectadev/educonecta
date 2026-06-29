@@ -261,7 +261,7 @@ export default function CursosList({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Cursos</h1>
-          <p className="text-xs text-gray-400 mt-1">{courses.length} cursos registrados · {teachers.length} profesores disponibles</p>
+          <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">{courses.length} cursos registrados · {teachers.length} profesores disponibles</p>
         </div>
         <button onClick={openCreate} className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium text-center">
           + Nuevo Curso
@@ -280,8 +280,8 @@ export default function CursosList({
             sortable: true,
             render: (c) => (
               <div>
-                <p className="text-sm font-medium text-gray-800">{c.name}</p>
-                {c.code && <p className="text-[11px] text-gray-400">Código: {c.code}</p>}
+                <p className="text-sm font-medium text-gray-900 dark:text-white/90">{c.name}</p>
+                {c.code && <p className="text-[11px] text-gray-500 dark:text-zinc-400">Código: {c.code}</p>}
               </div>
             ),
           },
@@ -289,14 +289,14 @@ export default function CursosList({
             key: "description",
             label: "Descripción",
             sortable: false,
-            render: (c) => c.description ? <span className="text-sm text-gray-500 line-clamp-1">{c.description}</span> : <span className="text-sm text-gray-300">—</span>,
+            render: (c) => c.description ? <span className="text-sm text-gray-700 dark:text-zinc-300 line-clamp-1">{c.description}</span> : <span className="text-sm text-gray-400 dark:text-zinc-600">—</span>,
           },
           {
             key: "scheduleCount",
             label: "Horarios",
             sortable: false,
             render: (c) => (
-              <span className="text-xs bg-gray-100 text-gray-600 rounded-full px-2.5 py-0.5">
+              <span className="badge-gray text-xs rounded-full px-2.5 py-0.5 border">
                 {c.scheduleCount ?? 0}
               </span>
             ),
@@ -310,21 +310,21 @@ export default function CursosList({
                 {c.teachers.length > 0 ? (
                   <div className="flex flex-wrap gap-1">
                     {c.teachers.slice(0, 2).map((ct) => (
-                      <span key={ct.id} className="text-[11px] bg-blue-50 text-blue-700 rounded-full px-2 py-0.5">
+                      <span key={ct.id} className="badge-blue text-[11px] rounded-full px-2 py-0.5 border">
                         {ct.teacher.user.name}
                         {(ct.grade || ct.section) && ` (${ct.grade?.name || ""}${ct.grade && ct.section ? " / " : ""}${ct.section?.name || ""})`}
                       </span>
                     ))}
                     {c.teachers.length > 2 && (
-                      <span className="text-[11px] text-gray-500">+{c.teachers.length - 2}</span>
+                      <span className="text-[11px] text-gray-500 dark:text-zinc-400">+{c.teachers.length - 2}</span>
                     )}
                   </div>
                 ) : (
-                  <span className="text-sm text-gray-400">Sin asignar</span>
+                  <span className="text-sm text-gray-400 dark:text-zinc-500">Sin asignar</span>
                 )}
                 <button
                   onClick={(e) => { e.stopPropagation(); onAssign(c) }}
-                  className="text-xs text-blue-600 hover:text-blue-800 ml-1"
+                  className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 ml-1"
                 >
                   Asignar
                 </button>

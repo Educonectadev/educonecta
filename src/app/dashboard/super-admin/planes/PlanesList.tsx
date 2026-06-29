@@ -252,7 +252,7 @@ export default function PlanesList({
             render: (s) =>
               s.expiresAt
                 ? new Date(s.expiresAt).toLocaleDateString("es-PE")
-                : <span className="text-xs text-gray-400">—</span>,
+                : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
           },
           {
             key: "isActive",
@@ -260,10 +260,8 @@ export default function PlanesList({
             render: (s) => (
               <button
                 onClick={() => toggleActive(s)}
-                className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium transition-all ${
-                  s.isActive
-                    ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100"
-                    : "bg-gray-100 text-gray-500 dark:bg-zinc-800 dark:text-zinc-500 hover:bg-gray-200"
+                className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium transition-all border ${
+                  s.isActive ? "badge-green hover:opacity-90" : "badge-gray hover:opacity-90"
                 }`}
                 title="Click para cambiar estado"
               >

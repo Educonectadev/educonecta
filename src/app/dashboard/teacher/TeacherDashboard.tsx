@@ -192,8 +192,8 @@ const quickLinks = [
                       {ct.course.name.charAt(0)}
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-800 dark:text-white/90">{ct.course.name}</p>
-                      <p className="text-[11px] text-gray-400 dark:text-zinc-500">{ct.grade?.name ?? "—"} / {ct.section?.name ?? "—"}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white/90">{ct.course.name}</p>
+                      <p className="text-[11px] text-gray-500 dark:text-zinc-400">{ct.grade?.name ?? "—"} / {ct.section?.name ?? "—"}</p>
                     </div>
                   </div>
                 </div>
@@ -246,8 +246,8 @@ const quickLinks = [
             {recentHomework.slice(0, 5).map((h) => (
               <div key={h.id} className="flex items-center justify-between py-2.5 px-3 rounded-xl hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors -mx-3">
                 <div>
-                  <p className="text-sm font-medium text-gray-800 dark:text-white/90">{h.title}</p>
-                  <p className="text-[11px] text-gray-400 dark:text-zinc-500">{h.course.name} · {h.grade?.name ?? "—"} / {h.section?.name ?? "—"}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{h.title}</p>
+                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">{h.course.name} · {h.grade?.name ?? "—"} / {h.section?.name ?? "—"}</p>
                 </div>
                 <span className="text-xs text-gray-500 dark:text-zinc-400 bg-gray-50 dark:bg-zinc-800 px-2.5 py-1 rounded-full">
                   Vence {formatDate(h.dueDate)}
@@ -285,8 +285,8 @@ const quickLinks = [
                 sortable: true,
                 render: (r) => (
                   <div>
-                    <p className="text-sm font-medium text-gray-800 dark:text-white/90">{r.courseName}</p>
-                    <p className="text-[11px] text-gray-400">Código: {r.courseCode}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white/90">{r.courseName}</p>
+                    <p className="text-[11px] text-gray-500 dark:text-zinc-400">Código: {r.courseCode}</p>
                   </div>
                 ),
               },
@@ -294,19 +294,19 @@ const quickLinks = [
                 key: "grade",
                 label: "Grado",
                 sortable: false,
-                render: (r) => <span className="text-sm text-gray-600 dark:text-zinc-300">{r.grade ?? "—"}</span>,
+                render: (r) => <span className="text-sm text-gray-700 dark:text-zinc-300">{r.grade ?? "—"}</span>,
               },
               {
                 key: "section",
                 label: "Sección",
                 sortable: false,
-                render: (r) => <span className="text-sm text-gray-600 dark:text-zinc-300">{r.section ?? "—"}</span>,
+                render: (r) => <span className="text-sm text-gray-700 dark:text-zinc-300">{r.section ?? "—"}</span>,
               },
               {
                 key: "schedule",
                 label: "Horario",
                 sortable: false,
-                render: (r) => <span className="text-xs text-gray-500 dark:text-zinc-400">{r.schedule}</span>,
+                render: (r) => <span className="text-xs text-gray-700 dark:text-zinc-300">{r.schedule}</span>,
               },
             ]}
           />

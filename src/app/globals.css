@@ -324,6 +324,93 @@ input[type="checkbox"]:checked::after {
   background-color: var(--muted-bg);
 }
 
+/* ------------------------------------------------------------------ */
+/* HeroUI Table – global dark/light contrast fixes                   */
+/* Ensures all DataTable consumers get readable headers, rows & cells  */
+/* without having to sprinkle dark: variants on every consumer file.   */
+/* ------------------------------------------------------------------ */
+
+/* Header row (thead) */
+[data-slot="table"] [data-slot="table-column"],
+[data-slot="table"] thead th {
+  color: #111827; /* gray-900 in light */
+  font-weight: 600;
+  background-color: #f9fafb; /* gray-50 in light */
+  border-bottom-color: var(--border);
+}
+.dark [data-slot="table"] [data-slot="table-column"],
+.dark [data-slot="table"] thead th {
+  color: #f5f5f5; /* var(--foreground) */
+  background-color: rgba(24, 24, 27, 0.6); /* zinc-900/60 */
+  border-bottom-color: #27272a; /* zinc-800 */
+}
+
+/* Sortable column header label / indicator */
+[data-slot="table"] [data-slot="table-sortable-column-header"],
+[data-slot="table"] [data-slot="table-sortable-column-header"] * {
+  color: inherit;
+}
+[data-slot="table-sortable-column-header"] [data-slot="table-sortable-column-indicator"] {
+  color: #6b7280; /* gray-500 */
+}
+.dark [data-slot="table-sortable-column-header"] [data-slot="table-sortable-column-indicator"] {
+  color: #a1a1aa; /* zinc-400 */
+}
+
+/* Body cells default text colour – guarantees contrast on both themes */
+[data-slot="table"] [data-slot="table-cell"],
+[data-slot="table"] tbody td {
+  color: #111827; /* gray-900 in light */
+  border-bottom-color: var(--border);
+}
+.dark [data-slot="table"] [data-slot="table-cell"],
+.dark [data-slot="table"] tbody td {
+  color: #f5f5f5; /* var(--foreground) */
+  border-bottom-color: #27272a; /* zinc-800 */
+}
+
+/* Hovered row – both themes */
+[data-slot="table"] [data-slot="table-row"][data-hovered="true"],
+[data-slot="table"] tbody tr[data-hovered="true"] {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.dark [data-slot="table"] [data-slot="table-row"][data-hovered="true"],
+.dark [data-slot="table"] tbody tr[data-hovered="true"] {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* Selected row */
+[data-slot="table"] [data-slot="table-row"][data-selected="true"],
+[data-slot="table"] tbody tr[data-selected="true"] {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.dark [data-slot="table"] [data-slot="table-row"][data-selected="true"],
+.dark [data-slot="table"] tbody tr[data-selected="true"] {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Empty-state container inside tables */
+[data-slot="table"] [data-slot="empty-state"],
+[data-slot="table"] [data-slot="empty-state"] * {
+  color: var(--muted-foreground);
+}
+
+/* Pagination footer (HeroUI Pagination component used inside table footers) */
+[data-slot="pagination"],
+[data-slot="pagination"] * {
+  color: var(--muted-foreground);
+}
+.dark [data-slot="pagination"],
+.dark [data-slot="pagination"] * {
+  color: #d4d4d8; /* zinc-300 */
+}
+[data-slot="pagination"] button {
+  color: inherit;
+}
+[data-slot="pagination"] button[data-hovered="true"] {
+  background-color: var(--muted-bg);
+}
+
 /* Status badges */
 .badge-green {
   background-color: #dcfce7;

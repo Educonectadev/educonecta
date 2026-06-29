@@ -92,10 +92,8 @@ export default function InstitutionList({ institutions: initial }: { institution
           {
             key: "isActive", label: "Estado",
             render: (inst) => (
-              <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium ${
-                inst.isActive
-                  ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
-                  : "bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800"
+              <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium border ${
+                inst.isActive ? "badge-green" : "badge-red"
               }`}>
                 {inst.isActive ? "Activo" : "Inactivo"}
               </span>

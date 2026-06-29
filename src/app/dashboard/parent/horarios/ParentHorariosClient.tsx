@@ -106,14 +106,14 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
               ) : (
                 <div className="bg-gray-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-700 rounded-[30px] overflow-x-auto">
                   <table className="w-full text-left text-sm">
-                    <thead className="hidden md:table-header-group border-b border-gray-200 dark:border-zinc-700">
+                    <thead className="hidden md:table-header-group border-b border-gray-200 dark:border-zinc-700 bg-white/40 dark:bg-zinc-900/60">
                       <tr>
-                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Día</th>
-                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Turno</th>
-                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Horario</th>
-                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Curso</th>
-                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Profesor</th>
-                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Aula</th>
+                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Día</th>
+                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Turno</th>
+                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Horario</th>
+                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Curso</th>
+                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Profesor</th>
+                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Aula</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-50 dark:divide-zinc-800/50 md:divide-y-0">

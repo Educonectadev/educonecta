@@ -213,8 +213,8 @@ export default function FeesPage() {
                   <DollarSign className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{f.name}</p>
-                  {f.description && <p className="text-[11px] text-gray-400">{f.description}</p>}
+                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{f.name}</p>
+                  {f.description && <p className="text-[11px] text-gray-500 dark:text-zinc-400">{f.description}</p>}
                 </div>
               </div>
             ),
@@ -224,7 +224,7 @@ export default function FeesPage() {
             label: "Tipo",
             sortable: true,
             render: (f) => (
-              <span className="text-xs bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400 rounded-full px-2.5 py-1">
+              <span className="badge-gray text-xs rounded-full px-2.5 py-1 border">
                 {typeLabels[f.type] ?? f.type}
               </span>
             ),
@@ -234,21 +234,21 @@ export default function FeesPage() {
             label: "Monto",
             sortable: true,
             render: (f) => (
-              <span className="text-sm font-medium text-gray-900 dark:text-white">S/ {f.amount.toFixed(2)}</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white/90">S/ {f.amount.toFixed(2)}</span>
             ),
           },
           {
             key: "dueDay",
             label: "Vence",
             sortable: true,
-            render: (f) => <span className="text-sm text-gray-500">Día {f.dueDay}</span>,
+            render: (f) => <span className="text-sm text-gray-700 dark:text-zinc-300">Día {f.dueDay}</span>,
           },
           {
             key: "academicYear",
             label: "Año",
             sortable: true,
             render: (f) => (
-              <span className="text-[11px] text-gray-400 dark:text-zinc-600 font-medium bg-gray-100 dark:bg-zinc-800 rounded-full px-2.5 py-1">
+              <span className="badge-gray text-[11px] rounded-full px-2.5 py-1 border">
                 {f.academicYear}
               </span>
             ),

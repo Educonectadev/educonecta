@@ -123,8 +123,8 @@ export default function AcademicPeriodsList() {
                   <Calendar className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{p.name}</p>
-                  <p className="text-[11px] text-gray-400 dark:text-zinc-500">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{p.name}</p>
+                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">
                     {typeLabels[p.type] ?? p.type} · {p.startDate} → {p.endDate}
                   </p>
                 </div>
@@ -135,14 +135,14 @@ export default function AcademicPeriodsList() {
             key: "academicYear",
             label: "Año",
             sortable: true,
-            render: (p) => <span className="text-sm text-gray-500">{p.academicYear}</span>,
+            render: (p) => <span className="text-sm text-gray-700 dark:text-zinc-300">{p.academicYear}</span>,
           },
           {
             key: "order",
             label: "Orden",
             sortable: true,
             render: (p) => (
-              <span className="text-[11px] text-gray-400 dark:text-zinc-600 font-medium bg-gray-100 dark:bg-zinc-800 rounded-full px-2.5 py-1">
+              <span className="badge-gray text-[11px] rounded-full px-2.5 py-1 border">
                 #{p.order}
               </span>
             ),
@@ -237,28 +237,28 @@ export default function AcademicPeriodsList() {
         <div className="space-y-5">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">Tipo</p>
-              <p className="font-medium text-gray-900 dark:text-white capitalize">{detail ? typeLabels[detail.type] ?? detail.type : ""}</p>
+              <p className="text-xs text-gray-500 dark:text-zinc-500 mb-0.5">Tipo</p>
+              <p className="font-medium text-gray-900 dark:text-white/90 capitalize">{detail ? typeLabels[detail.type] ?? detail.type : ""}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">Año</p>
-              <p className="font-medium text-gray-900 dark:text-white">{detail?.academicYear}</p>
+              <p className="text-xs text-gray-500 dark:text-zinc-500 mb-0.5">Año</p>
+              <p className="font-medium text-gray-900 dark:text-white/90">{detail?.academicYear}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">Inicio</p>
-              <p className="font-medium text-gray-900 dark:text-white">{detail?.startDate}</p>
+              <p className="text-xs text-gray-500 dark:text-zinc-500 mb-0.5">Inicio</p>
+              <p className="font-medium text-gray-900 dark:text-white/90">{detail?.startDate}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">Fin</p>
-              <p className="font-medium text-gray-900 dark:text-white">{detail?.endDate}</p>
+              <p className="text-xs text-gray-500 dark:text-zinc-500 mb-0.5">Fin</p>
+              <p className="font-medium text-gray-900 dark:text-white/90">{detail?.endDate}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">Orden</p>
-              <p className="font-medium text-gray-900 dark:text-white">#{detail?.order}</p>
+              <p className="text-xs text-gray-500 dark:text-zinc-500 mb-0.5">Orden</p>
+              <p className="font-medium text-gray-900 dark:text-white/90">#{detail?.order}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 mb-0.5">Estado</p>
-              <span className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${detail?.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-gray-100 text-gray-500 dark:bg-zinc-800 dark:text-zinc-400"}`}>
+              <p className="text-xs text-gray-500 dark:text-zinc-500 mb-0.5">Estado</p>
+              <span className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full border ${detail?.isActive ? "badge-green" : "badge-gray"}`}>
                 {detail?.isActive ? "Activo" : "Inactivo"}
               </span>
             </div>

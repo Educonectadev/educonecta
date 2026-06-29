@@ -116,8 +116,8 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
             sortable: true,
             render: (a) => (
               <div>
-                <p className="text-sm font-medium text-gray-800">{a.name}</p>
-                {a.code && <p className="text-[11px] text-gray-400">{a.code}</p>}
+                <p className="text-sm font-medium text-gray-900 dark:text-white/90">{a.name}</p>
+                {a.code && <p className="text-[11px] text-gray-500 dark:text-zinc-400">{a.code}</p>}
               </div>
             ),
           },
@@ -125,13 +125,13 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
             key: "capacity",
             label: "Capacidad",
             sortable: true,
-            render: (a) => a.capacity != null ? <span className="text-sm text-gray-500">{a.capacity} estudiantes</span> : <span className="text-sm text-gray-300">—</span>,
+            render: (a) => a.capacity != null ? <span className="text-sm text-gray-700 dark:text-zinc-300">{a.capacity} estudiantes</span> : <span className="text-sm text-gray-400 dark:text-zinc-600">—</span>,
           },
           {
             key: "location",
             label: "Ubicación",
             sortable: true,
-            render: (a) => a.location ? <span className="text-sm text-gray-500">{a.location}</span> : <span className="text-sm text-gray-300">—</span>,
+            render: (a) => a.location ? <span className="text-sm text-gray-700 dark:text-zinc-300">{a.location}</span> : <span className="text-sm text-gray-400 dark:text-zinc-600">—</span>,
           },
         ]}
       />

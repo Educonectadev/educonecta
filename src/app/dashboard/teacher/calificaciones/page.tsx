@@ -46,13 +46,13 @@ export default async function CalificacionesPage() {
       ) : (
         <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="hidden md:table-header-group border-b border-gray-100 dark:border-zinc-800">
+            <thead className="hidden md:table-header-group border-b border-gray-100 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900/60">
               <tr className="text-left">
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5">Estudiante</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5">Curso</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5">Evaluación</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5">Nota</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 px-4 py-3.5">Fecha</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">Estudiante</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">Curso</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">Evaluación</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">Nota</th>
+                <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">Fecha</th>
               </tr>
             </thead>
             <tbody>

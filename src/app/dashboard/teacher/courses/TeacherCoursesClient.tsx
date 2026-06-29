@@ -116,7 +116,7 @@ export default function TeacherCoursesClient({
             ← Volver al panel
           </Link>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mis Cursos</h1>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
             {rows.length} curso{rows.length === 1 ? "" : "s"} asignado{rows.length === 1 ? "" : "s"}
           </p>
         </div>
@@ -132,8 +132,8 @@ export default function TeacherCoursesClient({
             sortable: true,
             render: (r) => (
               <div>
-                <p className="text-sm font-medium text-gray-800 dark:text-white/90">{r.course.name}</p>
-                {r.course.code && <p className="text-[11px] text-gray-400">Código: {r.course.code}</p>}
+                <p className="text-sm font-medium text-gray-900 dark:text-white/90">{r.course.name}</p>
+                {r.course.code && <p className="text-[11px] text-gray-500 dark:text-zinc-400">Código: {r.course.code}</p>}
               </div>
             ),
           },
@@ -141,20 +141,20 @@ export default function TeacherCoursesClient({
             key: "grade",
             label: "Grado",
             sortable: false,
-            render: (r) => <span className="text-sm text-gray-600 dark:text-zinc-300">{r.grade?.name ?? "—"}</span>,
+            render: (r) => <span className="text-sm text-gray-700 dark:text-zinc-300">{r.grade?.name ?? "—"}</span>,
           },
           {
             key: "section",
             label: "Sección",
             sortable: false,
-            render: (r) => <span className="text-sm text-gray-600 dark:text-zinc-300">{r.section?.name ?? "—"}</span>,
+            render: (r) => <span className="text-sm text-gray-700 dark:text-zinc-300">{r.section?.name ?? "—"}</span>,
           },
           {
             key: "students",
             label: "Estudiantes",
             sortable: false,
             render: (r) => (
-              <span className="text-[11px] bg-blue-50 text-blue-700 rounded-full px-2.5 py-0.5">
+              <span className="badge-blue text-[11px] rounded-full px-2.5 py-0.5 border">
                 {r.studentCount}
               </span>
             ),
@@ -164,7 +164,7 @@ export default function TeacherCoursesClient({
             label: "Horarios",
             sortable: false,
             render: (r) => (
-              <span className="text-[11px] bg-gray-100 text-gray-600 rounded-full px-2.5 py-0.5">
+              <span className="badge-gray text-[11px] rounded-full px-2.5 py-0.5 border">
                 {r.scheduleCount}
               </span>
             ),
@@ -174,7 +174,7 @@ export default function TeacherCoursesClient({
             label: "Tareas",
             sortable: false,
             render: (r) => (
-              <span className="text-[11px] bg-amber-50 text-amber-700 rounded-full px-2.5 py-0.5">
+              <span className="badge-amber text-[11px] rounded-full px-2.5 py-0.5 border">
                 {r.homeworkCount}
               </span>
             ),
@@ -184,9 +184,9 @@ export default function TeacherCoursesClient({
             label: "Horario",
             sortable: false,
             render: (r) => (
-              <div className="text-xs text-gray-500 dark:text-zinc-400 space-y-0.5 max-w-[220px]">
+              <div className="text-xs text-gray-700 dark:text-zinc-300 space-y-0.5 max-w-[220px]">
                 {r.schedules.length === 0 ? (
-                  <span className="text-gray-300">—</span>
+                  <span className="text-gray-400 dark:text-zinc-600">—</span>
                 ) : (
                   r.schedules.slice(0, 2).map((s, i) => (
                     <p key={i} className="truncate">
@@ -195,7 +195,7 @@ export default function TeacherCoursesClient({
                     </p>
                   )).concat(
                     r.schedules.length > 2
-                      ? [<p key="more" className="text-gray-400">+{r.schedules.length - 2} más</p>]
+                      ? [<p key="more" className="text-gray-500 dark:text-zinc-400">+{r.schedules.length - 2} más</p>]
                       : [],
                   )
                 )}

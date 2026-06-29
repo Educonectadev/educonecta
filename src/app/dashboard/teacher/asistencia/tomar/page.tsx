@@ -241,10 +241,10 @@ export default function TomarAsistenciaPage() {
             </div>
           ) : (
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 dark:bg-zinc-800/50 text-xs uppercase tracking-wider text-gray-500 dark:text-zinc-400">
+              <thead className="bg-gray-50 dark:bg-zinc-800/50 text-xs uppercase tracking-wider text-gray-700 dark:text-zinc-300">
                 <tr>
-                  <th className="px-4 py-3 text-left font-medium">Alumno</th>
-                  <th className="px-4 py-3 text-left font-medium">Estado</th>
+                  <th className="px-4 py-3 text-left font-semibold">Alumno</th>
+                  <th className="px-4 py-3 text-left font-semibold">Estado</th>
                 </tr>
               </thead>
               <tbody>

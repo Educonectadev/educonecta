@@ -162,12 +162,12 @@ export default function AlumnosList({
             sortable: true,
             render: (s) => (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-500 shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-zinc-300 shrink-0">
                   {s.firstName.charAt(0)}{s.lastName.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-800 dark:text-white/90">{s.firstName} {s.lastName}</p>
-                  <p className="text-[11px] text-gray-400">{s.email || "—"}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{s.firstName} {s.lastName}</p>
+                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">{s.email || "—"}</p>
                 </div>
               </div>
             ),
@@ -181,9 +181,9 @@ export default function AlumnosList({
             key: "grade",
             label: "Grado / Sección",
             render: (s) => (
-              <div className="flex gap-1.5">
-                {s.grade && <span className="text-xs bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">{s.grade.name}</span>}
-                {s.section && <span className="text-xs bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">Sec. {s.section.name}</span>}
+              <div className="flex gap-1.5 flex-wrap">
+                {s.grade && <span className="badge-gray text-xs rounded-full px-2 py-0.5 border">{s.grade.name}</span>}
+                {s.section && <span className="badge-gray text-xs rounded-full px-2 py-0.5 border">Sec. {s.section.name}</span>}
               </div>
             ),
           },

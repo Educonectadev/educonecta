@@ -310,7 +310,7 @@ export default function HorariosList({
       <div className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[30px] overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="hidden md:table-header-group">
-            <tr className="border-b border-gray-200 dark:border-zinc-800 text-left text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-zinc-500">
+            <tr className="border-b border-gray-200 dark:border-zinc-800 text-left text-xs font-semibold uppercase tracking-widest text-gray-700 dark:text-zinc-300 bg-gray-50 dark:bg-zinc-900/60">
               <th className="px-6 py-4 whitespace-nowrap">Día</th>
               <th className="px-6 py-4 whitespace-nowrap">Turno</th>
               <th className="px-6 py-4 whitespace-nowrap">Curso</th>
@@ -333,39 +333,39 @@ export default function HorariosList({
                   onClick={() => setDetail(s)}
                   className="flex flex-col md:table-row border border-gray-200 dark:border-zinc-800 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer transition-colors hover:bg-gray-100/50 dark:hover:bg-zinc-800/30"
                 >
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 font-medium">
+                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 font-medium text-gray-900 dark:text-white/90">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Día</span>
                     <span>{dayLabels[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`}</span>
                   </td>
                   <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Turno</span>
-                    <span className={`text-xs font-semibold uppercase ${s.shift === "MAÑANA" ? "text-amber-600" : "text-blue-600"}`}>{s.shift}</span>
+                    <span className={`text-xs font-semibold uppercase ${s.shift === "MAÑANA" ? "text-amber-600 dark:text-amber-400" : "text-blue-600 dark:text-blue-400"}`}>{s.shift}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Curso</span>
                     <span>{s.course.name}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Profesor</span>
                     <span>{s.teacher?.name ?? "—"}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Grado</span>
                     <span>{s.grade?.name ?? "—"}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Sección</span>
                     <span>{s.section?.name ?? "—"}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Inicio</span>
                     <span>{s.startTime}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Fin</span>
                     <span>{s.endTime}</span>
                   </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Aula</span>
                     <span>{s.classroom ?? "—"}</span>
                   </td>
@@ -373,7 +373,7 @@ export default function HorariosList({
                     <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Acciones</span>
                     <div className="flex gap-2">
                       <button onClick={() => openEdit(s)} className="text-xs text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white/90 transition-all border border-gray-200 dark:border-zinc-700 rounded-[30px] px-3 py-1">Editar</button>
-                      <button onClick={() => setDeleting(s)} className="text-xs text-red-500 hover:text-red-700 transition-all border border-red-200 dark:border-red-900 rounded-[30px] px-3 py-1">Eliminar</button>
+                      <button onClick={() => setDeleting(s)} className="text-xs text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-all border border-red-200 dark:border-red-900 rounded-[30px] px-3 py-1">Eliminar</button>
                     </div>
                   </td>
                 </tr>
@@ -514,7 +514,7 @@ export default function HorariosList({
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Aula</label>
+            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Aula</label>
             <Select value={form.classroom} onChange={(val) => updateField("classroom", val)} options={classrooms.map(a => ({value: a.name, label: a.name + (a.code ? ` (${a.code})` : "")}))} placeholder="Sin aula" />
           </div>
         </div>
