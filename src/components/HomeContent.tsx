@@ -115,7 +115,7 @@ const statCardVariants = {
 
 export default function HomeContent({ data }: { data: ImpactData }) {
   return (
-    <div className="flex flex-col min-h-screen bg-white dark:bg-black overflow-x-hidden">
+    <div className="flex flex-col min-h-screen bg-white dark:bg-zinc-950 overflow-x-hidden">
       <motion.header
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -386,7 +386,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5 }}
-          className="border-t border-gray-100 dark:border-zinc-800 bg-[#fafafa] dark:bg-black"
+          className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-950"
         >
           <div className="max-w-5xl mx-auto px-6 py-16 sm:py-24">
             <motion.h2
@@ -432,7 +432,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5 }}
-          className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-black"
+          className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-950"
         >
           <div className="max-w-5xl mx-auto px-6 py-16 sm:py-24 text-center">
             <motion.h2
