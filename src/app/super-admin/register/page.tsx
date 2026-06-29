@@ -50,32 +50,32 @@ export default function SuperAdminRegisterPage() {
 
   if (status === "loading") {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-white">
-        <p className="text-gray-400">Cargando...</p>
+      <div className="flex min-h-screen items-center justify-center bg-white dark:bg-black">
+        <p className="text-gray-400 dark:text-zinc-500">Cargando...</p>
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-black">
       <header className="px-8 py-5 max-w-6xl mx-auto w-full">
-        <Link href="/" className="text-lg font-bold tracking-tight text-black">
+        <Link href="/" className="text-lg font-bold tracking-tight text-black dark:text-white">
           EduConecta
         </Link>
       </header>
 
       <main className="flex flex-1 items-center justify-center px-6">
         <div className="w-full max-w-sm">
-          <h1 className="text-2xl font-bold text-black text-center tracking-tight">
+          <h1 className="text-2xl font-bold text-black dark:text-white text-center tracking-tight">
             Registrar Super Admin
           </h1>
-          <p className="mt-2 text-center text-sm text-gray-400">
+          <p className="mt-2 text-center text-sm text-gray-400 dark:text-zinc-500">
             Crea la cuenta principal del sistema
           </p>
 
           <form onSubmit={handleSubmit} className="mt-10 space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-500 mb-1.5">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-500 dark:text-zinc-400 mb-1.5">
                 Nombre completo
               </label>
               <input
@@ -84,13 +84,13 @@ export default function SuperAdminRegisterPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-1 block w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                className="mt-1 block w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 px-5 py-3 text-sm text-black dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
                 placeholder="Super Administrador"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-500 mb-1.5">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-500 dark:text-zinc-400 mb-1.5">
                 Correo electrónico
               </label>
               <input
@@ -99,13 +99,13 @@ export default function SuperAdminRegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                className="mt-1 block w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 px-5 py-3 text-sm text-black dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
                 placeholder="super@educonecta.com"
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-500 mb-1.5">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-500 dark:text-zinc-400 mb-1.5">
                 Contraseña
               </label>
               <div className="relative mt-1">
@@ -116,13 +116,13 @@ export default function SuperAdminRegisterPage() {
                   minLength={6}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-[30px] border border-gray-200 px-5 py-3 pr-12 text-sm text-black placeholder:text-gray-300 focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                  className="block w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 px-5 py-3 pr-12 text-sm text-black dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors"
                   tabIndex={-1}
                 >
                   {showPassword ? (
@@ -143,7 +143,7 @@ export default function SuperAdminRegisterPage() {
             </div>
 
             {error && (
-              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-[30px] px-5 py-3">
+              <p className="badge-red text-sm rounded-[30px] px-5 py-3">
                 {error}
               </p>
             )}
@@ -157,9 +157,9 @@ export default function SuperAdminRegisterPage() {
             </button>
           </form>
 
-          <p className="mt-8 text-center text-sm text-gray-400">
+          <p className="mt-8 text-center text-sm text-gray-400 dark:text-zinc-500">
             ¿Ya tienes cuenta?{" "}
-            <Link href="/login" className="text-black underline underline-offset-4 hover:text-gray-600">
+            <Link href="/login" className="text-black dark:text-white underline underline-offset-4 hover:text-gray-600 dark:hover:text-zinc-300">
               Iniciar sesión
             </Link>
           </p>

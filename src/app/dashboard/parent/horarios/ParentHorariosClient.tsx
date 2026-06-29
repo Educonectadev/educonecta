@@ -68,12 +68,12 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
       <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Horarios</h1>
-          <p className="mt-1 text-sm text-gray-500">Horario semanal de clases</p>
+          <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Horario semanal de clases</p>
         </div>
       </div>
 
       {childrenData.length === 0 && (
-        <div className="mt-12 text-center text-gray-500">No hay estudiantes vinculados.</div>
+        <div className="mt-12 text-center text-gray-500 dark:text-zinc-400">No hay estudiantes vinculados.</div>
       )}
 
       <div className="mt-6 space-y-8">
@@ -89,45 +89,45 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-lg font-semibold">
                   {child.firstName} {child.lastName}
-                  <span className="ml-2 text-sm font-normal text-gray-500">
+                  <span className="ml-2 text-sm font-normal text-gray-500 dark:text-zinc-400">
                     {child.grade?.name ?? "—"} · {child.section?.name ?? "—"}
                   </span>
                 </h2>
                 <button
                   onClick={() => handlePrint(child)}
-                  className="rounded-[30px] border border-gray-200 px-4 py-2 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-all"
+                  className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-4 py-2 text-xs font-medium text-gray-600 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all"
                 >
                   Imprimir
                 </button>
               </div>
 
               {child.schedules.length === 0 ? (
-                <p className="text-sm text-gray-500">No hay horarios registrados.</p>
+                <p className="text-sm text-gray-500 dark:text-zinc-400">No hay horarios registrados.</p>
               ) : (
-                <div className="bg-gray-50 border border-gray-200 rounded-[30px] overflow-x-auto">
+                <div className="bg-gray-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-700 rounded-[30px] overflow-x-auto">
                   <table className="w-full text-left text-sm">
-                    <thead className="hidden md:table-header-group border-b border-gray-200">
+                    <thead className="hidden md:table-header-group border-b border-gray-200 dark:border-zinc-700">
                       <tr>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">Día</th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">Turno</th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">Horario</th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">Curso</th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">Profesor</th>
-                        <th className="px-6 py-4 font-medium text-gray-500 text-xs uppercase tracking-widest">Aula</th>
+                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Día</th>
+                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Turno</th>
+                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Horario</th>
+                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Curso</th>
+                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Profesor</th>
+                        <th className="px-6 py-4 font-medium text-gray-500 dark:text-zinc-400 text-xs uppercase tracking-widest">Aula</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-50 md:divide-y-0">
+                    <tbody className="divide-y divide-gray-50 dark:divide-zinc-800/50 md:divide-y-0">
                       {days.map((day) => {
                         const daySchedules = byDay[day] ?? []
                         if (daySchedules.length === 0) {
                           return (
-                            <tr key={day} className="flex flex-col md:table-row border border-gray-100 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0">
+                            <tr key={day} className="flex flex-col md:table-row border border-gray-100 dark:border-zinc-800 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0">
                               <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 font-medium">
-                                <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Día</span>
-                                <span className="text-gray-500">{day}</span>
+                                <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Día</span>
+                                <span className="text-gray-500 dark:text-zinc-400">{day}</span>
                               </td>
-                              <td colSpan={5} className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
-                                <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Clases</span>
+                              <td colSpan={5} className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                                <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Clases</span>
                                 <span>Sin clases</span>
                               </td>
                             </tr>
@@ -137,33 +137,33 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
                           <tr
                             key={`${day}-${s.id}`}
                             onClick={() => { setDetail(s); setDetailChild(child) }}
-                            className="flex flex-col md:table-row border border-gray-100 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer hover:bg-gray-100/50 transition-colors"
+                            className="flex flex-col md:table-row border border-gray-100 dark:border-zinc-800 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer hover:bg-gray-100/50 dark:hover:bg-zinc-800/30 transition-colors"
                           >
                             {idx === 0 && (
                               <td rowSpan={daySchedules.length} className="hidden md:table-cell px-6 py-4 font-medium">{day}</td>
                             )}
                             <td className="md:hidden flex justify-between px-0 py-1">
-                              <span className="text-xs uppercase tracking-widest text-gray-500">Día</span>
+                              <span className="text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Día</span>
                               <span>{day}</span>
                             </td>
                             <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
-                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Turno</span>
-                              <span className={`text-xs font-semibold uppercase ${s.shift === "MAÑANA" ? "text-amber-600" : "text-blue-600"}`}>{s.shift}</span>
+                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Turno</span>
+                              <span className={`text-xs font-semibold uppercase ${s.shift === "MAÑANA" ? "text-amber-600 dark:text-amber-400" : "text-blue-600 dark:text-blue-400"}`}>{s.shift}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
-                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Horario</span>
+                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Horario</span>
                               <span>{s.startTime} – {s.endTime}</span>
                             </td>
                             <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
-                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Curso</span>
+                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Curso</span>
                               <span>{s.course.name}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
-                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Profesor</span>
+                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Profesor</span>
                               <span>{s.teacherName ?? "—"}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500">
-                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500">Aula</span>
+                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
+                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Aula</span>
                               <span>{s.classroom ?? "—"}</span>
                             </td>
                           </tr>
@@ -191,33 +191,33 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Estudiante</p>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Estudiante</p>
                       <p className="font-medium">{detailChild?.firstName} {detailChild?.lastName}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Día</p>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Día</p>
                       <p className="font-medium">{detail.dayName}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Turno</p>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Turno</p>
                       <p className="font-medium">{detail.shift}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Inicio – Fin</p>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Inicio – Fin</p>
                       <p className="font-medium">{detail.startTime} – {detail.endTime}</p>
                     </div>
                   </div>
-                  <div className="border-t border-gray-100 pt-4">
-                    <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Curso</p>
+                  <div className="border-t border-gray-100 dark:border-zinc-800 pt-4">
+                    <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Curso</p>
                     <p className="font-medium text-lg">{detail.course.name}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Profesor</p>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Profesor</p>
                       <p className="font-medium">{detail.teacherName ?? "—"}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 mb-1">Aula</p>
+                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Aula</p>
                       <p className="font-medium">{detail.classroom ?? "—"}</p>
                     </div>
                   </div>

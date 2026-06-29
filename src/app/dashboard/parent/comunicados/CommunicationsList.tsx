@@ -18,12 +18,12 @@ function getPriorityBadge(priority: string) {
   switch (priority) {
     case "alta":
     case "high":
-      return "bg-black text-white border-black"
+      return "bg-black dark:bg-white text-white dark:text-black border-black dark:border-white"
     case "media":
     case "medium":
-      return "bg-gray-100 text-gray-600 border-gray-200"
+      return "bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400 border-gray-200 dark:border-zinc-700"
     default:
-      return "bg-gray-50 text-gray-400 border-gray-200"
+      return "bg-gray-50 dark:bg-zinc-800/30 text-gray-400 dark:text-zinc-500 border-gray-200 dark:border-zinc-700"
   }
 }
 
@@ -46,7 +46,7 @@ export default function CommunicationsList({ communications }: { communications:
   return (
     <>
       {communications.length === 0 ? (
-        <div className="mt-12 text-center text-gray-500">
+        <div className="mt-12 text-center text-gray-500 dark:text-zinc-400">
           No hay comunicados disponibles.
         </div>
       ) : (
@@ -55,12 +55,12 @@ export default function CommunicationsList({ communications }: { communications:
             <button
               key={c.id}
               onClick={() => setSelected(c)}
-              className="w-full text-left bg-gray-50 border border-gray-200 rounded-[25px] p-6 hover:bg-gray-100 transition-all duration-200 cursor-pointer"
+              className="w-full text-left bg-gray-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-700 rounded-[25px] p-6 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all duration-200 cursor-pointer"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-[#1a1a1a]">{c.title}</h3>
-                  <p className="mt-2 text-sm text-gray-500 leading-relaxed line-clamp-2">
+                  <h3 className="font-semibold text-gray-900 dark:text-white/90">{c.title}</h3>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400 leading-relaxed line-clamp-2">
                     {c.content}
                   </p>
                 </div>
@@ -70,7 +70,7 @@ export default function CommunicationsList({ communications }: { communications:
                   {getPriorityLabel(c.priority)}
                 </span>
               </div>
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400">
+              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 dark:text-zinc-500">
                 <span>
                   {new Date(c.createdAt).toLocaleDateString("es-ES", {
                     year: "numeric",
@@ -78,11 +78,11 @@ export default function CommunicationsList({ communications }: { communications:
                     day: "numeric",
                   })}
                 </span>
-                <span className="text-gray-200">·</span>
+                <span className="text-gray-200 dark:text-zinc-700">·</span>
                 <span>{c.author.name}</span>
                 {c.teacher && (
                   <>
-                    <span className="text-gray-200">·</span>
+                    <span className="text-gray-200 dark:text-zinc-700">·</span>
                     <span>Prof. {c.teacher.user.name}</span>
                   </>
                 )}
@@ -103,7 +103,7 @@ export default function CommunicationsList({ communications }: { communications:
                   <div className="flex items-start justify-between gap-4 w-full">
                     <div className="flex-1 min-w-0">
                       <span className="truncate block">{selected.title}</span>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 font-normal">
+                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 dark:text-zinc-500 font-normal">
                         <span>
                           {new Date(selected.createdAt).toLocaleDateString("es-ES", {
                             year: "numeric",
@@ -111,11 +111,11 @@ export default function CommunicationsList({ communications }: { communications:
                             day: "numeric",
                           })}
                         </span>
-                        <span className="text-gray-200">·</span>
+                        <span className="text-gray-200 dark:text-zinc-700">·</span>
                         <span>{selected.author.name}</span>
                         {selected.teacher && (
                           <>
-                            <span className="text-gray-200">·</span>
+                            <span className="text-gray-200 dark:text-zinc-700">·</span>
                             <span>Prof. {selected.teacher.user.name}</span>
                           </>
                         )}
@@ -130,7 +130,7 @@ export default function CommunicationsList({ communications }: { communications:
                 </Modal.Heading>
               </Modal.Header>
               <Modal.Body>
-                <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                <p className="text-sm text-gray-600 dark:text-zinc-300 leading-relaxed whitespace-pre-line">
                   {selected.content}
                 </p>
               </Modal.Body>

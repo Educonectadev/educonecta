@@ -27,21 +27,21 @@ export default function NotificationsPage() {
   }, [status])
 
   if (loading) {
-    return <div className="text-sm text-gray-500">Cargando...</div>
+    return <div className="text-sm text-gray-500 dark:text-zinc-400">Cargando...</div>
   }
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-lg font-semibold text-[#1a1a1a] mb-6">Notificaciones</h1>
+      <h1 className="text-lg font-semibold text-gray-900 dark:text-white/90 mb-6">Notificaciones</h1>
       {notifications.length === 0 ? (
-        <p className="text-sm text-gray-400">No tienes notificaciones.</p>
+        <p className="text-sm text-gray-400 dark:text-zinc-500">No tienes notificaciones.</p>
       ) : (
         <ul className="space-y-3">
           {notifications.map((n) => (
-            <li key={n.id} className={`p-4 rounded-xl border ${n.isRead ? "bg-white border-gray-100" : "bg-amber-50 border-amber-200"}`}>
-              <p className="text-sm font-medium text-[#1a1a1a]">{n.title}</p>
-              <p className="text-xs text-gray-500 mt-1">{n.message}</p>
-              <p className="text-[10px] text-gray-400 mt-2">{new Date(n.createdAt).toLocaleDateString()}</p>
+            <li key={n.id} className={`p-4 rounded-xl border ${n.isRead ? "bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800" : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800"}`}>
+              <p className="text-sm font-medium text-gray-900 dark:text-white/90">{n.title}</p>
+              <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">{n.message}</p>
+              <p className="text-[10px] text-gray-400 dark:text-zinc-500 mt-2">{new Date(n.createdAt).toLocaleDateString()}</p>
             </li>
           ))}
         </ul>

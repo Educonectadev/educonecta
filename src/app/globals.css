@@ -49,6 +49,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-card-bg: var(--card-bg);
   --color-field-foreground: #000000;
+  --color-surface-foreground: var(--surface-foreground);
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --radius-card: var(--radius-lg);
@@ -280,4 +281,137 @@ input[type="checkbox"]:checked::after {
 .btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Theme-aware semantic utility classes */
+.card-theme {
+  background-color: var(--card-bg);
+  border-color: var(--border);
+}
+.input-theme {
+  background-color: var(--card-bg);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+.input-theme:focus {
+  border-color: var(--brand-color);
+  --tw-ring-color: var(--brand-color);
+}
+.text-secondary {
+  color: var(--muted-foreground);
+}
+.bg-muted-theme {
+  background-color: var(--muted);
+}
+.divider-theme {
+  border-color: var(--border);
+}
+.hover-muted-theme:hover {
+  background-color: var(--muted);
+}
+
+/* Table header theme */
+.th-theme {
+  color: var(--muted-foreground);
+  border-color: var(--border);
+}
+
+/* Table row theme */
+.tr-theme {
+  border-color: var(--border);
+}
+.tr-theme:hover {
+  background-color: var(--muted);
+}
+
+/* Status badges */
+.badge-green {
+  background-color: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+.dark .badge-green {
+  background-color: rgba(6, 78, 59, 0.3);
+  color: #6ee7b7;
+  border-color: #065f46;
+}
+.badge-red {
+  background-color: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+.dark .badge-red {
+  background-color: rgba(127, 29, 29, 0.3);
+  color: #fca5a5;
+  border-color: #991b1b;
+}
+.badge-amber {
+  background-color: #fffbeb;
+  color: #d97706;
+  border-color: #fde68a;
+}
+.dark .badge-amber {
+  background-color: rgba(120, 53, 15, 0.3);
+  color: #fbbf24;
+  border-color: #92400e;
+}
+.badge-gray {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border-color: #e5e7eb;
+}
+.dark .badge-gray {
+  background-color: rgba(39, 39, 42, 0.5);
+  color: #a1a1aa;
+  border-color: #3f3f46;
+}
+.badge-blue {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+.dark .badge-blue {
+  background-color: rgba(30, 58, 138, 0.3);
+  color: #93c5fd;
+  border-color: #1e40af;
+}
+.badge-violet {
+  background-color: #f5f3ff;
+  color: #6d28d9;
+  border-color: #ddd6fe;
+}
+.dark .badge-violet {
+  background-color: rgba(76, 29, 149, 0.3);
+  color: #a78bfa;
+  border-color: #5b21b6;
+}
+.badge-emerald {
+  background-color: #ecfdf5;
+  color: #047857;
+  border-color: #a7f3d0;
+}
+.dark .badge-emerald {
+  background-color: rgba(6, 78, 59, 0.3);
+  color: #6ee7b7;
+  border-color: #065f46;
+}
+.badge-pink {
+  background-color: #fdf2f8;
+  color: #be185d;
+  border-color: #fbcfe8;
+}
+.dark .badge-pink {
+  background-color: rgba(131, 24, 67, 0.3);
+  color: #f9a8d4;
+  border-color: #831843;
+}
+.badge-indigo {
+  background-color: #eef2ff;
+  color: #4338ca;
+  border-color: #c7d2fe;
+}
+.dark .badge-indigo {
+  background-color: rgba(49, 46, 129, 0.3);
+  color: #a5b4fc;
+  border-color: #3730a3;
 }

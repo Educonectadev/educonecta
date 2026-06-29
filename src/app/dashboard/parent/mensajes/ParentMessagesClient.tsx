@@ -122,7 +122,7 @@ export default function ParentMessagesClient({
       </div>
 
       {teachers.length === 0 ? (
-        <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-10 text-center text-sm text-gray-400">
+        <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-10 text-center text-sm text-gray-400 dark:text-zinc-500">
           Aún no tienes docentes asignados para chatear.
         </div>
       ) : (
@@ -176,7 +176,7 @@ export default function ParentMessagesClient({
                           }
                         >
                           <p className="whitespace-pre-wrap break-words">{m.body}</p>
-                          <p className={"mt-1 text-[10px] " + (m.fromRole === "PARENT" ? "text-amber-100" : "text-gray-400")}>
+                          <p className={"mt-1 text-[10px] " + (m.fromRole === "PARENT" ? "text-amber-100 dark:text-amber-200" : "text-gray-400 dark:text-zinc-500")}>
                             {new Date(m.createdAt).toLocaleString("es-PE", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" })}
                           </p>
                         </div>
@@ -196,7 +196,7 @@ export default function ParentMessagesClient({
                       }
                     }}
                     placeholder="Escribe un mensaje…"
-                    className="flex-1 min-w-0 rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-colors"
+                    className="flex-1 min-w-0 rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white/90 px-4 py-2.5 text-sm focus:border-amber-500 dark:focus:border-amber-400 focus:outline-none focus:ring-1 focus:ring-amber-500 dark:focus:ring-amber-400 transition-colors"
                   />
                   <button
                     onClick={send}
@@ -218,7 +218,7 @@ export default function ParentMessagesClient({
                 </div>
               </>
             ) : (
-              <div className="flex-1 flex items-center justify-center text-sm text-gray-400">
+              <div className="flex-1 flex items-center justify-center text-sm text-gray-400 dark:text-zinc-500">
                 Selecciona un docente
               </div>
             )}
