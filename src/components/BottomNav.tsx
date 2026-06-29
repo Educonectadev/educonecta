@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation"
 import { motion, LayoutGroup } from "framer-motion"
 import * as Icons from "lucide-react"
 import type { LucideProps } from "lucide-react"
+import { useBrandColor } from "./BrandColorProvider"
 
 export type NavItem = {
   href: string
@@ -44,6 +45,8 @@ function NavIcon({ name, ...props }: { name: string } & LucideProps) {
 }
 
 function BottomItem({ item, active }: { item: NavItem; active: boolean }) {
+  const { brandColor } = useBrandColor()
+
   return (
     <Link href={item.href} prefetch>
       <motion.div
@@ -52,8 +55,8 @@ function BottomItem({ item, active }: { item: NavItem; active: boolean }) {
         className={
           "flex items-center gap-2 rounded-full cursor-pointer " +
           (active
-            ? "bg-zinc-800 pl-1.5 pr-3 py-1.5"
-            : "bg-zinc-900/60 w-11 h-11 justify-center")
+            ? "bg-gray-200 dark:bg-zinc-800 pl-1.5 pr-3 py-1.5"
+            : "bg-gray-100 dark:bg-zinc-900/60 w-11 h-11 justify-center")
         }
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -61,15 +64,22 @@ function BottomItem({ item, active }: { item: NavItem; active: boolean }) {
         <motion.div
           layout
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className={
-            "flex items-center justify-center rounded-full size-8 shrink-0 " +
-            (active ? "bg-[#8BFF5A]" : "")
-          }
+          className="flex items-center justify-center rounded-full size-8 shrink-0"
+          style={active ? { backgroundColor: brandColor } : {}}
         >
           <NavIcon
             name={item.icon}
             size={18}
-            className={active ? "text-black" : "text-zinc-400"}
+            className={
+              active
+                ? "text-white"
+                : "text-gray-400 dark:text-zinc-500"
+            }
+            style={
+              active
+                ? { color: "var(--brand-text-color, #fff)" }
+                : {}
+            }
           />
         </motion.div>
         {active && (
@@ -77,7 +87,7 @@ function BottomItem({ item, active }: { item: NavItem; active: boolean }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2, delay: 0.1 }}
-            className="text-white text-sm font-medium whitespace-nowrap"
+            className="text-gray-900 dark:text-white text-sm font-medium whitespace-nowrap"
           >
             {item.label}
           </motion.span>
@@ -108,7 +118,7 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
 
   return (
     <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 md:hidden">
-      <div className="flex items-center gap-1 px-3 py-2 bg-black/70 backdrop-blur-xl rounded-full shadow-2xl shadow-black/50 border border-zinc-800/60">
+      <div className="flex items-center gap-1 px-3 py-2 bg-white/80 dark:bg-black/70 backdrop-blur-xl rounded-full shadow-2xl shadow-gray-200/50 dark:shadow-black/50 border border-gray-200 dark:border-zinc-800/60">
         <LayoutGroup>
           {items.map((item) => (
             <BottomItemMemo
