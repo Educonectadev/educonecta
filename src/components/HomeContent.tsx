@@ -7,6 +7,7 @@ import IconClient from "@/components/IconClient"
 import AnimatedCounter from "@/components/AnimatedCounter"
 import ThemeToggle from "@/components/ThemeToggle"
 import SiteFooter from "@/components/SiteFooter"
+import { TextRoll } from "@/components/ui/skiper-ui/skiper58"
 
 interface ImpactData {
   institutionCount: number
@@ -426,6 +427,59 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           </div>
         </motion.section>
 
+        <motion.section
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5 }}
+          className="border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-black"
+        >
+          <div className="max-w-5xl mx-auto px-6 py-16 sm:py-24 text-center">
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
+              className="text-2xl font-bold text-center text-black dark:text-white/90 tracking-tight mb-10"
+            >
+              Explora EduConecta
+            </motion.h2>
+            <motion.ul
+              initial="initial"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{
+                visible: { transition: { staggerChildren: 0.08 } },
+              }}
+              className="flex flex-col items-center justify-center gap-1"
+            >
+              {[
+                { name: "Inicio", href: "/", desc: "Home" },
+                { name: "Funcionalidades", href: "/funcionalidades", desc: "Características" },
+                { name: "Planes", href: "/planes", desc: "Precios" },
+                { name: "Contacto", href: "/contacto", desc: "Soporte" },
+                { name: "Iniciar Sesión", href: "/login", desc: "Acceder" },
+              ].map((item) => (
+                <motion.li
+                  key={item.name}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                >
+                  <Link href={item.href} className="block">
+                    <TextRoll
+                      center
+                      className="text-3xl font-extrabold uppercase leading-[0.8] tracking-[-0.03em] transition-colors hover:text-emerald-600 dark:hover:text-emerald-400 lg:text-4xl"
+                    >
+                      {item.name}
+                    </TextRoll>
+                  </Link>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </div>
+        </motion.section>
       </main>
 
       <motion.div
