@@ -41,6 +41,10 @@ const iconMap: Record<string, keyof typeof Icons> = {
   file_upload: "Upload",
   payments: "Banknote",
   door_open: "DoorOpen",
+  building: "Building2",
+  users: "Users",
+  credit_card: "CreditCard",
+  settings: "Settings",
 }
 
 function NavIcon({ name, ...props }: { name: string } & LucideProps) {

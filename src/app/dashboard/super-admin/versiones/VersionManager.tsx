@@ -2,6 +2,9 @@
 
 import { useState } from "react"
 import { toast } from "@heroui/react"
+import { motion, AnimatePresence } from "framer-motion"
+import NeonCard from "@/components/premium/NeonCard"
+import IconTile, { getIcon } from "@/components/premium/IconTile"
 
 interface Version {
   id: number
@@ -88,101 +91,192 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-[1fr_2fr] items-start">
-      <form onSubmit={handleSubmit} className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-[25px] p-6 space-y-5">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-zinc-300">{editing ? "Editar Versión" : "Nueva Versión"}</h2>
+    <div className="grid gap-6 md:grid-cols-[1fr_2fr] items-start pt-4 md:pt-6">
+      <NeonCard hoverable={false} delay={0.05}>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="flex items-center gap-3">
+            <IconTile name={editing ? "edit" : "rocket"} size={16} filled active />
+            <h2 className="text-base font-semibold">{editing ? "Editar Versión" : "Nueva Versión"}</h2>
+          </div>
 
-        <div>
-          <label className="text-xs font-medium text-gray-500 dark:text-zinc-400 block mb-1.5">Versión *</label>
-          <input
-            value={version}
-            onChange={(e) => setVersion(e.target.value)}
-            placeholder="v1.0.0"
-            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
-          />
-        </div>
+          <div>
+            <label className="block sa-eyebrow mb-1.5">Versión *</label>
+            <input
+              value={version}
+              onChange={(e) => setVersion(e.target.value)}
+              placeholder="v1.0.0"
+              className="sa-input"
+            />
+          </div>
 
-        <div>
-          <label className="text-xs font-medium text-gray-500 dark:text-zinc-400 block mb-1.5">Título</label>
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Lanzamiento inicial"
-            className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
-          />
-        </div>
+          <div>
+            <label className="block sa-eyebrow mb-1.5">Título</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Lanzamiento inicial"
+              className="sa-input"
+            />
+          </div>
 
-        <div>
-          <label className="text-xs font-medium text-gray-500 dark:text-zinc-400 block mb-1.5">Descripción</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Novedades de esta versión..."
-            rows={3}
-            className="w-full rounded-[20px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all resize-none"
-          />
-        </div>
+          <div>
+            <label className="block sa-eyebrow mb-1.5">Descripción</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Novedades de esta versión..."
+              rows={3}
+              className="sa-input"
+              style={{ borderRadius: "18px", resize: "none" }}
+            />
+          </div>
 
-        <label className="flex items-center gap-2.5 text-sm text-gray-600 dark:text-zinc-400 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={isCurrent}
-            onChange={(e) => setIsCurrent(e.target.checked)}
-            className="accent-black dark:accent-white"
-          />
-          Marcar como versión actual
-        </label>
+          <label className="flex items-center gap-2.5 text-sm text-[color:var(--muted-foreground)] cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={isCurrent}
+              onChange={(e) => setIsCurrent(e.target.checked)}
+              className="accent-current size-4"
+              style={{ accentColor: "var(--neon)" }}
+            />
+            Marcar como versión actual
+          </label>
 
-        <div className="flex gap-2">
-          <button
-            type="submit"
-            disabled={loading || !version.trim()}
-            className="flex-1 rounded-[30px] btn-primary text-sm font-medium py-2.5"
-          >
-            {loading ? "Guardando..." : editing ? "Actualizar" : "Registrar"}
-          </button>
-          {editing && (
-            <button type="button" onClick={handleCancel} className="px-5 py-2.5 text-sm text-gray-500 dark:text-zinc-400 hover:text-gray-700 dark:hover:text-zinc-200 transition-colors">
-              Cancelar
+          <div className="flex gap-2 pt-2">
+            <button
+              type="submit"
+              disabled={loading || !version.trim()}
+              className="sa-btn sa-btn-primary flex-1 disabled:opacity-50"
+            >
+              {loading ? "Guardando..." : editing ? "Actualizar" : "Registrar"}
             </button>
-          )}
-        </div>
-      </form>
+            {editing && (
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="sa-btn sa-btn-ghost"
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
+        </form>
+      </NeonCard>
 
       <div className="space-y-3">
-        {versiones.length === 0 && (
-          <p className="text-sm text-gray-400 dark:text-zinc-500 text-center py-12">No hay versiones registradas</p>
-        )}
-        {versiones.map((v) => (
-          <div key={v.id} className={`bg-white dark:bg-zinc-900 border rounded-[25px] p-5 ${v.isCurrent ? "border-black dark:border-white ring-1 ring-black/10 dark:ring-white/10" : "border-gray-200 dark:border-zinc-800"}`}>
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-gray-900 dark:text-white/90">{v.version}</span>
-                {v.isCurrent && (
-                  <span className="text-[10px] font-semibold uppercase bg-black dark:bg-white text-white dark:text-black px-2 py-0.5 rounded-full">Actual</span>
-                )}
-              </div>
-              <div className="flex gap-1 shrink-0">
-                <button onClick={() => handleEdit(v)} className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 px-2 py-1 transition-colors">
-                  Editar
-                </button>
-                {!v.isCurrent && (
-                  <button onClick={() => handleSetCurrent(v)} className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 px-2 py-1 transition-colors">
-                    Marcar actual
-                  </button>
-                )}
-                <button onClick={() => handleDelete(v.id)} className="text-xs text-red-400 hover:text-red-600 px-2 py-1 transition-colors">
-                  Eliminar
-                </button>
-              </div>
+        {versiones.length === 0 ? (
+          <NeonCard hoverable={false} className="text-center">
+            <div className="py-8">
+              {getIcon("history", { size: 28, strokeWidth: 1.6, className: "mx-auto mb-3 opacity-50" })}
+              <p className="text-sm text-[color:var(--muted-foreground)]">No hay versiones registradas</p>
             </div>
-            {v.title && <p className="text-sm font-medium text-gray-700 dark:text-zinc-300 mt-1">{v.title}</p>}
-            {v.description && <p className="text-sm text-gray-500 dark:text-zinc-400 mt-0.5 whitespace-pre-line">{v.description}</p>}
-            <p className="text-[10px] text-gray-400 dark:text-zinc-500 mt-2">
-              {new Date(v.createdAt).toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })}
-            </p>
-          </div>
-        ))}
+          </NeonCard>
+        ) : (
+          <motion.ul layout className="space-y-3">
+            <AnimatePresence mode="popLayout">
+              {versiones.map((v, idx) => (
+                <motion.li
+                  layout
+                  key={v.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1], delay: idx * 0.02 }}
+                >
+                  <article
+                    className="sa-surface p-5"
+                    style={
+                      v.isCurrent
+                        ? {
+                            borderColor: "var(--neon)",
+                            boxShadow: "0 0 0 1px var(--neon), 0 12px 36px var(--neon-glow-soft)",
+                          }
+                        : undefined
+                    }
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span
+                          className="w-9 h-9 rounded-2xl flex items-center justify-center shrink-0"
+                          style={{
+                            background: v.isCurrent
+                              ? "color-mix(in srgb, var(--neon) 14%, transparent)"
+                              : "var(--surface-3)",
+                            border: "1px solid var(--surface-border)",
+                            color: v.isCurrent ? "var(--neon)" : "var(--muted-foreground)",
+                          }}
+                        >
+                          {getIcon("rocket", { size: 14, strokeWidth: 2 })}
+                        </span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg font-bold">{v.version}</span>
+                            {v.isCurrent && (
+                              <span
+                                className="sa-chip"
+                                style={{
+                                  color: "var(--neon)",
+                                  borderColor: "transparent",
+                                  backgroundColor: "color-mix(in srgb, var(--neon) 14%, transparent)",
+                                }}
+                              >
+                                <span
+                                  className="inline-block w-1.5 h-1.5 rounded-full"
+                                  style={{ background: "var(--neon)" }}
+                                />
+                                Actual
+                              </span>
+                            )}
+                          </div>
+                          {v.title && <p className="text-sm font-medium mt-0.5">{v.title}</p>}
+                        </div>
+                      </div>
+                      <div className="flex gap-1 shrink-0">
+                        <button
+                          onClick={() => handleEdit(v)}
+                          className="sa-btn sa-btn-ghost text-[11px] py-1 px-3"
+                        >
+                          {getIcon("edit", { size: 12, strokeWidth: 2 })}
+                          <span>Editar</span>
+                        </button>
+                        {!v.isCurrent && (
+                          <button
+                            onClick={() => handleSetCurrent(v)}
+                            className="sa-btn sa-btn-outline text-[11px] py-1 px-3"
+                          >
+                            <span>Marcar actual</span>
+                          </button>
+                        )}
+                        <button
+                          onClick={() => handleDelete(v.id)}
+                          className="sa-btn sa-btn-ghost text-[11px] py-1 px-3"
+                          style={{ color: "#f87171" }}
+                        >
+                          {getIcon("trash", { size: 12, strokeWidth: 2 })}
+                          <span>Eliminar</span>
+                        </button>
+                      </div>
+                    </div>
+                    {v.description && (
+                      <p className="text-sm text-[color:var(--muted-foreground)] mt-2 whitespace-pre-line">
+                        {v.description}
+                      </p>
+                    )}
+                    <p className="text-[10px] text-[color:var(--muted-foreground)] mt-3">
+                      {new Date(v.createdAt).toLocaleDateString("es-PE", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </article>
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </motion.ul>
+        )}
       </div>
     </div>
   )

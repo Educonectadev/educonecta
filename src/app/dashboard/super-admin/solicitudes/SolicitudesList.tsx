@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
+import NeonCard from "@/components/premium/NeonCard"
+import { getIcon } from "@/components/premium/IconTile"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface Lead {
   id: number
@@ -28,10 +31,23 @@ interface LeadMessage {
   createdAt: string
 }
 
-const STATUS_STYLES: Record<string, string> = {
-  NUEVO: "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800",
-  EN_CONTACTO: "bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800",
-  CERRADO: "bg-gray-100 text-gray-600 dark:bg-zinc-800 dark:text-zinc-400 border border-gray-200 dark:border-zinc-700",
+const STATUS_LABELS: Record<Lead["status"], string> = {
+  NUEVO: "Nuevo",
+  EN_CONTACTO: "En contacto",
+  CERRADO: "Cerrado",
+}
+
+function statusStyle(s: Lead["status"]) {
+  if (s === "NUEVO") {
+    return {
+      color: "var(--neon)",
+      bg: "color-mix(in srgb, var(--neon) 14%, transparent)",
+    }
+  }
+  if (s === "EN_CONTACTO") {
+    return { color: "#fbbf24", bg: "rgba(251, 191, 36, 0.14)" }
+  }
+  return { color: "var(--muted-foreground)", bg: "var(--surface-3)" }
 }
 
 const POLL_INTERVAL_MS = 5000
@@ -42,6 +58,7 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
   const [messages, setMessages] = useState<LeadMessage[]>([])
   const [draft, setDraft] = useState("")
   const [sending, setSending] = useState(false)
+  const [filter, setFilter] = useState<"ALL" | Lead["status"]>("ALL")
   const lastServerTimeRef = useRef<string>(new Date().toISOString())
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
@@ -178,62 +195,166 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
     } catch {}
   }
 
+  const counts = {
+    ALL: leads.length,
+    NUEVO: leads.filter((l) => l.status === "NUEVO").length,
+    EN_CONTACTO: leads.filter((l) => l.status === "EN_CONTACTO").length,
+    CERRADO: leads.filter((l) => l.status === "CERRADO").length,
+  }
+
+  const filteredLeads = filter === "ALL" ? leads : leads.filter((l) => l.status === filter)
+
+  const filterChips: { key: typeof filter; label: string; count: number }[] = [
+    { key: "ALL", label: "Todas", count: counts.ALL },
+    { key: "NUEVO", label: "Nuevas", count: counts.NUEVO },
+    { key: "EN_CONTACTO", label: "En contacto", count: counts.EN_CONTACTO },
+    { key: "CERRADO", label: "Cerradas", count: counts.CERRADO },
+  ]
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Solicitudes</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">
-          Colegios que pidieron contacto desde /planes.{" "}
-          {unreadCount > 0 && (
-            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-              {unreadCount} sin leer
+    <div className="space-y-6 pt-4 md:pt-6">
+      <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+        <div>
+          <p className="sa-eyebrow">Pipeline comercial</p>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-1">Solicitudes</h1>
+          <p className="text-sm text-[color:var(--muted-foreground)] mt-1.5">
+            Colegios que pidieron contacto desde /planes.
+            {unreadCount > 0 && (
+              <>
+                {" "}
+                <span className="font-semibold sa-accent-text">
+                  {unreadCount} sin leer
+                </span>
+              </>
+            )}
+          </p>
+        </div>
+      </header>
+
+      <div className="flex items-center gap-1 sa-rail" style={{ padding: "0.3rem" }}>
+        {filterChips.map((f) => (
+          <button
+            key={f.key}
+            onClick={() => setFilter(f.key)}
+            data-active={filter === f.key}
+            className="sa-rail-item"
+            style={{ padding: "0.4rem 0.85rem", fontSize: "0.8rem" }}
+          >
+            <span>{f.label}</span>
+            <span
+              className="sa-chip"
+              style={{
+                padding: "0.05rem 0.4rem",
+                fontSize: "0.65rem",
+                backgroundColor: filter === f.key ? "rgba(0,0,0,0.12)" : "var(--surface-3)",
+                color: filter === f.key ? "#0a0a0c" : "var(--muted-foreground)",
+                borderColor: "transparent",
+              }}
+            >
+              {f.count}
             </span>
-          )}
-        </p>
+          </button>
+        ))}
       </div>
 
-      <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
-        {leads.length === 0 ? (
-          <p className="p-10 text-center text-sm text-gray-400 dark:text-zinc-500">
-            Aún no hay solicitudes.
-          </p>
-        ) : (
-          <ul className="divide-y divide-gray-100 dark:divide-zinc-800">
-            {leads.map((l) => (
-              <li
-                key={l.id}
-                onClick={() => openLead(l)}
-                className={
-                  "p-4 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800/50 " +
-                  (selected?.id === l.id ? "bg-gray-50 dark:bg-zinc-800/50" : "")
-                }
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium text-sm text-gray-900 dark:text-white/90 truncate">
-                        {l.institutionName}
-                      </p>
-                      {l.unreadByAdmin && (
-                        <span className="shrink-0 inline-flex size-2 rounded-full bg-emerald-500" aria-label="No leído" />
+      {filteredLeads.length === 0 ? (
+        <NeonCard hoverable={false} className="text-center">
+          <div className="py-8">
+            {getIcon("inbox", { size: 28, strokeWidth: 1.6, className: "mx-auto mb-3 opacity-50" })}
+            <p className="text-sm text-[color:var(--muted-foreground)]">
+              No hay solicitudes en este filtro.
+            </p>
+          </div>
+        </NeonCard>
+      ) : (
+        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <AnimatePresence mode="popLayout">
+            {filteredLeads.map((l, idx) => {
+              const ss = statusStyle(l.status)
+              return (
+                <motion.li
+                  layout
+                  key={l.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1], delay: idx * 0.02 }}
+                >
+                  <article
+                    onClick={() => openLead(l)}
+                    className={
+                      "sa-surface sa-surface-hover p-5 cursor-pointer " +
+                      (selected?.id === l.id ? "sa-glow" : "")
+                    }
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span
+                          className="w-10 h-10 rounded-2xl flex items-center justify-center font-semibold text-sm shrink-0"
+                          style={{
+                            background: "var(--surface-3)",
+                            border: "1px solid var(--surface-border)",
+                          }}
+                        >
+                          {l.institutionName.charAt(0).toUpperCase()}
+                        </span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="font-semibold text-sm truncate">{l.institutionName}</p>
+                            {l.unreadByAdmin && (
+                              <span
+                                className="shrink-0 inline-flex size-2 rounded-full"
+                                style={{
+                                  background: "var(--neon)",
+                                  boxShadow: "0 0 8px var(--neon-glow)",
+                                }}
+                                aria-label="No leído"
+                              />
+                            )}
+                          </div>
+                          <p className="text-[11px] text-[color:var(--muted-foreground)] truncate">
+                            {l.directorName} · {l.email}
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        className="sa-chip"
+                        style={{
+                          color: ss.color,
+                          backgroundColor: ss.bg,
+                          borderColor: "transparent",
+                        }}
+                      >
+                        <span
+                          className="inline-block w-1.5 h-1.5 rounded-full"
+                          style={{ background: ss.color }}
+                        />
+                        {STATUS_LABELS[l.status]}
+                      </span>
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between text-[11px]">
+                      <span className="text-[color:var(--muted-foreground)]">
+                        {new Date(l.createdAt).toLocaleString("es-PE", {
+                          day: "2-digit",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      {l.plan && (
+                        <span className="sa-chip" style={{ padding: "0.1rem 0.5rem", fontSize: "0.65rem" }}>
+                          {l.plan}
+                        </span>
                       )}
                     </div>
-                    <p className="mt-0.5 text-xs text-gray-500 dark:text-zinc-400 truncate">
-                      {l.directorName} · {l.email}
-                    </p>
-                  </div>
-                  <span className={`shrink-0 text-[10px] font-semibold uppercase tracking-wider rounded-full px-2 py-0.5 ${STATUS_STYLES[l.status] ?? ""}`}>
-                    {l.status === "NUEVO" ? "Nuevo" : l.status === "EN_CONTACTO" ? "En contacto" : "Cerrado"}
-                  </span>
-                </div>
-                <p className="mt-1 text-[11px] text-gray-400 dark:text-zinc-500">
-                  {new Date(l.createdAt).toLocaleString("es-PE")}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                  </article>
+                </motion.li>
+              )
+            })}
+          </AnimatePresence>
+        </ul>
+      )}
 
       <Modal
         open={!!selected}
@@ -251,39 +372,54 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[11px] uppercase tracking-widest text-gray-400 dark:text-zinc-500">Estado:</span>
-              {(["NUEVO", "EN_CONTACTO", "CERRADO"] as const).map((s) => (
-                <button
-                  key={s}
-                  onClick={() => changeStatus(selected, s)}
-                  className={
-                    "text-[11px] rounded-full px-2.5 py-1 font-medium transition-colors duration-200 border " +
-                    (selected.status === s
-                      ? "bg-emerald-600 border-emerald-600 text-white"
-                      : "bg-white dark:bg-zinc-800 border-gray-200 dark:border-zinc-700 text-gray-500 hover:border-emerald-300 hover:text-emerald-600")
-                  }
-                >
-                  {s === "NUEVO" ? "Nuevo" : s === "EN_CONTACTO" ? "En contacto" : "Cerrado"}
-                </button>
-              ))}
+              <span className="sa-eyebrow">Estado:</span>
+              {(["NUEVO", "EN_CONTACTO", "CERRADO"] as const).map((s) => {
+                const active = selected.status === s
+                return (
+                  <button
+                    key={s}
+                    onClick={() => changeStatus(selected, s)}
+                    className={
+                      "sa-btn text-[11px] py-1 px-3 " +
+                      (active ? "sa-btn-primary" : "sa-btn-outline")
+                    }
+                  >
+                    {STATUS_LABELS[s]}
+                  </button>
+                )
+              })}
             </div>
 
-            <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800/30 p-3 max-h-72 overflow-y-auto space-y-2">
+            <div className="sa-surface-flat p-3 max-h-72 overflow-y-auto space-y-2 sa-scroll">
               {messages.length === 0 ? (
-                <p className="text-xs text-center text-gray-400 py-6">Sin mensajes aún. Escribe abajo para iniciar la conversación.</p>
+                <p className="text-xs text-center text-[color:var(--muted-foreground)] py-6">
+                  Sin mensajes aún. Escribe abajo para iniciar la conversación.
+                </p>
               ) : (
                 messages.map((m) => (
-                  <div key={m.id} className={"flex " + (m.authorRole === "ADMIN" ? "justify-end" : "justify-start")}>
+                  <div
+                    key={m.id}
+                    className={"flex " + (m.authorRole === "ADMIN" ? "justify-end" : "justify-start")}
+                  >
                     <div
-                      className={
-                        "max-w-[80%] rounded-2xl px-3 py-2 text-sm " +
-                        (m.authorRole === "ADMIN"
-                          ? "bg-emerald-600 text-white"
-                          : "bg-white dark:bg-zinc-900 text-gray-800 dark:text-zinc-200 border border-gray-100 dark:border-zinc-700")
+                      className="max-w-[80%] rounded-2xl px-3 py-2 text-sm"
+                      style={
+                        m.authorRole === "ADMIN"
+                          ? {
+                              background: "var(--neon)",
+                              color: "#0a0a0c",
+                            }
+                          : {
+                              background: "var(--surface-3)",
+                              color: "var(--foreground)",
+                              border: "1px solid var(--surface-border)",
+                            }
                       }
                     >
                       <p className="whitespace-pre-wrap break-words">{m.body}</p>
-                      <p className={"mt-1 text-[10px] " + (m.authorRole === "ADMIN" ? "text-emerald-100" : "text-gray-400")}>
+                      <p
+                        className="mt-1 text-[10px] opacity-70"
+                      >
                         {m.authorName ?? (m.authorRole === "ADMIN" ? "Tú" : "Visitante")} · {new Date(m.createdAt).toLocaleString("es-PE")}
                       </p>
                     </div>
@@ -304,12 +440,12 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
                   }
                 }}
                 placeholder="Escribe una respuesta…"
-                className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 px-4 py-2.5 text-sm bg-white dark:bg-zinc-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+                className="sa-input"
               />
               <button
                 onClick={sendMessage}
                 disabled={sending || !draft.trim()}
-                className="rounded-[30px] bg-emerald-600 hover:bg-emerald-700 transition-colors duration-200 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50"
+                className="sa-btn sa-btn-primary"
               >
                 {sending ? "Enviando…" : "Enviar"}
               </button>
@@ -324,11 +460,11 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
 function Field({ label, value, link }: { label: string; value: string; link?: string }) {
   return (
     <div>
-      <p className="text-[10px] uppercase tracking-widest text-gray-400 dark:text-zinc-500">{label}</p>
+      <p className="sa-eyebrow">{label}</p>
       {link ? (
-        <a href={link} className="text-sm text-emerald-600 dark:text-emerald-400 hover:underline">{value}</a>
+        <a href={link} className="text-sm sa-accent-text hover:underline">{value}</a>
       ) : (
-        <p className="text-sm text-gray-800 dark:text-zinc-200">{value}</p>
+        <p className="text-sm font-medium">{value}</p>
       )}
     </div>
   )

@@ -175,29 +175,28 @@ export default function PlanesList({
     .reduce((acc, s) => acc + Number(s.monthlyAmount ?? 0), 0)
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="space-y-6 md:space-y-8 pt-4 md:pt-6">
+      <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Planes y Suscripciones</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">
+          <p className="sa-eyebrow">Suscripciones</p>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-1">Planes y Suscripciones</h1>
+          <p className="text-sm text-[color:var(--muted-foreground)] mt-1.5 max-w-2xl">
             Activa el plan de cada colegio. El monto mensual se calcula como S/ {Number(form.pricePerParent || 2).toFixed(2)} × número de familias aportantes.
           </p>
         </div>
-        <button
-          onClick={openCreate}
-          className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium"
-        >
+        <button onClick={openCreate} className="sa-btn sa-btn-primary self-start md:self-auto">
           + Asignar plan
         </button>
-      </div>
+      </header>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard label="Suscripciones activas" value={subs.filter((s) => s.isActive).length} />
-        <StatCard label="Familias aportantes" value={subs.filter((s) => s.isActive).reduce((acc, s) => acc + Number(s.parentCount ?? 0), 0)} />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+        <StatCard label="Suscripciones activas" value={subs.filter((s) => s.isActive).length} accent="neon" />
         <StatCard
-          label="Ingreso mensual"
-          value={`S/ ${totalMonthly.toFixed(2)}`}
+          label="Familias aportantes"
+          value={subs.filter((s) => s.isActive).reduce((acc, s) => acc + Number(s.parentCount ?? 0), 0)}
+          accent="blue"
         />
+        <StatCard label="Ingreso mensual" value={`S/ ${totalMonthly.toFixed(2)}`} accent="violet" />
       </div>
 
       <DataTable
@@ -212,7 +211,7 @@ export default function PlanesList({
             render: (s) => (
               <div>
                 <p className="font-medium text-gray-900 dark:text-white/90">{s.institutionName ?? "—"}</p>
-                <p className="text-xs text-gray-400 dark:text-zinc-500">{s.institutionCode ?? ""}</p>
+                <p className="text-xs text-gray-500 dark:text-zinc-400">{s.institutionCode ?? ""}</p>
               </div>
             ),
           },
@@ -221,7 +220,7 @@ export default function PlanesList({
             label: "Plan",
             sortable: true,
             render: (s) => (
-              <span className={`text-xs rounded-full px-2.5 py-0.5 ${PLAN_STYLES[s.plan] ?? "bg-gray-100 text-gray-600"}`}>
+              <span className={`text-xs rounded-full px-2.5 py-0.5 ${PLAN_STYLES[s.plan] ?? "badge-gray"} border`}>
                 {PLAN_LABELS[s.plan] ?? s.plan}
               </span>
             ),
@@ -250,9 +249,11 @@ export default function PlanesList({
             key: "expiresAt",
             label: "Vence",
             render: (s) =>
-              s.expiresAt
-                ? new Date(s.expiresAt).toLocaleDateString("es-PE")
-                : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
+              s.expiresAt ? (
+                new Date(s.expiresAt).toLocaleDateString("es-PE")
+              ) : (
+                <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>
+              ),
           },
           {
             key: "isActive",
@@ -260,8 +261,8 @@ export default function PlanesList({
             render: (s) => (
               <button
                 onClick={() => toggleActive(s)}
-                className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium transition-all border ${
-                  s.isActive ? "badge-green hover:opacity-90" : "badge-gray hover:opacity-90"
+                className={`inline-block rounded-full px-3 py-1 text-[11px] font-medium transition-all border ${
+                  s.isActive ? "badge-green" : "badge-gray"
                 }`}
                 title="Click para cambiar estado"
               >
@@ -280,12 +281,12 @@ export default function PlanesList({
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Institución</label>
+            <label className="block sa-eyebrow mb-1.5">Institución</label>
             {editing ? (
               <input
                 value={editing.institutionName ?? ""}
                 disabled
-                className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm bg-gray-50 dark:bg-zinc-800 dark:border-zinc-700"
+                className="sa-input opacity-70 cursor-not-allowed"
               />
             ) : (
               <Select
@@ -296,12 +297,12 @@ export default function PlanesList({
               />
             )}
             {!editing && institutionsWithoutSub.length === 0 && (
-              <p className="mt-2 text-[11px] text-gray-400">Todas las instituciones ya tienen suscripción.</p>
+              <p className="mt-2 text-[11px] text-[color:var(--muted-foreground)]">Todas las instituciones ya tienen suscripción.</p>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Plan</label>
+            <label className="block sa-eyebrow mb-1.5">Plan</label>
             <Select
               value={form.plan}
               onChange={(val) => setForm((p) => ({ ...p, plan: val as Subscription["plan"] }))}
@@ -315,7 +316,7 @@ export default function PlanesList({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">S/ por familia</label>
+              <label className="block sa-eyebrow mb-1.5">S/ por familia</label>
               <input
                 type="number"
                 step="0.01"
@@ -329,11 +330,11 @@ export default function PlanesList({
                     monthlyAmount: computeMonthly(price, p.parentCount),
                   }))
                 }}
-                className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                className="sa-input"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">N° familias aportantes</label>
+              <label className="block sa-eyebrow mb-1.5">N° familias aportantes</label>
               <input
                 type="number"
                 min="0"
@@ -346,45 +347,46 @@ export default function PlanesList({
                     monthlyAmount: computeMonthly(p.pricePerParent, count),
                   }))
                 }}
-                className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                className="sa-input"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Monto mensual (S/)</label>
+            <label className="block sa-eyebrow mb-1.5">Monto mensual (S/)</label>
             <input
               type="number"
               step="0.01"
               min="0"
               value={form.monthlyAmount}
               onChange={(e) => setForm((p) => ({ ...p, monthlyAmount: e.target.value }))}
-              className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all bg-gray-50 dark:bg-zinc-800"
+              className="sa-input"
               placeholder="Se calcula automáticamente"
             />
-            <p className="mt-1 text-[11px] text-gray-400">
+            <p className="mt-1 text-[11px] text-[color:var(--muted-foreground)]">
               Auto: S/ {Number(form.pricePerParent || 0).toFixed(2)} × {form.parentCount || 0} = S/{" "}
               {computeMonthly(form.pricePerParent, form.parentCount) || "0.00"}
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Fecha de vencimiento (opcional)</label>
+            <label className="block sa-eyebrow mb-1.5">Fecha de vencimiento (opcional)</label>
             <input
               type="date"
               value={form.expiresAt}
               onChange={(e) => setForm((p) => ({ ...p, expiresAt: e.target.value }))}
-              className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+              className="sa-input"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Notas (opcional)</label>
+            <label className="block sa-eyebrow mb-1.5">Notas (opcional)</label>
             <textarea
               rows={2}
               value={form.notes}
               onChange={(e) => setForm((p) => ({ ...p, notes: e.target.value }))}
-              className="w-full rounded-2xl border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all resize-none"
+              className="sa-input"
+              style={{ borderRadius: "18px", resize: "none" }}
               placeholder="Comprobante, contacto, etc."
             />
           </div>
@@ -393,14 +395,14 @@ export default function PlanesList({
         <div className="flex gap-3 mt-6">
           <button
             onClick={() => setShowForm(false)}
-            className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all"
+            className="sa-btn sa-btn-ghost flex-1"
           >
             Cancelar
           </button>
           <button
             onClick={handleSave}
             disabled={loading}
-            className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+            className="sa-btn sa-btn-primary flex-1"
           >
             {loading ? "Guardando..." : editing ? "Actualizar" : "Activar plan"}
           </button>
@@ -410,11 +412,32 @@ export default function PlanesList({
   )
 }
 
-function StatCard({ label, value }: { label: string; value: number | string }) {
+const accentColors: Record<"neon" | "blue" | "violet", string> = {
+  neon: "var(--neon)",
+  blue: "#38bdf8",
+  violet: "#a855f7",
+}
+
+function StatCard({
+  label,
+  value,
+  accent = "neon",
+}: {
+  label: string
+  value: number | string
+  accent?: "neon" | "blue" | "violet"
+}) {
+  const color = accentColors[accent]
   return (
-    <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
-      <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">{label}</p>
-      <p className="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">{value}</p>
+    <div className="sa-surface p-5">
+      <div className="flex items-center justify-between mb-3">
+        <span
+          className="inline-block w-2 h-2 rounded-full"
+          style={{ background: color, boxShadow: `0 0 8px ${color}` }}
+        />
+        <span className="sa-eyebrow">{label}</span>
+      </div>
+      <p className="sa-num text-3xl">{value}</p>
     </div>
   )
 }

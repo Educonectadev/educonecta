@@ -3,7 +3,6 @@
 import { memo, useMemo, useEffect, useCallback } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import { themes, type RoleTheme } from "@/lib/themes"
 
 interface NavLink {
   href: string
@@ -25,12 +24,12 @@ const NavItem = memo(function NavItem({
   return (
     <Link
       href={link.href}
-      prefetch={true}
+      prefetch
+      onMouseEnter={prefetch}
       className={`inline-flex items-center justify-start gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium transition-colors ${
         active ? "" : "hover:bg-default-100 dark:hover:bg-default-50"
       }`}
       style={active ? { backgroundColor: "var(--brand-color)", color: "var(--brand-text-color)" } : undefined}
-      onMouseEnter={prefetch}
     >
       <span className={`material-icons text-lg ${active ? "opacity-100" : "opacity-40"}`} aria-hidden>
         {link.icon}
@@ -52,7 +51,6 @@ export default function SidebarNav({
 }) {
   const router = useRouter()
   const pathname = usePathname()
-  const t: RoleTheme = themes[theme] ?? themes.SUPER_ADMIN
 
   useEffect(() => {
     links.forEach((link) => router.prefetch(link.href))
@@ -76,9 +74,7 @@ export default function SidebarNav({
         aria-label={label}
         className="h-full flex flex-col gap-0.5 p-4"
       >
-        <p
-          className={`px-4 pb-3 pt-1 text-[10px] font-semibold uppercase tracking-widest ${t.sidebar.labelColor}`}
-        >
+        <p className="px-4 pb-3 pt-1 text-[10px] font-semibold uppercase tracking-widest text-default-600 dark:text-default-400">
           {label}
         </p>
         {links.map((link) => (

@@ -2,6 +2,10 @@
 
 import { useState, useRef } from "react"
 import { toast } from "@heroui/react"
+import { motion, AnimatePresence } from "framer-motion"
+import NeonCard from "@/components/premium/NeonCard"
+import GlowButton from "@/components/premium/GlowButton"
+import IconTile, { getIcon } from "@/components/premium/IconTile"
 
 interface Partner {
   id: number
@@ -116,106 +120,166 @@ export default function PartnerList({ partners: initial }: { partners: Partner[]
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-black dark:text-white/90">Instituciones Partners</h1>
-        <p className="text-sm text-gray-400 dark:text-zinc-500 mt-1">
+    <div className="space-y-6 md:space-y-8 pt-4 md:pt-6">
+      <header>
+        <p className="sa-eyebrow">Landing pública</p>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-1">Instituciones Partners</h1>
+        <p className="text-sm text-[color:var(--muted-foreground)] mt-1.5">
           Gestiona los logos de instituciones que aparecen en la landing page.
         </p>
-      </div>
+      </header>
 
-      <form onSubmit={handleSubmit} className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-[25px] p-6 space-y-5">
-        <h2 className="text-sm font-semibold text-black dark:text-white/90">
-          {editing ? "Editar institución" : "Nueva institución"}
-        </h2>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1.5">Nombre</label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ej: Colegio San José"
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
-            />
+      <NeonCard hoverable={false} delay={0.05}>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="flex items-center gap-3 mb-2">
+            <IconTile name={editing ? "edit" : "plus"} size={16} filled active />
+            <h2 className="text-base font-semibold">
+              {editing ? "Editar institución" : "Nueva institución"}
+            </h2>
           </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1.5">Orden</label>
-            <input
-              type="number"
-              value={order}
-              onChange={(e) => setOrder(Number(e.target.value))}
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all"
-            />
-          </div>
-        </div>
 
-        <div>
-          <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1.5">Logo</label>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFile}
-            className="w-full text-sm text-gray-500 dark:text-zinc-400 file:mr-3 file:py-2 file:px-4 file:rounded-[30px] file:border-0 file:text-sm file:font-medium file:bg-black file:text-white dark:file:bg-white dark:file:text-black hover:file:opacity-90 transition-all"
-          />
-          {logoPreview && (
-            <div className="mt-3 flex items-center gap-3">
-              <img src={logoPreview} alt="preview" className="h-10 w-auto object-contain rounded-lg border border-gray-200 dark:border-zinc-700" />
-              <span className="text-xs text-gray-400 dark:text-zinc-500">Previsualización</span>
-            </div>
-          )}
-        </div>
-
-        <div className="flex gap-2">
-          <button type="submit" disabled={loading || !name.trim() || !logoUrl} className="btn-primary px-6 py-2.5 rounded-[30px] text-sm font-medium transition disabled:opacity-50">
-            {loading ? "Guardando..." : editing ? "Actualizar" : "Agregar"}
-          </button>
-          {editing && (
-            <button type="button" onClick={resetForm} className="px-6 py-2.5 rounded-[30px] text-sm font-medium border border-gray-200 dark:border-zinc-700 text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all">
-              Cancelar
-            </button>
-          )}
-        </div>
-      </form>
-
-      <div className="space-y-3">
-        {items.length === 0 ? (
-          <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-[25px] p-12 text-center text-sm text-gray-400 dark:text-zinc-500">
-            No hay instituciones partners. Agrega la primera arriba.
-          </div>
-        ) : (
-          items.map((item) => (
-            <div key={item.id} className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-[25px] p-5 flex items-center gap-4">
-              <img
-                src={item.logoUrl}
-                alt={item.name}
-                className="h-10 w-10 object-contain rounded-lg border border-gray-100 dark:border-zinc-700 shrink-0"
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="block sa-eyebrow mb-1.5">Nombre</label>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ej: Colegio San José"
+                className="sa-input"
               />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-black dark:text-white/90 truncate">{item.name}</p>
-                <p className="text-xs text-gray-400 dark:text-zinc-500">Orden: {item.order}</p>
-              </div>
-              <button
-                onClick={() => toggleActive(item)}
-                className={`text-[10px] font-semibold uppercase px-3 py-1.5 rounded-full transition-all ${
-                  item.isActive
-                    ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400"
-                    : "bg-gray-100 text-gray-500 dark:bg-zinc-800 dark:text-zinc-500"
-                }`}
-              >
-                {item.isActive ? "Activo" : "Inactivo"}
-              </button>
-              <button onClick={() => editItem(item)} className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white transition-all px-3 py-1.5 rounded-full hover:bg-gray-50 dark:hover:bg-zinc-800">
-                Editar
-              </button>
-              <button onClick={() => handleDelete(item.id)} className="text-xs text-red-400 hover:text-red-600 transition-all px-3 py-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-950/30">
-                Eliminar
-              </button>
             </div>
-          ))
-        )}
-      </div>
+            <div>
+              <label className="block sa-eyebrow mb-1.5">Orden</label>
+              <input
+                type="number"
+                value={order}
+                onChange={(e) => setOrder(Number(e.target.value))}
+                className="sa-input"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block sa-eyebrow mb-1.5">Logo</label>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFile}
+              className="w-full text-sm text-[color:var(--muted-foreground)] file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold sa-btn-primary"
+            />
+            {logoPreview && (
+              <div className="mt-3 flex items-center gap-3">
+                <img
+                  src={logoPreview}
+                  alt="preview"
+                  className="h-10 w-auto object-contain rounded-xl border border-[color:var(--surface-border)]"
+                  style={{ background: "var(--surface-3)" }}
+                />
+                <span className="text-xs text-[color:var(--muted-foreground)]">Previsualización</span>
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-2 pt-2">
+            <button
+              type="submit"
+              disabled={loading || !name.trim() || !logoUrl}
+              className="sa-btn sa-btn-primary disabled:opacity-50"
+            >
+              {loading ? "Guardando..." : editing ? "Actualizar" : "Agregar"}
+            </button>
+            {editing && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="sa-btn sa-btn-ghost"
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
+        </form>
+      </NeonCard>
+
+      {items.length === 0 ? (
+        <NeonCard hoverable={false} className="text-center">
+          <div className="py-8">
+            {getIcon("users", { size: 28, strokeWidth: 1.6, className: "mx-auto mb-3 opacity-50" })}
+            <p className="text-sm text-[color:var(--muted-foreground)]">
+              No hay instituciones partners. Agrega la primera arriba.
+            </p>
+          </div>
+        </NeonCard>
+      ) : (
+        <motion.ul layout className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <AnimatePresence mode="popLayout">
+            {items.map((item, idx) => (
+              <motion.li
+                layout
+                key={item.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1], delay: idx * 0.02 }}
+              >
+                <article className="sa-surface sa-surface-hover p-4 flex items-center gap-4">
+                  <span
+                    className="h-12 w-12 rounded-2xl flex items-center justify-center shrink-0 overflow-hidden"
+                    style={{ background: "var(--surface-3)", border: "1px solid var(--surface-border)" }}
+                  >
+                    <img
+                      src={item.logoUrl}
+                      alt={item.name}
+                      className="h-8 w-8 object-contain"
+                    />
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold truncate">{item.name}</p>
+                    <p className="text-[11px] text-[color:var(--muted-foreground)]">
+                      Orden: {item.order}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => toggleActive(item)}
+                    className="sa-chip"
+                    style={
+                      item.isActive
+                        ? {
+                            color: "var(--neon)",
+                            borderColor: "transparent",
+                            backgroundColor: "color-mix(in srgb, var(--neon) 14%, transparent)",
+                          }
+                        : undefined
+                    }
+                  >
+                    <span
+                      className="inline-block w-1.5 h-1.5 rounded-full"
+                      style={{ background: item.isActive ? "var(--neon)" : "var(--muted-foreground)" }}
+                    />
+                    {item.isActive ? "Activo" : "Inactivo"}
+                  </button>
+                  <button
+                    onClick={() => editItem(item)}
+                    className="sa-btn sa-btn-ghost text-[11px] py-1 px-3"
+                  >
+                    {getIcon("edit", { size: 12, strokeWidth: 2 })}
+                    <span>Editar</span>
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="sa-btn sa-btn-ghost text-[11px] py-1 px-3"
+                    style={{ color: "#f87171" }}
+                  >
+                    {getIcon("trash", { size: 12, strokeWidth: 2 })}
+                    <span>Eliminar</span>
+                  </button>
+                </article>
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </motion.ul>
+      )}
     </div>
   )
 }

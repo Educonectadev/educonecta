@@ -16,11 +16,14 @@ export default async function VersionesPage() {
     .order("createdAt", { ascending: false })
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Versiones del Sistema</h1>
-        <p className="text-sm text-gray-500 dark:text-zinc-400 mt-1">Registra y gestiona las versiones lanzadas de EduConecta</p>
-      </div>
+    <div className="pt-4 md:pt-6">
+      <header className="mb-6 md:mb-8">
+        <p className="sa-eyebrow">Release management</p>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-1">Versiones del Sistema</h1>
+        <p className="text-sm text-[color:var(--muted-foreground)] mt-1.5">
+          Registra y gestiona las versiones lanzadas de EduConecta
+        </p>
+      </header>
       <VersionManager versiones={versiones ?? []} />
     </div>
   )

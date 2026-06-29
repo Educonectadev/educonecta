@@ -502,3 +502,311 @@ input[type="checkbox"]:checked::after {
   color: #a5b4fc;
   border-color: #3730a3;
 }
+
+/* ================================================================== */
+/*  SUPER-ADMIN PREMIUM DESIGN SYSTEM                                  */
+/*  Inspired by Raycast / Linear / Arc / AI dashboards.               */
+/*  Lime/neon accent + deep black surfaces + soft floating cards.     */
+/* ================================================================== */
+
+:root {
+  --neon: #c8ff00;
+  --neon-soft: #e0ff5b;
+  --neon-dim: #a8d400;
+  --neon-glow: rgba(200, 255, 0, 0.45);
+  --neon-glow-soft: rgba(200, 255, 0, 0.18);
+
+  --surface: #ffffff;
+  --surface-2: #fafafa;
+  --surface-3: #f4f4f5;
+  --surface-border: #e8e8ec;
+  --surface-shadow: 0 1px 2px rgba(15, 15, 20, 0.04), 0 8px 24px rgba(15, 15, 20, 0.06);
+  --surface-shadow-hover: 0 2px 4px rgba(15, 15, 20, 0.06), 0 16px 40px rgba(15, 15, 20, 0.10);
+
+  --radius-card: 28px;
+  --radius-tile: 22px;
+  --radius-pill: 999px;
+}
+
+.dark {
+  --neon: #d4ff3a;
+  --neon-soft: #e6ff7a;
+  --neon-dim: #b8e020;
+  --neon-glow: rgba(212, 255, 58, 0.45);
+  --neon-glow-soft: rgba(212, 255, 58, 0.18);
+
+  --surface: #0a0a0c;
+  --surface-2: #111114;
+  --surface-3: #18181c;
+  --surface-border: rgba(255, 255, 255, 0.06);
+  --surface-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.45);
+  --surface-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.5), 0 18px 48px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Surfaces (used by .sa-*) ─────────────────────────────────────── */
+.sa-bg {
+  background-color: var(--background);
+}
+.sa-surface {
+  background-color: var(--surface-2);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--surface-shadow);
+  transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+.sa-surface-hover:hover {
+  box-shadow: var(--surface-shadow-hover);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+.dark .sa-surface-hover:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.sa-surface-flat {
+  background-color: var(--surface-3);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-tile);
+}
+.sa-glass {
+  background-color: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+.dark .sa-glass {
+  background-color: rgba(20, 20, 24, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* ── Accent (neon) treatments ─────────────────────────────────────── */
+.sa-accent {
+  background-color: var(--neon);
+  color: #0a0a0c;
+}
+.sa-accent-text {
+  color: var(--neon);
+}
+.sa-accent-border {
+  border-color: var(--neon);
+}
+.sa-accent-ring {
+  box-shadow: 0 0 0 1px var(--neon), 0 8px 28px var(--neon-glow-soft);
+}
+.sa-glow {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04),
+              0 12px 36px var(--neon-glow-soft);
+}
+.sa-glow-strong {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06),
+              0 0 28px var(--neon-glow),
+              0 18px 48px rgba(0, 0, 0, 0.55);
+}
+
+/* ── Pill button (filled neon) ─────────────────────────────────────── */
+.sa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-pill);
+  padding: 0.625rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: transform 0.18s ease, box-shadow 0.25s ease,
+              background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+.sa-btn:active {
+  transform: scale(0.97);
+}
+.sa-btn-primary {
+  background-color: var(--neon);
+  color: #0a0a0c;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 8px 24px var(--neon-glow-soft);
+}
+.sa-btn-primary:hover {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 12px 32px var(--neon-glow);
+  filter: brightness(1.05);
+}
+.sa-btn-ghost {
+  background-color: var(--surface-3);
+  color: var(--foreground);
+  border: 1px solid var(--surface-border);
+}
+.sa-btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.dark .sa-btn-ghost:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+.sa-btn-outline {
+  background-color: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--surface-border);
+}
+.sa-btn-outline:hover {
+  border-color: var(--neon);
+  color: var(--neon);
+}
+
+/* ── Tile (KPI mini card) ──────────────────────────────────────────── */
+.sa-tile {
+  background-color: var(--surface-2);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-tile);
+  padding: 1rem 1.1rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease,
+              border-color 0.25s ease, background-color 0.25s ease;
+}
+.sa-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: var(--surface-shadow-hover);
+}
+
+/* ── Subtle inner divider ─────────────────────────────────────────── */
+.sa-divider {
+  height: 1px;
+  width: 100%;
+  background-color: var(--surface-border);
+}
+
+/* ── Pill chip / tag ──────────────────────────────────────────────── */
+.sa-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.7rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  background-color: var(--surface-3);
+  color: var(--foreground);
+  border: 1px solid var(--surface-border);
+}
+
+/* ── Sidebar pill rail ────────────────────────────────────────────── */
+.sa-rail {
+  background-color: var(--surface-2);
+  border: 1px solid var(--surface-border);
+  border-radius: 28px;
+  padding: 0.6rem;
+  box-shadow: var(--surface-shadow);
+}
+.dark .sa-rail {
+  background-color: rgba(20, 20, 24, 0.7);
+  backdrop-filter: blur(14px);
+}
+.sa-rail-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: var(--radius-pill);
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.sa-rail-item:hover {
+  background-color: var(--surface-3);
+  color: var(--foreground);
+}
+.sa-rail-item[data-active="true"] {
+  background-color: var(--neon);
+  color: #0a0a0c;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 6px 18px var(--neon-glow-soft);
+}
+.sa-rail-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: inherit;
+}
+
+/* ── Ring / circular indicator ────────────────────────────────────── */
+.sa-ring {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Inputs ───────────────────────────────────────────────────────── */
+.sa-input {
+  background-color: var(--surface-2);
+  border: 1px solid var(--surface-border);
+  color: var(--foreground);
+  border-radius: 18px;
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  width: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+              background-color 0.2s ease;
+  outline: none;
+}
+.sa-input::placeholder {
+  color: var(--muted-foreground);
+}
+.sa-input:focus {
+  border-color: var(--neon);
+  box-shadow: 0 0 0 3px var(--neon-glow-soft);
+}
+
+/* ── Scrollbar (dark sleek) ───────────────────────────────────────── */
+.sa-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.sa-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+.sa-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* ── Section heading style ────────────────────────────────────────── */
+.sa-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+/* ── Gradient mesh background (used in hero card) ────────────────── */
+.sa-mesh {
+  background-image:
+    radial-gradient(at 18% 14%, var(--neon-glow-soft) 0px, transparent 50%),
+    radial-gradient(at 82% 86%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(168, 85, 247, 0.08) 0px, transparent 55%);
+}
+
+/* ── Number ticker glow ───────────────────────────────────────────── */
+.sa-num {
+  font-feature-settings: "tnum" 1, "ss01" 1;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+/* ── Subtle entrance for staggered lists ──────────────────────────── */
+@keyframes sa-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+.sa-pop {
+  animation: sa-pop 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}

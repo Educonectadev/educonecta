@@ -124,29 +124,32 @@ export default function NuevaInstitucionPage() {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  const inputClass = "mt-1 block w-full rounded-[30px] border border-gray-200 dark:border-zinc-700 px-5 py-3 text-sm text-black dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all bg-white dark:bg-zinc-800"
-  const labelClass = "block text-sm font-medium text-gray-500 dark:text-zinc-400 mb-1.5"
+  const inputClass = "sa-input"
+  const labelClass = "block sa-eyebrow mb-1.5"
   const selectClass = inputClass
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Nueva Institución</h1>
+    <div className="w-full max-w-6xl mx-auto pt-4 md:pt-6">
+      <div className="flex items-center justify-between mb-6 md:mb-8">
+        <div>
+          <p className="sa-eyebrow">Nueva</p>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-1">Registrar Institución</h1>
+        </div>
         <button
           type="button"
           onClick={() => router.back()}
-          className="text-sm text-gray-400 dark:text-zinc-500 hover:text-black dark:hover:text-white transition-colors"
+          className="sa-btn sa-btn-ghost"
         >
           Cancelar
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Información General */}
           <section className="lg:col-span-2">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-4">Información General</h2>
-            <div className="bg-gray-50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800 rounded-[30px] p-6 space-y-4">
+            <h2 className="sa-eyebrow mb-3">Información General</h2>
+            <div className="sa-surface p-6 space-y-4">
               <div>
                 <label htmlFor="name" className={labelClass}>Nombre de la Institución *</label>
                 <input id="name" type="text" required value={form.name} onChange={(e) => setValue("name", e.target.value)} className={inputClass} placeholder="Ej: Colegio San José" />
@@ -158,7 +161,7 @@ export default function NuevaInstitucionPage() {
                 </div>
                 <div>
                   <label htmlFor="type" className={labelClass}>Tipo</label>
-                  <Select value={form.type} onChange={(val) => setValue("type", val)} options={[{value: "public", label: "Pública"}, {value: "private", label: "Privada"}]} className="mt-1" />
+                  <Select value={form.type} onChange={(val) => setValue("type", val)} options={[{value: "public", label: "Pública"}, {value: "private", label: "Privada"}]} />
                 </div>
                 <div>
                   <label htmlFor="ruc" className={labelClass}>RUC</label>
@@ -175,11 +178,10 @@ export default function NuevaInstitucionPage() {
                         key={opt.value}
                         type="button"
                         onClick={() => toggleArray("educationalLevel", opt.value)}
-                        className={`rounded-[30px] px-4 py-2 text-xs font-medium transition-all ${
-                          selected
-                          ? "bg-black text-white dark:bg-white dark:text-black"
-                          : "bg-white border border-black/10 text-black/50 hover:border-black/30 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-500"
-                        }`}
+                        className={
+                          "sa-btn " +
+                          (selected ? "sa-btn-primary" : "sa-btn-outline")
+                        }
                       >
                         {opt.label}
                       </button>
@@ -192,23 +194,23 @@ export default function NuevaInstitucionPage() {
                       const info = gradeStructure[key]
                       if (!info) return null
                       return (
-                        <div key={key} className="flex items-center gap-2 text-xs text-gray-500">
-                          <span className="inline-block w-2 h-2 rounded-full bg-black/20" />
+                        <div key={key} className="flex items-center gap-2 text-xs text-[color:var(--muted-foreground)]">
+                          <span className="inline-block w-2 h-2 rounded-full" style={{ background: "var(--neon)" }} />
                           <span className="font-medium">{info.name}:</span>
                           <span>{info.grades.length} grados</span>
-                          <span className="text-gray-300 dark:text-zinc-600">·</span>
+                          <span className="opacity-30">·</span>
                           <span>
                             {info.grades.map((g, i) => (
                               <span key={g}>
                                 {i > 0 && ", "}
-                                <span className="text-gray-600 dark:text-zinc-300">{g}</span>
+                                <span>{g}</span>
                               </span>
                             ))}
                           </span>
                         </div>
                       )
                     })}
-                    <p className="text-[11px] text-gray-400 pt-1">
+                    <p className="text-[11px] text-[color:var(--muted-foreground)] pt-1">
                       Se crearán {form.sectionsPerGrade} secciones (A-
                       {String.fromCharCode(64 + form.sectionsPerGrade)}) por cada grado.
                     </p>
@@ -220,8 +222,8 @@ export default function NuevaInstitucionPage() {
 
           {/* Ubicación */}
           <section>
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-4">Ubicación</h2>
-            <div className="bg-gray-50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800 rounded-[30px] p-6 space-y-4 h-full">
+            <h2 className="sa-eyebrow mb-3">Ubicación</h2>
+            <div className="sa-surface p-6 space-y-4 h-full">
               <div>
                 <label htmlFor="address" className={labelClass}>Dirección</label>
                 <input id="address" type="text" value={form.address} onChange={(e) => setValue("address", e.target.value)} className={inputClass} placeholder="Av. Principal 123" />
@@ -229,15 +231,15 @@ export default function NuevaInstitucionPage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label htmlFor="department" className={labelClass}>Departamento</label>
-                  <Select value={form.department} onChange={(val) => { setValue("department", val); setValue("province", ""); setValue("district", "") }} options={[{value: "", label: "Seleccionar departamento"}, ...departments.map(d => ({value: d, label: d}))]} className="mt-1" />
+                  <Select value={form.department} onChange={(val) => { setValue("department", val); setValue("province", ""); setValue("district", "") }} options={[{value: "", label: "Seleccionar departamento"}, ...departments.map(d => ({value: d, label: d}))]} />
                 </div>
                 <div>
                   <label htmlFor="province" className={labelClass}>Provincia</label>
-                  <Select value={form.province} onChange={(val) => { setValue("province", val); setValue("district", "") }} options={[{value: "", label: "Seleccionar provincia"}, ...getProvinces(form.department).map(p => ({value: p, label: p}))]} disabled={!form.department} className="mt-1" />
+                  <Select value={form.province} onChange={(val) => { setValue("province", val); setValue("district", "") }} options={[{value: "", label: "Seleccionar provincia"}, ...getProvinces(form.department).map(p => ({value: p, label: p}))]} disabled={!form.department} />
                 </div>
                 <div>
                   <label htmlFor="district" className={labelClass}>Distrito</label>
-                  <Select value={form.district} onChange={(val) => setValue("district", val)} options={[{value: "", label: "Seleccionar distrito"}, ...getDistricts(form.department, form.province).map(d => ({value: d, label: d}))]} disabled={!form.province} className="mt-1" />
+                  <Select value={form.district} onChange={(val) => setValue("district", val)} options={[{value: "", label: "Seleccionar distrito"}, ...getDistricts(form.department, form.province).map(d => ({value: d, label: d}))]} disabled={!form.province} />
                 </div>
               </div>
             </div>
@@ -245,8 +247,8 @@ export default function NuevaInstitucionPage() {
 
           {/* Contacto */}
           <section>
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-4">Contacto</h2>
-            <div className="bg-gray-50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800 rounded-[30px] p-6 space-y-4 h-full">
+            <h2 className="sa-eyebrow mb-3">Contacto</h2>
+            <div className="sa-surface p-6 space-y-4 h-full">
               <div className="grid grid-cols-1 gap-4">
                 <div>
                   <label htmlFor="phone" className={labelClass}>Teléfono</label>
@@ -266,8 +268,8 @@ export default function NuevaInstitucionPage() {
 
           {/* Configuración */}
           <section className="lg:col-span-2">
-            <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-4 mt-6">Configuración</h2>
-            <div className="bg-gray-50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800 rounded-[30px] p-6 space-y-4">
+            <h2 className="sa-eyebrow mb-3 mt-2">Configuración</h2>
+            <div className="sa-surface p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="directorName" className={labelClass}>Director(a)</label>
@@ -279,7 +281,7 @@ export default function NuevaInstitucionPage() {
                 </div>
               </div>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-2">Acceso del Director al Sistema</p>
+                <p className="sa-eyebrow mb-2">Acceso del Director al Sistema</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="directorEmail" className={labelClass}>Email de acceso *</label>
@@ -289,7 +291,7 @@ export default function NuevaInstitucionPage() {
                     <label htmlFor="directorPassword" className={labelClass}>Contraseña *</label>
                     <div className="relative">
                       <input id="directorPassword" type={showPassword ? "text" : "password"} value={form.directorPassword} onChange={(e) => setValue("directorPassword", e.target.value)} className={`${inputClass} pr-12`} placeholder="••••••" />
-                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 transition-colors" tabIndex={-1}>
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--muted-foreground)] hover:text-[color:var(--foreground)] transition-colors" tabIndex={-1}>
                         {showPassword ? (
                           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
@@ -307,7 +309,7 @@ export default function NuevaInstitucionPage() {
                     </div>
                   </div>
                 </div>
-                <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-2">Si completas ambos campos, se creará automáticamente el usuario del director con acceso al dashboard.</p>
+                <p className="text-[11px] text-[color:var(--muted-foreground)] mt-2">Si completas ambos campos, se creará automáticamente el usuario del director con acceso al dashboard.</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -320,11 +322,10 @@ export default function NuevaInstitucionPage() {
                           key={opt.value}
                           type="button"
                           onClick={() => toggleArray("shifts", opt.value)}
-                          className={`rounded-[30px] px-4 py-2 text-xs font-medium transition-all ${
-                            selected
-                              ? "bg-black text-white dark:bg-white dark:text-black"
-                              : "bg-white dark:bg-zinc-800 border border-black/10 dark:border-zinc-700 text-black/50 dark:text-zinc-400 hover:border-black/30 dark:hover:border-zinc-500"
-                          }`}
+                          className={
+                            "sa-btn " +
+                            (selected ? "sa-btn-primary" : "sa-btn-outline")
+                          }
                         >
                           {opt.label}
                         </button>
@@ -337,11 +338,11 @@ export default function NuevaInstitucionPage() {
                         const opt = shiftOptions.find((o) => o.value === id)
                         const time = form.shiftTimes[id] ?? { start: "08:00", end: "17:00" }
                         return (
-                          <div key={id} className="flex items-center gap-3 bg-white dark:bg-zinc-800 rounded-[20px] border border-gray-200 dark:border-zinc-700 px-4 py-2.5">
-                            <span className="text-xs font-medium text-gray-600 dark:text-zinc-300 w-14 shrink-0">{opt?.label ?? id}</span>
+                          <div key={id} className="flex items-center gap-3 sa-surface-flat px-4 py-2.5">
+                            <span className="text-xs font-medium w-14 shrink-0">{opt?.label ?? id}</span>
                             <div className="flex items-center gap-2 flex-1">
                               <TimePickerField value={time.start} onChange={(val) => setForm((p) => ({ ...p, shiftTimes: { ...p.shiftTimes, [id]: { ...(p.shiftTimes[id] ?? { start: "08:00", end: "17:00" }), start: val } } }))} />
-                              <span className="text-xs text-gray-400 shrink-0">a</span>
+                              <span className="text-xs text-[color:var(--muted-foreground)] shrink-0">a</span>
                               <TimePickerField value={time.end} onChange={(val) => setForm((p) => ({ ...p, shiftTimes: { ...p.shiftTimes, [id]: { ...(p.shiftTimes[id] ?? { start: "08:00", end: "17:00" }), end: val } } }))} />
                             </div>
                           </div>
@@ -353,22 +354,22 @@ export default function NuevaInstitucionPage() {
                 <div>
                   <label className={labelClass}>Secciones por Grado</label>
                   <div className="flex items-center gap-3 mt-1">
-                    <input type="range" min={1} max={20} value={form.sectionsPerGrade} onChange={(e) => setForm((p) => ({ ...p, sectionsPerGrade: Number(e.target.value) }))} className="flex-1 accent-black" />
-                    <span className="text-sm font-medium text-black/70 dark:text-white/70 w-8 text-center">{form.sectionsPerGrade}</span>
+                    <input type="range" min={1} max={20} value={form.sectionsPerGrade} onChange={(e) => setForm((p) => ({ ...p, sectionsPerGrade: Number(e.target.value) }))} className="flex-1" style={{ accentColor: "var(--neon)" }} />
+                    <span className="text-sm font-semibold w-8 text-center sa-num">{form.sectionsPerGrade}</span>
                   </div>
-                  <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-1">Se crearán A-{String.fromCharCode(64 + form.sectionsPerGrade)}</p>
+                  <p className="text-[11px] text-[color:var(--muted-foreground)] mt-1">Se crearán A-{String.fromCharCode(64 + form.sectionsPerGrade)}</p>
                 </div>
               </div>
               <div>
                 <label htmlFor="description" className={labelClass}>Descripción</label>
-                <textarea id="description" rows={2} value={form.description} onChange={(e) => setValue("description", e.target.value)} className={inputClass} placeholder="Breve descripción o misión de la institución" />
+                <textarea id="description" rows={2} value={form.description} onChange={(e) => setValue("description", e.target.value)} className={inputClass} style={{ borderRadius: "18px", resize: "none" }} placeholder="Breve descripción o misión de la institución" />
               </div>
             </div>
           </section>
         </div>
 
         {error && (
-          <p className="text-sm text-red-600 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-[30px] px-5 py-3">{error}</p>
+          <p className="text-sm text-red-400 sa-surface-flat px-5 py-3" style={{ borderColor: "rgba(248,113,113,0.4)" }}>{error}</p>
         )}
 
         {!created && (
@@ -376,14 +377,14 @@ export default function NuevaInstitucionPage() {
             <button
               type="submit"
               disabled={loading}
-              className="rounded-[30px] btn-primary px-8 py-3 text-sm font-medium"
+              className="sa-btn sa-btn-primary px-8"
             >
               {loading ? "Guardando..." : "Guardar Institución"}
             </button>
             <button
               type="button"
               onClick={() => router.back()}
-              className="rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-7 py-3 text-sm font-medium text-gray-400 dark:text-zinc-500 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all"
+              className="sa-btn sa-btn-ghost"
             >
               Cancelar
             </button>
@@ -392,36 +393,45 @@ export default function NuevaInstitucionPage() {
       </form>
 
       {created && (
-        <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-[30px] p-6 space-y-4">
+        <div className="sa-surface p-6 space-y-4 mt-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-lg font-bold">✓</div>
+            <span
+              className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold"
+              style={{
+                background: "color-mix(in srgb, var(--neon) 14%, transparent)",
+                color: "var(--neon)",
+                border: "1px solid color-mix(in srgb, var(--neon) 30%, transparent)",
+              }}
+            >
+              ✓
+            </span>
             <div>
-              <h3 className="text-sm font-bold text-emerald-800 dark:text-emerald-300">
+              <h3 className="text-sm font-bold">
                 {created.user ? "Institución y Director creados" : "Institución creada"}
               </h3>
-              <p className="text-xs text-emerald-600 dark:text-emerald-400">{created.institution.name} ({created.institution.code})</p>
+              <p className="text-xs text-[color:var(--muted-foreground)]">{created.institution.name} ({created.institution.code})</p>
             </div>
           </div>
           {created.user && (
-            <div className="bg-white dark:bg-zinc-800 rounded-[20px] p-4 space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Credenciales del Director</p>
-              <p className="text-sm"><span className="text-gray-400 dark:text-zinc-500">Email:</span> <strong className="text-black dark:text-white">{created.user.email}</strong></p>
-              <p className="text-sm"><span className="text-gray-400 dark:text-zinc-500">Contraseña:</span> <strong className="text-black dark:text-white">{created.user.password}</strong></p>
+            <div className="sa-surface-flat p-4 space-y-2">
+              <p className="sa-eyebrow">Credenciales del Director</p>
+              <p className="text-sm"><span className="text-[color:var(--muted-foreground)]">Email:</span> <strong>{created.user.email}</strong></p>
+              <p className="text-sm"><span className="text-[color:var(--muted-foreground)]">Contraseña:</span> <strong>{created.user.password}</strong></p>
             </div>
           )}
           {created.grades && Object.keys(created.grades).length > 0 && (
-            <div className="bg-white dark:bg-zinc-800 rounded-[20px] p-4 space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Grados y secciones creados automáticamente</p>
+            <div className="sa-surface-flat p-4 space-y-2">
+              <p className="sa-eyebrow">Grados y secciones creados automáticamente</p>
               {Object.entries(created.grades).map(([level, grades]) => (
-                <p key={level} className="text-sm text-gray-600 dark:text-zinc-300">
-                  <span className="font-medium text-gray-800 dark:text-zinc-200">{level}:</span> {grades.length} grados ({grades.join(", ")}) · {created.sectionCount ?? form.sectionsPerGrade} secciones c/u
+                <p key={level} className="text-sm text-[color:var(--muted-foreground)]">
+                  <span className="font-medium">{level}:</span> {grades.length} grados ({grades.join(", ")}) · {created.sectionCount ?? form.sectionsPerGrade} secciones c/u
                 </p>
               ))}
             </div>
           )}
           <Link
             href="/dashboard/super-admin/instituciones"
-            className="inline-block rounded-[30px] bg-emerald-700 hover:bg-emerald-800 px-6 py-2.5 text-sm font-medium text-white transition-all"
+            className="sa-btn sa-btn-primary inline-flex"
           >
             Ir a Instituciones
           </Link>

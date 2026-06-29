@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
-import DataTable from "@/components/DataTable"
+import { useMemo, useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import InstitutionModal from "./InstitutionModal"
+import IconTile, { getIcon } from "@/components/premium/IconTile"
 
 interface Institution {
   id: number
@@ -25,10 +26,14 @@ interface Institution {
   isActive: boolean | number
 }
 
+type FilterKey = "all" | "active" | "inactive"
+
 export default function InstitutionList({ institutions: initial }: { institutions: Institution[] }) {
   const [institutions, setInstitutions] = useState(initial)
   const [selected, setSelected] = useState<Institution | null>(null)
   const [toggling, setToggling] = useState<number | null>(null)
+  const [query, setQuery] = useState("")
+  const [filter, setFilter] = useState<FilterKey>("all")
 
   async function toggleActive(inst: Institution) {
     setToggling(inst.id)
@@ -48,78 +53,205 @@ export default function InstitutionList({ institutions: initial }: { institution
     setSelected(updated)
   }
 
-  const levels = (v: string | null) => {
-    if (!v) return ""
-    const map: Record<string, string> = { inicial: "Inicial", primaria: "Primaria", secundaria: "Secundaria" }
-    return v.split(",").filter(Boolean).map((l) => map[l] ?? l).join(", ")
-  }
+  const counts = useMemo(() => {
+    const active = institutions.filter((i) => i.isActive).length
+    return {
+      all: institutions.length,
+      active,
+      inactive: institutions.length - active,
+    }
+  }, [institutions])
+
+  const filtered = useMemo(() => {
+    let list = institutions
+    if (filter === "active") list = list.filter((i) => i.isActive)
+    if (filter === "inactive") list = list.filter((i) => !i.isActive)
+    const q = query.trim().toLowerCase()
+    if (!q) return list
+    return list.filter(
+      (i) =>
+        i.name.toLowerCase().includes(q) ||
+        i.code.toLowerCase().includes(q) ||
+        (i.directorName ?? "").toLowerCase().includes(q) ||
+        (i.district ?? "").toLowerCase().includes(q)
+    )
+  }, [institutions, query, filter])
+
+  const filters: { key: FilterKey; label: string; count: number }[] = [
+    { key: "all", label: "Todas", count: counts.all },
+    { key: "active", label: "Activas", count: counts.active },
+    { key: "inactive", label: "Inactivas", count: counts.inactive },
+  ]
 
   return (
-    <>
-      <DataTable
-        columns={[
-          {
-            key: "name", label: "Institución",
-            render: (inst) => (
-              <div>
-                <p className="font-medium text-gray-900 dark:text-white/90">{inst.name}</p>
-                <p className="text-xs text-gray-400 dark:text-zinc-500">{inst.code}{inst.directorName ? <> · Dir. {inst.directorName}</> : ""}</p>
-              </div>
-            ),
-          },
-          {
-            key: "type", label: "Tipo",
-            render: (inst) => (
-              <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium ${
-                inst.type === "private" ? "bg-black dark:bg-white text-white dark:text-black" : "bg-black/5 dark:bg-white/10 text-black/60 dark:text-zinc-400"
-              }`}>
-                {inst.type === "private" ? "Privada" : "Pública"}
-              </span>
-            ),
-          },
-          {
-            key: "department", label: "Ubicación",
-            render: (inst) => [inst.district, inst.province, inst.department].filter(Boolean).join(", ") || "—",
-          },
-          {
-            key: "educationalLevel", label: "Niveles",
-            render: (inst) => levels(inst.educationalLevel) || "—",
-          },
-          {
-            key: "email", label: "Contacto",
-            render: (inst) => inst.email || inst.phone || "—",
-          },
-          {
-            key: "isActive", label: "Estado",
-            render: (inst) => (
-              <span className={`inline-block rounded-[30px] px-3 py-1 text-[11px] font-medium border ${
-                inst.isActive ? "badge-green" : "badge-red"
-              }`}>
-                {inst.isActive ? "Activo" : "Inactivo"}
-              </span>
-            ),
-          },
-          {
-            key: "actions", label: "",
-            render: (inst) => (
-              <button
-                onClick={(e) => { e.stopPropagation(); toggleActive(inst) }}
-                disabled={toggling === inst.id}
-                 className={`text-xs font-medium rounded-[30px] px-3 py-1.5 border transition-all ${
-                   inst.isActive
-                     ? "border-red-200 dark:border-red-800 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
-                     : "border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
-                 }`}
+    <div className="space-y-4">
+      {/* Toolbar */}
+      <div className="sa-surface p-3 md:p-4 flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
+        <div className="flex items-center gap-2 flex-1 max-w-md">
+          <span
+            className="flex items-center justify-center w-9 h-9 rounded-full shrink-0"
+            style={{ background: "var(--surface-3)", border: "1px solid var(--surface-border)" }}
+          >
+            {getIcon("search", { size: 14, strokeWidth: 2 })}
+          </span>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Buscar por nombre, código, director o distrito…"
+            className="sa-input"
+          />
+        </div>
+
+        <div className="flex items-center gap-1 sa-rail" style={{ padding: "0.3rem" }}>
+          {filters.map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setFilter(f.key)}
+              data-active={filter === f.key}
+              className="sa-rail-item"
+              style={{ padding: "0.4rem 0.85rem", fontSize: "0.8rem" }}
+            >
+              <span>{f.label}</span>
+              <span
+                className="sa-chip"
+                style={{
+                  padding: "0.05rem 0.4rem",
+                  fontSize: "0.65rem",
+                  backgroundColor: filter === f.key ? "rgba(0,0,0,0.12)" : "var(--surface-3)",
+                  color: filter === f.key ? "#0a0a0c" : "var(--muted-foreground)",
+                  borderColor: "transparent",
+                }}
               >
-                {toggling === inst.id ? "..." : inst.isActive ? "Desactivar" : "Activar"}
-              </button>
-            ),
-          },
-        ]}
-        data={institutions}
-        onRowClick={(inst) => setSelected(inst)}
-        emptyMessage="No hay instituciones registradas."
-      />
+                {f.count}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Cards grid */}
+      {filtered.length === 0 ? (
+        <div className="sa-surface p-12 text-center">
+          <IconTile name="building" size={28} className="mb-3 opacity-50" />
+          <p className="text-sm text-[color:var(--muted-foreground)]">
+            {query ? "No encontramos instituciones con ese criterio." : "Aún no hay instituciones registradas."}
+          </p>
+        </div>
+      ) : (
+        <motion.ul
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4"
+        >
+          <AnimatePresence mode="popLayout">
+            {filtered.map((inst, idx) => (
+              <motion.li
+                layout
+                key={inst.id}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: idx * 0.03 }}
+              >
+                <article
+                  onClick={() => setSelected(inst)}
+                  className="sa-surface sa-surface-hover p-5 cursor-pointer h-full flex flex-col gap-4"
+                >
+                  <header className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span
+                        className="w-11 h-11 rounded-2xl flex items-center justify-center font-semibold text-sm shrink-0"
+                        style={{
+                          background: inst.isActive
+                            ? "color-mix(in srgb, var(--neon) 18%, transparent)"
+                            : "var(--surface-3)",
+                          border: "1px solid var(--surface-border)",
+                          color: inst.isActive ? "var(--neon)" : "var(--muted-foreground)",
+                        }}
+                      >
+                        {inst.name.charAt(0).toUpperCase()}
+                      </span>
+                      <div className="min-w-0">
+                        <h3 className="font-semibold truncate">{inst.name}</h3>
+                        <p className="text-[11px] text-[color:var(--muted-foreground)] truncate">
+                          {inst.code}
+                          {inst.directorName ? ` · Dir. ${inst.directorName}` : ""}
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      className="sa-chip"
+                      style={
+                        inst.isActive
+                          ? {
+                              color: "var(--neon)",
+                              borderColor: "transparent",
+                              backgroundColor: "color-mix(in srgb, var(--neon) 14%, transparent)",
+                            }
+                          : {
+                              color: "#f87171",
+                              borderColor: "transparent",
+                              backgroundColor: "rgba(248, 113, 113, 0.14)",
+                            }
+                      }
+                    >
+                      <span
+                        className="inline-block w-1.5 h-1.5 rounded-full"
+                        style={{ background: inst.isActive ? "var(--neon)" : "#f87171" }}
+                      />
+                      {inst.isActive ? "Activa" : "Inactiva"}
+                    </span>
+                  </header>
+
+                  <div className="grid grid-cols-2 gap-2 text-[11px]">
+                    <div className="sa-surface-flat px-3 py-2">
+                      <p className="sa-eyebrow !text-[9px] mb-0.5">Tipo</p>
+                      <p className="font-medium">{inst.type === "private" ? "Privada" : "Pública"}</p>
+                    </div>
+                    <div className="sa-surface-flat px-3 py-2">
+                      <p className="sa-eyebrow !text-[9px] mb-0.5">Niveles</p>
+                      <p className="font-medium truncate">{formatLevels(inst.educationalLevel)}</p>
+                    </div>
+                  </div>
+
+                  {(inst.district || inst.province || inst.department) && (
+                    <div className="flex items-center gap-1.5 text-[11px] text-[color:var(--muted-foreground)]">
+                      {getIcon("map", { size: 12, strokeWidth: 2 })}
+                      <span className="truncate">
+                        {[inst.district, inst.province, inst.department].filter(Boolean).join(", ")}
+                      </span>
+                    </div>
+                  )}
+
+                  <footer className="flex items-center justify-between pt-2 border-t border-[color:var(--surface-border)]">
+                    <span className="text-[10px] text-[color:var(--muted-foreground)]">
+                      {inst.email || inst.phone || "—"}
+                    </span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleActive(inst)
+                      }}
+                      disabled={toggling === inst.id}
+                      className={
+                        "sa-btn text-[11px] py-1 px-3 " +
+                        (inst.isActive ? "sa-btn-outline" : "sa-btn-primary")
+                      }
+                      style={inst.isActive ? { color: "#f87171", borderColor: "rgba(248,113,113,0.4)" } : undefined}
+                    >
+                      {toggling === inst.id
+                        ? "…"
+                        : inst.isActive
+                        ? "Desactivar"
+                        : "Activar"}
+                    </button>
+                  </footer>
+                </article>
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </motion.ul>
+      )}
+
       {selected && (
         <InstitutionModal
           institution={selected}
@@ -127,6 +259,13 @@ export default function InstitutionList({ institutions: initial }: { institution
           onUpdate={handleUpdate}
         />
       )}
-    </>
+    </div>
   )
+}
+
+function formatLevels(v: string | null): string {
+  if (!v) return "—"
+  const map: Record<string, string> = { inicial: "Inicial", primaria: "Primaria", secundaria: "Secundaria" }
+  const labels = v.split(",").filter(Boolean).map((l) => map[l] ?? l)
+  return labels.join(", ") || "—"
 }
