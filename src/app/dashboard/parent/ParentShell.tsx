@@ -2,8 +2,8 @@
 
 import Navbar from "@/components/Navbar"
 import BottomNav from "@/components/BottomNav"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
+import { ToggleButton } from "@heroui/react"
 
 const bottomLinks = [
   { href: "/dashboard/parent", label: "Inicio", icon: "home" },
@@ -28,6 +28,7 @@ const sidebarLinks = [
 ]
 
 export default function ParentShell({ children }: { children: React.ReactNode }) {
+  const router = useRouter()
   const pathname = usePathname()
 
   return (
@@ -41,20 +42,21 @@ export default function ParentShell({ children }: { children: React.ReactNode })
             </p>
             {sidebarLinks.map((link) => {
               const segments = link.href.split("/").filter(Boolean)
-              const isActive = pathname === link.href || (segments.length > 2 && pathname.startsWith(link.href + "/"))
+              const active = pathname === link.href || (segments.length > 2 && pathname.startsWith(link.href + "/"))
               return (
-                <Link
+                <ToggleButton
                   key={link.href}
-                  href={link.href}
-                  className={`flex items-center gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
-                    isActive
-                      ? "bg-amber-500 text-white"
-                      : "text-gray-400 dark:text-zinc-500 hover:bg-amber-500 hover:text-white"
-                  }`}
+                  isSelected={active}
+                  onPress={() => router.push(link.href)}
+                  variant="ghost"
+                  className="justify-start gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium"
+                  style={active ? { backgroundColor: "var(--brand-color)", color: "var(--brand-text-color)" } : undefined}
                 >
-                  <span className={`material-icons ${isActive ? "opacity-100" : "opacity-40"}`}>{link.icon}</span>
+                  <span className={`material-icons text-lg ${active ? "opacity-100" : "opacity-40"}`} aria-hidden>
+                    {link.icon}
+                  </span>
                   <span>{link.label}</span>
-                </Link>
+                </ToggleButton>
               )
             })}
           </nav>
