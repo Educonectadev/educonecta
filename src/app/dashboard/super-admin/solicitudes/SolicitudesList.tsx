@@ -40,8 +40,8 @@ const STATUS_LABELS: Record<Lead["status"], string> = {
 function statusStyle(s: Lead["status"]) {
   if (s === "NUEVO") {
     return {
-      color: "var(--neon)",
-      bg: "color-mix(in srgb, var(--neon) 14%, transparent)",
+      color: "var(--accent)",
+      bg: "color-mix(in srgb, var(--accent) 14%, transparent)",
     }
   }
   if (s === "EN_CONTACTO") {
@@ -284,7 +284,7 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
                     onClick={() => openLead(l)}
                     className={
                       "sa-surface sa-surface-hover p-5 cursor-pointer " +
-                      (selected?.id === l.id ? "sa-glow" : "")
+                      (selected?.id === l.id ? "ring-1 ring-[color:var(--accent)]" : "")
                     }
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -304,10 +304,7 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
                             {l.unreadByAdmin && (
                               <span
                                 className="shrink-0 inline-flex size-2 rounded-full"
-                                style={{
-                                  background: "var(--neon)",
-                                  boxShadow: "0 0 8px var(--neon-glow)",
-                                }}
+                                style={{ background: "var(--accent)" }}
                                 aria-label="No leído"
                               />
                             )}
@@ -406,7 +403,7 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
                       style={
                         m.authorRole === "ADMIN"
                           ? {
-                              background: "var(--neon)",
+                              background: "var(--accent)",
                               color: "#0a0a0c",
                             }
                           : {

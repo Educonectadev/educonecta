@@ -17,10 +17,10 @@ interface StatTileProps {
 }
 
 const accentMap: Record<NonNullable<StatTileProps["accent"]>, string> = {
-  neon: "var(--neon)",
-  blue: "#38bdf8",
-  violet: "#a855f7",
-  amber: "#fbbf24",
+  neon: "var(--accent)",
+  blue: "#8b9a8a",
+  violet: "#a89a87",
+  amber: "#bba882",
 }
 
 export default function StatTile({

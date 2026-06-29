@@ -163,10 +163,10 @@ export default function InstitutionList({ institutions: initial }: { institution
                         className="w-11 h-11 rounded-2xl flex items-center justify-center font-semibold text-sm shrink-0"
                         style={{
                           background: inst.isActive
-                            ? "color-mix(in srgb, var(--neon) 18%, transparent)"
+                            ? "color-mix(in srgb, var(--accent) 18%, transparent)"
                             : "var(--surface-3)",
                           border: "1px solid var(--surface-border)",
-                          color: inst.isActive ? "var(--neon)" : "var(--muted-foreground)",
+                          color: inst.isActive ? "var(--accent)" : "var(--muted-foreground)",
                         }}
                       >
                         {inst.name.charAt(0).toUpperCase()}
@@ -184,9 +184,9 @@ export default function InstitutionList({ institutions: initial }: { institution
                       style={
                         inst.isActive
                           ? {
-                              color: "var(--neon)",
+                              color: "var(--accent)",
                               borderColor: "transparent",
-                              backgroundColor: "color-mix(in srgb, var(--neon) 14%, transparent)",
+                              backgroundColor: "color-mix(in srgb, var(--accent) 14%, transparent)",
                             }
                           : {
                               color: "#f87171",
@@ -197,7 +197,7 @@ export default function InstitutionList({ institutions: initial }: { institution
                     >
                       <span
                         className="inline-block w-1.5 h-1.5 rounded-full"
-                        style={{ background: inst.isActive ? "var(--neon)" : "#f87171" }}
+                        style={{ background: inst.isActive ? "var(--accent)" : "#f87171" }}
                       />
                       {inst.isActive ? "Activa" : "Inactiva"}
                     </span>

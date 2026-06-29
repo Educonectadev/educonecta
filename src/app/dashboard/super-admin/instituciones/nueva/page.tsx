@@ -195,7 +195,7 @@ export default function NuevaInstitucionPage() {
                       if (!info) return null
                       return (
                         <div key={key} className="flex items-center gap-2 text-xs text-[color:var(--muted-foreground)]">
-                          <span className="inline-block w-2 h-2 rounded-full" style={{ background: "var(--neon)" }} />
+                          <span className="inline-block w-2 h-2 rounded-full" style={{ background: "var(--accent)" }} />
                           <span className="font-medium">{info.name}:</span>
                           <span>{info.grades.length} grados</span>
                           <span className="opacity-30">·</span>
@@ -354,7 +354,7 @@ export default function NuevaInstitucionPage() {
                 <div>
                   <label className={labelClass}>Secciones por Grado</label>
                   <div className="flex items-center gap-3 mt-1">
-                    <input type="range" min={1} max={20} value={form.sectionsPerGrade} onChange={(e) => setForm((p) => ({ ...p, sectionsPerGrade: Number(e.target.value) }))} className="flex-1" style={{ accentColor: "var(--neon)" }} />
+                    <input type="range" min={1} max={20} value={form.sectionsPerGrade} onChange={(e) => setForm((p) => ({ ...p, sectionsPerGrade: Number(e.target.value) }))} className="flex-1" style={{ accentColor: "var(--accent)" }} />
                     <span className="text-sm font-semibold w-8 text-center sa-num">{form.sectionsPerGrade}</span>
                   </div>
                   <p className="text-[11px] text-[color:var(--muted-foreground)] mt-1">Se crearán A-{String.fromCharCode(64 + form.sectionsPerGrade)}</p>
@@ -398,9 +398,9 @@ export default function NuevaInstitucionPage() {
             <span
               className="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold"
               style={{
-                background: "color-mix(in srgb, var(--neon) 14%, transparent)",
-                color: "var(--neon)",
-                border: "1px solid color-mix(in srgb, var(--neon) 30%, transparent)",
+                background: "color-mix(in srgb, var(--accent) 14%, transparent)",
+                color: "var(--accent)",
+                border: "1px solid color-mix(in srgb, var(--accent) 30%, transparent)",
               }}
             >
               ✓

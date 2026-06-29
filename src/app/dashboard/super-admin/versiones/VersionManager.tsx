@@ -138,7 +138,7 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
               checked={isCurrent}
               onChange={(e) => setIsCurrent(e.target.checked)}
               className="accent-current size-4"
-              style={{ accentColor: "var(--neon)" }}
+              style={{ accentColor: "var(--accent)" }}
             />
             Marcar como versión actual
           </label>
@@ -189,8 +189,8 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
                     style={
                       v.isCurrent
                         ? {
-                            borderColor: "var(--neon)",
-                            boxShadow: "0 0 0 1px var(--neon), 0 12px 36px var(--neon-glow-soft)",
+                            borderColor: "var(--accent)",
+                            boxShadow: "0 0 0 1px var(--accent), 0 4px 16px rgba(0,0,0,0.06)",
                           }
                         : undefined
                     }
@@ -201,10 +201,10 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
                           className="w-9 h-9 rounded-2xl flex items-center justify-center shrink-0"
                           style={{
                             background: v.isCurrent
-                              ? "color-mix(in srgb, var(--neon) 14%, transparent)"
+                              ? "color-mix(in srgb, var(--accent) 14%, transparent)"
                               : "var(--surface-3)",
                             border: "1px solid var(--surface-border)",
-                            color: v.isCurrent ? "var(--neon)" : "var(--muted-foreground)",
+                            color: v.isCurrent ? "var(--accent)" : "var(--muted-foreground)",
                           }}
                         >
                           {getIcon("rocket", { size: 14, strokeWidth: 2 })}
@@ -216,14 +216,14 @@ export default function VersionManager({ versiones: initial }: { versiones: Vers
                               <span
                                 className="sa-chip"
                                 style={{
-                                  color: "var(--neon)",
+                                  color: "var(--accent)",
                                   borderColor: "transparent",
-                                  backgroundColor: "color-mix(in srgb, var(--neon) 14%, transparent)",
+                                  backgroundColor: "color-mix(in srgb, var(--accent) 14%, transparent)",
                                 }}
                               >
                                 <span
                                   className="inline-block w-1.5 h-1.5 rounded-full"
-                                  style={{ background: "var(--neon)" }}
+                                  style={{ background: "var(--accent)" }}
                                 />
                                 Actual
                               </span>

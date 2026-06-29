@@ -3,7 +3,6 @@
 import { memo, useMemo, useEffect, useCallback } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { getIcon } from "./premium/iconRegistry"
 
 interface NavLink {
@@ -84,10 +83,7 @@ export default function SuperAdminSidebar({
             <div className="flex items-center gap-2 mb-1.5">
               <span
                 className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
-                style={{
-                  backgroundColor: "var(--neon)",
-                  boxShadow: "0 0 8px var(--neon-glow)",
-                }}
+                style={{ backgroundColor: "var(--accent)" }}
               />
               <span
                 className="font-semibold sa-sidebar-status-title"

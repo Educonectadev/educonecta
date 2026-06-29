@@ -413,7 +413,7 @@ export default function PlanesList({
 }
 
 const accentColors: Record<"neon" | "blue" | "violet", string> = {
-  neon: "var(--neon)",
+  neon: "var(--accent)",
   blue: "#38bdf8",
   violet: "#a855f7",
 }
@@ -433,7 +433,7 @@ function StatCard({
       <div className="flex items-center justify-between mb-3">
         <span
           className="inline-block w-2 h-2 rounded-full"
-          style={{ background: color, boxShadow: `0 0 8px ${color}` }}
+          style={{ background: color }}
         />
         <span className="sa-eyebrow">{label}</span>
       </div>

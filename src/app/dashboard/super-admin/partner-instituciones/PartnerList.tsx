@@ -247,16 +247,16 @@ export default function PartnerList({ partners: initial }: { partners: Partner[]
                     style={
                       item.isActive
                         ? {
-                            color: "var(--neon)",
+                            color: "var(--accent)",
                             borderColor: "transparent",
-                            backgroundColor: "color-mix(in srgb, var(--neon) 14%, transparent)",
+                            backgroundColor: "color-mix(in srgb, var(--accent) 14%, transparent)",
                           }
                         : undefined
                     }
                   >
                     <span
                       className="inline-block w-1.5 h-1.5 rounded-full"
-                      style={{ background: item.isActive ? "var(--neon)" : "var(--muted-foreground)" }}
+                      style={{ background: item.isActive ? "var(--accent)" : "var(--muted-foreground)" }}
                     />
                     {item.isActive ? "Activo" : "Inactivo"}
                   </button>
