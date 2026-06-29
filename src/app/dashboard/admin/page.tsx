@@ -1,7 +1,9 @@
+import { Suspense } from "react"
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
 import AdminDashboard from "./AdminDashboard"
+import { DashboardSkeleton } from "@/components/DashboardSkeleton"
 
 export const dynamic = "force-dynamic"
 
@@ -9,13 +11,19 @@ export default async function AdminDashboardPage() {
   const session = await getServerSession()
   if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") redirect("/login")
 
-  const institutionId = session.user.institutionId!
+  return (
+    <Suspense fallback={<DashboardSkeleton sections={4} />}>
+      <AdminDashboardData institutionId={session.user.institutionId!} />
+    </Suspense>
+  )
+}
+
+async function AdminDashboardData({ institutionId }: { institutionId: number }) {
   let studentCount = 0, teacherCount = 0, parentCount = 0, courseCount = 0
   let students: any[] = [], teachers: any[] = [], carouselImages: any[] = []
   let institutionName = ""
 
   try {
-    // Una sola query en lugar de 7: institution + 4 counts + 3 listas en 2 round-trips.
     const [bundle, recentStudents, recentTeachers, carousel] = await Promise.all([
       query<any[]>(
         `SELECT

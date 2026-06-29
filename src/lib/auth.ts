@@ -1,10 +1,11 @@
+import { cache } from "react"
 import { createSupabaseServerClient } from "./supabase-server"
 import { getSupabaseAdmin } from "./supabase"
 import type { Session } from "./session"
 
 export type { Session }
 
-export async function getServerSession(): Promise<Session | null> {
+export const getServerSession = cache(async (): Promise<Session | null> => {
   try {
     const supabase = await createSupabaseServerClient()
     const { data: authData } = await supabase.auth.getUser()
@@ -61,7 +62,7 @@ export async function getServerSession(): Promise<Session | null> {
     console.error("getServerSession error:", e)
     return null
   }
-}
+})
 
 export async function hashPassword(password: string): Promise<string> {
   const bcrypt = await import("bcryptjs")

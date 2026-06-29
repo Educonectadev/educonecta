@@ -1,7 +1,9 @@
+import { Suspense } from "react"
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
 import TeacherDashboard from "./TeacherDashboard"
+import { DashboardSkeleton } from "@/components/DashboardSkeleton"
 
 export const dynamic = "force-dynamic"
 
@@ -9,16 +11,35 @@ export default async function TeacherDashboardPage() {
   const session = await getServerSession()
   if (!session || session.user.role !== "TEACHER") redirect("/login")
 
-  const teacherId = session.user.teacherId
-  const institutionId = session.user.institutionId
+  return (
+    <Suspense fallback={<DashboardSkeleton sections={3} />}>
+      <TeacherDashboardData
+        teacherId={session.user.teacherId}
+        institutionId={session.user.institutionId}
+        teacherName={session.user.name}
+        institutionName={session.user.institutionName ?? ""}
+      />
+    </Suspense>
+  )
+}
 
+async function TeacherDashboardData({
+  teacherId,
+  institutionId,
+  teacherName,
+  institutionName,
+}: {
+  teacherId: number | null
+  institutionId: number | null
+  teacherName: string
+  institutionName: string
+}) {
   let courseTeachers: any[] = []
   let recentHomework: any[] = []
   let upcomingClasses: any[] = []
   let totalStudents = 0
   let activeHomework = 0
   let classesToday = 0
-  const institutionName = session.user.institutionName ?? ""
   let error: string | null = null
 
   try {
@@ -145,7 +166,7 @@ export default async function TeacherDashboardPage() {
 
   return (
     <TeacherDashboard
-      teacherName={session.user.name}
+      teacherName={teacherName}
       institutionName={institutionName}
       stats={{
         totalStudents,

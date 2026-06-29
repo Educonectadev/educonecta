@@ -1,12 +1,22 @@
+import { Suspense } from "react"
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { getParentChildren, getChildrenHomeworks, getChildrenGrades, getChildrenAttendance } from "@/lib/parent-data"
+import { DashboardSkeleton } from "@/components/DashboardSkeleton"
 
 export default async function ParentDashboardPage() {
   const session = await getServerSession()
   if (!session || session.user.role !== "PARENT") redirect("/login")
 
+  return (
+    <Suspense fallback={<DashboardSkeleton sections={3} />}>
+      <ParentDashboardContent session={session} />
+    </Suspense>
+  )
+}
+
+async function ParentDashboardContent({ session }: { session: NonNullable<Awaited<ReturnType<typeof getServerSession>>> }) {
   const parentId = session.user.parentId!
   const parent = await getParentChildren(parentId)
   if (!parent) redirect("/login")
