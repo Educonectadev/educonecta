@@ -7,6 +7,7 @@ import StatTile from "@/components/premium/StatTile"
 import NeonCard from "@/components/premium/NeonCard"
 import GlowButton from "@/components/premium/GlowButton"
 import IconTile, { getIcon } from "@/components/premium/IconTile"
+import TodayLabel from "@/components/premium/TodayLabel"
 
 async function supabaseCount(table: string, match?: Record<string, unknown>): Promise<number> {
   const admin = getSupabaseAdmin()
@@ -26,8 +27,16 @@ export const dynamic = "force-dynamic"
 function buildSeries(current: number, points = 8): number[] {
   const series: number[] = []
   let v = Math.max(0, current - Math.floor(current * 0.35))
+  // Deterministic pseudo-random based on the seed (current, points) so server
+  // and client produce the same series and avoid hydration mismatches.
+  const seed = (current + 1) * 9301 + points * 49297
+  let s = seed
+  const rand = () => {
+    s = (s * 9301 + 49297) % 233280
+    return s / 233280
+  }
   for (let i = 0; i < points - 1; i++) {
-    const drift = (Math.random() - 0.45) * Math.max(2, current * 0.07)
+    const drift = (rand() - 0.45) * Math.max(2, current * 0.07)
     v = Math.max(0, v + drift)
     series.push(Math.round(v))
   }
@@ -75,12 +84,6 @@ export default async function SuperAdminDashboardPage() {
     { href: "/dashboard/super-admin/versiones", icon: "rocket", label: "Publicar versión", desc: "Lanza una nueva release" },
   ]
 
-  const dateLabel = new Date().toLocaleDateString("es-PE", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-  })
-
   return (
     <div className="space-y-6 md:space-y-8 pt-4 md:pt-6">
       {/* HERO */}
@@ -127,7 +130,9 @@ export default async function SuperAdminDashboardPage() {
           <div className="grid grid-cols-2 gap-3 md:w-auto md:min-w-[320px]">
             <div className="sa-surface-flat p-4">
               <p className="sa-eyebrow mb-1.5">Hoy</p>
-              <p className="text-lg font-semibold capitalize">{dateLabel}</p>
+              <p className="text-lg font-semibold capitalize">
+                <TodayLabel />
+              </p>
               <p className="text-[11px] text-[color:var(--muted-foreground)] mt-1">
                 Hora local
               </p>
