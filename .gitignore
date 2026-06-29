@@ -52,3 +52,7 @@ android/app/build/
 android/.gradle/
 android/build/
 android/local.properties
+
+# Android keystore (sensitive - do not commit)
+android/app/*.jks
+android/app/*.keystore

@@ -1,6 +1,6 @@
 {
   "packageId": "dev.educonecta.app",
-  "host": "REEMPLAZA_CON_TU_DOMINIO",
+  "host": "educonecta-zeta.vercel.app",
   "name": "EduConecta",
   "launcherName": "EduConecta",
   "display": "standalone",
@@ -12,18 +12,19 @@
   "backgroundColor": "#ffffff",
   "enableNotifications": true,
   "startUrl": "/",
-  "iconUrl": "https://REEMPLAZA_CON_TU_DOMINIO/icons/icon-512.png",
-  "maskableIconUrl": "https://REEMPLAZA_CON_TU_DOMINIO/icons/icon-512.png",
+  "iconUrl": "https://educonecta-zeta.vercel.app/icons/icon-512.png",
+  "maskableIconUrl": "https://educonecta-zeta.vercel.app/icons/icon-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": null,
-    "alias": null
+    "path": "/home/codeol/Documentos/ProyectoCole/educonecta/android/app/educonecta-keystore.jks",
+    "alias": "educonecta",
+    "password": "educonecta123"
   },
   "appVersionName": "1.0.0",
   "appVersionCode": 1,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://REEMPLAZA_CON_TU_DOMINIO/manifest.json",
+  "webManifestUrl": "https://educonecta-zeta.vercel.app/manifest.json",
   "fallbackType": "customtabs",
   "features": {
     "locationDelegation": {

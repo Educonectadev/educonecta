@@ -8,7 +8,7 @@ public class MainActivity extends LauncherActivity {
     protected Uri getLaunchingUrl() {
         return new Uri.Builder()
                 .scheme("https")
-                .authority("CHANGE_ME_YOUR_DOMAIN_HERE")
+                .authority("educonecta-zeta.vercel.app")
                 .path("/")
                 .build();
     }

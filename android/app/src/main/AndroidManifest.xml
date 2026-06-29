@@ -39,7 +39,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="https"
-                    android:host="CHANGE_ME_YOUR_DOMAIN_HERE" />
+                    android:host="educonecta-zeta.vercel.app" />
             </intent-filter>
         </activity>
 
