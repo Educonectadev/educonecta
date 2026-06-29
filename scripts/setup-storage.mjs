@@ -1,6 +1,6 @@
 // Script para crear el bucket de storage desde Node.js
 // Usa service_role key (bypasea RLS y permisos de schema)
-// Ejecutar: node scripts/setup-storage.mjs
+// Ejecutar: node --env-file .env scripts/setup-storage.mjs
 
 import { createClient } from "@supabase/supabase-js"
 

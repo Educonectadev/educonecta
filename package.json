@@ -9,7 +9,7 @@
     "lint": "eslint",
     "seed": "npx tsx prisma/seed.ts",
     "seed:supabase": "npx tsx scripts/seed-supabase.ts",
-    "setup:storage": "node scripts/setup-storage.mjs"
+    "setup:storage": "node --env-file .env scripts/setup-storage.mjs"
   },
   "dependencies": {
     "@gravity-ui/icons": "^2.18.0",
