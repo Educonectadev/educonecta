@@ -5,10 +5,65 @@ import Link from "next/link"
 import SiteFooter from "@/components/SiteFooter"
 import ThemeToggle from "@/components/ThemeToggle"
 
-const pricingPlans = [
-    { name: "Starter Plan", monthlyPrice: 19, yearlyPrice: 15, features: ["Basic task management", "5 projects limit", "Email support", "Community access"] },
-    { name: "Growth Plan", monthlyPrice: 29, yearlyPrice: 24, isPopular: true, features: ["Advance task management", "Unlimited projects", "Priority support", "Team collaboration", "Advanced analytics"] },
-    { name: "Scale Plan", monthlyPrice: 79, yearlyPrice: 65, features: [ "Everything in Growth", "Unlimited projects", "24/7 priority support", "Advanced security & permissions", "Early access to new features", "Team performance insights"] }
+interface Plan {
+    name: string
+    monthlyPrice: number
+    yearlyPrice: number
+    tagline: string
+    isPopular?: boolean
+    features: string[]
+}
+
+const pricingPlans: Plan[] = [
+    {
+        name: "Esencial",
+        monthlyPrice: 2,
+        yearlyPrice: 1.5,
+        tagline: "Para colegios que recién empiezan a digitalizarse.",
+        features: [
+            "Hasta 50 estudiantes",
+            "Registro de asistencia",
+            "Calificaciones básicas",
+            "Tareas y comunicados",
+            "Horarios de clase",
+        ],
+    },
+    {
+        name: "Profesional",
+        monthlyPrice: 2,
+        yearlyPrice: 1.5,
+        tagline: "El más usado por colegios en crecimiento.",
+        isPopular: true,
+        features: [
+            "Hasta 500 estudiantes",
+            "Registro de asistencia",
+            "Calificaciones básicas",
+            "Tareas y comunicados",
+            "Horarios de clase",
+            "Notificaciones push",
+            "Módulo de disciplina",
+            "Reportes y exportación",
+        ],
+    },
+    {
+        name: "Institucional",
+        monthlyPrice: 2,
+        yearlyPrice: 1.5,
+        tagline: "Para redes educativas y colegios grandes.",
+        features: [
+            "Estudiantes ilimitados",
+            "Registro de asistencia",
+            "Calificaciones básicas",
+            "Tareas y comunicados",
+            "Horarios de clase",
+            "Notificaciones push",
+            "Módulo de disciplina",
+            "Reportes y exportación",
+            "Soporte prioritario 24/7",
+            "Dominio personalizado",
+            "Multi-sede",
+        ],
+    },
 ]
 
 export default function PlanesPage() {
@@ -35,15 +90,15 @@ export default function PlanesPage() {
 
             <main className="flex-1">
                 <div className="w-full bg-white dark:bg-black py-20 px-4 flex flex-col items-center">
-                    <h1 className="text-4xl md:text-5xl font-medium text-zinc-800 dark:text-white/90 text-center">Simple, Transparent Pricing</h1>
-                    <p className="text-sm md:text-base text-zinc-700 dark:text-zinc-400 mt-4 text-center">Choose a plan that grows with your workflow.</p>
+                    <h1 className="text-4xl md:text-5xl font-medium text-zinc-800 dark:text-white/90 text-center">Planes y Aporte</h1>
+                    <p className="text-sm md:text-base text-zinc-700 dark:text-zinc-400 mt-4 text-center">Elige el plan ideal para tu colegio.</p>
 
                     <div className="mt-8 flex items-center bg-zinc-900 dark:bg-zinc-800 rounded-full p-1 w-fit mx-auto cursor-pointer select-none" onClick={() => setIsYearly(!isYearly)}>
                         <div className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-500 ease-in-out ${!isYearly ? 'bg-white text-zinc-900' : 'text-white dark:text-zinc-400'}`} onClick={(e) => { e.stopPropagation(); setIsYearly(false); }}>
-                            Monthly
+                            Mensual
                         </div>
                         <div className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-500 ease-in-out ${isYearly ? 'bg-white text-zinc-900' : 'text-white dark:text-zinc-400'}`} onClick={(e) => { e.stopPropagation(); setIsYearly(true); }}>
-                            Yearly
+                            Anual
                         </div>
                     </div>
 
@@ -53,14 +108,16 @@ export default function PlanesPage() {
                                 <div className="flex items-center justify-between">
                                     <h3 className="text-xl font-medium text-zinc-900 dark:text-white/90">{plan.name}</h3>
                                     {plan.isPopular && (
-                                        <span className="text-xs bg-slate-50 dark:bg-zinc-800 border border-slate-600 dark:border-zinc-600 rounded-full px-3 py-1 text-slate-800 dark:text-zinc-300">Most Popular</span>
+                                        <span className="text-xs bg-slate-50 dark:bg-zinc-800 border border-slate-600 dark:border-zinc-600 rounded-full px-3 py-1 text-slate-800 dark:text-zinc-300">Más popular</span>
                                     )}
                                 </div>
+
+                                <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{plan.tagline}</p>
                                 
-                                <div className="mt-4">
-                                    <span className="text-4xl font-semibold text-zinc-900 dark:text-white">${isYearly ? plan.yearlyPrice : plan.monthlyPrice}</span>
+                                <div className="mt-4 flex items-baseline gap-1">
+                                    <span className="text-4xl font-semibold text-zinc-900 dark:text-white">S/ {isYearly ? plan.yearlyPrice : plan.monthlyPrice}</span>
+                                    <span className="text-sm text-zinc-500 dark:text-zinc-400">/ familia / mes</span>
                                 </div>
-                                <p className="text-zinc-800 dark:text-zinc-400 text-base mt-2">Billed {isYearly ? 'annually' : 'monthly'}</p>
                                 
                                 <hr className="border-t border-zinc-200 dark:border-zinc-800 w-full my-5.5" />
 
@@ -74,7 +131,7 @@ export default function PlanesPage() {
                                 </ul>
 
                                 <button className="mt-10 w-full bg-zinc-950 dark:bg-white text-white dark:text-black text-base font-medium py-3 rounded-full transition-colors hover:bg-zinc-900 dark:hover:bg-zinc-200 cursor-pointer">
-                                    Get Started
+                                    Quiero este plan
                                 </button>
                             </div>
                         ))}
