@@ -7,11 +7,11 @@ import { ToggleButton } from "@heroui/react"
 
 const bottomLinks = [
   { href: "/dashboard/parent", label: "Inicio", icon: "home" },
-  { href: "/dashboard/parent/horarios", label: "Horarios", icon: "calendar_month" },
   { href: "/dashboard/parent/tareas", label: "Tareas", icon: "assignment" },
   { href: "/dashboard/parent/calificaciones", label: "Notas", icon: "grade" },
-  { href: "/dashboard/parent/asistencia", label: "Asistencia", icon: "fact_check" },
   { href: "/dashboard/parent/mensajes", label: "Chat", icon: "chat" },
+  { href: "/dashboard/parent/horarios", label: "Horarios", icon: "calendar_month", overflow: true },
+  { href: "/dashboard/parent/asistencia", label: "Asistencia", icon: "fact_check", overflow: true },
 ]
 
 const sidebarLinks = [

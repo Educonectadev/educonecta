@@ -18,8 +18,8 @@ const bottomNavItems = [
   { href: "/dashboard/super-admin", label: "Inicio", icon: "home" },
   { href: "/dashboard/super-admin/solicitudes", label: "Solicitudes", icon: "mail" },
   { href: "/dashboard/super-admin/instituciones", label: "Colegios", icon: "account_balance" },
-  { href: "/dashboard/super-admin/partner-instituciones", label: "Partners", icon: "groups" },
-  { href: "/dashboard/super-admin/planes", label: "Planes", icon: "card_membership" },
+  { href: "/dashboard/super-admin/partner-instituciones", label: "Partners", icon: "groups", overflow: true },
+  { href: "/dashboard/super-admin/planes", label: "Planes", icon: "card_membership", overflow: true },
 ]
 
 export default async function SuperAdminLayout({ children }: { children: React.ReactNode }) {

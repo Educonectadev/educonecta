@@ -19,12 +19,12 @@ const sidebarLinks = [
 
 const bottomNavItems = [
   { href: "/dashboard/teacher", label: "Inicio", icon: "home" },
-  { href: "/dashboard/teacher/perfil", label: "Perfil", icon: "person" },
-  { href: "/dashboard/teacher/horarios", label: "Horarios", icon: "calendar_month" },
-  { href: "/dashboard/teacher/asistencia", label: "Asistencia", icon: "fact_check" },
   { href: "/dashboard/teacher/tareas", label: "Tareas", icon: "assignment" },
   { href: "/dashboard/teacher/calificaciones", label: "Notas", icon: "grade" },
   { href: "/dashboard/teacher/comunicados", label: "Mensajes", icon: "mail" },
+  { href: "/dashboard/teacher/perfil", label: "Perfil", icon: "person", overflow: true },
+  { href: "/dashboard/teacher/horarios", label: "Horarios", icon: "calendar_month", overflow: true },
+  { href: "/dashboard/teacher/asistencia", label: "Asistencia", icon: "fact_check", overflow: true },
 ]
 
 export default async function TeacherLayout({ children }: { children: React.ReactNode }) {
