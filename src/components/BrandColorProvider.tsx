@@ -75,7 +75,7 @@ export default function BrandColorProvider({ children }: { children: React.React
           resolved = fallback
         }
       }
-      if (!resolved || getLuminance(resolved) > 0.92) {
+      if (!resolved) {
         resolved = fallback
       }
       setBrandColorState(resolved)

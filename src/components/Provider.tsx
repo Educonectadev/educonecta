@@ -7,9 +7,9 @@ import BrandColorProvider from "./BrandColorProvider"
 export default function Provider({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
-      <BrandColorProvider>
-        <AuthProvider>{children}</AuthProvider>
-      </BrandColorProvider>
+      <AuthProvider>
+        <BrandColorProvider>{children}</BrandColorProvider>
+      </AuthProvider>
     </ThemeProvider>
   )
 }
