@@ -470,7 +470,7 @@ export default function HomeContent({ data }: { data: ImpactData }) {
                   <Link href={item.href} className="block">
                     <TextRoll
                       center
-                      className="text-3xl font-extrabold uppercase leading-[0.8] tracking-[-0.03em] transition-colors hover:text-emerald-600 dark:hover:text-emerald-400 lg:text-4xl"
+                      className="text-3xl font-extrabold uppercase leading-[0.8] tracking-[-0.03em] transition-colors text-gray-900 dark:text-white/90 hover:text-emerald-600 dark:hover:text-emerald-400 lg:text-4xl"
                     >
                       {item.name}
                     </TextRoll>
