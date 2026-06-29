@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { Card } from "@heroui/react"
@@ -115,42 +116,80 @@ const statCardVariants = {
 }
 
 export default function HomeContent({ data }: { data: ImpactData }) {
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [pagesOpen, setPagesOpen] = useState(false)
+
+  const pageLinks = [
+    { href: "/funcionalidades", label: "Funcionalidades" },
+    { href: "/planes", label: "Planes" },
+    { href: "/contacto", label: "Contacto" },
+  ]
+
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-zinc-950 overflow-x-hidden">
       <motion.header
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="flex items-center justify-between px-8 py-5 max-w-6xl mx-auto w-full"
+        className="flex flex-col items-center justify-center px-4"
       >
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.3 }}
-          className="text-lg font-bold tracking-tight text-black dark:text-white/90"
-        >
-          EduConecta
-        </motion.span>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.3 }}
-          className="flex items-center gap-2"
-        >
-          <ThemeToggle />
-          <Link
-            href="/login"
-            className="inline-flex items-center justify-center size-10 sm:size-auto sm:px-6 sm:py-2.5 text-sm font-medium btn-primary rounded-full sm:rounded-[30px] duration-200"
-            aria-label="Iniciar Sesión"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:hidden">
-              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-              <polyline points="10 17 15 12 10 7" />
-              <line x1="15" y1="12" x2="3" y2="12" />
-            </svg>
-            <span className="hidden sm:inline">Iniciar Sesión</span>
-          </Link>
-        </motion.div>
+        <nav className="flex flex-col items-center w-full">
+          <div className="flex items-center justify-between p-4 md:px-24 lg:px-32 xl:px-40 md:py-4 w-full relative">
+            <Link href="/" className="text-lg font-bold tracking-tight text-black dark:text-white/90">
+              EduConecta
+            </Link>
+
+            <div id="menu" className={`${mobileOpen ? "max-md:w-full" : "max-md:w-0"} max-md:fixed max-md:top-0 max-md:z-50 max-md:left-0 max-md:transition-all max-md:duration-300 max-md:overflow-hidden max-md:h-screen max-md:bg-white/25 max-md:backdrop-blur max-md:flex-col max-md:justify-center flex items-center gap-7.5 text-sm`}>
+              <div className="group relative max-md:flex max-md:flex-col max-md:items-center">
+                <button type="button" onClick={() => setPagesOpen((prev) => !prev)} className="flex items-center gap-1 text-gray-800 dark:text-zinc-300 hover:text-gray-600 dark:hover:text-zinc-400">
+                  Plataforma
+                  <svg className={`transition-transform duration-200 md:group-hover:rotate-180 ${pagesOpen ? "rotate-180" : ""}`} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m5 7.5 5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <div className={`${pagesOpen ? "mt-3 flex" : "hidden"} flex-col gap-1 md:absolute md:left-1/2 md:top-full md:mt-2 md:flex md:min-w-32 md:-translate-x-1/2 md:rounded-2xl md:border md:border-gray-200 dark:md:border-zinc-700 md:bg-white dark:md:bg-zinc-900 md:p-1.5 md:shadow-[0_18px_50px_rgba(0,0,0,0.08)] md:opacity-0 md:invisible md:-translate-y-2 md:transition-all md:duration-200 md:group-hover:visible md:group-hover:translate-y-0 md:group-hover:opacity-100`}>
+                  {pageLinks.map((page) => (
+                    <Link key={page.href} href={page.href} onClick={() => { setPagesOpen(false); setMobileOpen(false) }} className="rounded-lg px-3 py-2 text-center text-gray-700 dark:text-zinc-300 transition hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white">
+                      {page.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              {pageLinks.map((page) => (
+                <Link key={page.href} href={page.href} onClick={() => setMobileOpen(false)} className="text-gray-800 dark:text-zinc-300 hover:text-gray-600 dark:hover:text-zinc-400 max-md:block">
+                  {page.label}
+                </Link>
+              ))}
+              <button onClick={() => { setMobileOpen(false); setPagesOpen(false) }} className="md:hidden bg-zinc-900 hover:bg-zinc-800 text-white p-2 rounded-md aspect-square font-medium transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Link href="/login" className="hidden md:inline-flex items-center gap-1 btn-primary px-6 py-2.5 rounded-3xl text-sm font-medium transition cursor-pointer">
+                Iniciar Sesión
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </Link>
+              <Link href="/login" className="md:hidden btn-primary p-2 rounded-md aspect-square font-medium transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                  <polyline points="10 17 15 12 10 7" />
+                  <line x1="15" y1="12" x2="3" y2="12" />
+                </svg>
+              </Link>
+              <button onClick={() => setMobileOpen(true)} className="md:hidden bg-zinc-900 hover:bg-zinc-800 text-white p-2 rounded-md aspect-square font-medium transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 12h16" /><path d="M4 18h16" /><path d="M4 6h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </nav>
       </motion.header>
 
       <main className="flex-1">
@@ -158,21 +197,34 @@ export default function HomeContent({ data }: { data: ImpactData }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="flex flex-col items-center text-center px-6 pt-16 pb-16 sm:pt-24 sm:pb-24 max-w-6xl mx-auto"
+          className="flex flex-col items-center text-center px-6 pt-16 pb-16 sm:pt-20 sm:pb-24 max-w-6xl mx-auto"
         >
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
+            className="flex flex-wrap items-center justify-center gap-2 pl-2.5 pr-4 py-1.5 rounded-full border border-gray-200 dark:border-zinc-700"
+          >
+            <span className="px-2 py-0.5 rounded-full border border-emerald-600 bg-emerald-100 text-xs text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-500 font-medium">
+              NUEVO
+            </span>
+            <span className="text-sm text-gray-700 dark:text-zinc-400">Plataforma 2.0 — Gestión escolar inteligente</span>
+          </motion.div>
+
           <motion.h1
             initial={{ opacity: 0, y: 30, filter: "blur(4px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 0.6, delay: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl bg-gradient-to-r from-black via-emerald-800 to-black dark:from-white dark:via-emerald-400 dark:to-white bg-clip-text text-transparent"
+            transition={{ duration: 0.6, delay: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="text-5xl md:text-[64px]/18 font-medium text-gray-900 dark:text-white/90 bg-clip-text leading-tight max-w-[700px] mt-4"
           >
-            EduConecta
+            La plataforma que moderniza tu colegio
           </motion.h1>
+
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.45 }}
-            className="mt-5 text-lg text-gray-400 dark:text-zinc-500"
+            transition={{ duration: 0.4, delay: 0.55 }}
+            className="mt-5 text-base md:text-lg text-gray-400 dark:text-zinc-500"
           >
             Seguimiento escolar{" "}
             <FlipWords
@@ -180,210 +232,239 @@ export default function HomeContent({ data }: { data: ImpactData }) {
               className="text-gray-400 dark:text-zinc-500"
             />
           </motion.p>
+
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.6 }}
-            className="mt-5 text-base text-gray-600 dark:text-zinc-400 max-w-xl leading-relaxed"
+            transition={{ duration: 0.4, delay: 0.7 }}
+            className="mt-3 text-sm md:text-base text-gray-600 dark:text-zinc-400 max-w-[500px] leading-relaxed"
           >
-            Una plataforma integral que conecta a padres, profesores y
-            administradores para facilitar el seguimiento académico y la
-            comunicación en la comunidad educativa.
+            Una plataforma integral que conecta a padres, profesores y administradores para facilitar el seguimiento académico y la comunicación en la comunidad educativa.
           </motion.p>
+
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.75 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            transition={{ duration: 0.4, delay: 0.85 }}
+            className="flex gap-3.5 mt-10"
           >
             <Link
               href="/login"
-              className="mt-8 sm:mt-10 inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 text-base font-medium btn-primary rounded-[25px] duration-200"
+              className="inline-flex items-center gap-1 btn-primary font-medium px-5 py-2.5 rounded-xl text-sm transition cursor-pointer"
             >
               Comenzar ahora
-              <motion.span
-                animate={{ x: [0, 4, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <IconClient icon="lucide:arrow-right" className="size-4" />
-              </motion.span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="m6 12 4-4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </Link>
+            <Link
+              href="/funcionalidades"
+              className="inline-flex items-center gap-1 border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800 text-gray-950 dark:text-white/90 font-medium px-5 py-2.5 rounded-xl text-sm transition cursor-pointer"
+            >
+              Conoce más
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="m6 12 4-4-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </Link>
           </motion.div>
 
           <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="mt-12 sm:mt-16 w-full grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-left"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1 }}
+            className="w-full px-4 md:px-0 mt-13"
           >
-            {impactCards
-              .filter((_, i) => i === 0)
-              .map((card) => (
-                <motion.div
-                  key={card.title}
-                  variants={statCardVariants}
-                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                >
-                  <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
-                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
-                      <IconClient icon={card.icon} className="size-6" />
-                    </div>
-                    <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
-                      <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
-                    </p>
-                    <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
-                    <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
-                  </Card>
-                </motion.div>
-              ))}
-
-            <motion.div
-              variants={itemVariants}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="lg:col-span-2"
-            >
-              <Card className="w-full relative overflow-hidden border border-gray-100 dark:border-zinc-800 rounded-[25px] gap-0 h-full">
-                <div className="absolute inset-0">
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/70 via-emerald-800/50 to-black/40 z-10" />
-                  <img alt="Amazonía peruana" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80" />
-                </div>
-                <div className="relative z-20 p-5 sm:p-8 flex flex-col justify-end min-h-[200px] sm:min-h-[280px]">
-                  <div className="size-12 rounded-xl flex items-center justify-center bg-white/20 backdrop-blur-sm text-white">
-                    <IconClient icon="lucide:trees" className="size-6" />
-                  </div>
-                  <p className="mt-4 text-xl font-bold text-white">Protección de la Amazonía peruana</p>
-                  <p className="mt-2 text-sm text-white/80 leading-relaxed max-w-lg">
-                    {data.institutionCount} instituciones activas evitan la tala de{" "}
-                    <strong className="text-emerald-300">{data.treesSaved.toLocaleString("es-PE")} árboles al año</strong>.
-                    Cada colegio digitalizado reduce la demanda de pulpa de madera y protege el pulmón verde del planeta.
-                  </p>
-                  <div className="mt-4 flex gap-3 sm:gap-4">
-                    <div>
-                      <p className="text-xl sm:text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.treesSaved} suffix="" /></p>
-                      <p className="text-xs text-white/60">árboles/año</p>
-                    </div>
-                    <div className="w-px bg-white/20" />
-                    <div>
-                      <p className="text-xl sm:text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.institutionCount} suffix="" /></p>
-                      <p className="text-xs text-white/60">instituciones</p>
-                    </div>
-                    <div className="w-px bg-white/20" />
-                    <div>
-                      <p className="text-xl sm:text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.co2Saved} suffix="" /></p>
-                      <p className="text-xs text-white/60">kg CO₂/año</p>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-
-            {impactCards
-              .filter((_, i) => i === 3)
-              .map((card) => (
-                <motion.div
-                  key={card.title}
-                  variants={statCardVariants}
-                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                >
-                  <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
-                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
-                      <IconClient icon={card.icon} className="size-6" />
-                    </div>
-                    <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
-                      <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
-                    </p>
-                    <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
-                    <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
-                  </Card>
-                </motion.div>
-              ))}
-
-            {impactCards
-              .filter((_, i) => i === 1)
-              .map((card) => (
-                <motion.div
-                  key={card.title}
-                  variants={statCardVariants}
-                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                >
-                  <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
-                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
-                      <IconClient icon={card.icon} className="size-6" />
-                    </div>
-                    <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
-                      <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
-                    </p>
-                    <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
-                    <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
-                  </Card>
-                </motion.div>
-              ))}
-
-            <motion.div
-              variants={itemVariants}
-              whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="lg:col-span-2"
-            >
-              <Card className="w-full relative overflow-hidden border border-gray-100 dark:border-zinc-800 rounded-[25px] gap-0 h-full">
-                <div className="absolute inset-0">
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-900/60 via-amber-800/40 to-black/30 z-10" />
-                  <img alt="Escuela sostenible" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" />
-                </div>
-                <div className="relative z-20 p-5 sm:p-8 flex flex-col justify-end min-h-[200px] sm:min-h-[280px]">
-                  <div className="size-12 rounded-xl flex items-center justify-center bg-white/20 backdrop-blur-sm text-white">
-                    <IconClient icon="lucide:recycle" className="size-6" />
-                  </div>
-                  <p className="mt-4 text-xl font-bold text-white">Beneficios de la digitalización</p>
-                  <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg">
-                    <div className="flex items-center gap-2">
-                      <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
-                      <span className="text-sm text-white/90">Sin uso de papel</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
-                      <span className="text-sm text-white/90">Acceso desde cualquier lugar</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
-                      <span className="text-sm text-white/90">Datos en tiempo real</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
-                      <span className="text-sm text-white/90">Compromiso ambiental</span>
-                    </div>
-                  </div>
-                  <div className="mt-5">
-                    <Link href="/login" className="inline-flex items-center gap-2 px-5 py-2 text-sm font-medium text-white bg-white/20 backdrop-blur-sm rounded-[25px] hover:bg-white/30 transition-all duration-200">
-                      Suma tu institución
-                      <IconClient icon="lucide:arrow-right" className="size-4" />
-                    </Link>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-
-            {impactCards
-              .filter((_, i) => i === 2)
-              .map((card) => (
-                <motion.div
-                  key={card.title}
-                  variants={statCardVariants}
-                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                >
-                  <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
-                    <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
-                      <IconClient icon={card.icon} className="size-6" />
-                    </div>
-                    <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
-                      <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
-                    </p>
-                    <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
-                    <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
-                  </Card>
-                </motion.div>
-              ))}
+            <img
+              className="max-h-64 md:max-h-96 object-cover object-top w-full max-w-6xl mx-auto border border-gray-200 dark:border-zinc-800 rounded-[20px]"
+              src="https://assets.prebuiltui.com/images/components/hero-section/hero-modern-dashboard.png"
+              alt="Dashboard EduConecta"
+            />
           </motion.div>
+        </motion.section>
+
+        <motion.section
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.5 }}
+          className=""
+        >
+          <div className="max-w-6xl mx-auto px-6 py-16 sm:py-24">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-40px" }}
+              className="w-full grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-left"
+            >
+              {impactCards
+                .filter((_, i) => i === 0)
+                .map((card) => (
+                  <motion.div
+                    key={card.title}
+                    variants={statCardVariants}
+                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  >
+                    <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                      <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
+                        <IconClient icon={card.icon} className="size-6" />
+                      </div>
+                      <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
+                        <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
+                      </p>
+                      <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
+                      <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
+                    </Card>
+                  </motion.div>
+                ))}
+
+              <motion.div
+                variants={itemVariants}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="lg:col-span-2"
+              >
+                <Card className="w-full relative overflow-hidden border border-gray-100 dark:border-zinc-800 rounded-[25px] gap-0 h-full">
+                  <div className="absolute inset-0">
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/70 via-emerald-800/50 to-black/40 z-10" />
+                    <img alt="Amazonía peruana" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800&q=80" />
+                  </div>
+                  <div className="relative z-20 p-5 sm:p-8 flex flex-col justify-end min-h-[200px] sm:min-h-[280px]">
+                    <div className="size-12 rounded-xl flex items-center justify-center bg-white/20 backdrop-blur-sm text-white">
+                      <IconClient icon="lucide:trees" className="size-6" />
+                    </div>
+                    <p className="mt-4 text-xl font-bold text-white">Protección de la Amazonía peruana</p>
+                    <p className="mt-2 text-sm text-white/80 leading-relaxed max-w-lg">
+                      {data.institutionCount} instituciones activas evitan la tala de{" "}
+                      <strong className="text-emerald-300">{data.treesSaved.toLocaleString("es-PE")} árboles al año</strong>.
+                      Cada colegio digitalizado reduce la demanda de pulpa de madera y protege el pulmón verde del planeta.
+                    </p>
+                    <div className="mt-4 flex gap-3 sm:gap-4">
+                      <div>
+                        <p className="text-xl sm:text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.treesSaved} suffix="" /></p>
+                        <p className="text-xs text-white/60">árboles/año</p>
+                      </div>
+                      <div className="w-px bg-white/20" />
+                      <div>
+                        <p className="text-xl sm:text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.institutionCount} suffix="" /></p>
+                        <p className="text-xs text-white/60">instituciones</p>
+                      </div>
+                      <div className="w-px bg-white/20" />
+                      <div>
+                        <p className="text-xl sm:text-2xl font-bold text-emerald-300"><AnimatedCounter value={data.co2Saved} suffix="" /></p>
+                        <p className="text-xs text-white/60">kg CO₂/año</p>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+
+              {impactCards
+                .filter((_, i) => i === 3)
+                .map((card) => (
+                  <motion.div
+                    key={card.title}
+                    variants={statCardVariants}
+                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  >
+                    <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                      <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
+                        <IconClient icon={card.icon} className="size-6" />
+                      </div>
+                      <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
+                        <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
+                      </p>
+                      <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
+                      <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
+                    </Card>
+                  </motion.div>
+                ))}
+
+              {impactCards
+                .filter((_, i) => i === 1)
+                .map((card) => (
+                  <motion.div
+                    key={card.title}
+                    variants={statCardVariants}
+                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  >
+                    <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                      <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
+                        <IconClient icon={card.icon} className="size-6" />
+                      </div>
+                      <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
+                        <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
+                      </p>
+                      <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
+                      <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
+                    </Card>
+                  </motion.div>
+                ))}
+
+              <motion.div
+                variants={itemVariants}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                className="lg:col-span-2"
+              >
+                <Card className="w-full relative overflow-hidden border border-gray-100 dark:border-zinc-800 rounded-[25px] gap-0 h-full">
+                  <div className="absolute inset-0">
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-900/60 via-amber-800/40 to-black/30 z-10" />
+                    <img alt="Escuela sostenible" className="h-full w-full object-cover" src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80" />
+                  </div>
+                  <div className="relative z-20 p-5 sm:p-8 flex flex-col justify-end min-h-[200px] sm:min-h-[280px]">
+                    <div className="size-12 rounded-xl flex items-center justify-center bg-white/20 backdrop-blur-sm text-white">
+                      <IconClient icon="lucide:recycle" className="size-6" />
+                    </div>
+                    <p className="mt-4 text-xl font-bold text-white">Beneficios de la digitalización</p>
+                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg">
+                      <div className="flex items-center gap-2">
+                        <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
+                        <span className="text-sm text-white/90">Sin uso de papel</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
+                        <span className="text-sm text-white/90">Acceso desde cualquier lugar</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
+                        <span className="text-sm text-white/90">Datos en tiempo real</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <IconClient icon="lucide:circle-check" className="size-4 shrink-0 text-emerald-300" />
+                        <span className="text-sm text-white/90">Compromiso ambiental</span>
+                      </div>
+                    </div>
+                    <div className="mt-5">
+                      <Link href="/login" className="inline-flex items-center gap-2 px-5 py-2 text-sm font-medium text-white bg-white/20 backdrop-blur-sm rounded-[25px] hover:bg-white/30 transition-all duration-200">
+                        Suma tu institución
+                        <IconClient icon="lucide:arrow-right" className="size-4" />
+                      </Link>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+
+              {impactCards
+                .filter((_, i) => i === 2)
+                .map((card) => (
+                  <motion.div
+                    key={card.title}
+                    variants={statCardVariants}
+                    whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                  >
+                    <Card className={`w-full flex-col items-center text-center p-5 sm:p-8 border rounded-[25px] ${card.color} border-transparent`}>
+                      <div className={`size-12 rounded-xl flex items-center justify-center ${card.iconColor} bg-white/60 dark:bg-black/40`}>
+                        <IconClient icon={card.icon} className="size-6" />
+                      </div>
+                      <p className="mt-4 text-3xl font-bold text-black dark:text-white/90">
+                        <AnimatedCounter value={data[card.valueKey]} suffix={card.suffix} />
+                      </p>
+                      <p className="mt-2 text-sm font-semibold text-black dark:text-white/90">{card.title}</p>
+                      <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500 leading-relaxed max-w-[220px]">{card.description}</p>
+                    </Card>
+                  </motion.div>
+                ))}
+            </motion.div>
+          </div>
         </motion.section>
 
         <motion.section
