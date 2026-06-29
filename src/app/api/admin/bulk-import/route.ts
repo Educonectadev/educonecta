@@ -18,11 +18,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Archivo requerido" }, { status: 400 })
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer())
-    const rows = await parseExcel(buffer)
+    if (file.size === 0) {
+      return NextResponse.json({ error: "El archivo está vacío" }, { status: 400 })
+    }
+
+    const raw = await file.arrayBuffer()
+    const buffer = Buffer.from(raw)
+
+    let rows: Record<string, unknown>[]
+    try {
+      rows = await parseExcel(buffer)
+    } catch {
+      return NextResponse.json({
+        error: "No se pudo leer el archivo. Asegúrate de que sea un archivo Excel (.xlsx) o CSV válido.",
+      }, { status: 400 })
+    }
 
     if (rows.length === 0) {
-      return NextResponse.json({ error: "El archivo está vacío" }, { status: 400 })
+      return NextResponse.json({ error: "El archivo no contiene datos" }, { status: 400 })
     }
 
     let result
@@ -46,6 +59,6 @@ export async function POST(req: Request) {
     return NextResponse.json(result)
   } catch (error: any) {
     console.error("[bulk-import] error:", error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: error.message || "Error interno del servidor" }, { status: 500 })
   }
 }
