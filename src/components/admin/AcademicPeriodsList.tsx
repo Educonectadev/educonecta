@@ -35,6 +35,7 @@ const itemVariants: Variants = {
 
 export default function AcademicPeriodsList() {
   const [periods, setPeriods] = useState<Period[]>([])
+  const [detail, setDetail] = useState<Period | null>(null)
   const [editing, setEditing] = useState<Period | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [deleting, setDeleting] = useState<Period | null>(null)
@@ -136,7 +137,8 @@ export default function AcademicPeriodsList() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.25 }}
-              className="flex items-center justify-between rounded-[30px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 px-5 py-4 hover:border-gray-300 dark:hover:border-zinc-700 transition-colors"
+              onClick={() => setDetail(p)}
+              className="flex items-center justify-between rounded-[30px] bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 px-5 py-4 hover:border-gray-300 dark:hover:border-zinc-700 transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-4 min-w-0">
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center shrink-0">
@@ -252,6 +254,45 @@ export default function AcademicPeriodsList() {
             className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium disabled:opacity-40"
           >
             {loading ? "Guardando..." : editing ? "Guardar cambios" : "Crear período"}
+          </button>
+        </div>
+      </Modal>
+
+      <Modal open={!!detail} onClose={() => setDetail(null)} title={detail?.name ?? ""} size="sm">
+        <div className="space-y-5">
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-xs text-gray-400 mb-0.5">Tipo</p>
+              <p className="font-medium text-gray-900 dark:text-white capitalize">{detail ? typeLabels[detail.type] ?? detail.type : ""}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-0.5">Año</p>
+              <p className="font-medium text-gray-900 dark:text-white">{detail?.academicYear}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-0.5">Inicio</p>
+              <p className="font-medium text-gray-900 dark:text-white">{detail?.startDate}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-0.5">Fin</p>
+              <p className="font-medium text-gray-900 dark:text-white">{detail?.endDate}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-0.5">Orden</p>
+              <p className="font-medium text-gray-900 dark:text-white">#{detail?.order}</p>
+            </div>
+            <div>
+              <p className="text-xs text-gray-400 mb-0.5">Estado</p>
+              <span className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${detail?.isActive ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400" : "bg-gray-100 text-gray-500 dark:bg-zinc-800 dark:text-zinc-400"}`}>
+                {detail?.isActive ? "Activo" : "Inactivo"}
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={() => { const p = detail; setDetail(null); if (p) openEdit(p) }}
+            className="w-full rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+          >
+            Editar período
           </button>
         </div>
       </Modal>
