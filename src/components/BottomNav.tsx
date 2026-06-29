@@ -1,11 +1,12 @@
 "use client"
 
-import { useMemo, useState, useEffect } from "react"
+import { memo, useMemo, useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion"
 import * as Icons from "lucide-react"
 import type { LucideProps } from "lucide-react"
+import { useBrandColor } from "./BrandColorProvider"
 
 export type NavItem = {
   href: string
@@ -36,8 +37,6 @@ const iconMap: Record<string, keyof typeof Icons> = {
   diversity_3: "UserPlus",
   book: "Book",
   notifications: "Bell",
-  settings: "Settings",
-  door_open: "DoorOpen",
 }
 
 function NavIcon({ name, ...props }: { name: string } & LucideProps) {
@@ -45,6 +44,63 @@ function NavIcon({ name, ...props }: { name: string } & LucideProps) {
   const Component = key ? (Icons[key] as React.ComponentType<LucideProps>) : null
   return Component ? <Component {...props} /> : null
 }
+
+function BottomItem({ item, active }: { item: NavItem; active: boolean }) {
+  const { brandColor } = useBrandColor()
+
+  return (
+    <Link href={item.href} prefetch>
+      <motion.div
+        layout
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className={
+          "flex items-center gap-2 rounded-full cursor-pointer " +
+          (active
+            ? "bg-gray-200 dark:bg-zinc-800 pl-1.5 pr-3 py-1.5"
+            : "bg-gray-100 dark:bg-zinc-900/60 w-11 h-11 justify-center")
+        }
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <motion.div
+          layout
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="flex items-center justify-center rounded-full size-8 shrink-0"
+          style={active ? { backgroundColor: brandColor } : {}}
+        >
+          <NavIcon
+            name={item.icon}
+            size={18}
+            className={
+              active
+                ? "text-white"
+                : "text-gray-400 dark:text-zinc-500"
+            }
+            style={
+              active
+                ? { color: "var(--brand-text-color, #fff)" }
+                : {}
+            }
+          />
+        </motion.div>
+        {active && (
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2, delay: 0.1 }}
+            className="text-gray-900 dark:text-white text-sm font-medium whitespace-nowrap"
+          >
+            {item.label}
+          </motion.span>
+        )}
+      </motion.div>
+    </Link>
+  )
+}
+
+const BottomItemMemo = memo(BottomItem, (prev, next) => {
+  return prev.active === next.active && prev.item.href === next.item.href
+})
 
 function MoreMenu({ items, onClose }: { items: NavItem[]; onClose: () => void }) {
   return (
@@ -99,38 +155,6 @@ function MoreMenu({ items, onClose }: { items: NavItem[]; onClose: () => void })
   )
 }
 
-function TabItem({ item, active }: { item: NavItem; active: boolean }) {
-  return (
-    <Link href={item.href} prefetch className="block">
-      <div className="relative flex flex-col items-center px-2.5 py-1.5 min-w-[44px] cursor-pointer">
-        {active && (
-          <motion.div
-            layoutId="active-bg"
-            layout
-            transition={{ type: "spring", stiffness: 450, damping: 30 }}
-            className="absolute inset-0 bg-white rounded-full"
-          />
-        )}
-        <div className="relative z-10 flex items-center justify-center size-5 mb-0.5">
-          <NavIcon
-            name={item.icon}
-            size={16}
-            className={active ? "text-black" : "text-zinc-400"}
-          />
-        </div>
-        <span
-          className={
-            "relative z-10 text-[10px] leading-tight whitespace-nowrap " +
-            (active ? "text-black font-medium" : "text-zinc-500")
-          }
-        >
-          {item.label}
-        </span>
-      </div>
-    </Link>
-  )
-}
-
 export default function BottomNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname()
   const [moreOpen, setMoreOpen] = useState(false)
@@ -138,14 +162,14 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
   const primaryItems = useMemo(() => items.filter((i) => !i.overflow), [items])
   const overflowItems = useMemo(() => items.filter((i) => i.overflow), [items])
 
-  const isActive = useMemo(() => {
+  const activeMap = useMemo(() => {
     const m = new Map<string, boolean>()
     for (const item of items) {
       const segments = item.href.split("/").filter(Boolean)
-      const active =
+      const isActive =
         pathname === item.href ||
         (segments.length > 2 && pathname.startsWith(item.href + "/"))
-      m.set(item.href, active)
+      m.set(item.href, isActive)
     }
     return m
   }, [items, pathname])
@@ -180,43 +204,41 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
       )}
 
       <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 md:hidden">
-        <div className="flex items-center gap-0.5 px-1.5 py-1.5 bg-black/80 backdrop-blur-xl rounded-full shadow-2xl shadow-black/50 border border-zinc-800/60">
+        <div className="flex items-center gap-1 px-3 py-2 bg-white/80 dark:bg-black/70 backdrop-blur-xl rounded-full shadow-2xl shadow-gray-200/50 dark:shadow-black/50 border border-gray-200 dark:border-zinc-800/60">
           <LayoutGroup>
             {primaryItems.map((item) => (
-              <TabItem
+              <BottomItemMemo
                 key={item.href}
                 item={item}
-                active={!!isActive.get(item.href)}
+                active={!!activeMap.get(item.href)}
               />
             ))}
-
-            {hasOverflow && (
-              <button
-                onClick={() => setMoreOpen((prev) => !prev)}
-                className="relative flex flex-col items-center px-2.5 py-1.5 min-w-[44px] cursor-pointer"
-              >
-                <div className="relative z-10 flex items-center justify-center size-5 mb-0.5">
-                  <motion.div
-                    animate={{ rotate: moreOpen ? 45 : 0 }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
-                  >
-                    <Icons.Plus
-                      size={16}
-                      className={moreOpen ? "text-white" : "text-zinc-400"}
-                    />
-                  </motion.div>
-                </div>
-                <span
-                  className={
-                    "relative z-10 text-[10px] leading-tight whitespace-nowrap " +
-                    (moreOpen ? "text-white" : "text-zinc-500")
-                  }
-                >
-                  Más
-                </span>
-              </button>
-            )}
           </LayoutGroup>
+
+          {hasOverflow && (
+            <motion.button
+              onClick={() => setMoreOpen((prev) => !prev)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={
+                "flex items-center justify-center size-11 rounded-full transition-colors " +
+                (moreOpen
+                  ? "bg-gray-200 dark:bg-zinc-700"
+                  : "bg-gray-100 dark:bg-zinc-900/60")
+              }
+              aria-label={moreOpen ? "Cerrar menú" : "Más opciones"}
+            >
+              <motion.div
+                animate={{ rotate: moreOpen ? 45 : 0 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+              >
+                <Icons.Plus
+                  size={20}
+                  className="text-gray-400 dark:text-zinc-500"
+                />
+              </motion.div>
+            </motion.button>
+          )}
         </div>
       </nav>
     </>
