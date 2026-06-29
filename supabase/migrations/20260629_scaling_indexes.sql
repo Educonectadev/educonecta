@@ -35,11 +35,6 @@ CREATE INDEX IF NOT EXISTS idx_homework_course_due_covering
   ON "Homework"("courseId", "dueDate")
   INCLUDE (title, description);
 
--- 3. PARTIAL INDEXES (for filtered queries)
-CREATE INDEX IF NOT EXISTS idx_user_active ON "User"("institutionId") WHERE "isActive" = true;
-CREATE INDEX IF NOT EXISTS idx_student_active ON "Student"("institutionId") WHERE "isActive" = true;
-CREATE INDEX IF NOT EXISTS idx_notification_unread ON "Notification"("userId", "createdAt" DESC) WHERE "isRead" = false;
-
 -- 4. INDEXES FOR FK CHAINS (tables that join through other tables)
 CREATE INDEX IF NOT EXISTS idx_section_grade_name ON "Section"("gradeId", name);
 CREATE INDEX IF NOT EXISTS idx_enrollment_grade_section ON "Enrollment"("gradeId", "sectionId");
