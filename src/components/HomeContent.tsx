@@ -171,7 +171,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                   </Link>
                 ))}
               </div>
-              <button onClick={() => { setMobileOpen(false); setPagesOpen(false) }} className="md:hidden bg-zinc-900 hover:bg-zinc-800 text-white p-3 rounded-[30px] aspect-square font-medium transition">
+              <button onClick={() => { setMobileOpen(false); setPagesOpen(false) }} className="md:hidden bg-gray-100 dark:bg-zinc-900 hover:bg-gray-200 dark:hover:bg-zinc-800 text-gray-900 dark:text-white p-3 rounded-[30px] aspect-square font-medium transition">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 6 6 18" /><path d="m6 6 12 12" />
                 </svg>
@@ -193,7 +193,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                   <line x1="15" y1="12" x2="3" y2="12" />
                 </svg>
               </Link>
-              <button onClick={() => setMobileOpen(true)} className="md:hidden bg-zinc-900 hover:bg-zinc-800 text-white p-3 rounded-[30px] aspect-square font-medium transition">
+              <button onClick={() => setMobileOpen(true)} className="md:hidden bg-gray-100 dark:bg-zinc-900 hover:bg-gray-200 dark:hover:bg-zinc-800 text-gray-900 dark:text-white p-3 rounded-[30px] aspect-square font-medium transition">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 12h16" /><path d="M4 18h16" /><path d="M4 6h16" />
                 </svg>

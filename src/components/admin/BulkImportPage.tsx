@@ -55,16 +55,16 @@ export default function BulkImportPage() {
 
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold text-white">Carga Masiva</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Carga Masiva</h1>
 
-      <div className="rounded-2xl bg-zinc-900 border border-zinc-800 p-6 space-y-4">
+      <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 p-6 space-y-4">
         <div className="flex gap-2">
           <button
             onClick={() => setType("students")}
             className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
               type === "students"
                 ? "bg-emerald-600 text-white"
-                : "bg-zinc-800 text-zinc-400 hover:text-white"
+                : "bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
             }`}
           >
             Estudiantes
@@ -74,19 +74,19 @@ export default function BulkImportPage() {
             className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
               type === "grades"
                 ? "bg-emerald-600 text-white"
-                : "bg-zinc-800 text-zinc-400 hover:text-white"
+                : "bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white"
             }`}
           >
             Notas
           </button>
         </div>
 
-        <div className="rounded-xl bg-zinc-800/50 border border-dashed border-zinc-700 p-8 text-center">
-          <FileSpreadsheet className="w-10 h-10 text-zinc-500 mx-auto mb-3" />
-          <p className="text-sm text-zinc-400 mb-1">
+        <div className="rounded-xl bg-gray-50 dark:bg-zinc-800/50 border border-dashed border-gray-300 dark:border-zinc-700 p-8 text-center">
+          <FileSpreadsheet className="w-10 h-10 text-gray-400 dark:text-zinc-500 mx-auto mb-3" />
+          <p className="text-sm text-gray-500 dark:text-zinc-400 mb-1">
             Sube un archivo Excel (.xlsx) o CSV
           </p>
-          <p className="text-xs text-zinc-600 mb-4">
+          <p className="text-xs text-gray-400 dark:text-zinc-600 mb-4">
             {type === "students"
               ? "Columnas: nombres, apellidos, dni, grado, seccion"
               : "Columnas: dni, curso, evaluacion, nota, periodoId"}
@@ -109,7 +109,7 @@ export default function BulkImportPage() {
             </button>
             <button
               onClick={downloadTemplate}
-              className="flex items-center gap-2 rounded-xl bg-zinc-800 px-5 py-2.5 text-sm font-medium text-zinc-300 hover:text-white"
+              className="flex items-center gap-2 rounded-xl bg-gray-100 dark:bg-zinc-800 px-5 py-2.5 text-sm font-medium text-gray-600 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white"
             >
               <Download className="w-4 h-4" />
               Plantilla
@@ -125,14 +125,14 @@ export default function BulkImportPage() {
               ) : (
                 <AlertCircle className="w-5 h-5 text-amber-400" />
               )}
-              <span className="text-zinc-300">
+              <span className="text-gray-600 dark:text-zinc-300">
                 {result.success} de {result.total} registros importados
               </span>
             </div>
             {result.errors.length > 0 && (
-              <div className="rounded-xl bg-red-900/20 border border-red-800/30 p-3 max-h-40 overflow-y-auto">
+              <div className="rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 p-3 max-h-40 overflow-y-auto">
                 {result.errors.map((e, i) => (
-                  <p key={i} className="text-xs text-red-400 font-mono">
+                  <p key={i} className="text-xs text-red-600 dark:text-red-400 font-mono">
                     Fila {e.row}: {e.message}
                   </p>
                 ))}

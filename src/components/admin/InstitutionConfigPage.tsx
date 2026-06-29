@@ -27,7 +27,7 @@ export default function InstitutionConfigPage() {
       .then(setSettings)
   }, [])
 
-  if (!settings) return <div className="p-8 text-zinc-400">Cargando...</div>
+  if (!settings) return <div className="p-8 text-gray-500 dark:text-zinc-400">Cargando...</div>
 
   const handleSave = async () => {
     setSaving(true)
@@ -64,7 +64,7 @@ export default function InstitutionConfigPage() {
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-white">Configuración de la Institución</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Configuración de la Institución</h1>
         <button
           onClick={handleSave}
           disabled={saving}
@@ -75,11 +75,11 @@ export default function InstitutionConfigPage() {
         </button>
       </div>
       {message && (
-        <div className="rounded-xl bg-zinc-800 px-4 py-3 text-sm text-zinc-300">{message}</div>
+        <div className="rounded-xl bg-gray-100 dark:bg-zinc-800 px-4 py-3 text-sm text-gray-600 dark:text-zinc-300">{message}</div>
       )}
 
-      <section className="rounded-2xl bg-zinc-900 border border-zinc-800 p-6 space-y-4">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
+      <section className="rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 p-6 space-y-4">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
           <Calendar className="w-5 h-5 text-emerald-400" />
           Años Académicos
         </h2>
@@ -87,29 +87,29 @@ export default function InstitutionConfigPage() {
           {settings.academicYears.map((year) => (
             <span
               key={year}
-              className="inline-flex items-center gap-2 rounded-lg bg-zinc-800 px-3 py-1.5 text-sm text-zinc-300"
+              className="inline-flex items-center gap-2 rounded-lg bg-gray-100 dark:bg-zinc-800 px-3 py-1.5 text-sm text-gray-600 dark:text-zinc-300"
             >
               {year}
-              <button onClick={() => removeYear(year)} className="text-zinc-500 hover:text-red-400">&times;</button>
+              <button onClick={() => removeYear(year)} className="text-gray-400 dark:text-zinc-500 hover:text-red-500 dark:hover:text-red-400">&times;</button>
             </span>
           ))}
           <button
             onClick={addYear}
-            className="rounded-lg border border-dashed border-zinc-700 px-3 py-1.5 text-sm text-zinc-500 hover:text-zinc-300 hover:border-zinc-500"
+            className="rounded-lg border border-dashed border-gray-300 dark:border-zinc-700 px-3 py-1.5 text-sm text-gray-400 dark:text-zinc-500 hover:text-gray-700 dark:hover:text-zinc-300 hover:border-gray-400 dark:hover:border-zinc-500"
           >
             + Agregar año
           </button>
         </div>
       </section>
 
-      <section className="rounded-2xl bg-zinc-900 border border-zinc-800 p-6 space-y-4">
-        <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
+      <section className="rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 p-6 space-y-4">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
           <GraduationCap className="w-5 h-5 text-emerald-400" />
           Sistema de Evaluación
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">Tipo de períodos</label>
+            <label className="block text-sm text-gray-500 dark:text-zinc-400 mb-1">Tipo de períodos</label>
             <select
               value={settings.evaluationSystem.periods}
               onChange={(e) =>
@@ -118,7 +118,7 @@ export default function InstitutionConfigPage() {
                   evaluationSystem: { ...settings.evaluationSystem, periods: e.target.value },
                 })
               }
-              className="w-full rounded-xl bg-zinc-800 border border-zinc-700 px-4 py-2.5 text-sm text-white"
+              className="w-full rounded-xl bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white"
             >
               <option value="bimester">Bimestres</option>
               <option value="trimester">Trimestres</option>
@@ -127,7 +127,7 @@ export default function InstitutionConfigPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">Períodos por año</label>
+            <label className="block text-sm text-gray-500 dark:text-zinc-400 mb-1">Períodos por año</label>
             <input
               type="number"
               value={settings.evaluationSystem.periodsPerYear}
@@ -140,11 +140,11 @@ export default function InstitutionConfigPage() {
                   },
                 })
               }
-              className="w-full rounded-xl bg-zinc-800 border border-zinc-700 px-4 py-2.5 text-sm text-white"
+              className="w-full rounded-xl bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white"
             />
           </div>
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">Tipo de escala</label>
+            <label className="block text-sm text-gray-500 dark:text-zinc-400 mb-1">Tipo de escala</label>
             <select
               value={settings.evaluationSystem.gradeScale.type}
               onChange={(e) =>
@@ -156,14 +156,14 @@ export default function InstitutionConfigPage() {
                   },
                 })
               }
-              className="w-full rounded-xl bg-zinc-800 border border-zinc-700 px-4 py-2.5 text-sm text-white"
+              className="w-full rounded-xl bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white"
             >
               <option value="numeric">Numérica (0-20)</option>
               <option value="literal">Literal (AD/A/B/C)</option>
             </select>
           </div>
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">Nota mínima aprobatoria</label>
+            <label className="block text-sm text-gray-500 dark:text-zinc-400 mb-1">Nota mínima aprobatoria</label>
             <input
               type="number"
               value={settings.evaluationSystem.gradeScale.passing}
@@ -179,11 +179,11 @@ export default function InstitutionConfigPage() {
                   },
                 })
               }
-              className="w-full rounded-xl bg-zinc-800 border border-zinc-700 px-4 py-2.5 text-sm text-white"
+              className="w-full rounded-xl bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white"
             />
           </div>
           <div>
-            <label className="block text-sm text-zinc-400 mb-1">Tipo de promedio</label>
+            <label className="block text-sm text-gray-500 dark:text-zinc-400 mb-1">Tipo de promedio</label>
             <select
               value={settings.evaluationSystem.weightType}
               onChange={(e) =>
@@ -192,7 +192,7 @@ export default function InstitutionConfigPage() {
                   evaluationSystem: { ...settings.evaluationSystem, weightType: e.target.value },
                 })
               }
-              className="w-full rounded-xl bg-zinc-800 border border-zinc-700 px-4 py-2.5 text-sm text-white"
+              className="w-full rounded-xl bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white"
             >
               <option value="average">Promedio simple</option>
               <option value="weighted">Promedio ponderado</option>
