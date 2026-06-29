@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import Logo from "./Logo"
 
 const productLinks = [
   { href: "/funcionalidades", label: "Funcionalidades" },
@@ -45,8 +46,9 @@ export default function SiteFooter() {
         <div className="flex flex-wrap justify-between gap-y-12 lg:gap-x-8">
           {/* Brand */}
           <div className="w-full md:w-[45%] lg:w-[35%] flex flex-col items-start text-left">
-            <Link href="/" className="text-xl font-bold tracking-tight text-black dark:text-white">
-              EduConecta
+            <Link href="/" className="flex items-center gap-2.5">
+              <Logo size={24} className="text-black dark:text-white" />
+              <span className="text-xl font-bold tracking-tight text-black dark:text-white">EduConecta</span>
             </Link>
             <div className="w-full max-w-52 h-px mt-8 bg-gradient-to-r from-gray-200 dark:from-zinc-700 to-transparent" />
             <p className="text-sm text-gray-500 dark:text-zinc-400 mt-6 max-w-[350px] leading-relaxed">

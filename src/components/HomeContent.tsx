@@ -10,6 +10,7 @@ import ThemeToggle from "@/components/ThemeToggle"
 import SiteFooter from "@/components/SiteFooter"
 import { TextRoll } from "@/components/ui/skiper-ui/skiper58"
 import { FlipWords } from "@/components/ui/flip-words"
+import Logo from "@/components/Logo"
 import InstitutionLogos from "@/components/InstitutionLogos"
 
 interface ImpactData {
@@ -142,8 +143,9 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
       >
         <nav className="flex flex-col items-center w-full">
           <div className="flex items-center justify-between p-4 md:px-24 lg:px-32 xl:px-40 md:py-4 w-full relative">
-            <Link href="/" className="text-lg font-bold tracking-tight text-black dark:text-white/90">
-              EduConecta
+            <Link href="/" className="flex items-center gap-2">
+              <Logo size={22} className="text-black dark:text-white/90" />
+              <span className="text-lg font-bold tracking-tight text-black dark:text-white/90">EduConecta</span>
             </Link>
 
             <div id="menu" className={`${mobileOpen ? "max-md:w-full" : "max-md:w-0"} max-md:fixed max-md:top-0 max-md:z-50 max-md:left-0 max-md:transition-all max-md:duration-300 max-md:overflow-hidden max-md:h-screen max-md:bg-white/25 max-md:backdrop-blur max-md:flex-col max-md:justify-center flex items-center gap-7.5 text-sm`}>
