@@ -24,6 +24,7 @@
     "dotenv": "^17.4.2",
     "framer-motion": "^12.41.0",
     "html5-qrcode": "^2.3.8",
+    "lucide-react": "^1.22.0",
     "motion": "^12.42.0",
     "mysql2": "^3.22.5",
     "next": "16.2.9",
