@@ -9,6 +9,7 @@ const sidebarLinks = [
   { href: "/dashboard/super-admin", label: "Dashboard", icon: "dashboard" },
   { href: "/dashboard/super-admin/solicitudes", label: "Solicitudes", icon: "mail", extra: <SolicitudesBadge /> },
   { href: "/dashboard/super-admin/instituciones", label: "Instituciones", icon: "account_balance" },
+  { href: "/dashboard/super-admin/partner-instituciones", label: "Partners", icon: "groups" },
   { href: "/dashboard/super-admin/planes", label: "Planes", icon: "card_membership" },
   { href: "/dashboard/super-admin/versiones", label: "Versiones", icon: "history" },
 ]
@@ -17,6 +18,7 @@ const bottomNavItems = [
   { href: "/dashboard/super-admin", label: "Inicio", icon: "home" },
   { href: "/dashboard/super-admin/solicitudes", label: "Solicitudes", icon: "mail" },
   { href: "/dashboard/super-admin/instituciones", label: "Colegios", icon: "account_balance" },
+  { href: "/dashboard/super-admin/partner-instituciones", label: "Partners", icon: "groups" },
   { href: "/dashboard/super-admin/planes", label: "Planes", icon: "card_membership" },
 ]
 

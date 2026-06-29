@@ -10,6 +10,7 @@ import ThemeToggle from "@/components/ThemeToggle"
 import SiteFooter from "@/components/SiteFooter"
 import { TextRoll } from "@/components/ui/skiper-ui/skiper58"
 import { FlipWords } from "@/components/ui/flip-words"
+import InstitutionLogos from "@/components/InstitutionLogos"
 
 interface ImpactData {
   institutionCount: number
@@ -115,7 +116,13 @@ const statCardVariants = {
   }),
 }
 
-export default function HomeContent({ data }: { data: ImpactData }) {
+interface Partner {
+  id: number
+  name: string
+  logoUrl: string
+}
+
+export default function HomeContent({ data, partners = [] }: { data: ImpactData; partners?: Partner[] }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [pagesOpen, setPagesOpen] = useState(false)
 
@@ -468,6 +475,8 @@ export default function HomeContent({ data }: { data: ImpactData }) {
             </motion.div>
           </div>
         </motion.section>
+
+        <InstitutionLogos partners={partners} />
 
         <motion.section
           initial={{ opacity: 0 }}

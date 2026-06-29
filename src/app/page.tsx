@@ -1,6 +1,12 @@
 import { getSupabaseAdmin } from "@/lib/supabase"
 import HomeContent from "@/components/HomeContent"
 
+interface Partner {
+  id: number
+  name: string
+  logoUrl: string
+}
+
 async function getInstitutionCount(): Promise<number> {
   try {
     const supabase = getSupabaseAdmin()
@@ -14,10 +20,24 @@ async function getInstitutionCount(): Promise<number> {
   }
 }
 
+async function getPartners(): Promise<Partner[]> {
+  try {
+    const supabase = getSupabaseAdmin()
+    const { data } = await supabase
+      .from("PartnerInstitution")
+      .select("id, name, logoUrl")
+      .eq("isActive", true)
+      .order("order", { ascending: true })
+    return data ?? []
+  } catch {
+    return []
+  }
+}
+
 export const dynamic = "force-dynamic"
 
 export default async function Home() {
-  const institutionCount = await getInstitutionCount()
+  const [institutionCount, partners] = await Promise.all([getInstitutionCount(), getPartners()])
   const estimatedStudentsPerInstitution = 400
   const totalStudents = institutionCount * estimatedStudentsPerInstitution
   const paperSheetsPerStudentPerMonth = 30
@@ -36,6 +56,7 @@ export default async function Home() {
         treesSaved,
         co2Saved,
       }}
+      partners={partners}
     />
   )
 }
