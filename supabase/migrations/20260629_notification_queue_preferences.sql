@@ -22,6 +22,7 @@ CREATE INDEX IF NOT EXISTS idx_notif_queue_sent ON "NotificationQueue"(sent);
 CREATE INDEX IF NOT EXISTS idx_notif_queue_created ON "NotificationQueue"(createdAt);
 
 -- Trigger para updatedAt en NotificationQueue
-CREATE TRIGGER IF NOT EXISTS update_NotificationQueue_updatedAt
+DROP TRIGGER IF EXISTS update_NotificationQueue_updatedAt ON "NotificationQueue";
+CREATE TRIGGER update_NotificationQueue_updatedAt
   BEFORE UPDATE ON "NotificationQueue"
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
