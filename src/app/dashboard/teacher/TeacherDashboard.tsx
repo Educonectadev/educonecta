@@ -116,7 +116,7 @@ const quickLinks = [
   const starColor = theme === "dark" ? "#ffffff" : "#000000"
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" data-tour="dashboard">
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-100 via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 min-h-[200px] sm:min-h-[240px] flex items-end">
         <StarsBackground className="absolute inset-0" starColor={starColor} pointerEvents={false} />
         <div className="relative z-10 w-full p-6 sm:p-8">

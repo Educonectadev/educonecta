@@ -36,11 +36,13 @@ export default async function ParentMensajesPage() {
   )
 
   return (
-    <ParentMessagesClient
-      teachers={teachers as any}
-      lastMessages={lastMessages as any}
-      parentUserId={parentUserId}
-      parentName={session.user.name}
-    />
+    <div data-tour="messages">
+      <ParentMessagesClient
+        teachers={teachers as any}
+        lastMessages={lastMessages as any}
+        parentUserId={parentUserId}
+        parentName={session.user.name}
+      />
+    </div>
   )
 }

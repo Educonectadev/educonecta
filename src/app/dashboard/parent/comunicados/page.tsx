@@ -11,7 +11,7 @@ export default async function ComunicadosPage() {
   const communications = await getInstitutionCommunications(institutionId)
 
   return (
-    <div>
+    <div data-tour="announcements">
       <h1 className="text-2xl font-bold tracking-tight">Comunicados</h1>
       <p className="mt-1 text-sm text-gray-500">
         Comunicaciones de la institución y docentes

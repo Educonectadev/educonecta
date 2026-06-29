@@ -22,7 +22,7 @@ export default async function StudentAsistenciaPage() {
   const pct = total > 0 ? Math.round((presentes / total) * 100) : null
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-tour="attendance">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mi asistencia</h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Últimos 60 registros.</p>

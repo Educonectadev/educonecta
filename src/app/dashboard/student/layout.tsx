@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import Navbar from "@/components/Navbar"
 import BottomNav from "@/components/BottomNav"
 import SidebarNav from "@/components/SidebarNav"
+import TourDashboardShell from "@/lib/tour/TourDashboardShell"
 
 const sidebarLinks = [
   { href: "/dashboard/student", label: "Inicio", icon: "dashboard" },
@@ -30,13 +31,15 @@ export default async function StudentLayout({ children }: { children: React.Reac
   if (!session || session.user.role !== "STUDENT") redirect("/login")
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-black">
-      <Navbar />
-      <div className="flex flex-1 pt-14 md:pt-16">
-        <SidebarNav links={sidebarLinks as any} label="Estudiante" theme="STUDENT" />
-        <main className="flex-1 p-4 pb-20 md:p-8 md:pb-8">{children}</main>
+    <TourDashboardShell role="STUDENT">
+      <div className="min-h-screen flex flex-col bg-white dark:bg-black">
+        <Navbar />
+        <div className="flex flex-1 pt-14 md:pt-16">
+          <SidebarNav links={sidebarLinks as any} label="Estudiante" theme="STUDENT" />
+          <main className="flex-1 p-4 pb-20 md:p-8 md:pb-8">{children}</main>
+        </div>
+        <BottomNav items={bottomNavItems} />
       </div>
-      <BottomNav items={bottomNavItems} />
-    </div>
+    </TourDashboardShell>
   )
 }

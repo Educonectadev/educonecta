@@ -21,7 +21,7 @@ export default async function StudentCursosPage() {
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-tour="courses">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mis cursos</h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">{courses.length} cursos este periodo.</p>

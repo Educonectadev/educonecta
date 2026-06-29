@@ -43,5 +43,9 @@ export default async function HorariosPage() {
     })),
   }))
 
-  return <ParentHorariosClient childrenData={childrenData} />
+  return (
+    <div data-tour="schedule">
+      <ParentHorariosClient childrenData={childrenData} />
+    </div>
+  )
 }

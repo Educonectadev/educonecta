@@ -31,11 +31,13 @@ export default async function TeacherMensajesPage() {
   )
 
   return (
-    <TeacherMessagesClient
-      parents={parents as any}
-      lastMessages={lastMessages as any}
-      teacherUserId={teacherUserId}
-      teacherName={session.user.name}
-    />
+    <div data-tour="messages">
+      <TeacherMessagesClient
+        parents={parents as any}
+        lastMessages={lastMessages as any}
+        teacherUserId={teacherUserId}
+        teacherName={session.user.name}
+      />
+    </div>
   )
 }

@@ -16,7 +16,7 @@ export default async function CalificacionesPage() {
   const gradesByStudent = await getChildrenGrades(studentIds)
 
   return (
-    <div>
+    <div data-tour="grades">
       <h1 className="text-2xl font-bold tracking-tight">Calificaciones</h1>
       <p className="mt-1 text-sm text-gray-500">
         Notas y evaluaciones de sus hijos

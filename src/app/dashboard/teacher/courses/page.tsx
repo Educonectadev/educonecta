@@ -111,11 +111,13 @@ export default async function TeacherCoursesPage() {
   }
 
   return (
-    <TeacherCoursesClient
-      items={items}
-      schedules={schedules}
-      homework={homework}
-      studentCountByKey={studentCountByKey}
-    />
+    <div data-tour="courses">
+      <TeacherCoursesClient
+        items={items}
+        schedules={schedules}
+        homework={homework}
+        studentCountByKey={studentCountByKey}
+      />
+    </div>
   )
 }

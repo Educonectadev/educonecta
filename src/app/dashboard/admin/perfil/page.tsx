@@ -32,7 +32,7 @@ export default async function AdminPerfilPage() {
     : { count: 0 }
 
   return (
-    <div>
+    <div data-tour="profile">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mi Perfil</h1>
@@ -73,7 +73,7 @@ export default async function AdminPerfilPage() {
         <EditableInstitutionSection institution={institution as any} />
       </section>
 
-      <section className="mb-8">
+      <section className="mb-8" data-tour="brand-color">
         <BrandColorPicker />
       </section>
 

@@ -17,7 +17,7 @@ export default async function AsistenciaPage() {
   const attendanceByStudent = await getChildrenAttendance(studentIds)
 
   return (
-    <div>
+    <div data-tour="attendance">
       <h1 className="text-2xl font-bold tracking-tight">Asistencia</h1>
       <p className="mt-1 text-sm text-gray-500">
         Registro de asistencia de sus hijos

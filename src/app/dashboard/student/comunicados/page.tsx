@@ -31,7 +31,7 @@ export default async function StudentComunicadosPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-tour="announcements">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Comunicados</h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Avisos de tu institución y de tus docentes.</p>

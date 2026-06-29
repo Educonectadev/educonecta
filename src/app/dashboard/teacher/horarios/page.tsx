@@ -42,5 +42,9 @@ export default async function TeacherHorariosPage() {
     section: s.sec_id ? { id: s.sec_id, name: s.sec_name } : null,
   }))
 
-  return <TeacherHorariosClient schedules={schedules} />
+  return (
+    <div data-tour="schedule">
+      <TeacherHorariosClient schedules={schedules} />
+    </div>
+  )
 }

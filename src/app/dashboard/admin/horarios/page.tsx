@@ -69,14 +69,16 @@ export default async function HorariosPage() {
   }))
 
   return (
-    <HorariosList
-      schedules={schedules as any}
-      courses={courses as any}
-      classrooms={classrooms as any}
-      teachers={teachersList as any}
-      grades={grades as any}
-      sections={(sectionsData || []) as any}
-      studentsWithParents={(studentsWithParents || []) as any}
-    />
+    <div data-tour="schedule">
+      <HorariosList
+        schedules={schedules as any}
+        courses={courses as any}
+        classrooms={classrooms as any}
+        teachers={teachersList as any}
+        grades={grades as any}
+        sections={(sectionsData || []) as any}
+        studentsWithParents={(studentsWithParents || []) as any}
+      />
+    </div>
   )
 }

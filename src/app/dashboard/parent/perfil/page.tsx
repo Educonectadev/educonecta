@@ -35,7 +35,7 @@ export default async function PerfilPage() {
   }
 
   return (
-    <div>
+    <div data-tour="profile">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Mi Perfil</h1>

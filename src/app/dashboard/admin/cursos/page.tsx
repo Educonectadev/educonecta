@@ -99,5 +99,9 @@ export default async function CursosPage() {
     speciality: t.speciality,
   }))
 
-  return <CursosList courses={coursesList as any} teachers={teachers as any} grades={grades as any} sections={sections as any} />
+  return (
+    <div data-tour="courses">
+      <CursosList courses={coursesList as any} teachers={teachers as any} grades={grades as any} sections={sections as any} />
+    </div>
+  )
 }

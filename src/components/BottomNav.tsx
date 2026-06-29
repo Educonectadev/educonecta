@@ -203,7 +203,7 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
         </AnimatePresence>
       )}
 
-      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 md:hidden">
+      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 md:hidden" data-tour="bottom-nav">
         <div className="flex items-center gap-1 px-3 py-2 bg-white/80 dark:bg-black/70 backdrop-blur-xl rounded-full shadow-2xl shadow-gray-200/50 dark:shadow-black/50 border border-gray-200 dark:border-zinc-800/60">
           <LayoutGroup>
             {primaryItems.map((item) => (
@@ -217,6 +217,7 @@ export default function BottomNav({ items }: { items: NavItem[] }) {
 
           {hasOverflow && (
             <motion.button
+              data-tour="more-menu"
               onClick={() => setMoreOpen((prev) => !prev)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

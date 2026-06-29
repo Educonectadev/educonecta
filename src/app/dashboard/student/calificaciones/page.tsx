@@ -35,7 +35,7 @@ export default async function StudentCalificacionesPage() {
     : null
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-tour="grades">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mis calificaciones</h1>

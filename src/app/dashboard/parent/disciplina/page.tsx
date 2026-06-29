@@ -16,7 +16,7 @@ export default async function DisciplinaPage() {
   const disciplineByStudent = await getChildrenDiscipline(studentIds)
 
   return (
-    <div>
+    <div data-tour="discipline">
       <h1 className="text-2xl font-bold tracking-tight">Disciplina</h1>
       <p className="mt-1 text-sm text-gray-500">
         Registro disciplinario de sus hijos

@@ -64,7 +64,7 @@ export default function SidebarNav({
   }, [links, pathname])
 
   return (
-    <aside className="hidden w-56 shrink-0 md:block">
+    <aside className="hidden w-56 shrink-0 md:block" data-tour="sidebar">
       <nav
         aria-label={label}
         className="h-[calc(100dvh-3.5rem)] sticky top-14 flex flex-col gap-0.5 p-4"

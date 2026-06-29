@@ -25,7 +25,7 @@ export default async function ComunicadosPage() {
   }))
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" data-tour="announcements">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Comunicados</h1>
