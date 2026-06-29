@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import Navbar from "@/components/Navbar"
 import BottomNav from "@/components/BottomNav"
 import SidebarNav from "@/components/SidebarNav"
+import DashboardContent from "@/components/DashboardContent"
 import TourDashboardShell from "@/lib/tour/TourDashboardShell"
 
 const sidebarLinks = [
@@ -38,11 +39,13 @@ export default async function TeacherLayout({ children }: { children: React.Reac
 
   return (
     <TourDashboardShell role="TEACHER">
-      <div className="min-h-screen flex flex-col bg-white dark:bg-black">
+      <div className="h-dvh overflow-hidden bg-white dark:bg-black">
         <Navbar />
-        <div className="flex flex-1 pt-14 md:pt-16">
+        <div className="flex h-dvh pt-14 md:pt-16">
           <SidebarNav links={sidebarLinks} label="Profesor" theme="TEACHER" />
-          <main className="flex-1 p-4 pb-20 md:p-8 md:pb-8">{children}</main>
+          <DashboardContent>
+            <main className="p-4 pb-20 md:p-8 md:pb-8">{children}</main>
+          </DashboardContent>
         </div>
         <BottomNav items={bottomNavItems} />
       </div>

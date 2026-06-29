@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/Navbar"
 import BottomNav from "@/components/BottomNav"
+import DashboardContent from "@/components/DashboardContent"
 import { useRouter, usePathname } from "next/navigation"
 import { ToggleButton } from "@heroui/react"
 import TourDashboardShell from "@/lib/tour/TourDashboardShell"
@@ -39,37 +40,41 @@ export default function ParentShell({ children }: { children: React.ReactNode })
 
   return (
     <TourDashboardShell role="PARENT">
-      <Navbar />
-      <div className="flex min-h-screen pt-14 md:pt-16 bg-white dark:bg-black">
-        <aside className="hidden w-56 shrink-0 md:block">
-          <nav className="h-[calc(100dvh-3.5rem)] sticky top-14 flex flex-col gap-0.5 p-4">
-            <p className="px-4 pb-3 pt-1 text-[10px] font-semibold uppercase tracking-widest text-amber-500">
-              Padre
-            </p>
-            {sidebarLinks.map((link) => {
-              const segments = link.href.split("/").filter(Boolean)
-              const active = pathname === link.href || (segments.length > 2 && pathname.startsWith(link.href + "/"))
-              return (
-                <ToggleButton
-                  key={link.href}
-                  isSelected={active}
-                  onPress={() => router.push(link.href)}
-                  variant="ghost"
-                  className="justify-start gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium"
-                  style={active ? { backgroundColor: "var(--brand-color)", color: "var(--brand-text-color)" } : undefined}
-                >
-                  <span className={`material-icons text-lg ${active ? "opacity-100" : "opacity-40"}`} aria-hidden>
-                    {link.icon}
-                  </span>
-                  <span>{link.label}</span>
-                </ToggleButton>
-              )
-            })}
-          </nav>
-        </aside>
-        <main className="flex-1 p-4 pb-20 md:p-8 md:pb-8">{children}</main>
+      <div className="h-dvh overflow-hidden bg-white dark:bg-black">
+        <Navbar />
+        <div className="flex h-dvh pt-14 md:pt-16">
+          <aside className="hidden w-56 shrink-0 md:block">
+            <nav className="h-full flex flex-col gap-0.5 p-4">
+              <p className="px-4 pb-3 pt-1 text-[10px] font-semibold uppercase tracking-widest text-amber-500">
+                Padre
+              </p>
+              {sidebarLinks.map((link) => {
+                const segments = link.href.split("/").filter(Boolean)
+                const active = pathname === link.href || (segments.length > 2 && pathname.startsWith(link.href + "/"))
+                return (
+                  <ToggleButton
+                    key={link.href}
+                    isSelected={active}
+                    onPress={() => router.push(link.href)}
+                    variant="ghost"
+                    className="justify-start gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium"
+                    style={active ? { backgroundColor: "var(--brand-color)", color: "var(--brand-text-color)" } : undefined}
+                  >
+                    <span className={`material-icons text-lg ${active ? "opacity-100" : "opacity-40"}`} aria-hidden>
+                      {link.icon}
+                    </span>
+                    <span>{link.label}</span>
+                  </ToggleButton>
+                )
+              })}
+            </nav>
+          </aside>
+          <DashboardContent>
+            <main className="p-4 pb-20 md:p-8 md:pb-8">{children}</main>
+          </DashboardContent>
+        </div>
+        <BottomNav items={bottomLinks} />
       </div>
-      <BottomNav items={bottomLinks} />
     </TourDashboardShell>
   )
 }

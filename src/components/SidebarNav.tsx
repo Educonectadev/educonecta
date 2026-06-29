@@ -67,7 +67,7 @@ export default function SidebarNav({
     <aside className="hidden w-56 shrink-0 md:block" data-tour="sidebar">
       <nav
         aria-label={label}
-        className="h-[calc(100dvh-3.5rem)] sticky top-14 flex flex-col gap-0.5 p-4"
+        className="h-full flex flex-col gap-0.5 p-4"
       >
         <p
           className={`px-4 pb-3 pt-1 text-[10px] font-semibold uppercase tracking-widest ${t.sidebar.labelColor}`}
