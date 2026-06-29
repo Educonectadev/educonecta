@@ -1,8 +1,8 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
 function getUrl(): string {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  if (!url) throw new Error("NEXT_PUBLIC_SUPABASE_URL is not set")
+  const url = process.env.SUPABASE_POOL_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
+  if (!url) throw new Error("SUPABASE_URL is not set")
   return url
 }
 
