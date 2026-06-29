@@ -6,6 +6,8 @@ import Modal from "@/components/Modal"
 import DataTable from "@/components/DataTable"
 import { UnreadChatCount } from "@/components/UnreadChatCount"
 import { PendingQrCount } from "@/components/PendingQrCount"
+import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars"
+import { useTheme } from "@/components/ThemeProvider"
 
 interface CourseTeacher {
   id: number
@@ -110,19 +112,22 @@ const quickLinks = [
     return list.slice(0, 2).map((s) => `${s.day} ${s.time}`).join(", ") + (list.length > 2 ? "…" : "")
   }
 
+  const { theme } = useTheme()
+  const starColor = theme === "dark" ? "#ffffff" : "#000000"
+
   return (
     <div className="space-y-8">
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 min-h-[200px] sm:min-h-[240px] flex items-end">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-40" />
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-100 via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 min-h-[200px] sm:min-h-[240px] flex items-end">
+        <StarsBackground className="absolute inset-0" starColor={starColor} pointerEvents={false} />
         <div className="relative z-10 w-full p-6 sm:p-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-              <span className="material-icons text-white/80 text-xl">person</span>
+            <div className="w-10 h-10 rounded-xl bg-black/5 dark:bg-white/10 backdrop-blur-sm flex items-center justify-center">
+              <span className="material-icons text-black/60 dark:text-white/80 text-xl">person</span>
             </div>
-            <span className="text-xs font-medium text-white/60 uppercase tracking-wider">{institutionName || "Institución"}</span>
+            <span className="text-xs font-medium text-black/50 dark:text-white/60 uppercase tracking-wider">{institutionName || "Institución"}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white">Hola, {teacherName}</h1>
-          <p className="mt-1 text-sm text-white/60">Panel del Docente</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Hola, {teacherName}</h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-white/60">Panel del Docente</p>
         </div>
       </div>
 
