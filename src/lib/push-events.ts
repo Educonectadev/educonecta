@@ -65,6 +65,7 @@ export async function broadcastHomeworkToParents(args: HomeworkPushArgs) {
     body: `${title} · vence ${formatted}`,
     url: "/dashboard/parent",
     tag: `homework-${Date.now()}`,
+    type: "homework",
   })
 }
 
@@ -117,6 +118,7 @@ export async function broadcastScheduleToTeachers(args: SchedulePushArgs) {
     body: `${day} · ${startTime} - ${endTime}`,
     url: "/dashboard/teacher/horarios",
     tag: `schedule-${Date.now()}`,
+    type: "schedule",
   })
 }
 
@@ -173,5 +175,6 @@ export async function broadcastCommunicationToParents(args: CommunicationPushArg
     body: title,
     url: "/dashboard/parent/comunicados",
     tag: `comm-${Date.now()}`,
+    type: "communications",
   })
 }

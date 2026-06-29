@@ -1,6 +1,8 @@
 import BrandColorPicker from "@/components/BrandColorPicker"
 import NotificationsToggle from "./NotificationsToggle"
+import NotificationPreferences from "./NotificationPreferences"
 import AccountInfo from "./AccountInfo"
+import TourTrigger from "@/lib/tour/TourTrigger"
 
 interface SettingsPageProps {
   title?: string
@@ -22,17 +24,25 @@ export default function SettingsPage({
   accent,
 }: SettingsPageProps) {
   return (
-    <div>
+    <div data-tour="settings">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{title}</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">{subtitle}</p>
         </div>
+        <TourTrigger />
       </div>
 
       <section className="mb-8">
-        <h2 className={`text-xs font-semibold uppercase tracking-widest ${accent} mb-3`}>Notificaciones</h2>
+        <h2 className={`text-xs font-semibold uppercase tracking-widest ${accent} mb-3`}>Notificaciones Push</h2>
         <NotificationsToggle />
+      </section>
+
+      <section className="mb-8">
+        <h2 className={`text-xs font-semibold uppercase tracking-widest ${accent} mb-3`}>Preferencias de notificaciones</h2>
+        <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-[25px] p-6">
+          <NotificationPreferences />
+        </div>
       </section>
 
       <section className="mb-8">
