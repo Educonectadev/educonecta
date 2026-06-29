@@ -30,7 +30,11 @@ export default function BulkImportPage() {
         body: formData,
       })
       const data = await res.json()
-      setResult(data)
+      if (!res.ok) {
+        setResult({ success: 0, errors: [{ row: 0, message: data.error || "Error del servidor" }], total: 0 })
+      } else {
+        setResult(data)
+      }
     } catch {
       setResult({ success: 0, errors: [{ row: 0, message: "Error de conexión" }], total: 0 })
     }
