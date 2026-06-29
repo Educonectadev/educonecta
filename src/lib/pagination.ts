@@ -51,7 +51,7 @@ export async function paginate<T extends Record<string, any>>(
   const { data, error } = await q
   if (error) throw error
 
-  const rows = (data ?? []) as T[]
+  const rows = (data ?? []) as unknown as T[]
   const hasMore = rows.length > limit
   const result = rows.slice(0, limit)
   const nextCursor = hasMore
