@@ -14,6 +14,11 @@ const links = [
   { href: "/dashboard/admin/grados", label: "Grados", icon: "layers" },
   { href: "/dashboard/admin/horarios", label: "Horarios", icon: "calendar_month" },
   { href: "/dashboard/admin/aulas", label: "Aulas", icon: "meeting_room" },
+  { href: "/dashboard/admin/matricula", label: "Matrícula", icon: "how_to_reg" },
+  { href: "/dashboard/admin/configuracion/evaluacion", label: "Evaluación", icon: "fact_check" },
+  { href: "/dashboard/admin/configuracion/periodos", label: "Períodos", icon: "calendar_today" },
+  { href: "/dashboard/admin/carga-masiva", label: "Carga masiva", icon: "file_upload" },
+  { href: "/dashboard/admin/cuotas", label: "Cuotas", icon: "payments" },
 ]
 
 export default function AdminSidebar() {
