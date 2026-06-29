@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { findMany } from "@/lib/prisma"
 import InstitutionList from "./InstitutionList"
-import { getIcon } from "@/components/premium/IconTile"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 export default async function InstitucionesPage() {
   const session = await getServerSession()

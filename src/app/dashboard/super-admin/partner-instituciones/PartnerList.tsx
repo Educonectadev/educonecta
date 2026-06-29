@@ -5,7 +5,8 @@ import { toast } from "@heroui/react"
 import { motion, AnimatePresence } from "framer-motion"
 import NeonCard from "@/components/premium/NeonCard"
 import GlowButton from "@/components/premium/GlowButton"
-import IconTile, { getIcon } from "@/components/premium/IconTile"
+import IconTile from "@/components/premium/IconTile"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 interface Partner {
   id: number

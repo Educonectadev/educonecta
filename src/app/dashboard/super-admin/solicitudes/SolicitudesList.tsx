@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 import NeonCard from "@/components/premium/NeonCard"
-import { getIcon } from "@/components/premium/IconTile"
+import { getIcon } from "@/components/premium/iconRegistry"
 import { motion, AnimatePresence } from "framer-motion"
 
 interface Lead {

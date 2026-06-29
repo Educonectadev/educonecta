@@ -4,7 +4,7 @@ import { memo, useMemo, useEffect, useCallback, useRef, useState, useLayoutEffec
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { getIcon } from "./premium/IconTile"
+import { getIcon } from "./premium/iconRegistry"
 import { themes, type RoleTheme } from "@/lib/themes"
 
 interface NavLink {

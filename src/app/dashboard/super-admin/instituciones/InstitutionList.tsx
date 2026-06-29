@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import InstitutionModal from "./InstitutionModal"
-import IconTile, { getIcon } from "@/components/premium/IconTile"
+import IconTile from "@/components/premium/IconTile"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 interface Institution {
   id: number

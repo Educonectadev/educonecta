@@ -6,7 +6,8 @@ import AnimatedNumber from "@/components/premium/AnimatedNumber"
 import StatTile from "@/components/premium/StatTile"
 import NeonCard from "@/components/premium/NeonCard"
 import GlowButton from "@/components/premium/GlowButton"
-import IconTile, { getIcon } from "@/components/premium/IconTile"
+import IconTile from "@/components/premium/IconTile"
+import { getIcon } from "@/components/premium/iconRegistry"
 import TodayLabel from "@/components/premium/TodayLabel"
 
 async function supabaseCount(table: string, match?: Record<string, unknown>): Promise<number> {
