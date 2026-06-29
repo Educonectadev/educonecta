@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence, type Variants } from "framer-motion"
-import { Plus, Trash2, Calendar } from "lucide-react"
+import { Plus, Trash2, Calendar, Pencil } from "lucide-react"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 
@@ -35,7 +35,8 @@ const itemVariants: Variants = {
 
 export default function AcademicPeriodsList() {
   const [periods, setPeriods] = useState<Period[]>([])
-  const [showCreate, setShowCreate] = useState(false)
+  const [editing, setEditing] = useState<Period | null>(null)
+  const [showForm, setShowForm] = useState(false)
   const [deleting, setDeleting] = useState<Period | null>(null)
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
@@ -59,21 +60,27 @@ export default function AcademicPeriodsList() {
     setForm({ name: "", type: "bimester", academicYear: String(new Date().getFullYear()), startDate: "", endDate: "", order: 1 })
   }
 
-  async function handleCreate() {
+  function openEdit(p: Period) {
+    setEditing(p)
+    setForm({ name: p.name, type: p.type, academicYear: p.academicYear, startDate: p.startDate, endDate: p.endDate, order: p.order })
+    setShowForm(true)
+  }
+
+  async function handleSave() {
     setLoading(true)
     try {
-      const res = await fetch("/api/admin/academic-periods", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      })
-      if (!res.ok) throw new Error("Error al crear")
-      toast.success("Período creado correctamente")
-      setShowCreate(false)
+      const isEdit = !!editing
+      const url = isEdit ? `/api/admin/academic-periods/${editing!.id}` : "/api/admin/academic-periods"
+      const method = isEdit ? "PUT" : "POST"
+      const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) })
+      if (!res.ok) throw new Error("Error al guardar")
+      toast.success(isEdit ? "Período actualizado" : "Período creado")
+      setShowForm(false)
+      setEditing(null)
       resetForm()
       load()
     } catch {
-      toast.danger("Error al crear el período")
+      toast.danger("Error al guardar el período")
     }
     setLoading(false)
   }
@@ -106,7 +113,7 @@ export default function AcademicPeriodsList() {
           Períodos Académicos
         </h2>
         <button
-          onClick={() => { resetForm(); setShowCreate(true) }}
+          onClick={() => { resetForm(); setEditing(null); setShowForm(true) }}
           className="rounded-[30px] btn-primary inline-flex items-center gap-2 px-5 py-2 text-sm font-medium"
         >
           <Plus className="w-4 h-4" />
@@ -143,6 +150,13 @@ export default function AcademicPeriodsList() {
                 </div>
               </div>
               <div className="flex items-center gap-3 shrink-0 ml-4">
+                <button
+                  onClick={() => openEdit(p)}
+                  className="text-gray-400 dark:text-zinc-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+                  title="Editar"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
                 <span className="text-[11px] text-gray-400 dark:text-zinc-600 font-medium bg-gray-100 dark:bg-zinc-800 rounded-full px-2.5 py-1">
                   #{p.order}
                 </span>
@@ -159,7 +173,7 @@ export default function AcademicPeriodsList() {
         </AnimatePresence>
       </motion.div>
 
-      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Nuevo período académico" size="md" scroll="inside">
+      <Modal open={showForm} onClose={() => { setShowForm(false); setEditing(null) }} title={editing ? "Editar período académico" : "Nuevo período académico"} size="md" scroll="inside">
         <div className="space-y-4">
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
@@ -227,17 +241,17 @@ export default function AcademicPeriodsList() {
         </div>
         <div className="flex gap-3 mt-8">
           <button
-            onClick={() => setShowCreate(false)}
+            onClick={() => { setShowForm(false); setEditing(null) }}
             className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
           >
             Cancelar
           </button>
           <button
-            onClick={handleCreate}
+            onClick={handleSave}
             disabled={loading || !form.name || !form.startDate || !form.endDate}
             className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium disabled:opacity-40"
           >
-            {loading ? "Creando..." : "Crear período"}
+            {loading ? "Guardando..." : editing ? "Guardar cambios" : "Crear período"}
           </button>
         </div>
       </Modal>
