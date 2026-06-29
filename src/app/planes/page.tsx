@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import SiteFooter from "@/components/SiteFooter"
+import ThemeToggle from "@/components/ThemeToggle"
 
 const pricingPlans = [
     { name: "Starter Plan", monthlyPrice: 19, yearlyPrice: 15, features: ["Basic task management", "5 projects limit", "Email support", "Community access"] },
@@ -14,62 +15,65 @@ export default function PlanesPage() {
     const [isYearly, setIsYearly] = useState(false)
 
     return (
-        <div className="min-h-screen flex flex-col bg-white">
-            <header className="border-b border-gray-100">
+        <div className="min-h-screen flex flex-col bg-white dark:bg-black">
+            <header className="border-b border-gray-100 dark:border-zinc-800">
                 <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
-                    <Link href="/" className="text-lg font-bold tracking-tight text-gray-900">
+                    <Link href="/" className="text-lg font-bold tracking-tight text-gray-900 dark:text-white/90">
                         EduConecta
                     </Link>
-                    <Link
-                        href="/login"
-                        className="text-sm font-medium text-gray-500 hover:text-emerald-600 transition-colors duration-200"
-                    >
-                        Iniciar sesión
-                    </Link>
+                    <div className="flex items-center gap-3">
+                        <ThemeToggle />
+                        <Link
+                            href="/login"
+                            className="text-sm font-medium text-gray-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-200"
+                        >
+                            Iniciar sesión
+                        </Link>
+                    </div>
                 </div>
             </header>
 
             <main className="flex-1">
-                <div className="w-full bg-white py-20 px-4 flex flex-col items-center">
-                    <h1 className="text-4xl md:text-5xl font-medium text-zinc-800 text-center">Simple, Transparent Pricing</h1>
-                    <p className="text-sm md:text-base text-zinc-700 mt-4 text-center">Choose a plan that grows with your workflow.</p>
+                <div className="w-full bg-white dark:bg-black py-20 px-4 flex flex-col items-center">
+                    <h1 className="text-4xl md:text-5xl font-medium text-zinc-800 dark:text-white/90 text-center">Simple, Transparent Pricing</h1>
+                    <p className="text-sm md:text-base text-zinc-700 dark:text-zinc-400 mt-4 text-center">Choose a plan that grows with your workflow.</p>
 
-                    <div className="mt-8 flex items-center bg-zinc-900 rounded-full p-1 w-fit mx-auto cursor-pointer select-none" onClick={() => setIsYearly(!isYearly)}>
-                        <div className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-500 ease-in-out ${!isYearly ? 'bg-white text-zinc-900' : 'text-white'}`} onClick={(e) => { e.stopPropagation(); setIsYearly(false); }}>
+                    <div className="mt-8 flex items-center bg-zinc-900 dark:bg-zinc-800 rounded-full p-1 w-fit mx-auto cursor-pointer select-none" onClick={() => setIsYearly(!isYearly)}>
+                        <div className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-500 ease-in-out ${!isYearly ? 'bg-white text-zinc-900' : 'text-white dark:text-zinc-400'}`} onClick={(e) => { e.stopPropagation(); setIsYearly(false); }}>
                             Monthly
                         </div>
-                        <div className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-500 ease-in-out ${isYearly ? 'bg-white text-zinc-900' : 'text-white'}`} onClick={(e) => { e.stopPropagation(); setIsYearly(true); }}>
+                        <div className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-500 ease-in-out ${isYearly ? 'bg-white text-zinc-900' : 'text-white dark:text-zinc-400'}`} onClick={(e) => { e.stopPropagation(); setIsYearly(true); }}>
                             Yearly
                         </div>
                     </div>
 
                     <div className="max-w-[1100px] mx-auto w-full mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {pricingPlans.map((plan, index) => (
-                            <div key={index} className={`flex flex-col border-[3px] ${plan.isPopular ? 'border-slate-800 hover:border-slate-900' : 'border-slate-200 hover:border-slate-300'} rounded-2xl p-6 bg-white transition-colors relative`}>
+                            <div key={index} className={`flex flex-col border-[3px] ${plan.isPopular ? 'border-slate-800 dark:border-zinc-600 hover:border-slate-900 dark:hover:border-zinc-500' : 'border-slate-200 dark:border-zinc-700 hover:border-slate-300 dark:hover:border-zinc-600'} rounded-2xl p-6 bg-white dark:bg-black transition-colors relative`}>
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-xl font-medium text-zinc-900">{plan.name}</h3>
+                                    <h3 className="text-xl font-medium text-zinc-900 dark:text-white/90">{plan.name}</h3>
                                     {plan.isPopular && (
-                                        <span className="text-xs bg-slate-50 border border-slate-600 rounded-full px-3 py-1 text-slate-800">Most Popular</span>
+                                        <span className="text-xs bg-slate-50 dark:bg-zinc-800 border border-slate-600 dark:border-zinc-600 rounded-full px-3 py-1 text-slate-800 dark:text-zinc-300">Most Popular</span>
                                     )}
                                 </div>
                                 
                                 <div className="mt-4">
-                                    <span className="text-4xl font-semibold text-zinc-900">${isYearly ? plan.yearlyPrice : plan.monthlyPrice}</span>
+                                    <span className="text-4xl font-semibold text-zinc-900 dark:text-white">${isYearly ? plan.yearlyPrice : plan.monthlyPrice}</span>
                                 </div>
-                                <p className="text-zinc-800 text-base mt-2">Billed {isYearly ? 'annually' : 'monthly'}</p>
+                                <p className="text-zinc-800 dark:text-zinc-400 text-base mt-2">Billed {isYearly ? 'annually' : 'monthly'}</p>
                                 
-                                <hr className="border-t border-zinc-200 w-full my-5.5" />
+                                <hr className="border-t border-zinc-200 dark:border-zinc-800 w-full my-5.5" />
 
                                 <ul className="flex flex-col gap-3 grow">
                                     {plan.features.map((feature, idx) => (
-                                        <li key={idx} className="flex items-center gap-2.5 text-base text-zinc-800">
-                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#a)" stroke="#27272a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.534 6.664a6.666 6.666 0 1 1-3.2-4.444"/><path d="m6 7.33 2 2 6.667-6.666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
+                                        <li key={idx} className="flex items-center gap-2.5 text-base text-zinc-800 dark:text-zinc-300">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#a)" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.534 6.664a6.666 6.666 0 1 1-3.2-4.444"/><path d="m6 7.33 2 2 6.667-6.666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
                                             <span>{feature}</span>
                                         </li>
                                     ))}
                                 </ul>
 
-                                <button className="mt-10 w-full bg-zinc-950 text-white text-base font-medium py-3 rounded-full transition-colors hover:bg-zinc-900 cursor-pointer">
+                                <button className="mt-10 w-full bg-zinc-950 dark:bg-white text-white dark:text-black text-base font-medium py-3 rounded-full transition-colors hover:bg-zinc-900 dark:hover:bg-zinc-200 cursor-pointer">
                                     Get Started
                                 </button>
                             </div>
