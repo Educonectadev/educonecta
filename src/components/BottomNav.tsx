@@ -37,6 +37,8 @@ const iconMap: Record<string, keyof typeof Icons> = {
   diversity_3: "UserPlus",
   book: "Book",
   notifications: "Bell",
+  settings: "Settings",
+  door_open: "DoorOpen",
 }
 
 function NavIcon({ name, ...props }: { name: string } & LucideProps) {
