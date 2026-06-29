@@ -8,6 +8,7 @@ import AnimatedCounter from "@/components/AnimatedCounter"
 import ThemeToggle from "@/components/ThemeToggle"
 import SiteFooter from "@/components/SiteFooter"
 import { TextRoll } from "@/components/ui/skiper-ui/skiper58"
+import { FlipWords } from "@/components/ui/flip-words"
 
 interface ImpactData {
   institutionCount: number
@@ -173,7 +174,11 @@ export default function HomeContent({ data }: { data: ImpactData }) {
             transition={{ duration: 0.4, delay: 0.45 }}
             className="mt-5 text-lg text-gray-400 dark:text-zinc-500"
           >
-            Seguimiento escolar en tiempo real
+            Seguimiento escolar{" "}
+            <FlipWords
+              words={["en tiempo real", "sin papel", "desde cualquier lugar", "para toda la comunidad"]}
+              className="text-gray-400 dark:text-zinc-500"
+            />
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 12 }}
@@ -396,7 +401,11 @@ export default function HomeContent({ data }: { data: ImpactData }) {
               transition={{ duration: 0.4 }}
               className="text-2xl font-bold text-center text-black dark:text-white/90 tracking-tight"
             >
-              ¿Por qué elegir EduConecta?
+              ¿Por qué elegir{" "}
+              <FlipWords
+                words={["EduConecta?", "esta plataforma?", "nuestra solución?"]}
+                className="text-black dark:text-white/90"
+              />
             </motion.h2>
             <motion.div
               variants={containerVariants}
@@ -442,7 +451,11 @@ export default function HomeContent({ data }: { data: ImpactData }) {
               transition={{ duration: 0.4 }}
               className="text-2xl font-bold text-center text-black dark:text-white/90 tracking-tight mb-10"
             >
-              Explora EduConecta
+              Explora{" "}
+              <FlipWords
+                words={["EduConecta", "nuestras funciones", "la plataforma", "todo"]}
+                className="text-black dark:text-white/90"
+              />
             </motion.h2>
             <motion.ul
               initial="initial"
