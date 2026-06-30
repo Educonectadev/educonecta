@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
 import Link from "next/link"
 import { getIcon } from "@/components/premium/iconRegistry"
+import GradesTable from "./GradesTable"
 
 export default async function CalificacionesPage() {
   const session = await getServerSession()
@@ -50,44 +51,8 @@ export default async function CalificacionesPage() {
           <p className="text-xs max-w-xs mx-auto" style={{ color: "var(--muted-foreground)" }}>Las calificaciones aparecerán aquí cuando registres notas de tus estudiantes.</p>
         </div>
       ) : (
-        <div className="sa-surface overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="hidden md:table-header-group border-b" style={{ borderColor: "var(--surface-border)", background: "var(--surface-2)" }}>
-              <tr className="text-left">
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Estudiante</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Curso</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Evaluación</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Nota</th>
-                <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Fecha</th>
-              </tr>
-            </thead>
-            <tbody>
-              {grades.map((g: { id: number; student: { firstName: string; lastName: string }; course: { name: string }; evaluationName: string; grade: number; evaluationDate: Date | null }) => (
-                <tr key={g.id} className="flex flex-col md:table-row border md:border-0 rounded-2xl p-4 md:p-0 mb-3 md:mb-0 transition-colors" style={{ borderColor: "var(--surface-border)" }}>
-                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 font-medium" style={{ color: "var(--foreground)" }}>
-                    <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Estudiante</span>
-                    <span>{g.student.firstName} {g.student.lastName}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                    <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Curso</span>
-                    <span>{g.course.name}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                    <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Evaluación</span>
-                    <span>{g.evaluationName}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 font-semibold" style={{ color: "var(--foreground)" }}>
-                    <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Nota</span>
-                    <span>{g.grade}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                    <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Fecha</span>
-                    <span>{g.evaluationDate?.toLocaleDateString("es-ES") ?? "—"}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="sa-surface">
+          <GradesTable grades={grades} />
         </div>
       )}
     </div>

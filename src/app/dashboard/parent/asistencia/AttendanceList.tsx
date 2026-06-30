@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Modal } from "@heroui/react"
+import { Chip, Modal, Table } from "@heroui/react"
 
 interface AttendanceRecord {
   id: number
@@ -70,60 +70,39 @@ export default function AttendanceList({
                 <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>No hay registros de asistencia para este estudiante.</p>
               </div>
             ) : (
-              <div className="sa-surface overflow-hidden">
-                <table className="w-full text-left text-sm">
-                  <thead className="hidden md:table-header-group" style={{ borderBottom: "1px solid var(--surface-border)", background: "var(--surface-2)" }}>
-                    <tr>
-                      <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                        Fecha
-                      </th>
-                      <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                        Estado
-                      </th>
-                      <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                        Nota
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody style={{ borderBottom: "1px solid var(--surface-border)" }}>
-                    {records.map((r) => (
-                      <tr
-                        key={r.id}
-                        onClick={() => setSelected(r)}
-                        className="flex flex-col md:table-row rounded-[var(--radius-card)] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer border border-[var(--surface-border)] md:border-0"
-                        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)" }}
-                        onMouseLeave={(e) => { e.currentTarget.style.background = "" }}
-                      >
-                        <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                          <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Fecha</span>
-                          <span style={{ color: "var(--foreground)" }}>
+              <Table>
+                <Table.ScrollContainer>
+                  <Table.Content className="min-w-[600px]">
+                    <Table.Header>
+                      <Table.Column>Fecha</Table.Column>
+                      <Table.Column>Estado</Table.Column>
+                      <Table.Column>Nota</Table.Column>
+                    </Table.Header>
+                    <Table.Body>
+                      {records.map((r) => (
+                        <Table.Row key={r.id} onAction={() => setSelected(r)}>
+                          <Table.Cell>
                             {new Date(r.date).toLocaleDateString("es-ES", {
                               weekday: "long",
                               year: "numeric",
                               month: "long",
                               day: "numeric",
                             })}
-                          </span>
-                        </td>
-                        <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                          <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Estado</span>
-                          <span>
+                          </Table.Cell>
+                          <Table.Cell>
                             {r.isPresent ? (
-                              <span className="sa-chip" style={{ color: "var(--accent)", background: "color-mix(in srgb, var(--accent) 14%, transparent)" }}>Presente</span>
+                              <Chip variant="soft" color="success">Presente</Chip>
                             ) : (
-                              <span className="sa-chip" style={{ color: "#ef4444", background: "rgba(239, 68, 68, 0.12)" }}>Ausente</span>
+                              <Chip variant="soft" color="danger">Ausente</Chip>
                             )}
-                          </span>
-                        </td>
-                        <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                          <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Nota</span>
-                          <span>{r.note ?? "—"}</span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                          </Table.Cell>
+                          <Table.Cell>{r.note ?? "—"}</Table.Cell>
+                        </Table.Row>
+                      ))}
+                    </Table.Body>
+                  </Table.Content>
+                </Table.ScrollContainer>
+              </Table>
             )}
           </motion.section>
         )

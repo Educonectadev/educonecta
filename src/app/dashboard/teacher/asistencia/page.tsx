@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
 import Link from "next/link"
 import { getIcon } from "@/components/premium/iconRegistry"
+import RecentAttendanceTable from "./RecentAttendanceTable"
 
 export default async function AsistenciaPage() {
   const session = await getServerSession()
@@ -95,49 +96,8 @@ export default async function AsistenciaPage() {
             <p className="text-xs max-w-xs mx-auto" style={{ color: "var(--muted-foreground)" }}>Los registros de asistencia aparecerán aquí cuando tomes asistencia.</p>
           </div>
         ) : (
-          <div className="sa-surface overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="hidden md:table-header-group border-b" style={{ borderColor: "var(--surface-border)", background: "var(--surface-2)" }}>
-                <tr className="text-left">
-                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Estudiante</th>
-                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Fecha</th>
-                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Presente</th>
-                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Nota</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentAttendance.map((a: { id: number; date: string | Date; isPresent: boolean; note: string | null; student: { firstName: string; lastName: string } }) => {
-                  const dateStr = typeof a.date === "string" ? a.date : a.date.toISOString().substring(0, 10)
-                  const dateObj = new Date(dateStr)
-                  return (
-                  <tr key={a.id} className="flex flex-col md:table-row border md:border-0 rounded-2xl p-4 md:p-0 mb-3 md:mb-0 transition-colors" style={{ borderColor: "var(--surface-border)" }}>
-                    <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 font-medium" style={{ color: "var(--foreground)" }}>
-                      <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Estudiante</span>
-                      <span>{a.student.firstName} {a.student.lastName}</span>
-                    </td>
-                    <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                      <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Fecha</span>
-                      <span>{dateObj.toLocaleDateString("es-ES")}</span>
-                    </td>
-                    <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                      <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Presente</span>
-                      <span className={`sa-chip text-[11px] font-semibold uppercase tracking-wider ${
-                        a.isPresent
-                          ? ""
-                          : ""
-                      }`} style={a.isPresent ? { color: "var(--accent)", background: "color-mix(in srgb, var(--accent) 14%, transparent)" } : { color: "var(--muted-foreground)", background: "var(--surface-3)" }}>
-                        {a.isPresent ? "Presente" : "Ausente"}
-                      </span>
-                    </td>
-                    <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                      <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Nota</span>
-                      <span>{a.note ?? "—"}</span>
-                    </td>
-                  </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+          <div className="sa-surface">
+            <RecentAttendanceTable recentAttendance={recentAttendance} />
           </div>
         )}
       </section>

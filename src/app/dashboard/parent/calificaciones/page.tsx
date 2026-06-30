@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { getParentChildren, getChildrenGrades } from "@/lib/parent-data"
+import GradesTable from "./GradesTable"
 
 export default async function CalificacionesPage() {
   const session = await getServerSession()
@@ -77,83 +78,7 @@ export default async function CalificacionesPage() {
                   <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>No hay calificaciones registradas.</p>
                 </div>
               ) : (
-                <div className="sa-surface overflow-hidden">
-                  <table className="w-full text-left text-sm">
-                    <thead className="hidden md:table-header-group" style={{ borderBottom: "1px solid var(--surface-border)", background: "var(--surface-2)" }}>
-                      <tr>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Curso
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Evaluaci&oacute;n
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Nota
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Fecha
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Promedio
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody style={{ borderBottom: "1px solid var(--surface-border)" }}>
-                      {Object.entries(byCourse).map(([courseName, gs]) =>
-                        gs.map((g, idx) => (
-                          <tr key={g.id} className="flex flex-col md:table-row rounded-[var(--radius-card)] p-4 md:p-0 mb-3 md:mb-0 border border-[var(--surface-border)] md:border-0"
-                            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)" }}
-                            onMouseLeave={(e) => { e.currentTarget.style.background = "" }}>
-                            {idx === 0 && (
-                              <td
-                                rowSpan={gs.length}
-                                className="hidden md:table-cell px-4 py-3 font-medium"
-                                style={{ color: "var(--foreground)" }}
-                              >
-                                {courseName}
-                              </td>
-                            )}
-                            <td className="md:hidden flex justify-between px-0 py-1">
-                              <span className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Curso</span>
-                              <span className="font-medium" style={{ color: "var(--foreground)" }}>{courseName}</span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Evaluaci&oacute;n</span>
-                              <span>{g.evaluationName}</span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Nota</span>
-                              <span style={{ color: "var(--foreground)" }}>{g.grade}</span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Fecha</span>
-                              <span>
-                                {g.evaluationDate
-                                  ? new Date(
-                                      g.evaluationDate
-                                    ).toLocaleDateString("es-ES")
-                                  : "—"}
-                              </span>
-                            </td>
-                            {idx === 0 && (
-                              <td
-                                rowSpan={gs.length}
-                                className="hidden md:table-cell px-4 py-3 font-medium"
-                                style={{ color: "var(--foreground)" }}
-                              >
-                                {courseAverages[courseName]}
-                              </td>
-                            )}
-                            <td className="md:hidden flex justify-between px-0 py-1 pt-2 mt-2" style={{ borderTop: "1px solid var(--surface-border)" }}>
-                              <span className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Promedio</span>
-                              <span className="font-medium" style={{ color: "var(--foreground)" }}>{courseAverages[courseName]}</span>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                <GradesTable grades={grades} child={child} byCourse={byCourse} />
               )}
             </section>
           )

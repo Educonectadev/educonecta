@@ -2,6 +2,8 @@
 
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
+import { Button, Chip, Table, type SortDescriptor } from "@heroui/react"
+import { Icon } from "@iconify/react"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
 import TimePickerField from "@/components/TimePickerField"
@@ -97,6 +99,7 @@ export default function HorariosList({
   const [detail, setDetail] = useState<Schedule | null>(null)
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState<FormState>({ ...emptyForm })
+  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({ column: "dayOfWeek", direction: "ascending" })
 
   const [jornadaDay, setJornadaDay] = useState("1")
   const [jornadaShift, setJornadaShift] = useState("MAÑANA")
@@ -127,6 +130,25 @@ export default function HorariosList({
     }
     return Object.values(map).sort((a, b) => a.student.lastName.localeCompare(b.student.lastName))
   }, [form.gradeId, form.sectionId, studentsWithParents])
+
+  const sortedSchedules = useMemo(() => {
+    return [...schedules].sort((a, b) => {
+      const col = sortDescriptor.column as string
+      const dir = sortDescriptor.direction === "ascending" ? 1 : -1
+      switch (col) {
+        case "dayOfWeek": return (a.dayOfWeek - b.dayOfWeek) * dir
+        case "shift": return a.shift.localeCompare(b.shift) * dir
+        case "course": return a.course.name.localeCompare(b.course.name) * dir
+        case "teacher": return (a.teacher?.name ?? "").localeCompare(b.teacher?.name ?? "") * dir
+        case "grade": return (a.grade?.name ?? "").localeCompare(b.grade?.name ?? "") * dir
+        case "section": return (a.section?.name ?? "").localeCompare(b.section?.name ?? "") * dir
+        case "startTime": return a.startTime.localeCompare(b.startTime) * dir
+        case "endTime": return a.endTime.localeCompare(b.endTime) * dir
+        case "classroom": return (a.classroom ?? "").localeCompare(b.classroom ?? "") * dir
+        default: return 0
+      }
+    })
+  }, [schedules, sortDescriptor])
 
   function openEdit(s: Schedule) {
     setEditing(s)
@@ -307,80 +329,85 @@ export default function HorariosList({
         </div>
       </div>
 
-      <div className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[30px] overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="hidden md:table-header-group">
-            <tr className="border-b border-gray-200 dark:border-zinc-800 text-left text-xs font-semibold uppercase tracking-widest text-gray-700 dark:text-zinc-300 bg-gray-50 dark:bg-zinc-900/60">
-              <th className="px-6 py-4 whitespace-nowrap">Día</th>
-              <th className="px-6 py-4 whitespace-nowrap">Turno</th>
-              <th className="px-6 py-4 whitespace-nowrap">Curso</th>
-              <th className="px-6 py-4 whitespace-nowrap">Profesor</th>
-              <th className="px-6 py-4 whitespace-nowrap">Grado</th>
-              <th className="px-6 py-4 whitespace-nowrap">Sección</th>
-              <th className="px-6 py-4 whitespace-nowrap">Inicio</th>
-              <th className="px-6 py-4 whitespace-nowrap">Fin</th>
-              <th className="px-6 py-4 whitespace-nowrap">Aula</th>
-              <th className="px-6 py-4 w-24 whitespace-nowrap">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-zinc-800/50 md:divide-y-0">
-            {schedules.length === 0 ? (
-              <tr><td colSpan={10} className="px-6 py-12 text-center text-gray-500 dark:text-zinc-500">No hay horarios registrados.</td></tr>
-            ) : (
-              schedules.map((s) => (
-                <tr
-                  key={s.id}
-                  onClick={() => setDetail(s)}
-                  className="flex flex-col md:table-row border border-gray-200 dark:border-zinc-800 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer transition-colors hover:bg-gray-100/50 dark:hover:bg-zinc-800/30"
-                >
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 font-medium text-gray-900 dark:text-white/90">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Día</span>
-                    <span>{dayLabels[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Turno</span>
-                    <span className={`text-xs font-semibold uppercase ${s.shift === "MAÑANA" ? "text-amber-600 dark:text-amber-400" : "text-blue-600 dark:text-blue-400"}`}>{s.shift}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Curso</span>
-                    <span>{s.course.name}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Profesor</span>
-                    <span>{s.teacher?.name ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Grado</span>
-                    <span>{s.grade?.name ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Sección</span>
-                    <span>{s.section?.name ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Inicio</span>
-                    <span>{s.startTime}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Fin</span>
-                    <span>{s.endTime}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Aula</span>
-                    <span>{s.classroom ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" onClick={(e) => e.stopPropagation()}>
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Acciones</span>
-                    <div className="flex gap-2">
-                      <button onClick={() => openEdit(s)} className="text-xs text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white/90 transition-all border border-gray-200 dark:border-zinc-700 rounded-[30px] px-3 py-1">Editar</button>
-                      <button onClick={() => setDeleting(s)} className="text-xs text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-all border border-red-200 dark:border-red-900 rounded-[30px] px-3 py-1">Eliminar</button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[30px]">
+        <Table aria-label="Horarios">
+          <Table.ScrollContainer>
+            <Table.Content className="min-w-[900px]" sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}>
+              <Table.Header>
+                <Table.Column allowsSorting className="max-w-[100px] after:hidden" id="dayOfWeek">
+                  {({ sortDirection }) => <Table.SortableColumnHeader sortDirection={sortDirection}>Día</Table.SortableColumnHeader>}
+                </Table.Column>
+                <Table.Column allowsSorting className="after:hidden" id="shift">
+                  {({ sortDirection }) => <Table.SortableColumnHeader sortDirection={sortDirection}>Turno</Table.SortableColumnHeader>}
+                </Table.Column>
+                <Table.Column allowsSorting className="after:hidden" id="course">
+                  {({ sortDirection }) => <Table.SortableColumnHeader sortDirection={sortDirection}>Curso</Table.SortableColumnHeader>}
+                </Table.Column>
+                <Table.Column className="after:hidden" id="teacher">Profesor</Table.Column>
+                <Table.Column allowsSorting className="after:hidden" id="grade">
+                  {({ sortDirection }) => <Table.SortableColumnHeader sortDirection={sortDirection}>Grado</Table.SortableColumnHeader>}
+                </Table.Column>
+                <Table.Column allowsSorting className="after:hidden" id="section">
+                  {({ sortDirection }) => <Table.SortableColumnHeader sortDirection={sortDirection}>Sección</Table.SortableColumnHeader>}
+                </Table.Column>
+                <Table.Column allowsSorting className="after:hidden" id="startTime">
+                  {({ sortDirection }) => <Table.SortableColumnHeader sortDirection={sortDirection}>Inicio</Table.SortableColumnHeader>}
+                </Table.Column>
+                <Table.Column allowsSorting className="after:hidden" id="endTime">
+                  {({ sortDirection }) => <Table.SortableColumnHeader sortDirection={sortDirection}>Fin</Table.SortableColumnHeader>}
+                </Table.Column>
+                <Table.Column allowsSorting className="after:hidden" id="classroom">
+                  {({ sortDirection }) => <Table.SortableColumnHeader sortDirection={sortDirection}>Aula</Table.SortableColumnHeader>}
+                </Table.Column>
+                <Table.Column className="w-24 after:hidden" id="acciones">Acciones</Table.Column>
+              </Table.Header>
+              <Table.Body>
+                {sortedSchedules.length === 0 ? (
+                  <Table.Row>
+                    <Table.Cell colSpan={10} className="text-center text-gray-500 dark:text-zinc-500 py-12">
+                      No hay horarios registrados.
+                    </Table.Cell>
+                  </Table.Row>
+                ) : (
+                  sortedSchedules.map((s) => (
+                    <Table.Row key={s.id} onClick={() => setDetail(s)} className="cursor-pointer">
+                      <Table.Cell className="font-medium text-gray-900 dark:text-white/90">{dayLabels[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`}</Table.Cell>
+                      <Table.Cell>
+                        <Chip
+                          size="sm"
+                          variant="soft"
+                          className={s.shift === "MAÑANA"
+                            ? "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
+                            : "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                          }
+                        >
+                          {s.shift}
+                        </Chip>
+                      </Table.Cell>
+                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.course.name}</Table.Cell>
+                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.teacher?.name ?? "—"}</Table.Cell>
+                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.grade?.name ?? "—"}</Table.Cell>
+                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.section?.name ?? "—"}</Table.Cell>
+                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.startTime}</Table.Cell>
+                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.endTime}</Table.Cell>
+                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.classroom ?? "—"}</Table.Cell>
+                      <Table.Cell onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center gap-1">
+                          <Button isIconOnly size="sm" variant="tertiary" onClick={() => openEdit(s)}>
+                            <Icon className="size-4" icon="gravity-ui:pencil" />
+                          </Button>
+                          <Button isIconOnly size="sm" variant="danger-soft" onClick={() => setDeleting(s)}>
+                            <Icon className="size-4" icon="gravity-ui:trash-bin" />
+                          </Button>
+                        </div>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
+                )}
+              </Table.Body>
+            </Table.Content>
+          </Table.ScrollContainer>
+        </Table>
       </div>
 
       <style>{`

@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { getParentChildren, getChildrenDiscipline } from "@/lib/parent-data"
+import DisciplineTable from "./DisciplineTable"
 
 export default async function DisciplinaPage() {
   const session = await getServerSession()
@@ -75,73 +76,7 @@ export default async function DisciplinaPage() {
                   <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>Sin registros disciplinarios.</p>
                 </div>
               ) : (
-                <div className="sa-surface overflow-hidden">
-                  <table className="w-full text-left text-sm">
-                    <thead className="hidden md:table-header-group" style={{ borderBottom: "1px solid var(--surface-border)", background: "var(--surface-2)" }}>
-                      <tr>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Fecha
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Tipo
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Descripci&oacute;n
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Estado
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Registrado por
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody style={{ borderBottom: "1px solid var(--surface-border)" }}>
-                      {records.map((r) => (
-                        <tr key={r.id} className="flex flex-col md:table-row rounded-[var(--radius-card)] p-4 md:p-0 mb-3 md:mb-0 border border-[var(--surface-border)] md:border-0"
-                          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)" }}
-                          onMouseLeave={(e) => { e.currentTarget.style.background = "" }}>
-                          <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                            <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Fecha</span>
-                            <span style={{ color: "var(--foreground)" }}>
-                              {new Date(r.date).toLocaleDateString("es-ES", {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              })}
-                            </span>
-                          </td>
-                          <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                            <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Tipo</span>
-                            <span>
-                              <span className="sa-chip text-xs font-medium" style={{ color: "var(--muted-foreground)", background: "var(--surface-3)" }}>
-                                {r.type}
-                              </span>
-                            </span>
-                          </td>
-                          <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--foreground)" }}>
-                            <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Descripci&oacute;n</span>
-                            <span>{r.description}</span>
-                          </td>
-                          <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                            <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Estado</span>
-                            <span>
-                              {r.isResolved ? (
-                                <span className="sa-chip" style={{ color: "var(--accent)", background: "color-mix(in srgb, var(--accent) 14%, transparent)" }}>Resuelto</span>
-                              ) : (
-                                <span className="sa-chip" style={{ color: "#d97706", background: "rgba(217, 119, 6, 0.14)" }}>Pendiente</span>
-                              )}
-                            </span>
-                          </td>
-                          <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                            <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Registrado por</span>
-                            <span>{r.teacher?.user?.name ?? "—"}</span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <DisciplineTable records={records} />
               )}
             </section>
           )

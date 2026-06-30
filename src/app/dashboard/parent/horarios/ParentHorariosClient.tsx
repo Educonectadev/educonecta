@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { Modal } from "@heroui/react"
+import { Modal, Table } from "@heroui/react"
 
 const dayLabels: Record<number, string> = {
   1: "Lunes", 2: "Martes", 3: "Mi&eacute;rcoles", 4: "Jueves", 5: "Viernes",
@@ -127,79 +127,55 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
                   <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>No hay horarios registrados.</p>
                 </div>
               ) : (
-                <div className="sa-surface overflow-x-auto">
-                  <table className="w-full text-left text-sm">
-                    <thead className="hidden md:table-header-group" style={{ borderBottom: "1px solid var(--surface-border)", background: "var(--surface-2)" }}>
-                      <tr>
-                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>D&iacute;a</th>
-                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>Turno</th>
-                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>Horario</th>
-                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>Curso</th>
-                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>Profesor</th>
-                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>Aula</th>
-                      </tr>
-                    </thead>
-                    <tbody style={{ borderBottom: "1px solid var(--surface-border)" }}>
-                      {days.map((day) => {
-                        const daySchedules = byDay[day] ?? []
-                        if (daySchedules.length === 0) {
-                          return (
-                            <tr key={day} className="flex flex-col md:table-row rounded-[var(--radius-card)] p-4 md:p-0 mb-3 md:mb-0 border border-[var(--surface-border)] md:border-0">
-                              <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 font-medium">
-                                <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>D&iacute;a</span>
-                                <span style={{ color: "var(--muted-foreground)" }}>{day}</span>
-                              </td>
-                              <td colSpan={5} className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--muted-foreground)" }}>
-                                <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Clases</span>
-                                <span>Sin clases</span>
-                              </td>
-                            </tr>
-                          )
-                        }
-                        return daySchedules.map((s, idx) => (
-                          <tr
-                            key={`${day}-${s.id}`}
-                            onClick={() => { setDetail(s); setDetailChild(child) }}
-                            className="flex flex-col md:table-row rounded-[var(--radius-card)] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer border border-[var(--surface-border)] md:border-0"
-                            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)" }}
-                            onMouseLeave={(e) => { e.currentTarget.style.background = "" }}
-                          >
-                            {idx === 0 && (
-                              <td rowSpan={daySchedules.length} className="hidden md:table-cell px-6 py-4 font-medium" style={{ color: "var(--foreground)" }}>{day}</td>
-                            )}
-                            <td className="md:hidden flex justify-between px-0 py-1">
-                              <span className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>D&iacute;a</span>
-                              <span style={{ color: "var(--foreground)" }}>{day}</span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Turno</span>
-                              <span className="text-xs font-semibold uppercase"
-                                style={{ color: s.shift === "MAÑANA" || s.shift === "MA&Ntilde;ANA" ? "#d97706" : "var(--accent)" }}>
-                                {s.shift}
-                              </span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--muted-foreground)" }}>
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Horario</span>
-                              <span>{s.startTime} &ndash; {s.endTime}</span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Curso</span>
-                              <span style={{ color: "var(--foreground)" }}>{s.course.name}</span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--muted-foreground)" }}>
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Profesor</span>
-                              <span>{s.teacherName ?? "—"}</span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--muted-foreground)" }}>
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Aula</span>
-                              <span>{s.classroom ?? "—"}</span>
-                            </td>
-                          </tr>
-                        ))
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                <Table>
+                  <Table.ScrollContainer>
+                    <Table.Content className="min-w-[600px]">
+                      <Table.Header>
+                        <Table.Column>Día</Table.Column>
+                        <Table.Column>Turno</Table.Column>
+                        <Table.Column>Horario</Table.Column>
+                        <Table.Column>Curso</Table.Column>
+                        <Table.Column>Profesor</Table.Column>
+                        <Table.Column>Aula</Table.Column>
+                      </Table.Header>
+                      <Table.Body>
+                        {days.flatMap((day) => {
+                          const daySchedules = byDay[day] ?? []
+                          if (daySchedules.length === 0) {
+                            return [(
+                              <Table.Row key={day}>
+                                <Table.Cell>{day}</Table.Cell>
+                                <Table.Cell>—</Table.Cell>
+                                <Table.Cell>—</Table.Cell>
+                                <Table.Cell>Sin clases</Table.Cell>
+                                <Table.Cell>—</Table.Cell>
+                                <Table.Cell>—</Table.Cell>
+                              </Table.Row>
+                            )]
+                          }
+                          return daySchedules.map((s) => (
+                            <Table.Row
+                              key={`${day}-${s.id}`}
+                              onAction={() => { setDetail(s); setDetailChild(child) }}
+                            >
+                              <Table.Cell>{day}</Table.Cell>
+                              <Table.Cell>
+                                <span className="text-xs font-semibold uppercase"
+                                  style={{ color: s.shift === "MAÑANA" || s.shift === "MA&Ntilde;ANA" ? "#d97706" : "var(--accent)" }}>
+                                  {s.shift}
+                                </span>
+                              </Table.Cell>
+                              <Table.Cell>{s.startTime} &ndash; {s.endTime}</Table.Cell>
+                              <Table.Cell>{s.course.name}</Table.Cell>
+                              <Table.Cell>{s.teacherName ?? "—"}</Table.Cell>
+                              <Table.Cell>{s.classroom ?? "—"}</Table.Cell>
+                            </Table.Row>
+                          ))
+                        })}
+                      </Table.Body>
+                    </Table.Content>
+                  </Table.ScrollContainer>
+                </Table>
               )}
             </motion.section>
           )

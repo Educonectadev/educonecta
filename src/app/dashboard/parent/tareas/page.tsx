@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { getParentChildren, getChildrenHomeworks } from "@/lib/parent-data"
+import HomeworkTable from "./HomeworkTable"
 
 export default async function TareasPage() {
   const session = await getServerSession()
@@ -67,65 +68,7 @@ export default async function TareasPage() {
                   <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>No hay tareas registradas.</p>
                 </div>
               ) : (
-                <div className="sa-surface overflow-hidden">
-                  <table className="w-full text-left text-sm">
-                    <thead className="hidden md:table-header-group" style={{ borderBottom: "1px solid var(--surface-border)", background: "var(--surface-2)" }}>
-                      <tr>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          T&iacute;tulo
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Curso
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Fecha l&iacute;mite
-                        </th>
-                        <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
-                          Estado
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody style={{ borderBottom: "1px solid var(--surface-border)" }}>
-                      {hws.map((hw) => {
-                        const sub = hw.submissions.find(
-                          (s: any) => s.studentId === child.id
-                        )
-                        const submitted = sub?.submitted ?? false
-                        const overdue = new Date(hw.dueDate) < new Date()
-                        return (
-                          <tr key={hw.id} className="flex flex-col md:table-row rounded-[var(--radius-card)] p-4 md:p-0 mb-3 md:mb-0 border border-[var(--surface-border)] md:border-0"
-                            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)" }}
-                            onMouseLeave={(e) => { e.currentTarget.style.background = "" }}>
-                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>T&iacute;tulo</span>
-                              <span style={{ color: "var(--foreground)" }}>{hw.title}</span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Curso</span>
-                              <span>{hw.course.name}</span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Fecha l&iacute;mite</span>
-                              <span>{new Date(hw.dueDate).toLocaleDateString("es-ES")}</span>
-                            </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Estado</span>
-                              <span>
-                                {submitted ? (
-                                  <span className="sa-chip" style={{ color: "var(--accent)", background: "color-mix(in srgb, var(--accent) 14%, transparent)" }}>Entregado</span>
-                                ) : overdue ? (
-                                  <span className="sa-chip" style={{ color: "#ef4444", background: "rgba(239, 68, 68, 0.12)" }}>Vencido</span>
-                                ) : (
-                                  <span className="sa-chip" style={{ color: "#d97706", background: "rgba(217, 119, 6, 0.14)" }}>Pendiente</span>
-                                )}
-                              </span>
-                            </td>
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                <HomeworkTable homeworks={hws} childInfo={child} />
               )}
             </section>
           )

@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
+import { Table } from "@heroui/react"
 import Select from "@/components/Select"
 import { motion } from "framer-motion"
 import { getIcon } from "@/components/premium/iconRegistry"
@@ -259,67 +260,69 @@ export default function TomarAsistenciaPage() {
               </p>
             </div>
           ) : (
-            <table className="w-full text-sm">
-              <thead style={{ background: "var(--surface-2)" }}>
-                <tr className="text-xs uppercase tracking-wider" style={{ color: "var(--foreground)" }}>
-                  <th className="px-4 py-3 text-left font-semibold">Alumno</th>
-                  <th className="px-4 py-3 text-left font-semibold">Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                {students.map((s) => {
-                  const current = status[s.id] ?? "PRESENT"
-                  return (
-                    <tr key={s.id} className="border-t" style={{ borderColor: "var(--surface-border)" }}>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full text-[11px] font-medium flex items-center justify-center shrink-0" style={{ background: "var(--surface-3)", color: "var(--muted-foreground)" }}>
-                            {s.firstName.charAt(0)}{s.lastName.charAt(0)}
-                          </div>
-                          <span className="font-medium" style={{ color: "var(--foreground)" }}>
-                            {s.lastName}, {s.firstName}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex flex-wrap items-center gap-2">
-                          {statusOptions.map((opt) => {
-                            const isActive = current === opt.value
-                            return (
-                              <button
-                                key={opt.value}
-                                type="button"
-                                onClick={() => setStatusFor(s.id, opt.value)}
-                                className={`px-3 py-1.5 rounded-full border text-xs font-medium transition-all duration-150 flex items-center gap-1.5 ${
-                                  isActive ? opt.active : `bg-transparent ${opt.idle} hover:bg-gray-50 dark:hover:bg-zinc-800/50`
-                                }`}
-                                aria-pressed={isActive}
-                              >
-                                <span aria-hidden>{isActive ? opt.emoji : "⚪"}</span>
-                                <span>{opt.label}</span>
-                              </button>
-                            )
-                          })}
-                          {current === "LATE" && (
-                            <div className="flex items-center gap-1.5 ml-2">
-                              <input
-                                type="number"
-                                min={1}
-                                value={minutesLate[s.id] ?? 5}
-                                onChange={(e) => setMinutesLate((prev) => ({ ...prev, [s.id]: Number(e.target.value) }))}
-                                className="sa-input w-16 text-xs text-center"
-                                style={{ color: "var(--foreground)", background: "var(--surface)" }}
-                              />
-                              <span className="text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>min tarde</span>
+            <Table>
+              <Table.ScrollContainer>
+                <Table.Content className="min-w-[600px]">
+                  <Table.Header>
+                    <Table.Column isRowHeader>Alumno</Table.Column>
+                    <Table.Column>Estado</Table.Column>
+                  </Table.Header>
+                  <Table.Body>
+                    {students.map((s) => {
+                      const current = status[s.id] ?? "PRESENT"
+                      return (
+                        <Table.Row key={s.id}>
+                          <Table.Cell>
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full text-[11px] font-medium flex items-center justify-center shrink-0" style={{ background: "var(--surface-3)", color: "var(--muted-foreground)" }}>
+                                {s.firstName.charAt(0)}{s.lastName.charAt(0)}
+                              </div>
+                              <span className="font-medium" style={{ color: "var(--foreground)" }}>
+                                {s.lastName}, {s.firstName}
+                              </span>
                             </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <div className="flex flex-wrap items-center gap-2">
+                              {statusOptions.map((opt) => {
+                                const isActive = current === opt.value
+                                return (
+                                  <button
+                                    key={opt.value}
+                                    type="button"
+                                    onClick={() => setStatusFor(s.id, opt.value)}
+                                    className={`px-3 py-1.5 rounded-full border text-xs font-medium transition-all duration-150 flex items-center gap-1.5 ${
+                                      isActive ? opt.active : `bg-transparent ${opt.idle} hover:bg-gray-50 dark:hover:bg-zinc-800/50`
+                                    }`}
+                                    aria-pressed={isActive}
+                                  >
+                                    <span aria-hidden>{isActive ? opt.emoji : "⚪"}</span>
+                                    <span>{opt.label}</span>
+                                  </button>
+                                )
+                              })}
+                              {current === "LATE" && (
+                                <div className="flex items-center gap-1.5 ml-2">
+                                  <input
+                                    type="number"
+                                    min={1}
+                                    value={minutesLate[s.id] ?? 5}
+                                    onChange={(e) => setMinutesLate((prev) => ({ ...prev, [s.id]: Number(e.target.value) }))}
+                                    className="sa-input w-16 text-xs text-center"
+                                    style={{ color: "var(--foreground)", background: "var(--surface)" }}
+                                  />
+                                  <span className="text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>min tarde</span>
+                                </div>
+                              )}
+                            </div>
+                          </Table.Cell>
+                        </Table.Row>
+                      )
+                    })}
+                  </Table.Body>
+                </Table.Content>
+              </Table.ScrollContainer>
+            </Table>
           )}
         </motion.div>
       )}
