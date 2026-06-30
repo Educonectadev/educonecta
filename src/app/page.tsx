@@ -25,10 +25,14 @@ async function getPartners(): Promise<Partner[]> {
     const supabase = getSupabaseAdmin()
     const { data } = await supabase
       .from("PartnerInstitution")
-      .select("id, name, logoUrl")
-      .eq("isActive", true)
+      .select("id, name, logourl")
+      .eq("isactive", true)
       .order("order", { ascending: true })
-    return data ?? []
+    return (data ?? []).map((item: Record<string, unknown>) => ({
+      id: item.id as number,
+      name: item.name as string,
+      logoUrl: item.logourl as string,
+    }))
   } catch {
     return []
   }

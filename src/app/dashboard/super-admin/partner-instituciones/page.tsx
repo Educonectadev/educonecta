@@ -15,5 +15,15 @@ export default async function PartnerInstitucionesPage() {
     .select("*")
     .order("order", { ascending: true })
 
-  return <PartnerList partners={data ?? []} />
+  const partners = (data ?? []).map((item: Record<string, unknown>) => ({
+    id: item.id as number,
+    name: item.name as string,
+    logoUrl: item.logourl as string,
+    order: item.order as number,
+    isActive: item.isactive as boolean,
+    createdAt: item.createdAt as string,
+    updatedAt: item.updatedAt as string,
+  }))
+
+  return <PartnerList partners={partners} />
 }
