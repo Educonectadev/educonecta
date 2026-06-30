@@ -67,16 +67,19 @@ export default function MatriculaPage() {
           {result && <p className="text-sm" style={{ color: "var(--accent)" }}>{result}</p>}
         </div>
 
-        <div className="sa-surface p-6 space-y-4">
+        <div className="sa-surface p-6 space-y-4 overflow-hidden">
           <h2 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>Matrícula individual</h2>
           <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
             Busca un estudiante por DNI o nombres para matriculario en un grado y sección específicos.
           </p>
-          <GooeyInput
-            placeholder="Buscar por DNI, nombres o apellidos..."
-            expandedWidth={320}
-            expandedOffset={60}
-          />
+          <div className="flex justify-center md:justify-start">
+            <GooeyInput
+              placeholder="Buscar por DNI, nombres o apellidos..."
+              expandedWidth={320}
+              expandedOffset={60}
+              className="max-w-full"
+            />
+          </div>
         </div>
       </div>
     </motion.div>

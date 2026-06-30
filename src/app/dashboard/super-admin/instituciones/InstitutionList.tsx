@@ -96,20 +96,23 @@ export default function InstitutionList({
       </div>
 
       <div
-        className="flex flex-col gap-3 p-3 md:p-4 rounded-[22px]"
+        className="flex flex-col gap-3 p-3 md:p-4 rounded-[22px] overflow-hidden"
         style={{
           background: "var(--surface)",
           border: "1px solid var(--surface-border)",
           boxShadow: "var(--surface-shadow)",
         }}
       >
-        <GooeyInput
-          value={query}
-          onValueChange={setQuery}
-          placeholder="Buscar por nombre, código o director…"
-          expandedWidth={280}
-          collapsedWidth={130}
-        />
+        <div className="flex justify-center md:justify-start">
+          <GooeyInput
+            value={query}
+            onValueChange={setQuery}
+            placeholder="Buscar por nombre, código o director…"
+            expandedWidth={280}
+            collapsedWidth={130}
+            className="max-w-full"
+          />
+        </div>
 
         <div className="flex items-center gap-1.5">
           {FILTERS_CONFIG.map((f) => {
