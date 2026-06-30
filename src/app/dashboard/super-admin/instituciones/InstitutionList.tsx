@@ -25,11 +25,23 @@ interface Institution {
   foundedYear: number | null
   description: string | null
   isActive: boolean | number
+  studentCount?: number
+  createdAt?: string
 }
 
 type FilterKey = "all" | "active" | "inactive"
 
-export default function InstitutionList({ institutions: initial }: { institutions: Institution[] }) {
+export default function InstitutionList({
+  institutions: initial,
+  total,
+  active,
+  inactive,
+}: {
+  institutions: Institution[]
+  total: number
+  active: number
+  inactive: number
+}) {
   const [institutions, setInstitutions] = useState(initial)
   const [selected, setSelected] = useState<Institution | null>(null)
   const [toggling, setToggling] = useState<number | null>(null)
@@ -54,14 +66,7 @@ export default function InstitutionList({ institutions: initial }: { institution
     setSelected(updated)
   }
 
-  const counts = useMemo(() => {
-    const active = institutions.filter((i) => i.isActive).length
-    return {
-      all: institutions.length,
-      active,
-      inactive: institutions.length - active,
-    }
-  }, [institutions])
+  const counts = { all: total, active, inactive }
 
   const filtered = useMemo(() => {
     let list = institutions
@@ -86,13 +91,9 @@ export default function InstitutionList({ institutions: initial }: { institution
 
   return (
     <div className="space-y-4">
-      {/* Toolbar */}
       <div className="sa-surface p-3 md:p-4 flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
         <div className="flex items-center gap-2 flex-1 max-w-md">
-          <span
-            className="flex items-center justify-center w-9 h-9 rounded-full shrink-0"
-            style={{ background: "var(--surface-3)", border: "1px solid var(--surface-border)" }}
-          >
+          <span className="flex items-center justify-center w-9 h-9 rounded-full shrink-0" style={{ background: "var(--surface-3)", border: "1px solid var(--surface-border)" }}>
             {getIcon("search", { size: 14, strokeWidth: 2 })}
           </span>
           <input
@@ -130,19 +131,22 @@ export default function InstitutionList({ institutions: initial }: { institution
         </div>
       </div>
 
-      {/* Cards grid */}
       {filtered.length === 0 ? (
-        <div className="sa-surface p-12 text-center">
-          <IconTile name="building" size={28} className="mb-3 opacity-50" />
-          <p className="text-sm text-[color:var(--muted-foreground)]">
-            {query ? "No encontramos instituciones con ese criterio." : "Aún no hay instituciones registradas."}
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4" style={{ background: "var(--surface-3)" }}>
+            {getIcon("building", { size: 28, strokeWidth: 1.6 })}
+          </span>
+          <p className="text-sm font-medium mb-1">
+            {query ? "Sin resultados" : "Aún no hay instituciones"}
+          </p>
+          <p className="text-xs text-[color:var(--muted-foreground)] max-w-xs mx-auto">
+            {query
+              ? "No encontramos instituciones con ese criterio. Intenta con otros términos."
+              : "Las instituciones registradas aparecerán aquí. Usa el botón superior para añadir la primera."}
           </p>
         </div>
       ) : (
-        <motion.ul
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4"
-        >
+        <motion.ul layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
           <AnimatePresence mode="popLayout">
             {filtered.map((inst, idx) => (
               <motion.li
@@ -214,37 +218,62 @@ export default function InstitutionList({ institutions: initial }: { institution
                     </div>
                   </div>
 
-                  {(inst.district || inst.province || inst.department) && (
-                    <div className="flex items-center gap-1.5 text-[11px] text-[color:var(--muted-foreground)]">
-                      {getIcon("map", { size: 12, strokeWidth: 2 })}
-                      <span className="truncate">
-                        {[inst.district, inst.province, inst.department].filter(Boolean).join(", ")}
-                      </span>
-                    </div>
-                  )}
+                  <div className="space-y-1 text-[11px] text-[color:var(--muted-foreground)]">
+                    {(inst.district || inst.province || inst.department) && (
+                      <div className="flex items-center gap-1.5">
+                        {getIcon("map", { size: 12, strokeWidth: 2 })}
+                        <span className="truncate">
+                          {[inst.district, inst.province, inst.department].filter(Boolean).join(", ")}
+                        </span>
+                      </div>
+                    )}
+                    {inst.createdAt && (
+                      <div className="flex items-center gap-1.5">
+                        {getIcon("calendar", { size: 12, strokeWidth: 2 })}
+                        <span>{new Date(inst.createdAt).toLocaleDateString("es-PE", { year: "numeric", month: "short", day: "numeric" })}</span>
+                      </div>
+                    )}
+                  </div>
 
                   <footer className="flex items-center justify-between pt-2 border-t border-[color:var(--surface-border)]">
-                    <span className="text-[10px] text-[color:var(--muted-foreground)]">
-                      {inst.email || inst.phone || "—"}
-                    </span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        toggleActive(inst)
-                      }}
-                      disabled={toggling === inst.id}
-                      className={
-                        "sa-btn text-[11px] py-1 px-3 " +
-                        (inst.isActive ? "sa-btn-outline" : "sa-btn-primary")
-                      }
-                      style={inst.isActive ? { color: "#f87171", borderColor: "rgba(248,113,113,0.4)" } : undefined}
-                    >
-                      {toggling === inst.id
-                        ? "…"
-                        : inst.isActive
-                        ? "Desactivar"
-                        : "Activar"}
-                    </button>
+                    <div className="flex items-center gap-2 text-[11px] text-[color:var(--muted-foreground)]">
+                      {inst.studentCount !== undefined && (
+                        <span className="flex items-center gap-1">
+                          {getIcon("person", { size: 12, strokeWidth: 2 })}
+                          {inst.studentCount} alumnos
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setSelected(inst)
+                        }}
+                        className="sa-btn-ghost"
+                        style={{ padding: "0.3rem 0.6rem", fontSize: "0.7rem", borderRadius: "999px" }}
+                      >
+                        {getIcon("eye", { size: 12, strokeWidth: 2 })}
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          toggleActive(inst)
+                        }}
+                        disabled={toggling === inst.id}
+                        className={
+                          "sa-btn text-[11px] py-1 px-3 " +
+                          (inst.isActive ? "sa-btn-outline" : "sa-btn-primary")
+                        }
+                        style={inst.isActive ? { color: "#f87171", borderColor: "rgba(248,113,113,0.4)" } : undefined}
+                      >
+                        {toggling === inst.id
+                          ? "…"
+                          : inst.isActive
+                          ? "Desactivar"
+                          : "Activar"}
+                      </button>
+                    </div>
                   </footer>
                 </article>
               </motion.li>

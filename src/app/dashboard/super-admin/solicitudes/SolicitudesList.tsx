@@ -37,15 +37,18 @@ const STATUS_LABELS: Record<Lead["status"], string> = {
   CERRADO: "Cerrado",
 }
 
+const STATUS_ICONS: Record<Lead["status"], string> = {
+  NUEVO: "spark",
+  EN_CONTACTO: "chat",
+  CERRADO: "check",
+}
+
 function statusStyle(s: Lead["status"]) {
   if (s === "NUEVO") {
-    return {
-      color: "var(--accent)",
-      bg: "color-mix(in srgb, var(--accent) 14%, transparent)",
-    }
+    return { color: "var(--accent)", bg: "color-mix(in srgb, var(--accent) 14%, transparent)" }
   }
   if (s === "EN_CONTACTO") {
-    return { color: "#fbbf24", bg: "rgba(251, 191, 36, 0.14)" }
+    return { color: "#f59e0b", bg: "rgba(245, 158, 11, 0.14)" }
   }
   return { color: "var(--muted-foreground)", bg: "var(--surface-3)" }
 }
@@ -64,7 +67,6 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
 
   const unreadCount = leads.filter((l) => l.unreadByAdmin).length
 
-  // Polling de leads nuevos
   useEffect(() => {
     let cancelled = false
     async function poll() {
@@ -92,13 +94,9 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
       } catch {}
     }
     const t = setInterval(poll, POLL_INTERVAL_MS)
-    return () => {
-      cancelled = true
-      clearInterval(t)
-    }
+    return () => { cancelled = true; clearInterval(t) }
   }, [])
 
-  // Polling de mensajes del chat abierto
   useEffect(() => {
     if (!selected) return
     let lastTime = new Date().toISOString()
@@ -132,10 +130,7 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
         }
       } catch {}
     }, POLL_INTERVAL_MS)
-    return () => {
-      cancelled = true
-      clearInterval(t)
-    }
+    return () => { cancelled = true; clearInterval(t) }
   }, [selected])
 
   useEffect(() => {
@@ -178,9 +173,7 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
       } else {
         toast.danger("No se pudo enviar el mensaje")
       }
-    } finally {
-      setSending(false)
-    }
+    } finally { setSending(false) }
   }
 
   async function changeStatus(lead: Lead, status: Lead["status"]) {
@@ -204,11 +197,11 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
 
   const filteredLeads = filter === "ALL" ? leads : leads.filter((l) => l.status === filter)
 
-  const filterChips: { key: typeof filter; label: string; count: number }[] = [
-    { key: "ALL", label: "Todas", count: counts.ALL },
-    { key: "NUEVO", label: "Nuevas", count: counts.NUEVO },
-    { key: "EN_CONTACTO", label: "En contacto", count: counts.EN_CONTACTO },
-    { key: "CERRADO", label: "Cerradas", count: counts.CERRADO },
+  const metricItems = [
+    { key: "ALL" as const, label: "Todas", value: counts.ALL, icon: "inbox", color: "var(--foreground)" },
+    { key: "NUEVO" as const, label: "Nuevas", value: counts.NUEVO, icon: "spark", color: "var(--accent)" },
+    { key: "EN_CONTACTO" as const, label: "En contacto", value: counts.EN_CONTACTO, icon: "chat", color: "#f59e0b" },
+    { key: "CERRADO" as const, label: "Cerradas", value: counts.CERRADO, icon: "check", color: "var(--muted-foreground)" },
   ]
 
   return (
@@ -217,55 +210,54 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
         <div>
           <p className="sa-eyebrow">Pipeline comercial</p>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-1">Solicitudes</h1>
-          <p className="text-sm text-[color:var(--muted-foreground)] mt-1.5">
-            Colegios que pidieron contacto desde /planes.
-            {unreadCount > 0 && (
-              <>
-                {" "}
-                <span className="font-semibold sa-accent-text">
-                  {unreadCount} sin leer
-                </span>
-              </>
-            )}
-          </p>
+          {unreadCount > 0 && (
+            <p className="text-sm mt-1.5">
+              <span className="font-semibold" style={{ color: "var(--accent)" }}>
+                {unreadCount} sin leer
+              </span>
+            </p>
+          )}
         </div>
       </header>
 
-      <div className="flex items-center gap-1 sa-rail" style={{ padding: "0.3rem" }}>
-        {filterChips.map((f) => (
-          <button
-            key={f.key}
-            onClick={() => setFilter(f.key)}
-            data-active={filter === f.key}
-            className="sa-rail-item"
-            style={{ padding: "0.4rem 0.85rem", fontSize: "0.8rem" }}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+        {metricItems.map((m) => (
+          <motion.button
+            key={m.key}
+            onClick={() => setFilter(m.key)}
+            whileTap={{ scale: 0.97 }}
+            className="sa-surface p-3 md:p-4 flex items-center gap-3 text-left cursor-pointer"
+            style={{
+              borderColor: filter === m.key ? m.color : undefined,
+              boxShadow: filter === m.key ? `0 0 0 1px ${m.color}` : undefined,
+            }}
           >
-            <span>{f.label}</span>
             <span
-              className="sa-chip"
-              style={{
-                padding: "0.05rem 0.4rem",
-                fontSize: "0.65rem",
-                backgroundColor: filter === f.key ? "rgba(0,0,0,0.12)" : "var(--surface-3)",
-                color: filter === f.key ? "#0a0a0c" : "var(--muted-foreground)",
-                borderColor: "transparent",
-              }}
+              className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center shrink-0"
+              style={{ backgroundColor: `color-mix(in srgb, ${m.color} 16%, transparent)`, color: m.color }}
             >
-              {f.count}
+              {getIcon(m.icon, { size: 16, strokeWidth: 2 })}
             </span>
-          </button>
+            <div className="min-w-0">
+              <p className="text-lg md:text-xl font-bold tracking-tight">{m.value}</p>
+              <p className="text-[10px] text-[color:var(--muted-foreground)] font-medium truncate">{m.label}</p>
+            </div>
+          </motion.button>
         ))}
       </div>
 
       {filteredLeads.length === 0 ? (
-        <NeonCard hoverable={false} className="text-center">
-          <div className="py-8">
-            {getIcon("inbox", { size: 28, strokeWidth: 1.6, className: "mx-auto mb-3 opacity-50" })}
-            <p className="text-sm text-[color:var(--muted-foreground)]">
-              No hay solicitudes en este filtro.
-            </p>
-          </div>
-        </NeonCard>
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4" style={{ background: "var(--surface-3)" }}>
+            {getIcon("inbox", { size: 28, strokeWidth: 1.6 })}
+          </span>
+          <p className="text-sm font-medium mb-1">Sin solicitudes</p>
+          <p className="text-xs text-[color:var(--muted-foreground)] max-w-xs mx-auto">
+            {filter === "ALL"
+              ? "No hay solicitudes de contacto aún. Cuando un colegio se registre desde la página de planes, aparecerá aquí."
+              : `No hay solicitudes en estado "${metricItems.find((m) => m.key === filter)?.label.toLowerCase()}".`}
+          </p>
+        </div>
       ) : (
         <ul className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           <AnimatePresence mode="popLayout">
@@ -283,17 +275,28 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
                   <article
                     onClick={() => openLead(l)}
                     className={
-                      "sa-surface sa-surface-hover p-5 cursor-pointer " +
-                      (selected?.id === l.id ? "ring-1 ring-[color:var(--accent)]" : "")
+                      "sa-surface sa-surface-hover p-4 md:p-5 cursor-pointer relative " +
+                      (selected?.id === l.id ? "ring-1 ring-[color:var(--accent)]" : "") +
+                      (l.unreadByAdmin ? " sa-accent-border" : "")
                     }
                   >
+                    {l.unreadByAdmin && (
+                      <span className="absolute top-3 right-3 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider" style={{ color: "var(--accent)" }}>
+                        <span className="inline-block w-2 h-2 rounded-full" style={{ background: "var(--accent)" }} />
+                        Nuevo
+                      </span>
+                    )}
+
                     <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex items-center gap-3 min-w-0 flex-1">
                         <span
                           className="w-10 h-10 rounded-2xl flex items-center justify-center font-semibold text-sm shrink-0"
                           style={{
-                            background: "var(--surface-3)",
+                            background: l.status === "NUEVO"
+                              ? "color-mix(in srgb, var(--accent) 18%, transparent)"
+                              : "var(--surface-3)",
                             border: "1px solid var(--surface-border)",
+                            color: l.status === "NUEVO" ? "var(--accent)" : "var(--muted-foreground)",
                           }}
                         >
                           {l.institutionName.charAt(0).toUpperCase()}
@@ -301,49 +304,46 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
                             <p className="font-semibold text-sm truncate">{l.institutionName}</p>
-                            {l.unreadByAdmin && (
-                              <span
-                                className="shrink-0 inline-flex size-2 rounded-full"
-                                style={{ background: "var(--accent)" }}
-                                aria-label="No leído"
-                              />
-                            )}
                           </div>
                           <p className="text-[11px] text-[color:var(--muted-foreground)] truncate">
-                            {l.directorName} · {l.email}
+                            {l.directorName}
                           </p>
                         </div>
                       </div>
                       <span
-                        className="sa-chip"
-                        style={{
-                          color: ss.color,
-                          backgroundColor: ss.bg,
-                          borderColor: "transparent",
-                        }}
+                        className="sa-chip shrink-0"
+                        style={{ color: ss.color, backgroundColor: ss.bg, borderColor: "transparent" }}
                       >
-                        <span
-                          className="inline-block w-1.5 h-1.5 rounded-full"
-                          style={{ background: ss.color }}
-                        />
+                        {getIcon(STATUS_ICONS[l.status], { size: 10, strokeWidth: 2.5 })}
                         {STATUS_LABELS[l.status]}
                       </span>
                     </div>
 
-                    <div className="mt-3 flex items-center justify-between text-[11px]">
-                      <span className="text-[color:var(--muted-foreground)]">
-                        {new Date(l.createdAt).toLocaleString("es-PE", {
-                          day: "2-digit",
-                          month: "short",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
+                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-[color:var(--muted-foreground)]">
+                      <span className="flex items-center gap-1">
+                        {getIcon("mail", { size: 11, strokeWidth: 2 })}
+                        {l.email}
                       </span>
-                      {l.plan && (
-                        <span className="sa-chip" style={{ padding: "0.1rem 0.5rem", fontSize: "0.65rem" }}>
-                          {l.plan}
+                      {l.phone && (
+                        <span className="flex items-center gap-1">
+                          {getIcon("devices", { size: 11, strokeWidth: 2 })}
+                          {l.phone}
                         </span>
                       )}
+                    </div>
+
+                    <div className="mt-2 flex items-center justify-between text-[11px]">
+                      <div className="flex items-center gap-2">
+                        {l.plan && (
+                          <span className="sa-chip" style={{ padding: "0.1rem 0.5rem", fontSize: "0.65rem" }}>
+                            {getIcon("rocket", { size: 9, strokeWidth: 2.5 })}
+                            {l.plan}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[color:var(--muted-foreground)]">
+                        {timeAgo(l.createdAt)}
+                      </span>
                     </div>
                   </article>
                 </motion.li>
@@ -402,21 +402,12 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
                       className="max-w-[80%] rounded-2xl px-3 py-2 text-sm"
                       style={
                         m.authorRole === "ADMIN"
-                          ? {
-                              background: "var(--accent)",
-                              color: "#0a0a0c",
-                            }
-                          : {
-                              background: "var(--surface-3)",
-                              color: "var(--foreground)",
-                              border: "1px solid var(--surface-border)",
-                            }
+                          ? { background: "var(--accent)", color: "#0a0a0c" }
+                          : { background: "var(--surface-3)", color: "var(--foreground)", border: "1px solid var(--surface-border)" }
                       }
                     >
                       <p className="whitespace-pre-wrap break-words">{m.body}</p>
-                      <p
-                        className="mt-1 text-[10px] opacity-70"
-                      >
+                      <p className="mt-1 text-[10px] opacity-70">
                         {m.authorName ?? (m.authorRole === "ADMIN" ? "Tú" : "Visitante")} · {new Date(m.createdAt).toLocaleString("es-PE")}
                       </p>
                     </div>
@@ -465,4 +456,18 @@ function Field({ label, value, link }: { label: string; value: string; link?: st
       )}
     </div>
   )
+}
+
+function timeAgo(dateStr: string): string {
+  const now = Date.now()
+  const d = new Date(dateStr).getTime()
+  const diff = now - d
+  const mins = Math.floor(diff / 60000)
+  if (mins < 1) return "ahora"
+  if (mins < 60) return `hace ${mins}m`
+  const hrs = Math.floor(mins / 60)
+  if (hrs < 24) return `hace ${hrs}h`
+  const days = Math.floor(hrs / 24)
+  if (days < 7) return `hace ${days}d`
+  return new Date(dateStr).toLocaleDateString("es-PE", { day: "2-digit", month: "short" })
 }
