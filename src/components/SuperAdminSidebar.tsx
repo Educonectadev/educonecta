@@ -1,9 +1,8 @@
 "use client"
 
-import { memo, useMemo, useEffect, useCallback } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import Link from "next/link"
-import { getIcon } from "./premium/iconRegistry"
+import { ToggleButton } from "@heroui/react"
+import { themes } from "@/lib/themes"
 
 interface NavLink {
   href: string
@@ -11,34 +10,6 @@ interface NavLink {
   icon: string
   extra?: React.ReactNode
 }
-
-const NavItem = memo(function NavItem({
-  link,
-  active,
-}: {
-  link: NavLink
-  active: boolean
-}) {
-  const router = useRouter()
-  const prefetch = useCallback(() => router.prefetch(link.href), [router, link.href])
-  const icon = getIcon(link.icon, { size: 18, strokeWidth: 2 })
-
-  return (
-    <Link
-      href={link.href}
-      prefetch
-      onMouseEnter={prefetch}
-      data-active={active}
-      className="sa-rail-item group"
-    >
-      <span className="sa-rail-icon shrink-0">{icon}</span>
-      <span className="sa-rail-label">{link.label}</span>
-      {link.extra && (
-        <span className="ml-auto shrink-0 transition-opacity">{link.extra}</span>
-      )}
-    </Link>
-  )
-})
 
 export default function SuperAdminSidebar({
   links,
@@ -49,55 +20,36 @@ export default function SuperAdminSidebar({
 }) {
   const router = useRouter()
   const pathname = usePathname()
-
-  useEffect(() => {
-    links.forEach((link) => router.prefetch(link.href))
-  }, [links, router])
-
-  const activeMap = useMemo(() => {
-    const m = new Map<string, boolean>()
-    for (const link of links) {
-      const segments = link.href.split("/").filter(Boolean)
-      const active =
-        pathname === link.href ||
-        (segments.length > 2 && pathname.startsWith(link.href + "/"))
-      m.set(link.href, active)
-    }
-    return m
-  }, [links, pathname])
+  const t = themes.SUPER_ADMIN
 
   return (
-    <aside className="sa-sidebar" data-tour="sidebar">
-      <div className="sa-sidebar-rail">
-        <div className="px-3 pt-2 pb-4">
-          <p className="sa-eyebrow">{label}</p>
-        </div>
-        <nav aria-label={label} className="flex flex-col gap-0.5">
-          {links.map((link) => (
-            <NavItem key={link.href} link={link} active={!!activeMap.get(link.href)} />
-          ))}
-        </nav>
+    <aside className="hidden w-56 shrink-0 md:block" data-tour="sidebar">
+      <nav className="h-[calc(100dvh-3.5rem)] sticky top-14 flex flex-col gap-0.5 p-4">
+        <p className={`px-4 pb-3 pt-1 text-[10px] font-semibold uppercase tracking-widest ${t.sidebar.labelColor}`}>
+          {label}
+        </p>
+        {links.map((link) => {
+          const segments = link.href.split("/").filter(Boolean)
+          const active =
+            pathname === link.href ||
+            (segments.length > 2 && pathname.startsWith(link.href + "/"))
 
-        <div className="sa-sidebar-footer">
-          <div className="sa-surface-flat sa-sidebar-status">
-            <div className="flex items-center gap-2 mb-1.5">
-              <span
-                className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
-                style={{ backgroundColor: "var(--accent)" }}
-              />
-              <span
-                className="font-semibold sa-sidebar-status-title"
-                style={{ color: "var(--foreground)" }}
-              >
-                Sistema operativo
-              </span>
-            </div>
-            <p className="sa-sidebar-status-text">
-              Plataforma EduConecta en línea. Las métricas se actualizan en tiempo real.
-            </p>
-          </div>
-        </div>
-      </div>
+          return (
+            <ToggleButton
+              key={link.href}
+              isSelected={active}
+              onPress={() => router.push(link.href)}
+              variant="ghost"
+              className="justify-start gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium w-full"
+              style={active ? { backgroundColor: "var(--brand-color)", color: "var(--brand-text-color)" } : undefined}
+            >
+              <span className={`material-icons text-lg ${active ? "opacity-100" : "opacity-40"}`}>{link.icon}</span>
+              <span>{link.label}</span>
+              {link.extra}
+            </ToggleButton>
+          )
+        })}
+      </nav>
     </aside>
   )
 }
