@@ -1,7 +1,7 @@
 "use client"
 
 import type { Selection, SortDescriptor } from "@heroui/react"
-import { Button, Checkbox, EmptyState, Table } from "@heroui/react"
+import { Button, Checkbox, Table } from "@heroui/react"
 import { Icon } from "@iconify/react"
 import { useMemo, useState } from "react"
 
@@ -92,18 +92,16 @@ export default function DataTable<T extends { id: number }>({
           </Table.Header>
           <Table.Body
             renderEmptyState={() => (
-              <EmptyState
-                aria-label="Sin resultados"
-                className="flex h-full w-full flex-col items-center justify-center gap-4 text-center py-12"
-              >
+              <div className="flex h-full w-full flex-col items-center justify-center gap-4 text-center py-12">
                 <Icon
-                  className="size-8 text-zinc-300 dark:text-zinc-600"
+                  className="size-8"
                   icon="gravity-ui:tray"
+                  style={{ color: "var(--muted-foreground)" }}
                 />
-                <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>
                   {emptyMessage}
                 </span>
-              </EmptyState>
+              </div>
             )}
           >
             {sorted.map((item) => (
