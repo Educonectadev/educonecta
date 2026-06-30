@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import { toast } from "@heroui/react"
 import Select from "@/components/Select"
 
@@ -95,82 +96,86 @@ export default function NuevoProfesorPage() {
     : ""
 
   return (
-    <div>
-      <h1 className="mb-8 text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Registrar Profesor</h1>
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}>
+      <div className="mb-8">
+        <p className="sa-eyebrow">Planilla docente</p>
+        <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Registrar Profesor</h1>
+      </div>
 
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-8">
         {/* Datos Personales */}
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">Datos Personales</p>
+          <p className="sa-eyebrow mb-4">Datos Personales</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-500">Nombres</label>
+              <label className="block sa-eyebrow mb-1.5">Nombres</label>
               <input name="firstName" value={form.firstName} onChange={handleChange} required
-                className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Juan" />
+                className="sa-input w-full" placeholder="Juan" />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-500">Apellidos</label>
+              <label className="block sa-eyebrow mb-1.5">Apellidos</label>
               <input name="lastName" value={form.lastName} onChange={handleChange} required
-                className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Pérez" />
+                className="sa-input w-full" placeholder="Pérez" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-500">DNI / CE</label>
+              <label className="block sa-eyebrow mb-1.5">DNI / CE</label>
               <input name="documentId" value={form.documentId} onChange={handleChange}
-                className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="12345678" />
+                className="sa-input w-full" placeholder="12345678" />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-500">Teléfono</label>
+              <label className="block sa-eyebrow mb-1.5">Teléfono</label>
               <input name="phone" value={form.phone} onChange={handleChange}
-                className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="987654321" />
+                className="sa-input w-full" placeholder="987654321" />
             </div>
           </div>
         </div>
 
         {/* Datos Profesionales */}
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">Datos Profesionales</p>
+          <p className="sa-eyebrow mb-4">Datos Profesionales</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-500">Título Profesional</label>
+              <label className="block sa-eyebrow mb-1.5">Título Profesional</label>
               <input name="professionalTitle" value={form.professionalTitle} onChange={handleChange}
-                className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Lic. en Educación" />
+                className="sa-input w-full" placeholder="Lic. en Educación" />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-500">Especialidad</label>
+              <label className="block sa-eyebrow mb-1.5">Especialidad</label>
               <input name="speciality" value={form.speciality} onChange={handleChange}
-                className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Matemáticas" />
+                className="sa-input w-full" placeholder="Matemáticas" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-500">Nivel de Estudios</label>
+              <label className="block sa-eyebrow mb-1.5">Nivel de Estudios</label>
               <Select value={form.educationLevel} onChange={(val) => setForm((prev) => ({ ...prev, educationLevel: val }))} options={educationLevels.map(l => ({value: l, label: l}))} placeholder="Seleccionar" />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-500">Tipo de Contrato</label>
+              <label className="block sa-eyebrow mb-1.5">Tipo de Contrato</label>
               <Select value={form.contractType} onChange={(val) => setForm((prev) => ({ ...prev, contractType: val }))} options={contractTypes.map(c => ({value: c, label: c}))} placeholder="Seleccionar" />
             </div>
           </div>
           <div className="mt-4">
-            <label className="mb-1.5 block text-sm font-medium text-gray-500">Fecha de Contratación</label>
+            <label className="block sa-eyebrow mb-1.5">Fecha de Contratación</label>
             <input type="date" name="hireDate" value={form.hireDate} onChange={handleChange}
-              className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              className="sa-input w-full" />
           </div>
         </div>
 
         {/* Niveles Asignados */}
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">Niveles Asignados</p>
-          <p className="text-xs text-gray-400 mb-3">Selecciona los niveles educativos en los que el profesor dicta clases.</p>
+          <p className="sa-eyebrow mb-4">Niveles Asignados</p>
+          <p className="text-xs mb-3" style={{ color: "var(--muted-foreground)" }}>Selecciona los niveles educativos en los que el profesor dicta clases.</p>
           <div className="flex flex-wrap gap-2">
             {assignedLevelOptions.map((opt) => {
               const selected = form.assignedLevels.includes(opt.value)
               return (
-                <button
+                <motion.button
                   key={opt.value}
                   type="button"
+                  whileTap={{ scale: 0.97 }}
                   onClick={() =>
                     setForm((prev) => ({
                       ...prev,
@@ -179,15 +184,11 @@ export default function NuevoProfesorPage() {
                         : [...prev.assignedLevels, opt.value],
                     }))
                   }
-                  className={
-                    "rounded-full px-5 py-2 text-sm font-medium border transition-all " +
-                    (selected
-                      ? "bg-emerald-500 border-emerald-500 text-white"
-                      : "bg-white border-gray-200 text-gray-500 hover:border-emerald-300")
-                  }
+                  className={"sa-chip cursor-pointer text-sm " + (selected ? "sa-accent sa-accent-border" : "")}
+                  style={selected ? { background: "var(--accent)", color: "var(--background)", borderColor: "var(--accent)" } : {}}
                 >
                   {opt.label}
-                </button>
+                </motion.button>
               )
             })}
           </div>
@@ -195,53 +196,53 @@ export default function NuevoProfesorPage() {
 
         {/* Contacto y Emergencia */}
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">Contacto y Emergencia</p>
+          <p className="sa-eyebrow mb-4">Contacto y Emergencia</p>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-500">Dirección</label>
+            <label className="block sa-eyebrow mb-1.5">Dirección</label>
             <input name="address" value={form.address} onChange={handleChange}
-              className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Av. Principal 123" />
+              className="sa-input w-full" placeholder="Av. Principal 123" />
           </div>
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-500">Contacto de Emergencia</label>
+              <label className="block sa-eyebrow mb-1.5">Contacto de Emergencia</label>
               <input name="emergencyContactName" value={form.emergencyContactName} onChange={handleChange}
-                className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="María López" />
+                className="sa-input w-full" placeholder="María López" />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-gray-500">Tel. Emergencia</label>
+              <label className="block sa-eyebrow mb-1.5">Tel. Emergencia</label>
               <input name="emergencyContactPhone" value={form.emergencyContactPhone} onChange={handleChange}
-                className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="987654321" />
+                className="sa-input w-full" placeholder="987654321" />
             </div>
           </div>
         </div>
 
         {/* Acceso al Sistema */}
         <div>
-          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 mb-4">Acceso al Sistema</p>
+          <p className="sa-eyebrow mb-4">Acceso al Sistema</p>
           {previewEmail && (
-            <div className="bg-gray-50 rounded-[20px] px-5 py-3 mb-4">
-              <p className="text-xs text-gray-400">Email generado automáticamente:</p>
-              <p className="text-sm font-medium text-gray-700">{previewEmail}</p>
+            <div className="px-5 py-3 rounded-[var(--radius-tile)] mb-4" style={{ background: "var(--surface-2)" }}>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Email generado automáticamente:</p>
+              <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{previewEmail}</p>
             </div>
           )}
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-500">Contraseña</label>
+            <label className="block sa-eyebrow mb-1.5">Contraseña</label>
             <input name="password" type="password" value={form.password} onChange={handleChange} required
-              className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              className="sa-input w-full" />
           </div>
         </div>
 
         <div className="flex items-center gap-3 pt-2">
-          <button type="submit" disabled={loading}
-            className="rounded-[30px] btn-primary px-8 py-3 text-sm font-medium">
+          <motion.button whileTap={{ scale: 0.97 }} type="submit" disabled={loading}
+            className="sa-btn sa-btn-primary">
             {loading ? "Guardando..." : "Guardar"}
-          </button>
+          </motion.button>
           <Link href="/dashboard/admin/profesores"
-            className="rounded-[30px] border border-gray-200 px-7 py-3 text-sm font-medium text-gray-400 transition-all hover:bg-gray-50">
+            className="sa-btn sa-btn-ghost">
             Cancelar
           </Link>
         </div>
       </form>
-    </div>
+    </motion.div>
   )
 }

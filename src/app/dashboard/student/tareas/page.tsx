@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
+import { motion } from "framer-motion"
 
 export default async function StudentTareasPage() {
   const session = await getServerSession()
@@ -26,50 +27,66 @@ export default async function StudentTareasPage() {
   const vencidas = tareas.filter((t) => new Date(t.dueDate) < ahora)
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mis tareas</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="space-y-5 md:space-y-6 pt-3 md:pt-6"
+    >
+      <header>
+        <p className="sa-eyebrow" style={{ color: "#8b5cf6" }}>Académico</p>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Mis tareas</h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--muted-foreground)" }}>
           {pendientes.length} pendientes · {vencidas.length} vencidas
         </p>
-      </div>
+      </header>
 
       {tareas.length === 0 ? (
-        <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-10 text-center text-sm text-gray-400">
-          No tienes tareas asignadas.
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            <svg className="size-6" style={{ color: "var(--muted-foreground)" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium mt-3" style={{ color: "var(--foreground)" }}>Sin tareas</p>
+          <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>No tienes tareas asignadas.</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {tareas.map((t) => {
+          {tareas.map((t, idx) => {
             const overdue = new Date(t.dueDate) < ahora
             return (
-              <div
+              <motion.div
                 key={t.id}
-                className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.02, ease: [0.16, 1, 0.3, 1] }}
+                className="sa-surface p-5 md:p-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-base font-semibold text-gray-900 dark:text-white/90">{t.title}</h3>
+                    <h3 className="text-base font-semibold font-display" style={{ color: "var(--foreground)" }}>{t.title}</h3>
                     {overdue && (
-                      <span className="text-[10px] uppercase tracking-wider rounded-full bg-red-100 text-red-700 dark:bg-red-950/30 dark:text-red-400 px-2 py-0.5 font-semibold">Vencida</span>
+                      <span className="sa-chip" style={{ color: "#ef4444", background: "rgba(239, 68, 68, 0.12)" }}>Vencida</span>
                     )}
                   </div>
                   {t.description && (
-                    <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400 line-clamp-2">{t.description}</p>
+                    <p className="mt-1 text-sm line-clamp-2" style={{ color: "var(--muted-foreground)" }}>{t.description}</p>
                   )}
-                  <p className="mt-2 text-xs text-gray-400 dark:text-zinc-500">{t.courseName}</p>
+                  <p className="mt-2 text-xs" style={{ color: "var(--muted-foreground)" }}>{t.courseName}</p>
                 </div>
                 <div className="shrink-0 text-right">
-                  <p className="text-xs uppercase tracking-wider text-gray-400 dark:text-zinc-500">Vence</p>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-zinc-200">
+                  <p className="text-xs uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Vence</p>
+                  <p className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
                     {new Date(t.dueDate).toLocaleDateString("es-PE", { day: "2-digit", month: "short" })}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             )
           })}
         </div>
       )}
-    </div>
+    </motion.div>
   )
 }

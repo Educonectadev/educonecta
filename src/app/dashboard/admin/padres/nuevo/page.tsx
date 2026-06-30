@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import { toast } from "@heroui/react"
 
 interface Student {
@@ -84,74 +85,80 @@ export default function NuevoPadrePage() {
     : ""
 
   return (
-    <div>
-      <h1 className="mb-8 text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Registrar Padre</h1>
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}>
+      <div className="mb-8">
+        <p className="sa-eyebrow">Comunidad educativa</p>
+        <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Registrar Padre</h1>
+      </div>
 
       <form onSubmit={handleSubmit} className="max-w-lg space-y-5">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-500">Nombres</label>
+            <label className="block sa-eyebrow mb-1.5">Nombres</label>
             <input
               name="firstName"
               value={form.firstName}
               onChange={handleChange}
               required
-              className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+              className="sa-input w-full"
               placeholder="Juan"
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-500">Apellidos</label>
+            <label className="block sa-eyebrow mb-1.5">Apellidos</label>
             <input
               name="lastName"
               value={form.lastName}
               onChange={handleChange}
               required
-              className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+              className="sa-input w-full"
               placeholder="Pérez"
             />
           </div>
         </div>
 
         {previewEmail && (
-          <div className="bg-gray-50 rounded-[20px] px-5 py-3">
-            <p className="text-xs text-gray-400">Email generado automáticamente:</p>
-            <p className="text-sm font-medium text-gray-700">{previewEmail}</p>
+          <div className="px-5 py-3 rounded-[var(--radius-tile)]" style={{ background: "var(--surface-2)" }}>
+            <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Email generado automáticamente:</p>
+            <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{previewEmail}</p>
           </div>
         )}
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-500">Contraseña</label>
+          <label className="block sa-eyebrow mb-1.5">Contraseña</label>
           <input
             name="password"
             type="password"
             value={form.password}
             onChange={handleChange}
             required
-            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="sa-input w-full"
           />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-500">Teléfono</label>
+          <label className="block sa-eyebrow mb-1.5">Teléfono</label>
           <input
             name="phone"
             value={form.phone}
             onChange={handleChange}
-            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="sa-input w-full"
           />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-500">Hijos</label>
-          <div className="max-h-48 overflow-y-auto scrollbar-hide rounded-[30px] border border-gray-200 p-3">
+          <label className="block sa-eyebrow mb-1.5">Hijos</label>
+          <div className="max-h-48 overflow-y-auto scrollbar-hide sa-surface p-3" style={{ borderRadius: "var(--radius-tile)" }}>
             {students.length === 0 ? (
-              <p className="p-2 text-sm text-gray-400">No hay alumnos disponibles.</p>
+              <p className="p-2 text-sm" style={{ color: "var(--muted-foreground)" }}>No hay alumnos disponibles.</p>
             ) : (
               students.map((s) => (
                 <label
                   key={s.id}
-                  className="flex cursor-pointer items-center gap-2 rounded-[30px] px-3 py-2 text-sm hover:bg-gray-50 transition-colors"
+                  className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm rounded-[var(--radius-pill)] transition-colors"
+                  style={{ color: "var(--foreground)" }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = "var(--surface-2)"}
+                  onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
                 >
                   <input
                     type="checkbox"
@@ -166,21 +173,22 @@ export default function NuevoPadrePage() {
         </div>
 
         <div className="flex items-center gap-3 pt-2">
-          <button
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             type="submit"
             disabled={loading || !form.firstName || !form.lastName || !form.password}
-            className="rounded-[30px] btn-primary px-8 py-3 text-sm font-medium"
+            className="sa-btn sa-btn-primary"
           >
             {loading ? "Guardando..." : "Guardar"}
-          </button>
+          </motion.button>
           <Link
             href="/dashboard/admin/padres"
-            className="rounded-[30px] border border-gray-200 px-7 py-3 text-sm font-medium text-gray-400 transition-all hover:bg-gray-50"
+            className="sa-btn sa-btn-ghost"
           >
             Cancelar
           </Link>
         </div>
       </form>
-    </div>
+    </motion.div>
   )
 }

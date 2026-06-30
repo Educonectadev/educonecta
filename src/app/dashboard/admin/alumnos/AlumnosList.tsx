@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
+import { motion } from "framer-motion"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
@@ -143,82 +144,89 @@ export default function AlumnosList({
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Alumnos</h1>
-        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium text-center">
-          + Registrar Alumno
-        </button>
-      </div>
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+          <div>
+            <p className="sa-eyebrow">Gestión académica</p>
+            <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Alumnos</h1>
+          </div>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setShowCreate(true); resetForm() }} className="sa-btn sa-btn-primary">
+            + Registrar Alumno
+          </motion.button>
+        </div>
+      </motion.div>
 
-      <DataTable
-        data={students}
-        emptyMessage="No hay alumnos registrados."
-        onEdit={openEdit}
-        onDelete={(s) => setDeleting(s)}
-        columns={[
-          {
-            key: "name",
-            label: "Alumno",
-            sortable: true,
-            render: (s) => (
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-zinc-300 shrink-0">
-                  {s.firstName.charAt(0)}{s.lastName.charAt(0)}
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}>
+        <DataTable
+          data={students}
+          emptyMessage="No hay alumnos registrados."
+          onEdit={openEdit}
+          onDelete={(s) => setDeleting(s)}
+          columns={[
+            {
+              key: "name",
+              label: "Alumno",
+              sortable: true,
+              render: (s) => (
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium shrink-0" style={{ background: "var(--surface-3)", color: "var(--muted-foreground)" }}>
+                    {s.firstName.charAt(0)}{s.lastName.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{s.firstName} {s.lastName}</p>
+                    <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>{s.email || "—"}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{s.firstName} {s.lastName}</p>
-                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">{s.email || "—"}</p>
+              ),
+            },
+            {
+              key: "documentId",
+              label: "Documento",
+              sortable: true,
+            },
+            {
+              key: "grade",
+              label: "Grado / Sección",
+              render: (s) => (
+                <div className="flex gap-1.5 flex-wrap">
+                  {s.grade && <span className="sa-chip">{s.grade.name}</span>}
+                  {s.section && <span className="sa-chip">Sec. {s.section.name}</span>}
                 </div>
-              </div>
-            ),
-          },
-          {
-            key: "documentId",
-            label: "Documento",
-            sortable: true,
-          },
-          {
-            key: "grade",
-            label: "Grado / Sección",
-            render: (s) => (
-              <div className="flex gap-1.5 flex-wrap">
-                {s.grade && <span className="badge-gray text-xs rounded-full px-2 py-0.5 border">{s.grade.name}</span>}
-                {s.section && <span className="badge-gray text-xs rounded-full px-2 py-0.5 border">Sec. {s.section.name}</span>}
-              </div>
-            ),
-          },
-        ]}
-      />
+              ),
+            },
+          ]}
+        />
+      </motion.div>
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Alumno" size="md" scroll="inside">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
-              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <label className="block sa-eyebrow mb-1.5">Nombre</label>
+              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="sa-input w-full" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Apellido</label>
-              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Documento</label>
-              <input value={form.documentId} onChange={(e) => setForm({ ...form, documentId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Email</label>
-              <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <label className="block sa-eyebrow mb-1.5">Apellido</label>
+              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="sa-input w-full" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+              <label className="block sa-eyebrow mb-1.5">Documento</label>
+              <input value={form.documentId} onChange={(e) => setForm({ ...form, documentId: e.target.value })} className="sa-input w-full" />
+            </div>
+            <div>
+              <label className="block sa-eyebrow mb-1.5">Email</label>
+              <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="sa-input w-full" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block sa-eyebrow mb-1.5">Grado</label>
               <Select value={form.gradeId} onChange={(val) => setForm({...form, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Sin grado" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+              <label className="block sa-eyebrow mb-1.5">Sección</label>
               <Select value={form.sectionId} onChange={(val) => setForm({...form, sectionId: val})} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Sin sección" />
             </div>
           </div>
@@ -229,49 +237,50 @@ export default function AlumnosList({
               onChange={(e) => setForm({ ...form, createAccount: e.target.checked })}
               className="size-4"
             />
-            <span className="text-xs text-gray-600">
+            <span className="text-xs" style={{ color: "var(--foreground)" }}>
               Crear cuenta de acceso para que el alumno entre a su portal.
             </span>
           </label>
           {form.createAccount && !form.email.trim() && (
-            <p className="text-[11px] text-amber-600 dark:text-amber-400">
+            <p className="text-[11px]" style={{ color: "#d97706" }}>
               Ingresa el email del alumno para crear la cuenta.
             </p>
           )}
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.documentId} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowCreate(false)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.documentId} className="sa-btn sa-btn-primary flex-1">
             {loading ? "Guardando..." : "Registrar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
 
       <Modal open={!!createdCredentials} onClose={() => setCreatedCredentials(null)} title="Cuenta creada" size="md">
         {createdCredentials && (
           <div className="space-y-4">
-            <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 p-4 text-sm">
-              <p className="text-emerald-700 dark:text-emerald-300 font-semibold">Cuenta creada para {createdCredentials.name}</p>
-              <p className="mt-2 text-xs text-emerald-700/80 dark:text-emerald-300/80">
+            <div className="rounded-2xl p-4 text-sm" style={{ background: "color-mix(in srgb, var(--accent) 14%, transparent)", border: "1px solid color-mix(in srgb, var(--accent) 30%, transparent)", color: "var(--accent)" }}>
+              <p className="font-semibold">Cuenta creada para {createdCredentials.name}</p>
+              <p className="mt-2 text-xs" style={{ opacity: 0.8 }}>
                 Entrega estas credenciales al alumno. Le recomendamos cambiar la contraseña al primer ingreso desde su portal.
               </p>
             </div>
             <div className="space-y-3">
               <div>
-                <p className="text-[11px] uppercase tracking-widest text-gray-400 dark:text-zinc-500">Email</p>
-                <p className="text-sm font-mono text-gray-900 dark:text-white/90">{createdCredentials.email}</p>
+                <p className="sa-eyebrow">Email</p>
+                <p className="text-sm font-mono" style={{ color: "var(--foreground)" }}>{createdCredentials.email}</p>
               </div>
               <div>
-                <p className="text-[11px] uppercase tracking-widest text-gray-400 dark:text-zinc-500">Contraseña temporal</p>
-                <p className="text-sm font-mono text-gray-900 dark:text-white/90 select-all bg-gray-50 dark:bg-zinc-800 rounded-[20px] px-4 py-2 inline-block">{createdCredentials.tempPassword}</p>
+                <p className="sa-eyebrow">Contraseña temporal</p>
+                <p className="text-sm font-mono select-all inline-block px-4 py-2 rounded-[var(--radius-tile)]" style={{ color: "var(--foreground)", background: "var(--surface-3)" }}>{createdCredentials.tempPassword}</p>
               </div>
             </div>
-            <button
+            <motion.button
+              whileTap={{ scale: 0.97 }}
               onClick={() => setCreatedCredentials(null)}
-              className="w-full rounded-[30px] bg-emerald-600 hover:bg-emerald-700 transition-colors duration-200 py-2.5 text-sm font-medium text-white"
+              className="sa-btn w-full" style={{ background: "var(--accent)", color: "var(--background)", border: "1px solid var(--accent)" }}
             >
               Entendido
-            </button>
+            </motion.button>
           </div>
         )}
       </Modal>
@@ -280,50 +289,50 @@ export default function AlumnosList({
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
-              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <label className="block sa-eyebrow mb-1.5">Nombre</label>
+              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="sa-input w-full" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Apellido</label>
-              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Documento</label>
-              <input value={form.documentId} onChange={(e) => setForm({ ...form, documentId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Email</label>
-              <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <label className="block sa-eyebrow mb-1.5">Apellido</label>
+              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="sa-input w-full" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+              <label className="block sa-eyebrow mb-1.5">Documento</label>
+              <input value={form.documentId} onChange={(e) => setForm({ ...form, documentId: e.target.value })} className="sa-input w-full" />
+            </div>
+            <div>
+              <label className="block sa-eyebrow mb-1.5">Email</label>
+              <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="sa-input w-full" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block sa-eyebrow mb-1.5">Grado</label>
               <Select value={form.gradeId} onChange={(val) => setForm({...form, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Sin grado" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+              <label className="block sa-eyebrow mb-1.5">Sección</label>
               <Select value={form.sectionId} onChange={(val) => setForm({...form, sectionId: val})} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Sin sección" />
             </div>
           </div>
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setEditing(null)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={handleSave} disabled={loading} className="sa-btn sa-btn-primary flex-1">
             {loading ? "Guardando..." : "Guardar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar alumno" size="sm">
-        <p className="text-sm text-gray-500 text-center">Se eliminará {deleting?.firstName} {deleting?.lastName}. Esta acción no se puede deshacer.</p>
+        <p className="text-sm text-center" style={{ color: "var(--muted-foreground)" }}>Se eliminará {deleting?.firstName} {deleting?.lastName}. Esta acción no se puede deshacer.</p>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setDeleting(null)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={handleDelete} disabled={loading} className="sa-btn flex-1" style={{ background: "#ef4444", color: "white", border: "1px solid #ef4444" }}>
             {loading ? "Eliminando..." : "Eliminar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
     </>

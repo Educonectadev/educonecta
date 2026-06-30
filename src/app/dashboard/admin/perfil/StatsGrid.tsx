@@ -24,10 +24,10 @@ export default function StatsGrid({ stats }: { stats: { label: string; value: nu
               transition: { type: "spring", damping: 18, stiffness: 260 },
             },
           }}
-          className="bg-gray-50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800 rounded-[20px] p-5 text-center"
+          className="sa-tile text-center"
         >
-          <p className="text-2xl font-bold text-gray-900 dark:text-white/90">{s.value ?? 0}</p>
-          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">{s.label}</p>
+          <p className="sa-num text-2xl" style={{ color: "var(--foreground)" }}>{s.value ?? 0}</p>
+          <p className="sa-eyebrow mt-1">{s.label}</p>
         </motion.div>
       ))}
     </motion.div>

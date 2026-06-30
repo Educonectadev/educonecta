@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { motion } from "framer-motion"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
 
@@ -140,84 +141,113 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
   }
 
   return (
-    <div>
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Grados y Secciones</h1>
-          <p className="mt-1 text-sm text-gray-500">Administra los grados y sus secciones</p>
+          <p className="sa-eyebrow">Estructura educativa</p>
+          <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Grados y Secciones</h1>
+          <p className="mt-1 text-sm" style={{ color: "var(--muted-foreground)" }}>Administra los grados y sus secciones</p>
         </div>
-        <button
+        <motion.button
+          whileTap={{ scale: 0.97 }}
           onClick={() => { setModal("create-grade"); setForm({ name: "", level: "", capacity: "", defaultShift: "" }); setError("") }}
-          className="btn-primary px-5 py-2 rounded-[30px] text-sm font-medium"
+          className="sa-btn sa-btn-primary"
         >
           + Nuevo Grado
-        </button>
+        </motion.button>
       </div>
 
       {grades.length === 0 ? (
-        <p className="text-sm text-gray-400 dark:text-zinc-600">No hay grados registrados. Crea el primer grado.</p>
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            <span className="text-xl" style={{ color: "var(--muted-foreground)" }}>📚</span>
+          </div>
+          <p className="text-sm font-medium mt-3" style={{ color: "var(--foreground)" }}>No hay grados registrados</p>
+          <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>Crea el primer grado para empezar a organizar tu institución.</p>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={() => { setModal("create-grade"); setForm({ name: "", level: "", capacity: "", defaultShift: "" }); setError("") }}
+            className="sa-btn sa-btn-primary mt-4"
+          >
+            + Nuevo Grado
+          </motion.button>
+        </div>
       ) : (
-        <div className="space-y-4">
-          {grades.map((grade) => (
-            <div key={grade.id} className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[25px] overflow-hidden">
-              <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-zinc-800">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
+          className="space-y-4"
+        >
+          {grades.map((grade, idx) => (
+            <motion.div
+              key={grade.id}
+              variants={{ hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const, delay: idx * 0.02 } } }}
+              className="sa-surface overflow-hidden"
+            >
+              <div className="flex items-center justify-between p-5" style={{ borderBottom: "1px solid var(--surface-border)" }}>
                 <div>
-                  <span className="font-semibold text-gray-900 dark:text-white/90">{grade.name}</span>
-                  {grade.level && <span className="ml-2 text-xs text-gray-400 dark:text-zinc-600">{grade.level}</span>}
-                  <span className="ml-3 text-xs text-gray-400 dark:text-zinc-600">{grade.sections.length} secciones</span>
+                  <span className="font-semibold" style={{ color: "var(--foreground)" }}>{grade.name}</span>
+                  {grade.level && <span className="ml-2 text-xs" style={{ color: "var(--muted-foreground)" }}>{grade.level}</span>}
+                  <span className="ml-3 text-xs" style={{ color: "var(--muted-foreground)" }}>{grade.sections.length} secciones</span>
                 </div>
                 <div className="flex gap-2">
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => openSectionCreate(grade)}
-                    className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white/90 transition-all"
+                    className="text-xs" style={{ color: "var(--muted-foreground)" }}
                   >
                     + Sección
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => openGradeEdit(grade)}
-                    className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white/90 transition-all"
+                    className="text-xs" style={{ color: "var(--muted-foreground)" }}
                   >
                     Editar
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => { setSelected(grade); setModal("delete-grade"); setError("") }}
-                    className="text-xs text-red-400 hover:text-red-600 transition-all"
+                    className="text-xs" style={{ color: "#ef4444" }}
                   >
                     Eliminar
-                  </button>
+                  </motion.button>
                 </div>
               </div>
               {grade.sections.length > 0 ? (
-                <div className="divide-y divide-gray-200 dark:divide-zinc-800">
+                <div className="divide-y" style={{ borderColor: "var(--surface-border)" }}>
                   {grade.sections.map((s) => (
                     <div key={s.id} className="flex items-center justify-between px-5 py-3">
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-gray-600 dark:text-zinc-400">Sección {s.name}</span>
-                        {s.capacity && <span className="text-xs text-gray-400 dark:text-zinc-600">Capacidad: {s.capacity}</span>}
+                        <span className="text-sm font-medium" style={{ color: "var(--muted-foreground)" }}>Sección {s.name}</span>
+                        {s.capacity && <span className="text-xs" style={{ color: "var(--muted-foreground)" }}>Capacidad: {s.capacity}</span>}
                       </div>
                       <div className="flex gap-2">
-                        <button
+                        <motion.button
+                          whileTap={{ scale: 0.9 }}
                           onClick={() => openSectionEdit(s)}
-                          className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white/90 transition-all"
+                          className="text-xs" style={{ color: "var(--muted-foreground)" }}
                         >
                           Editar
-                        </button>
-                        <button
+                        </motion.button>
+                        <motion.button
+                          whileTap={{ scale: 0.9 }}
                           onClick={() => { setSelected(s); setModal("delete-section"); setError("") }}
-                          className="text-xs text-red-400 hover:text-red-600 transition-all"
+                          className="text-xs" style={{ color: "#ef4444" }}
                         >
                           Eliminar
-                        </button>
+                        </motion.button>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="px-5 py-3 text-sm text-gray-400 dark:text-zinc-600">Sin secciones</p>
+                <p className="px-5 py-3 text-sm" style={{ color: "var(--muted-foreground)" }}>Sin secciones</p>
               )}
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       <Modal
@@ -235,23 +265,23 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
       >
         {(modal === "delete-grade" || modal === "delete-section") ? (
           <form onSubmit={handleSubmit}>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm mb-6" style={{ color: "var(--muted-foreground)" }}>
               ¿Estás seguro de eliminar {modal === "delete-grade" ? "este grado" : "esta sección"}? Los estudiantes asociados perderán la asignación.
             </p>
-            {error && <p className="text-xs text-red-500 mb-4">{error}</p>}
+            {error && <p className="text-xs mb-4" style={{ color: "#ef4444" }}>{error}</p>}
             <div className="flex gap-3 justify-end">
-              <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-black transition-all">Cancelar</button>
-              <button type="submit" disabled={loading} className="bg-red-600 text-white px-5 py-2 rounded-[30px] text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">{loading ? "..." : "Eliminar"}</button>
+              <motion.button whileTap={{ scale: 0.97 }} type="button" onClick={() => setModal(null)} className="sa-btn sa-btn-ghost">Cancelar</motion.button>
+              <motion.button whileTap={{ scale: 0.97 }} type="submit" disabled={loading} className="sa-btn" style={{ background: "#ef4444", color: "white", border: "1px solid #ef4444" }}>{loading ? "..." : "Eliminar"}</motion.button>
             </div>
           </form>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
+              <label className="block sa-eyebrow mb-1.5">Nombre</label>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
+                className="sa-input w-full"
                 placeholder={modal === "create-section" ? "Ej: A, B, C..." : "Ej: 1ero, 2do..."}
                 required
                 autoFocus
@@ -260,35 +290,35 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
             {(modal === "create-grade" || modal === "edit-grade") && (
               <>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Nivel</label>
+                  <label className="block sa-eyebrow mb-1.5">Nivel</label>
                   <Select value={form.level} onChange={(val) => setForm({...form, level: val})} options={[{value: "Inicial", label: "Inicial"}, {value: "Primaria", label: "Primaria"}, {value: "Secundaria", label: "Secundaria"}]} placeholder="Sin nivel" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Turno por defecto</label>
+                  <label className="block sa-eyebrow mb-1.5">Turno por defecto</label>
                   <Select value={form.defaultShift} onChange={(val) => setForm({...form, defaultShift: val})} options={[{value: "MAÑANA", label: "Mañana"}, {value: "TARDE", label: "Tarde"}]} placeholder="Sin turno" />
                 </div>
               </>
             )}
             {(modal === "create-section" || modal === "edit-section") && (
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Capacidad</label>
+                <label className="block sa-eyebrow mb-1.5">Capacidad</label>
                 <input
                   type="number"
                   value={form.capacity}
                   onChange={(e) => setForm({ ...form, capacity: e.target.value })}
-                  className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
+                  className="sa-input w-full"
                   placeholder="Opcional"
                 />
               </div>
             )}
-            {error && <p className="text-xs text-red-500">{error}</p>}
+            {error && <p className="text-xs" style={{ color: "#ef4444" }}>{error}</p>}
             <div className="flex gap-3 justify-end pt-2">
-              <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-black transition-all">Cancelar</button>
-              <button type="submit" disabled={loading} className="btn-primary px-5 py-2 rounded-[30px] text-sm font-medium">{loading ? "..." : "Guardar"}</button>
+              <motion.button whileTap={{ scale: 0.97 }} type="button" onClick={() => setModal(null)} className="sa-btn sa-btn-ghost">Cancelar</motion.button>
+              <motion.button whileTap={{ scale: 0.97 }} type="submit" disabled={loading} className="sa-btn sa-btn-primary">{loading ? "..." : "Guardar"}</motion.button>
             </div>
           </form>
         )}
       </Modal>
-    </div>
+    </motion.div>
   )
 }

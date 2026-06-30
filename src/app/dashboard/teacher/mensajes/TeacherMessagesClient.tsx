@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { motion } from "framer-motion"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 interface Parent {
   userId: number
@@ -112,20 +114,37 @@ export default function TeacherMessagesClient({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mensajes</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Conversación directa con los padres de tus estudiantes.</p>
+        <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Docente / Mensajes</p>
+        <h1 className="text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Mensajes</h1>
+        <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>Conversación directa con los padres de tus estudiantes.</p>
       </div>
 
       {parents.length === 0 ? (
-        <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-10 text-center text-sm text-gray-400">
-          Aún no tienes apoderados para chatear.
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+          className="sa-surface py-14 md:py-16 text-center"
+        >
+          <div className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            {getIcon("chat", { className: "w-6 h-6", style: { color: "var(--muted-foreground)" } })}
+          </div>
+          <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>Aún no tienes apoderados para chatear.</p>
+          <p className="text-xs max-w-xs mx-auto" style={{ color: "var(--muted-foreground)" }}>
+            Los padres de tus estudiantes aparecerán aquí cuando se vinculen a la plataforma.
+          </p>
+        </motion.div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <aside className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
-            <ul className="divide-y divide-gray-100 dark:divide-zinc-800 max-h-[60vh] md:max-h-[70vh] overflow-y-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        >
+          <aside className="sa-surface overflow-hidden">
+            <ul className="divide-y max-h-[60vh] md:max-h-[70vh] overflow-y-auto" style={{ borderColor: "var(--surface-border)" }}>
               {parents.map((p) => {
                 const last = byParent.get(p.userId)
                 const active = selected?.userId === p.userId
@@ -133,14 +152,15 @@ export default function TeacherMessagesClient({
                   <li key={p.userId}>
                     <button
                       onClick={() => setSelected(p)}
-                      className={
-                        "w-full text-left p-4 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-colors " +
-                        (active ? "bg-emerald-50 dark:bg-emerald-950/30" : "")
-                      }
+                      className="w-full text-left p-4 transition-colors"
+                      style={{
+                        background: active ? "color-mix(in srgb, var(--accent) 14%, transparent)" : "transparent",
+                        color: "var(--foreground)",
+                      }}
                     >
-                      <p className="text-sm font-medium text-gray-900 dark:text-white/90 truncate">{p.name}</p>
-                      <p className="text-[11px] text-gray-500 dark:text-zinc-400 truncate">{p.studentName}</p>
-                      <p className="mt-0.5 text-xs text-gray-400 dark:text-zinc-500 truncate">
+                      <p className="text-sm font-medium truncate" style={{ color: "var(--foreground)" }}>{p.name}</p>
+                      <p className="text-[11px] truncate" style={{ color: "var(--muted-foreground)" }}>{p.studentName}</p>
+                      <p className="mt-0.5 text-xs truncate" style={{ color: "var(--muted-foreground)" }}>
                         {last ? last.body : "Sin mensajes aún"}
                       </p>
                     </button>
@@ -150,31 +170,31 @@ export default function TeacherMessagesClient({
             </ul>
           </aside>
 
-          <section className="md:col-span-2 rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col h-[70vh]">
+          <section className="md:col-span-2 sa-surface flex flex-col h-[70vh]">
             {selected ? (
               <>
-                <header className="px-5 py-3 border-b border-gray-100 dark:border-zinc-800">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white/90">{selected.name}</p>
-                  <p className="text-[11px] text-gray-400 dark:text-zinc-500">Apoderado de {selected.studentName}</p>
+                <header className="px-5 py-3 border-b" style={{ borderColor: "var(--surface-border)" }}>
+                  <p className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>{selected.name}</p>
+                  <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>Apoderado de {selected.studentName}</p>
                 </header>
                 <div className="flex-1 overflow-y-auto p-4 space-y-2">
                   {messages.length === 0 ? (
-                    <p className="text-xs text-center text-gray-400 dark:text-zinc-500 py-10">
+                    <p className="text-xs text-center py-10" style={{ color: "var(--muted-foreground)" }}>
                       Escribe abajo para iniciar la conversación.
                     </p>
                   ) : (
                     messages.map((m) => (
                       <div key={m.id} className={"flex " + (m.fromRole === "TEACHER" ? "justify-end" : "justify-start")}>
                         <div
-                          className={
-                            "max-w-[75%] rounded-2xl px-3 py-2 text-sm " +
-                            (m.fromRole === "TEACHER"
-                              ? "bg-emerald-600 text-white"
-                              : "bg-gray-100 text-gray-800 dark:bg-zinc-800 dark:text-zinc-100")
+                          className="max-w-[75%] rounded-2xl px-3 py-2 text-sm"
+                          style={
+                            m.fromRole === "TEACHER"
+                              ? { background: "var(--accent)", color: "var(--foreground)" }
+                              : { background: "var(--surface-3)", color: "var(--foreground)" }
                           }
                         >
                           <p className="whitespace-pre-wrap break-words">{m.body}</p>
-                          <p className={"mt-1 text-[10px] " + (m.fromRole === "TEACHER" ? "text-emerald-100" : "text-gray-400")}>
+                          <p className="mt-1 text-[10px]" style={{ color: "var(--muted-foreground)" }}>
                             {new Date(m.createdAt).toLocaleString("es-PE", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" })}
                           </p>
                         </div>
@@ -183,7 +203,7 @@ export default function TeacherMessagesClient({
                   )}
                   <div ref={endRef} />
                 </div>
-                <div className="p-3 border-t border-gray-100 dark:border-zinc-800 flex gap-2">
+                <div className="p-3 border-t flex gap-2" style={{ borderColor: "var(--surface-border)" }}>
                   <input
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
@@ -194,13 +214,15 @@ export default function TeacherMessagesClient({
                       }
                     }}
                     placeholder="Escribe un mensaje…"
-                    className="flex-1 min-w-0 rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+                    className="flex-1 min-w-0 sa-input"
+                    style={{ color: "var(--foreground)", background: "var(--surface)" }}
                   />
                   <button
                     onClick={send}
                     disabled={sending || !draft.trim()}
                     aria-label="Enviar mensaje"
-                    className="shrink-0 inline-flex items-center justify-center size-11 rounded-full bg-emerald-600 hover:bg-emerald-700 transition-colors duration-200 text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="shrink-0 inline-flex items-center justify-center size-11 rounded-full transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ background: "var(--accent)", color: "var(--foreground)" }}
                   >
                     {sending ? (
                       <svg className="size-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -216,12 +238,12 @@ export default function TeacherMessagesClient({
                 </div>
               </>
             ) : (
-              <div className="flex-1 flex items-center justify-center text-sm text-gray-400">
+              <div className="flex-1 flex items-center justify-center text-sm" style={{ color: "var(--muted-foreground)" }}>
                 Selecciona un apoderado
               </div>
             )}
           </section>
-        </div>
+        </motion.div>
       )}
     </div>
   )

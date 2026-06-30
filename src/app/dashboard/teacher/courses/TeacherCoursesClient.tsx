@@ -2,6 +2,8 @@
 
 import Link from "next/link"
 import DataTable from "@/components/DataTable"
+import { motion } from "framer-motion"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 interface CourseTeacherRow {
   id: number
@@ -109,124 +111,136 @@ export default function TeacherCoursesClient({
   })
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6 max-w-6xl mx-auto">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <Link href="/dashboard/teacher" className="text-xs text-gray-500 dark:text-zinc-400 hover:underline">
+          <Link href="/dashboard/teacher" className="text-xs hover:underline" style={{ color: "var(--muted-foreground)" }}>
             ← Volver al panel
           </Link>
-          <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mis Cursos</h1>
-          <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
+          <h1 className="mt-2 text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Mis Cursos</h1>
+          <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>
             {rows.length} curso{rows.length === 1 ? "" : "s"} asignado{rows.length === 1 ? "" : "s"}
           </p>
         </div>
-      </div>
+      </header>
 
-      <DataTable
-        data={rows}
-        emptyMessage="No tienes cursos asignados."
-        columns={[
-          {
-            key: "course",
-            label: "Curso",
-            sortable: true,
-            render: (r) => (
-              <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white/90">{r.course.name}</p>
-                {r.course.code && <p className="text-[11px] text-gray-500 dark:text-zinc-400">Código: {r.course.code}</p>}
-              </div>
-            ),
-          },
-          {
-            key: "grade",
-            label: "Grado",
-            sortable: false,
-            render: (r) => <span className="text-sm text-gray-700 dark:text-zinc-300">{r.grade?.name ?? "—"}</span>,
-          },
-          {
-            key: "section",
-            label: "Sección",
-            sortable: false,
-            render: (r) => <span className="text-sm text-gray-700 dark:text-zinc-300">{r.section?.name ?? "—"}</span>,
-          },
-          {
-            key: "students",
-            label: "Estudiantes",
-            sortable: false,
-            render: (r) => (
-              <span className="badge-blue text-[11px] rounded-full px-2.5 py-0.5 border">
-                {r.studentCount}
-              </span>
-            ),
-          },
-          {
-            key: "scheduleCount",
-            label: "Horarios",
-            sortable: false,
-            render: (r) => (
-              <span className="badge-gray text-[11px] rounded-full px-2.5 py-0.5 border">
-                {r.scheduleCount}
-              </span>
-            ),
-          },
-          {
-            key: "homeworkCount",
-            label: "Tareas",
-            sortable: false,
-            render: (r) => (
-              <span className="badge-amber text-[11px] rounded-full px-2.5 py-0.5 border">
-                {r.homeworkCount}
-              </span>
-            ),
-          },
-          {
-            key: "schedules",
-            label: "Horario",
-            sortable: false,
-            render: (r) => (
-              <div className="text-xs text-gray-700 dark:text-zinc-300 space-y-0.5 max-w-[220px]">
-                {r.schedules.length === 0 ? (
-                  <span className="text-gray-400 dark:text-zinc-600">—</span>
-                ) : (
-                  r.schedules.slice(0, 2).map((s, i) => (
-                    <p key={i} className="truncate">
-                      {DAY_LABELS[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`} {s.startTime}–{s.endTime}
-                      {s.classroom ? ` · ${s.classroom}` : ""}
-                    </p>
-                  )).concat(
-                    r.schedules.length > 2
-                      ? [<p key="more" className="text-gray-500 dark:text-zinc-400">+{r.schedules.length - 2} más</p>]
-                      : [],
-                  )
-                )}
-              </div>
-            ),
-          },
-        ]}
-      />
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+      >
+        <DataTable
+          data={rows}
+          emptyMessage="No tienes cursos asignados."
+          columns={[
+            {
+              key: "course",
+              label: "Curso",
+              sortable: true,
+              render: (r) => (
+                <div>
+                  <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{r.course.name}</p>
+                  {r.course.code && <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>Código: {r.course.code}</p>}
+                </div>
+              ),
+            },
+            {
+              key: "grade",
+              label: "Grado",
+              sortable: false,
+              render: (r) => <span className="text-sm" style={{ color: "var(--foreground)" }}>{r.grade?.name ?? "—"}</span>,
+            },
+            {
+              key: "section",
+              label: "Sección",
+              sortable: false,
+              render: (r) => <span className="text-sm" style={{ color: "var(--foreground)" }}>{r.section?.name ?? "—"}</span>,
+            },
+            {
+              key: "students",
+              label: "Estudiantes",
+              sortable: false,
+              render: (r) => (
+                <span className="sa-chip text-[11px]" style={{ color: "var(--accent)", background: "color-mix(in srgb, var(--accent) 14%, transparent)" }}>
+                  {r.studentCount}
+                </span>
+              ),
+            },
+            {
+              key: "scheduleCount",
+              label: "Horarios",
+              sortable: false,
+              render: (r) => (
+                <span className="sa-chip text-[11px]" style={{ color: "var(--muted-foreground)", background: "var(--surface-3)" }}>
+                  {r.scheduleCount}
+                </span>
+              ),
+            },
+            {
+              key: "homeworkCount",
+              label: "Tareas",
+              sortable: false,
+              render: (r) => (
+                <span className="sa-chip text-[11px]" style={{ color: "#d97706", background: "rgba(217, 119, 6, 0.14)" }}>
+                  {r.homeworkCount}
+                </span>
+              ),
+            },
+            {
+              key: "schedules",
+              label: "Horario",
+              sortable: false,
+              render: (r) => (
+                <div className="text-xs space-y-0.5 max-w-[220px]" style={{ color: "var(--foreground)" }}>
+                  {r.schedules.length === 0 ? (
+                    <span style={{ color: "var(--muted-foreground)" }}>—</span>
+                  ) : (
+                    r.schedules.slice(0, 2).map((s, i) => (
+                      <p key={i} className="truncate">
+                        {DAY_LABELS[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`} {s.startTime}–{s.endTime}
+                        {s.classroom ? ` · ${s.classroom}` : ""}
+                      </p>
+                    )).concat(
+                      r.schedules.length > 2
+                        ? [<p key="more" style={{ color: "var(--muted-foreground)" }}>+{r.schedules.length - 2} más</p>]
+                        : [],
+                    )
+                  )}
+                </div>
+              ),
+            },
+          ]}
+        />
+      </motion.div>
 
       {rows.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500">Detalle por curso</h2>
-          {rows.map((r) => (
-            <div key={r.id} className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 space-y-5">
+          <h2 className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Detalle por curso</h2>
+          {rows.map((r, idx) => (
+            <motion.div
+              key={r.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const, delay: idx * 0.025 }}
+              className="sa-surface p-6 space-y-5"
+            >
               <header className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white/90">{r.course.name}</h3>
-                  <p className="text-xs text-gray-500 dark:text-zinc-400">
+                  <h3 className="text-base font-bold" style={{ color: "var(--foreground)" }}>{r.course.name}</h3>
+                  <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
                     {r.grade?.name ?? "—"} · {r.section?.name ?? "—"} · {r.studentCount} estudiante{r.studentCount === 1 ? "" : "s"}
                   </p>
                 </div>
                 <div className="flex gap-2">
                   <Link
                     href={`/dashboard/teacher/asistencia/tomar?courseId=${r.courseId}&gradeId=${r.gradeId ?? ""}&sectionId=${r.sectionId ?? ""}`}
-                    className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-4 py-2 text-xs font-medium text-gray-700 dark:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
+                    className="sa-btn sa-btn-ghost text-xs px-4 py-2"
                   >
                     Tomar asistencia
                   </Link>
                   <Link
                     href={`/dashboard/teacher/calificaciones/registrar?courseId=${r.courseId}&gradeId=${r.gradeId ?? ""}&sectionId=${r.sectionId ?? ""}`}
-                    className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-4 py-2 text-xs font-medium text-gray-700 dark:text-zinc-200 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-all"
+                    className="sa-btn sa-btn-ghost text-xs px-4 py-2"
                   >
                     Registrar notas
                   </Link>
@@ -235,19 +249,19 @@ export default function TeacherCoursesClient({
 
               <div className="grid lg:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-3">
+                  <h4 className="sa-eyebrow mb-3" style={{ color: "var(--muted-foreground)" }}>
                     Horario ({r.scheduleCount})
                   </h4>
                   {r.schedules.length === 0 ? (
-                    <p className="text-sm text-gray-400 dark:text-zinc-500">Sin horario asignado.</p>
+                    <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>Sin horario asignado.</p>
                   ) : (
                     <ul className="space-y-2 text-sm">
                       {r.schedules.map((s, i) => (
-                        <li key={i} className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-zinc-800/50 px-4 py-2.5">
-                          <span className="font-medium text-gray-700 dark:text-zinc-200">
+                        <li key={i} className="flex items-center justify-between rounded-xl px-4 py-2.5" style={{ background: "var(--surface-2)" }}>
+                          <span className="font-medium" style={{ color: "var(--foreground)" }}>
                             {DAY_LABELS[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`}
                           </span>
-                          <span className="text-gray-500 dark:text-zinc-400">
+                          <span style={{ color: "var(--muted-foreground)" }}>
                             {s.startTime} – {s.endTime}
                             {s.classroom ? ` · ${s.classroom}` : ""}
                           </span>
@@ -258,24 +272,24 @@ export default function TeacherCoursesClient({
                 </div>
 
                 <div>
-                  <h4 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-3">
+                  <h4 className="sa-eyebrow mb-3" style={{ color: "var(--muted-foreground)" }}>
                     Tareas ({r.homeworkCount})
                   </h4>
                   {r.homework.length === 0 ? (
-                    <p className="text-sm text-gray-400 dark:text-zinc-500">No hay tareas registradas.</p>
+                    <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>No hay tareas registradas.</p>
                   ) : (
                     <ul className="space-y-2 text-sm">
                       {r.homework.map((h) => (
-                        <li key={h.id} className="flex items-center justify-between rounded-xl bg-gray-50 dark:bg-zinc-800/50 px-4 py-2.5">
-                          <span className="font-medium text-gray-700 dark:text-zinc-200 truncate pr-3">{h.title}</span>
-                          <span className="text-xs text-gray-500 dark:text-zinc-400 shrink-0">Vence {formatDate(h.dueDate)}</span>
+                        <li key={h.id} className="flex items-center justify-between rounded-xl px-4 py-2.5" style={{ background: "var(--surface-2)" }}>
+                          <span className="font-medium truncate pr-3" style={{ color: "var(--foreground)" }}>{h.title}</span>
+                          <span className="text-xs shrink-0" style={{ color: "var(--muted-foreground)" }}>Vence {formatDate(h.dueDate)}</span>
                         </li>
                       ))}
                     </ul>
                   )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </section>
       )}

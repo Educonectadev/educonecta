@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { FileSpreadsheet, Download, Upload, Search } from "lucide-react"
+import { motion } from "framer-motion"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 export default function MatriculaPage() {
   const [file, setFile] = useState<File | null>(null)
@@ -21,60 +22,71 @@ export default function MatriculaPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Matrícula</h1>
-
-      <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Matrícula masiva desde Excel</h2>
-        <p className="text-sm text-gray-500 dark:text-zinc-400">
-          Sube un archivo Excel con los datos de los estudiantes para matricularlos automáticamente.
-          Columnas requeridas: nombres, apellidos, dni, grado, seccion
-        </p>
-        <div className="flex items-center gap-3">
-          <input
-            type="file"
-            accept=".xlsx,.csv"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            className="text-sm text-gray-500 dark:text-zinc-400 file:mr-3 file:rounded-xl file:border-0 file:bg-gray-100 dark:file:bg-zinc-800 file:px-4 file:py-2 file:text-sm file:text-gray-700 dark:file:text-zinc-300 hover:file:bg-gray-200 dark:hover:file:bg-zinc-700"
-          />
-          <button
-            onClick={handleUpload}
-            disabled={!file || loading}
-            className="flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm text-white hover:bg-emerald-700 disabled:opacity-50"
-          >
-            <Upload className="w-4 h-4" />
-            {loading ? "Procesando..." : "Importar"}
-          </button>
-          <a
-            href="data:text/csv;charset=utf-8,%EF%BB%BFnombres,apellidos,dni,grado,seccion%0A"
-            download="plantilla-matricula.csv"
-            className="flex items-center gap-2 rounded-xl bg-gray-100 dark:bg-zinc-800 px-4 py-2 text-sm text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white"
-          >
-            <Download className="w-4 h-4" />
-            Plantilla
-          </a>
-        </div>
-        {result && <p className="text-sm text-emerald-600 dark:text-emerald-400">{result}</p>}
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}>
+      <div className="mb-8">
+        <p className="sa-eyebrow">Gestión académica</p>
+        <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Matrícula</h1>
       </div>
 
-      <div className="rounded-2xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Matrícula individual</h2>
-        <p className="text-sm text-gray-500 dark:text-zinc-400">
-          Busca un estudiante por DNI o nombres para matriculario en un grado y sección específicos.
-        </p>
-        <div className="flex gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-zinc-500" />
+      <div className="max-w-4xl mx-auto space-y-5 md:space-y-6">
+        <div className="sa-surface p-6 space-y-4">
+          <h2 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>Matrícula masiva desde Excel</h2>
+          <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
+            Sube un archivo Excel con los datos de los estudiantes para matricularlos automáticamente.
+            Columnas requeridas: nombres, apellidos, dni, grado, seccion
+          </p>
+          <div className="flex items-center gap-3">
             <input
-              placeholder="Buscar por DNI, nombres o apellidos..."
-              className="w-full rounded-xl bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 pl-10 pr-4 py-2.5 text-sm text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-zinc-500"
+              type="file"
+              accept=".xlsx,.csv"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              className="text-sm sa-input file:mr-3 file:rounded-xl file:border-0 file:px-4 file:py-2 file:text-sm"
+              style={{ color: "var(--muted-foreground)" }}
             />
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              onClick={handleUpload}
+              disabled={!file || loading}
+              className="sa-btn flex items-center gap-2"
+              style={{ background: "var(--accent)", color: "var(--background)", border: "1px solid var(--accent)" }}
+            >
+              {getIcon("file_upload", { size: 16 })}
+              {loading ? "Procesando..." : "Importar"}
+            </motion.button>
+            <motion.a
+              whileTap={{ scale: 0.97 }}
+              href="data:text/csv;charset=utf-8,%EF%BB%BFnombres,apellidos,dni,grado,seccion%0A"
+              download="plantilla-matricula.csv"
+              className="sa-btn sa-btn-ghost flex items-center gap-2"
+            >
+              {getIcon("download", { size: 16 })}
+              Plantilla
+            </motion.a>
           </div>
-          <button className="rounded-xl bg-gray-100 dark:bg-zinc-800 px-4 py-2.5 text-sm text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white">
-            Buscar
-          </button>
+          {result && <p className="text-sm" style={{ color: "var(--accent)" }}>{result}</p>}
+        </div>
+
+        <div className="sa-surface p-6 space-y-4">
+          <h2 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>Matrícula individual</h2>
+          <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
+            Busca un estudiante por DNI o nombres para matriculario en un grado y sección específicos.
+          </p>
+          <div className="flex gap-3">
+            <div className="relative flex-1">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2">
+                {getIcon("search", { size: 16, style: { color: "var(--muted-foreground)" } })}
+              </span>
+              <input
+                placeholder="Buscar por DNI, nombres o apellidos..."
+                className="sa-input w-full pl-10"
+              />
+            </div>
+            <motion.button whileTap={{ scale: 0.97 }} className="sa-btn sa-btn-ghost">
+              Buscar
+            </motion.button>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

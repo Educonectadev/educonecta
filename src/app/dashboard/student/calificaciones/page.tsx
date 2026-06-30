@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
+import { motion } from "framer-motion"
 
 export default async function StudentCalificacionesPage() {
   const session = await getServerSession()
@@ -35,54 +36,68 @@ export default async function StudentCalificacionesPage() {
     : null
 
   return (
-    <div className="space-y-6" data-tour="grades">
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="space-y-5 md:space-y-6 pt-3 md:pt-6"
+      data-tour="grades"
+    >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mis calificaciones</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">
-            {courses.length} cursos · Promedio general: <span className="font-semibold text-gray-800 dark:text-zinc-200">{promedioGeneral !== null ? promedioGeneral.toFixed(2) : "—"}</span>
+          <p className="sa-eyebrow" style={{ color: "#8b5cf6" }}>Académico</p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Mis calificaciones</h1>
+          <p className="mt-1 text-sm" style={{ color: "var(--muted-foreground)" }}>
+            {courses.length} cursos · Promedio general: <span className="font-semibold" style={{ color: "var(--foreground)" }}>{promedioGeneral !== null ? promedioGeneral.toFixed(2) : "—"}</span>
           </p>
         </div>
       </div>
 
       {courses.length === 0 ? (
-        <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-10 text-center text-sm text-gray-400">
-          Aún no tienes calificaciones registradas.
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            <svg className="size-6" style={{ color: "var(--muted-foreground)" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium mt-3" style={{ color: "var(--foreground)" }}>Sin calificaciones</p>
+          <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>Aún no tienes calificaciones registradas.</p>
         </div>
       ) : (
         <div className="space-y-5">
-          {courses.map((c) => (
-            <section key={c.course} className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
+          {courses.map((c, idx) => (
+            <motion.section
+              key={c.course}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: idx * 0.04, ease: [0.16, 1, 0.3, 1] }}
+              className="sa-surface p-5 md:p-6"
+            >
               <header className="flex items-center justify-between mb-3">
-                <h2 className="text-base font-semibold text-gray-900 dark:text-white/90">{c.course}</h2>
-                <span className="text-xs rounded-full px-2.5 py-0.5 bg-violet-50 text-violet-700 dark:bg-violet-950/30 dark:text-violet-300 font-semibold">
+                <h2 className="text-base font-semibold" style={{ color: "var(--foreground)" }}>{c.course}</h2>
+                <span className="sa-chip" style={{ color: "#8b5cf6", background: "color-mix(in srgb, #8b5cf6 14%, transparent)" }}>
                   Prom. {c.promedio !== null ? c.promedio.toFixed(2) : "—"}
                 </span>
               </header>
-              <ul className="divide-y divide-gray-100 dark:divide-zinc-800">
-                {c.items.map((i) => (
+              <ul className="divide-y sa-divider">
+                {c.items.map((i: any) => (
                   <li key={i.id} className="py-2.5 flex items-center justify-between gap-3 text-sm">
                     <div className="min-w-0">
-                      <p className="font-medium text-gray-800 dark:text-zinc-200 truncate">{i.evaluationName}</p>
+                      <p className="font-medium truncate" style={{ color: "var(--foreground)" }}>{i.evaluationName}</p>
                       {i.evaluationDate && (
-                        <p className="text-xs text-gray-400">{new Date(i.evaluationDate).toLocaleDateString("es-PE")}</p>
+                        <p className="text-xs mt-0.5" style={{ color: "var(--muted-foreground)" }}>{new Date(i.evaluationDate).toLocaleDateString("es-PE")}</p>
                       )}
                     </div>
-                    <span className={
-                      "shrink-0 font-semibold " +
-                      (Number(i.grade) >= 11
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-red-600 dark:text-red-400")
-                    }>
+                    <span className="shrink-0 font-semibold" style={{ color: Number(i.grade) >= 11 ? "#10b981" : "#ef4444" }}>
                       {Number(i.grade).toFixed(2)}
                     </span>
                   </li>
                 ))}
               </ul>
-            </section>
+            </motion.section>
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   )
 }

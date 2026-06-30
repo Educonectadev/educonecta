@@ -11,11 +11,14 @@ export default async function ComunicadosPage() {
   const communications = await getInstitutionCommunications(institutionId)
 
   return (
-    <div data-tour="announcements">
-      <h1 className="text-2xl font-bold tracking-tight">Comunicados</h1>
-      <p className="mt-1 text-sm text-gray-500">
-        Comunicaciones de la institución y docentes
-      </p>
+    <div data-tour="announcements" className="space-y-5 md:space-y-6 pt-3 md:pt-6">
+      <header>
+        <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Comunicados</p>
+        <h1 className="text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Comunicados</h1>
+        <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>
+          Comunicaciones de la instituci&oacute;n y docentes
+        </p>
+      </header>
 
       <CommunicationsList communications={communications} />
     </div>

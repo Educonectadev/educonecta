@@ -18,7 +18,7 @@ const bottomLinks = [
   { href: "/dashboard/parent/disciplina", label: "Disciplina", icon: "gavel", overflow: true },
   { href: "/dashboard/parent/comunicados", label: "Comunicados", icon: "mail", overflow: true },
   { href: "/dashboard/parent/notificaciones", label: "Notificaciones", icon: "notifications", overflow: true },
-  { href: "/dashboard/parent/configuracion", label: "Configuración", icon: "settings", overflow: true },
+  { href: "/dashboard/parent/configuracion", label: "Configuraci&oacute;n", icon: "settings", overflow: true },
 ]
 
 const sidebarLinks = [
@@ -40,12 +40,12 @@ export default function ParentShell({ children }: { children: React.ReactNode })
 
   return (
     <TourDashboardShell role="PARENT">
-      <div className="h-dvh overflow-hidden bg-white dark:bg-black">
+      <div className="h-dvh overflow-hidden" style={{ background: "var(--surface)" }}>
         <Navbar />
         <div className="flex h-dvh pt-14 md:pt-16">
           <aside className="hidden w-56 shrink-0 md:block">
             <nav className="h-full flex flex-col gap-0.5 p-4">
-              <p className="px-4 pb-3 pt-1 text-[10px] font-semibold uppercase tracking-widest text-amber-500">
+              <p className="px-4 pb-3 pt-1 sa-eyebrow" style={{ color: "#d97706" }}>
                 Padre
               </p>
               {sidebarLinks.map((link) => {
@@ -57,8 +57,8 @@ export default function ParentShell({ children }: { children: React.ReactNode })
                     isSelected={active}
                     onPress={() => router.push(link.href)}
                     variant="ghost"
-                    className="justify-start gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium"
-                    style={active ? { backgroundColor: "var(--brand-color)", color: "var(--brand-text-color)" } : undefined}
+                    className="justify-start gap-3 sa-btn px-4 py-2.5 text-sm font-medium"
+                    style={active ? { backgroundColor: "var(--accent)", color: "white" } : undefined}
                   >
                     <span className={`material-icons text-lg ${active ? "opacity-100" : "opacity-40"}`} aria-hidden>
                       {link.icon}

@@ -2,6 +2,7 @@ import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
 import Link from "next/link"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 const typeLabels: Record<string, string> = {
   attention_call: "Llamado de Atención",
@@ -30,46 +31,54 @@ export default async function DisciplinaPage() {
   }))
 
   return (
-    <div className="space-y-8" data-tour="discipline">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6" data-tour="discipline">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Disciplina</h1>
-          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">{records.length} registros</p>
+          <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Docente / Disciplina</p>
+          <h1 className="text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Disciplina</h1>
+          <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>{records.length} registros</p>
         </div>
         <Link
           href="/dashboard/teacher/disciplina/nuevo"
-          className="btn-primary rounded-[30px] px-6 py-2.5 text-sm font-medium text-center"
+          className="sa-btn sa-btn-primary text-sm"
         >
           + Nuevo Registro
         </Link>
-      </div>
+      </header>
 
       {records.length === 0 ? (
-        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-12 text-center text-gray-400 dark:text-zinc-500 text-sm">
-          No hay registros disciplinarios.
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            {getIcon("gavel", { className: "w-6 h-6", style: { color: "var(--muted-foreground)" } })}
+          </div>
+          <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>No hay registros disciplinarios.</p>
+          <p className="text-xs max-w-xs mx-auto" style={{ color: "var(--muted-foreground)" }}>Los registros disciplinarios aparecerán aquí cuando sean creados.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {records.map((r: { id: number; type: string; description: string; date: Date; isResolved: boolean; student: { firstName: string; lastName: string } }) => (
-            <div key={r.id} className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-5 hover:border-gray-200 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/20 transition-all duration-200">
+            <div key={r.id} className="sa-surface">
               <div className="flex items-start justify-between gap-3 mb-3">
-                <p className="font-semibold text-gray-900 dark:text-white/90">
+                <p className="font-semibold" style={{ color: "var(--foreground)" }}>
                   {r.student.firstName} {r.student.lastName}
                 </p>
-                <span className={`text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full shrink-0 ${
-                  r.type === "suspension"
-                    ? "bg-gray-900 text-white dark:bg-white dark:text-black"
-                    : r.type === "warning"
-                    ? "bg-gray-100 text-gray-700 dark:bg-zinc-800 dark:text-zinc-300"
-                    : "bg-gray-50 text-gray-500 dark:bg-zinc-800/50 dark:text-zinc-400 border border-gray-100 dark:border-zinc-700"
-                }`}>
+                <span
+                  className="sa-chip shrink-0"
+                  style={
+                    r.type === "suspension"
+                      ? { color: "var(--foreground)", background: "var(--surface-3)" }
+                      : r.type === "warning"
+                      ? { color: "#d97706", background: "rgba(217, 119, 6, 0.14)" }
+                      : { color: "var(--muted-foreground)", background: "var(--surface-3)" }
+                  }
+                >
                   {typeLabels[r.type] ?? r.type}
                 </span>
               </div>
-              <p className="text-sm text-gray-500 dark:text-zinc-400 leading-relaxed">{r.description}</p>
-              <div className="flex items-center gap-3 mt-3 text-xs text-gray-400 dark:text-zinc-500">
+              <p className="text-sm leading-relaxed" style={{ color: "var(--muted-foreground)" }}>{r.description}</p>
+              <div className="flex items-center gap-3 mt-3 text-xs" style={{ color: "var(--muted-foreground)" }}>
                 <span>{r.date.toLocaleDateString("es-ES")}</span>
-                {r.isResolved && <span className="text-gray-900 dark:text-white/90 font-medium">Resuelto</span>}
+                {r.isResolved && <span className="font-medium" style={{ color: "var(--foreground)" }}>Resuelto</span>}
               </div>
             </div>
           ))}

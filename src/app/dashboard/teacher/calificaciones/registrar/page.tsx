@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
+import { motion } from "framer-motion"
 
 interface Student {
   id: number
@@ -107,15 +108,22 @@ export default function RegistrarCalificacionesPage() {
   return (
     <Modal open={open} onClose={close} title="Registrar Calificaciones" size="lg" scroll="inside">
       <div className="space-y-4">
-        <p className="text-xs text-gray-500 dark:text-zinc-500">Ingresa las notas de tus estudiantes</p>
+        <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Ingresa las notas de tus estudiantes</p>
 
         {error && (
-          <p className="text-sm border border-gray-100 dark:border-zinc-800 rounded-2xl p-4 bg-gray-50 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400">{error}</p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm sa-surface p-4"
+            style={{ color: "#ef4444" }}
+          >
+            {error}
+          </motion.p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Curso *</label>
+            <label className="block sa-eyebrow mb-1.5" style={{ color: "var(--muted-foreground)" }}>Curso *</label>
             <Select
               value={courseId}
               onChange={setCourseId}
@@ -128,39 +136,43 @@ export default function RegistrarCalificacionesPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Nombre de la Evaluación *</label>
+            <label className="block sa-eyebrow mb-1.5" style={{ color: "var(--muted-foreground)" }}>Nombre de la Evaluación *</label>
             <input
               type="text"
               value={evaluationName}
               onChange={(e) => setEvaluationName(e.target.value)}
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+              className="sa-input w-full"
               placeholder="Ej: Examen Parcial 1"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Fecha</label>
+            <label className="block sa-eyebrow mb-1.5" style={{ color: "var(--muted-foreground)" }}>Fecha</label>
             <input
               type="date"
               value={evaluationDate}
               onChange={(e) => setEvaluationDate(e.target.value)}
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+              className="sa-input w-full"
             />
           </div>
 
           {students.length > 0 && (
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-2">Notas por estudiante</p>
-              <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl overflow-hidden max-h-64 overflow-y-auto scrollbar-hide">
-                <div className="divide-y divide-gray-100 dark:divide-zinc-800">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}
+            >
+              <p className="sa-eyebrow mb-2" style={{ color: "var(--muted-foreground)" }}>Notas por estudiante</p>
+              <div className="sa-surface overflow-hidden max-h-64 overflow-y-auto scrollbar-hide">
+                <div className="divide-y" style={{ borderColor: "var(--surface-border)" }}>
                   {students.map((s) => (
-                    <div key={s.id} className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
+                    <div key={s.id} className="flex items-center justify-between gap-3 px-4 py-3 transition-colors" style={{ borderColor: "var(--surface-border)" }}>
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-medium text-gray-500 dark:text-zinc-400 shrink-0">
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium shrink-0" style={{ background: "var(--surface-3)", color: "var(--muted-foreground)" }}>
                           {s.firstName.charAt(0)}{s.lastName.charAt(0)}
                         </div>
-                        <span className="text-sm text-gray-900 dark:text-white/90 truncate">
+                        <span className="text-sm truncate" style={{ color: "var(--foreground)" }}>
                           {s.firstName} {s.lastName}
                         </span>
                       </div>
@@ -173,24 +185,25 @@ export default function RegistrarCalificacionesPage() {
                         onChange={(e) =>
                           setGrades((prev) => ({ ...prev, [s.id]: e.target.value }))
                         }
-                        className="w-24 rounded-[30px] border border-gray-200 dark:border-zinc-800 px-3 py-1.5 text-sm bg-white dark:bg-black text-gray-900 dark:text-white text-center focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+                        className="sa-input w-24 text-sm text-center"
+                        style={{ color: "var(--foreground)", background: "var(--surface)" }}
                         placeholder="0-20"
                       />
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
 
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={close} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">
+            <button type="button" onClick={close} className="sa-btn sa-btn-ghost flex-1 text-sm py-2.5">
               Cancelar
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+              className="sa-btn sa-btn-primary flex-1 text-sm py-2.5"
             >
               {submitting ? "Guardando..." : "Guardar Calificaciones"}
             </button>

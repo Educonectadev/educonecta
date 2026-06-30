@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { motion } from "framer-motion"
 import { Modal } from "@heroui/react"
 
 interface AttendanceRecord {
@@ -29,66 +30,73 @@ export default function AttendanceList({
   const [selected, setSelected] = useState<AttendanceRecord | null>(null)
 
   return (
-    <div className="mt-6 space-y-8">
+    <div className="space-y-8">
       {children.map((child) => {
         const records = attendanceByStudent[child.id] ?? []
         const presentCount = records.filter((r) => r.isPresent).length
         const absentCount = records.length - presentCount
 
         return (
-          <section key={child.id}>
+          <motion.section
+            key={child.id}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          >
             <div className="mb-3 flex items-baseline justify-between">
-              <h2 className="text-lg font-semibold">
+              <h2 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>
                 {child.firstName} {child.lastName}
-                <span className="ml-2 text-sm font-normal text-gray-500 dark:text-zinc-400">
-                  {child.grade?.name ?? "—"} · {child.section?.name ?? "—"}
+                <span className="ml-2 text-sm font-normal" style={{ color: "var(--muted-foreground)" }}>
+                  {child.grade?.name ?? "—"} &middot; {child.section?.name ?? "—"}
                 </span>
               </h2>
               {records.length > 0 && (
-                <div className="flex gap-4 text-xs">
-                  <span className="text-green-700 dark:text-green-400">
-                    Presente: {presentCount}
-                  </span>
-                  <span className="text-red-700 dark:text-red-400">
-                    Ausente: {absentCount}
-                  </span>
-                  <span className="text-gray-500 dark:text-zinc-400">
-                    Total: {records.length}
-                  </span>
+                <div className="flex gap-4 text-xs" style={{ color: "var(--muted-foreground)" }}>
+                  <span style={{ color: "var(--accent)" }}>Presente: {presentCount}</span>
+                  <span style={{ color: "#ef4444" }}>Ausente: {absentCount}</span>
+                  <span style={{ color: "var(--muted-foreground)" }}>Total: {records.length}</span>
                 </div>
               )}
             </div>
 
             {records.length === 0 ? (
-              <p className="text-sm text-gray-500 dark:text-zinc-400">
-                No hay registros de asistencia.
-              </p>
+              <div className="sa-surface py-10 text-center">
+                <div className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--muted-foreground)" }}>
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                </div>
+                <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>Sin registros</p>
+                <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>No hay registros de asistencia para este estudiante.</p>
+              </div>
             ) : (
-              <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl overflow-hidden">
+              <div className="sa-surface overflow-hidden">
                 <table className="w-full text-left text-sm">
-                  <thead className="hidden md:table-header-group border-b border-gray-100 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900/60">
+                  <thead className="hidden md:table-header-group" style={{ borderBottom: "1px solid var(--surface-border)", background: "var(--surface-2)" }}>
                     <tr>
-                      <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">
+                      <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
                         Fecha
                       </th>
-                      <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">
+                      <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
                         Estado
                       </th>
-                      <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">
+                      <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>
                         Nota
                       </th>
                     </tr>
                   </thead>
-                <tbody className="divide-y divide-gray-50 dark:divide-zinc-800/50 md:divide-y-0">
-                  {records.map((r) => (
-                    <tr
-                      key={r.id}
-                      onClick={() => setSelected(r)}
-                      className="flex flex-col md:table-row border border-gray-100 dark:border-zinc-800 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors"
-                    >
+                  <tbody style={{ borderBottom: "1px solid var(--surface-border)" }}>
+                    {records.map((r) => (
+                      <tr
+                        key={r.id}
+                        onClick={() => setSelected(r)}
+                        className="flex flex-col md:table-row rounded-[var(--radius-card)] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer border border-[var(--surface-border)] md:border-0"
+                        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)" }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = "" }}
+                      >
                         <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                          <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Fecha</span>
-                          <span>
+                          <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Fecha</span>
+                          <span style={{ color: "var(--foreground)" }}>
                             {new Date(r.date).toLocaleDateString("es-ES", {
                               weekday: "long",
                               year: "numeric",
@@ -98,17 +106,17 @@ export default function AttendanceList({
                           </span>
                         </td>
                         <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                          <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Estado</span>
+                          <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Estado</span>
                           <span>
                             {r.isPresent ? (
-                              <span className="text-green-700 dark:text-green-400">Presente</span>
+                              <span className="sa-chip" style={{ color: "var(--accent)", background: "color-mix(in srgb, var(--accent) 14%, transparent)" }}>Presente</span>
                             ) : (
-                              <span className="text-red-700 dark:text-red-400">Ausente</span>
+                              <span className="sa-chip" style={{ color: "#ef4444", background: "rgba(239, 68, 68, 0.12)" }}>Ausente</span>
                             )}
                           </span>
                         </td>
-                        <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-500 dark:text-zinc-400">
-                          <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Nota</span>
+                        <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
+                          <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Nota</span>
                           <span>{r.note ?? "—"}</span>
                         </td>
                       </tr>
@@ -117,7 +125,7 @@ export default function AttendanceList({
                 </table>
               </div>
             )}
-          </section>
+          </motion.section>
         )
       })}
 
@@ -131,8 +139,8 @@ export default function AttendanceList({
                 <Modal.Heading>
                   <div className="flex items-start justify-between gap-4 w-full">
                     <div className="flex-1 min-w-0">
-                      <span className="truncate block">Registro de Asistencia</span>
-                      <p className="mt-1 text-sm text-gray-400 dark:text-zinc-500 font-normal">
+                      <span className="truncate block" style={{ color: "var(--foreground)" }}>Registro de Asistencia</span>
+                      <p className="mt-1 text-sm font-normal" style={{ color: "var(--muted-foreground)" }}>
                         {new Date(selected.date).toLocaleDateString("es-ES", {
                           weekday: "long",
                           year: "numeric",
@@ -141,11 +149,8 @@ export default function AttendanceList({
                         })}
                       </p>
                     </div>
-                    <span className={`shrink-0 inline-block rounded-[30px] border px-4 py-1.5 text-sm font-medium ${
-                      selected.isPresent
-                        ? "bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800"
-                        : "bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800"
-                    }`}>
+                    <span className="sa-chip text-sm font-medium"
+                      style={selected.isPresent ? { color: "var(--accent)", background: "color-mix(in srgb, var(--accent) 14%, transparent)" } : { color: "#ef4444", background: "rgba(239, 68, 68, 0.12)" }}>
                       {selected.isPresent ? "Presente" : "Ausente"}
                     </span>
                   </div>
@@ -154,13 +159,13 @@ export default function AttendanceList({
               <Modal.Body>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Registrado por</p>
-                    <p className="text-sm text-gray-600 dark:text-zinc-300">{selected.teacher.user.name}</p>
+                    <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Registrado por</p>
+                    <p className="text-sm" style={{ color: "var(--foreground)" }}>{selected.teacher.user.name}</p>
                   </div>
                   {selected.note && (
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Nota del docente</p>
-                      <p className="text-sm text-gray-600 dark:text-zinc-300 leading-relaxed">{selected.note}</p>
+                      <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Nota del docente</p>
+                      <p className="text-sm leading-relaxed" style={{ color: "var(--foreground)" }}>{selected.note}</p>
                     </div>
                   )}
                 </div>

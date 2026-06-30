@@ -2,6 +2,7 @@ import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
 import Link from "next/link"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 export default async function ComunicadosPage() {
   const session = await getServerSession()
@@ -25,45 +26,53 @@ export default async function ComunicadosPage() {
   }))
 
   return (
-    <div className="space-y-8" data-tour="announcements">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6" data-tour="announcements">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Comunicados</h1>
-          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">{communications.length} comunicados</p>
+          <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Docente / Comunicados</p>
+          <h1 className="text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Comunicados</h1>
+          <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>{communications.length} comunicados</p>
         </div>
         <Link
           href="/dashboard/teacher/comunicados/nuevo"
-          className="btn-primary rounded-[30px] px-6 py-2.5 text-sm font-medium text-center"
+          className="sa-btn sa-btn-primary text-sm"
         >
           + Nuevo Comunicado
         </Link>
-      </div>
+      </header>
 
       {communications.length === 0 ? (
-        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-12 text-center text-gray-400 dark:text-zinc-500 text-sm">
-          No hay comunicados.
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            {getIcon("bell", { className: "w-6 h-6", style: { color: "var(--muted-foreground)" } })}
+          </div>
+          <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>No hay comunicados.</p>
+          <p className="text-xs max-w-xs mx-auto" style={{ color: "var(--muted-foreground)" }}>Los comunicados que recibas o publiques aparecerán aquí.</p>
         </div>
       ) : (
         <div className="space-y-3">
           {communications.map((c: { id: number; title: string; content: string; priority: string; type: string; createdAt: Date; author: { name: string } }) => (
-            <div key={c.id} className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-5 hover:border-gray-200 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/20 transition-all duration-200">
+            <div key={c.id} className="sa-surface">
               <div className="flex items-start justify-between gap-3 mb-3">
-                <p className="font-semibold text-gray-900 dark:text-white/90">{c.title}</p>
+                <p className="font-semibold" style={{ color: "var(--foreground)" }}>{c.title}</p>
                 <div className="flex gap-2 shrink-0">
-                  <span className={`text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full ${
-                    c.priority === "high"
-                      ? "bg-gray-900 text-white dark:bg-white dark:text-black"
-                      : "bg-gray-100 text-gray-600 dark:bg-zinc-800 dark:text-zinc-400"
-                  }`}>
+                  <span
+                    className="sa-chip"
+                    style={
+                      c.priority === "high"
+                        ? { color: "var(--foreground)", background: "var(--surface-3)" }
+                        : { color: "var(--muted-foreground)", background: "var(--surface-3)" }
+                    }
+                  >
                     {c.priority === "high" ? "Importante" : "Normal"}
                   </span>
-                  <span className="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-gray-50 text-gray-500 dark:bg-zinc-800/50 dark:text-zinc-400 border border-gray-100 dark:border-zinc-700">
+                  <span className="sa-chip" style={{ color: "var(--muted-foreground)", background: "var(--surface-3)" }}>
                     {c.type === "general" ? "General" : "Importante"}
                   </span>
                 </div>
               </div>
-              <p className="text-sm text-gray-500 dark:text-zinc-400 leading-relaxed">{c.content}</p>
-              <p className="text-xs text-gray-400 dark:text-zinc-500 mt-3">
+              <p className="text-sm leading-relaxed" style={{ color: "var(--muted-foreground)" }}>{c.content}</p>
+              <p className="text-xs mt-3" style={{ color: "var(--muted-foreground)" }}>
                 {c.author.name} — {new Date(c.createdAt).toLocaleDateString("es-ES")}
               </p>
             </div>

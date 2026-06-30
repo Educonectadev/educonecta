@@ -2,6 +2,7 @@ import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
 import Link from "next/link"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 export default async function AsistenciaPage() {
   const session = await getServerSession()
@@ -38,22 +39,26 @@ export default async function AsistenciaPage() {
   }))
 
   return (
-    <div className="space-y-8" data-tour="attendance">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6" data-tour="attendance">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Asistencia</h1>
-          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">{courseTeachers.length} cursos disponibles</p>
+          <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Docente / Asistencia</p>
+          <h1 className="text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Asistencia</h1>
+          <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>{courseTeachers.length} cursos disponibles</p>
         </div>
-      </div>
+      </header>
 
-      <div>
+      <section>
         <div className="flex items-center gap-2 mb-4">
-          <span className="material-icons text-base text-gray-400 dark:text-zinc-500">fact_check</span>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500">Tomar Asistencia</h2>
+          {getIcon("fact_check", { className: "text-base", style: { color: "var(--muted-foreground)" } })}
+          <span className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Tomar Asistencia</span>
         </div>
         {courseTeachers.length === 0 ? (
-          <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-12 text-center text-gray-400 dark:text-zinc-500 text-sm">
-            No tienes cursos asignados para tomar asistencia.
+          <div className="sa-surface py-14 md:py-16 text-center">
+            <div className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+              {getIcon("fact_check", { className: "w-6 h-6", style: { color: "var(--muted-foreground)" } })}
+            </div>
+            <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>No tienes cursos asignados para tomar asistencia.</p>
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
@@ -61,39 +66,43 @@ export default async function AsistenciaPage() {
               <Link
                 key={ct.id}
                 href={`/dashboard/teacher/asistencia/tomar?courseId=${ct.courseId}&gradeId=${ct.gradeId ?? ""}&sectionId=${ct.sectionId ?? ""}`}
-                className="group bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-5 hover:border-gray-200 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/20 transition-all duration-200"
+                className="sa-surface group"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="material-icons text-base text-gray-300 dark:text-zinc-600 group-hover:text-gray-500 dark:group-hover:text-zinc-400 transition-colors">arrow_forward</span>
+                  {getIcon("arrow_right", { className: "text-base", style: { color: "var(--muted-foreground)" } })}
                 </div>
-                <p className="font-semibold text-gray-900 dark:text-white/90">{ct.course.name}</p>
-                <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">
+                <p className="font-semibold" style={{ color: "var(--foreground)" }}>{ct.course.name}</p>
+                <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>
                   {ct.grade?.name ?? "—"} / {ct.section?.name ?? "—"}
                 </p>
               </Link>
             ))}
           </div>
         )}
-      </div>
+      </section>
 
-      <div>
+      <section>
         <div className="flex items-center gap-2 mb-4">
-          <span className="material-icons text-base text-gray-400 dark:text-zinc-500">history</span>
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500">Registros Recientes</h2>
+          {getIcon("history", { className: "text-base", style: { color: "var(--muted-foreground)" } })}
+          <span className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Registros Recientes</span>
         </div>
         {recentAttendance.length === 0 ? (
-          <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-8 text-center text-gray-400 dark:text-zinc-500 text-sm">
-            Sin registros.
+          <div className="sa-surface py-14 md:py-16 text-center">
+            <div className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+              {getIcon("history", { className: "w-6 h-6", style: { color: "var(--muted-foreground)" } })}
+            </div>
+            <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>Sin registros.</p>
+            <p className="text-xs max-w-xs mx-auto" style={{ color: "var(--muted-foreground)" }}>Los registros de asistencia aparecerán aquí cuando tomes asistencia.</p>
           </div>
         ) : (
-          <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl overflow-hidden">
+          <div className="sa-surface overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="hidden md:table-header-group border-b border-gray-100 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900/60">
+              <thead className="hidden md:table-header-group border-b" style={{ borderColor: "var(--surface-border)", background: "var(--surface-2)" }}>
                 <tr className="text-left">
-                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">Estudiante</th>
-                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">Fecha</th>
-                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">Presente</th>
-                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider text-gray-700 dark:text-zinc-300 px-4 py-3.5">Nota</th>
+                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Estudiante</th>
+                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Fecha</th>
+                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Presente</th>
+                  <th className="text-left text-[11px] font-semibold uppercase tracking-wider px-4 py-3.5" style={{ color: "var(--foreground)" }}>Nota</th>
                 </tr>
               </thead>
               <tbody>
@@ -101,27 +110,27 @@ export default async function AsistenciaPage() {
                   const dateStr = typeof a.date === "string" ? a.date : a.date.toISOString().substring(0, 10)
                   const dateObj = new Date(dateStr)
                   return (
-                  <tr key={a.id} className="flex flex-col md:table-row border border-gray-100 dark:border-zinc-800/50 md:border-0 rounded-2xl p-4 md:p-0 mb-3 md:mb-0 hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-                    <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-900 dark:text-white/90 font-medium">
-                      <span className="md:hidden text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500">Estudiante</span>
+                  <tr key={a.id} className="flex flex-col md:table-row border md:border-0 rounded-2xl p-4 md:p-0 mb-3 md:mb-0 transition-colors" style={{ borderColor: "var(--surface-border)" }}>
+                    <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 font-medium" style={{ color: "var(--foreground)" }}>
+                      <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Estudiante</span>
                       <span>{a.student.firstName} {a.student.lastName}</span>
                     </td>
-                    <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-600 dark:text-zinc-400">
-                      <span className="md:hidden text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500">Fecha</span>
+                    <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
+                      <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Fecha</span>
                       <span>{dateObj.toLocaleDateString("es-ES")}</span>
                     </td>
                     <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3">
-                      <span className="md:hidden text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500">Presente</span>
-                      <span className={`text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                      <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Presente</span>
+                      <span className={`sa-chip text-[11px] font-semibold uppercase tracking-wider ${
                         a.isPresent
-                          ? "bg-gray-900 text-white dark:bg-white dark:text-black"
-                          : "bg-gray-100 text-gray-500 dark:bg-zinc-800 dark:text-zinc-400"
-                      }`}>
+                          ? ""
+                          : ""
+                      }`} style={a.isPresent ? { color: "var(--accent)", background: "color-mix(in srgb, var(--accent) 14%, transparent)" } : { color: "var(--muted-foreground)", background: "var(--surface-3)" }}>
                         {a.isPresent ? "Presente" : "Ausente"}
                       </span>
                     </td>
-                    <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3 text-gray-500 dark:text-zinc-400">
-                      <span className="md:hidden text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500">Nota</span>
+                    <td className="flex justify-between md:table-cell px-0 md:px-4 py-1 md:py-3" style={{ color: "var(--muted-foreground)" }}>
+                      <span className="md:hidden text-[11px] uppercase tracking-wider" style={{ color: "var(--muted-foreground)" }}>Nota</span>
                       <span>{a.note ?? "—"}</span>
                     </td>
                   </tr>
@@ -131,7 +140,7 @@ export default async function AsistenciaPage() {
             </table>
           </div>
         )}
-      </div>
+      </section>
     </div>
   )
 }

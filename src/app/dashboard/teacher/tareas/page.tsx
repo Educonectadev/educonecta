@@ -2,6 +2,7 @@ import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
 import Link from "next/link"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 export default async function TareasPage() {
   const session = await getServerSession()
@@ -26,39 +27,44 @@ export default async function TareasPage() {
   }))
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Tareas</h1>
-          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">{homework.length} publicadas</p>
+          <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Docente / Tareas</p>
+          <h1 className="text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Tareas</h1>
+          <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>{homework.length} publicadas</p>
         </div>
         <Link
           href="/dashboard/teacher/tareas/nueva"
-          className="btn-primary rounded-[30px] px-6 py-2.5 text-sm font-medium text-center"
+          className="sa-btn sa-btn-primary text-sm"
         >
           + Nueva Tarea
         </Link>
-      </div>
+      </header>
 
       {homework.length === 0 ? (
-        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-12 text-center text-gray-400 dark:text-zinc-500 text-sm">
-          No hay tareas publicadas.
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            {getIcon("assignment", { className: "w-6 h-6", style: { color: "var(--muted-foreground)" } })}
+          </div>
+          <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>No hay tareas publicadas.</p>
+          <p className="text-xs max-w-xs mx-auto" style={{ color: "var(--muted-foreground)" }}>Las tareas que publiques para tus estudiantes aparecerán aquí.</p>
         </div>
       ) : (
         <div className="grid gap-3">
           {homework.map((h: { id: number; title: string; description: string | null; dueDate: Date; course: { name: string }; grade: { name: string } | null; section: { name: string } | null }) => (
-            <div key={h.id} className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-5 hover:border-gray-200 dark:hover:border-zinc-700 hover:shadow-sm dark:hover:shadow-black/20 transition-all duration-200">
+            <div key={h.id} className="sa-surface">
               <div className="flex items-start justify-between gap-3 mb-2">
-                <p className="font-semibold text-gray-900 dark:text-white/90">{h.title}</p>
-                <span className="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full bg-gray-50 text-gray-500 dark:bg-zinc-800/50 dark:text-zinc-400 border border-gray-100 dark:border-zinc-700 shrink-0">
+                <p className="font-semibold" style={{ color: "var(--foreground)" }}>{h.title}</p>
+                <span className="sa-chip shrink-0" style={{ color: "var(--muted-foreground)", background: "var(--surface-3)" }}>
                   Vence {h.dueDate.toLocaleDateString("es-ES")}
                 </span>
               </div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>
                 {h.course.name} — {h.grade?.name ?? "—"} / {h.section?.name ?? "—"}
               </p>
               {h.description && (
-                <p className="text-sm mt-3 text-gray-500 dark:text-zinc-400 leading-relaxed">{h.description}</p>
+                <p className="text-sm mt-3 leading-relaxed" style={{ color: "var(--muted-foreground)" }}>{h.description}</p>
               )}
             </div>
           ))}

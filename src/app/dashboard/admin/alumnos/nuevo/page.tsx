@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import { toast } from "@heroui/react"
 import Select from "@/components/Select"
 
@@ -77,90 +78,94 @@ export default function NuevoAlumnoPage() {
   }
 
   return (
-    <div>
-      <h1 className="mb-8 text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Registrar Alumno</h1>
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}>
+      <div className="mb-8">
+        <p className="sa-eyebrow">Gestión académica</p>
+        <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Registrar Alumno</h1>
+      </div>
 
       <form onSubmit={handleSubmit} className="max-w-lg space-y-5">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-500">Nombre</label>
+          <label className="block sa-eyebrow mb-1.5">Nombre</label>
           <input
             name="firstName"
             value={form.firstName}
             onChange={handleChange}
             required
-            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="sa-input w-full"
           />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-500">Apellido</label>
+          <label className="block sa-eyebrow mb-1.5">Apellido</label>
           <input
             name="lastName"
             value={form.lastName}
             onChange={handleChange}
             required
-            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="sa-input w-full"
           />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-500">Documento de Identidad</label>
+          <label className="block sa-eyebrow mb-1.5">Documento de Identidad</label>
           <input
             name="documentId"
             value={form.documentId}
             onChange={handleChange}
             required
-            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="sa-input w-full"
           />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-500">Email</label>
+          <label className="block sa-eyebrow mb-1.5">Email</label>
           <input
             name="email"
             type="email"
             value={form.email}
             onChange={handleChange}
-            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="sa-input w-full"
           />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-500">Teléfono</label>
+          <label className="block sa-eyebrow mb-1.5">Teléfono</label>
           <input
             name="phone"
             value={form.phone}
             onChange={handleChange}
-            className="w-full rounded-[30px] border border-gray-200 px-5 py-3 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+            className="sa-input w-full"
           />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-500">Grado</label>
+          <label className="block sa-eyebrow mb-1.5">Grado</label>
           <Select value={form.gradeId} onChange={(val) => setForm((prev) => ({...prev, gradeId: val}))} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Seleccionar grado" />
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-500">Sección</label>
+          <label className="block sa-eyebrow mb-1.5">Sección</label>
           <Select value={form.sectionId} onChange={(val) => setForm((prev) => ({...prev, sectionId: val}))} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Seleccionar sección" />
         </div>
 
         <div className="flex items-center gap-3 pt-2">
-          <button
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             type="submit"
             disabled={loading}
-            className="rounded-[30px] btn-primary px-8 py-3 text-sm font-medium"
+            className="sa-btn sa-btn-primary"
           >
             {loading ? "Guardando..." : "Guardar"}
-          </button>
+          </motion.button>
           <Link
             href="/dashboard/admin/alumnos"
-            className="rounded-[30px] border border-gray-200 px-7 py-3 text-sm font-medium text-gray-400 transition-all hover:bg-gray-50"
+            className="sa-btn sa-btn-ghost"
           >
             Cancelar
           </Link>
         </div>
       </form>
-    </div>
+    </motion.div>
   )
 }

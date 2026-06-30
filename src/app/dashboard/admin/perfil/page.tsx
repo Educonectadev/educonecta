@@ -6,6 +6,7 @@ import { getSupabaseAdmin } from "@/lib/supabase"
 import EditableInstitutionSection from "./EditableInstitutionSection"
 import BrandColorPicker from "@/components/BrandColorPicker"
 import StatsGrid from "./StatsGrid"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 export default async function AdminPerfilPage() {
   const session = await getServerSession()
@@ -35,35 +36,33 @@ export default async function AdminPerfilPage() {
     <div data-tour="profile">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mi Perfil</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Información personal y datos de la institución</p>
+          <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Mi Perfil</h1>
+          <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>Información personal y datos de la institución</p>
         </div>
         <Link
           href="/dashboard/admin/perfil/carrusel"
-          className="rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-5 py-2.5 text-sm font-medium text-gray-700 dark:text-zinc-200 hover:border-emerald-300 hover:text-emerald-600 transition-colors duration-200 inline-flex items-center gap-2"
+          className="sa-btn sa-btn-ghost inline-flex items-center gap-2"
         >
-          <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><path d="m21 15-5-5L5 21" />
-          </svg>
+          {getIcon("eye", { size: 16 })}
           Gestionar carrusel
         </Link>
       </div>
 
       <section className="mb-8">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-blue-500 mb-3">Datos del Administrador</h2>
-        <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-[25px] p-6">
+        <p className="sa-eyebrow mb-3">Datos del Administrador</p>
+        <div className="sa-surface p-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Nombre</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{(user as any)?.name}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Nombre</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{(user as any)?.name}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Email</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{(user as any)?.email}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Email</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{(user as any)?.email}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Rol</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">Administrador Institucional</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Rol</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>Administrador Institucional</p>
             </div>
           </div>
         </div>
@@ -78,7 +77,7 @@ export default async function AdminPerfilPage() {
       </section>
 
       <section>
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-3">Estadísticas</h2>
+        <p className="sa-eyebrow mb-3">Estadísticas</p>
         <StatsGrid stats={[
           { label: "Estudiantes", value: studentRes.count },
           { label: "Docentes", value: teacherRes.count },

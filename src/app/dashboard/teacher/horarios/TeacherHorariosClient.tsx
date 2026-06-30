@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Modal } from "@heroui/react"
+import { motion } from "framer-motion"
 
 const dayLabels: Record<number, string> = {
   1: "Lunes", 2: "Martes", 3: "Miércoles", 4: "Jueves", 5: "Viernes",
@@ -61,48 +62,64 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
   }
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6">
+      <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mi Horario</h1>
-          <p className="text-xs text-gray-400 dark:text-zinc-500 mt-1">Clases asignadas por día</p>
+          <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Docente / Horario</p>
+          <h1 className="text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Mi Horario</h1>
+          <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>Clases asignadas por día</p>
         </div>
-        <button onClick={handlePrint} className="rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-2.5 text-sm font-medium text-gray-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">
+        <button onClick={handlePrint} className="sa-btn sa-btn-ghost text-sm">
           Imprimir
         </button>
-      </div>
+      </header>
 
       {schedules.length === 0 ? (
-        <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-12 text-center text-gray-400 dark:text-zinc-500 text-sm">
-          No tienes horarios asignados.
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+          className="sa-surface py-14 md:py-16 text-center"
+        >
+          <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>No tienes horarios asignados.</p>
+          <p className="text-xs max-w-xs mx-auto" style={{ color: "var(--muted-foreground)" }}>
+            Los horarios aparecerán aquí cuando sean asignados por el administrador.
+          </p>
+        </motion.div>
       ) : (
         <div className="grid gap-4 md:grid-cols-5">
-          {days.map((d) => {
+          {days.map((d, dayIdx) => {
             const dayScheds = grouped[d] || []
             const morningScheds = dayScheds.filter((s) => s.shift === "MAÑANA")
             const eveningScheds = dayScheds.filter((s) => s.shift === "TARDE")
             return (
-              <div key={d} className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-2xl p-4">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-3 text-center">{dayLabels[d]}</h3>
+              <motion.div
+                key={d}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const, delay: dayIdx * 0.05 }}
+                className="sa-surface p-4"
+              >
+                <h3 className="sa-eyebrow mb-3 text-center" style={{ color: "var(--muted-foreground)" }}>{dayLabels[d]}</h3>
                 {morningScheds.length === 0 && eveningScheds.length === 0 ? (
-                  <p className="text-[11px] uppercase tracking-wider text-gray-300 dark:text-zinc-600 text-center py-4">Sin clases</p>
+                  <p className="text-[11px] uppercase tracking-wider text-center py-4" style={{ color: "var(--muted-foreground)" }}>Sin clases</p>
                 ) : (
                   <>
                     {morningScheds.length > 0 && (
                       <div className="mb-3">
-                        <p className="text-[10px] uppercase tracking-widest text-gray-400 dark:text-zinc-500 font-semibold mb-2">Mañana</p>
+                        <p className="text-[10px] uppercase tracking-widest font-semibold mb-2" style={{ color: "var(--muted-foreground)" }}>Mañana</p>
                         <div className="space-y-2">
                           {morningScheds.map((s) => (
                             <div
                               key={s.id}
                               onClick={() => setDetail(s)}
-                              className="bg-gray-50 dark:bg-zinc-800 rounded-xl p-3 border border-gray-100 dark:border-zinc-700 cursor-pointer hover:shadow-sm dark:hover:shadow-black/20 transition-all"
+                              className="rounded-xl p-3 border cursor-pointer transition-all"
+                              style={{ background: "var(--surface-2)", borderColor: "var(--surface-border)" }}
                             >
-                              <p className="font-semibold text-xs text-gray-900 dark:text-white/90">{s.course.name}</p>
-                              <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-1">{s.startTime} – {s.endTime}</p>
-                              <p className="text-[11px] text-gray-400 dark:text-zinc-500">{s.grade?.name ?? "—"} · {s.section?.name ?? "—"}</p>
-                              {s.classroom && <p className="text-[11px] text-gray-400 dark:text-zinc-500">Aula: {s.classroom}</p>}
+                              <p className="font-semibold text-xs" style={{ color: "var(--foreground)" }}>{s.course.name}</p>
+                              <p className="text-[11px] mt-1" style={{ color: "var(--muted-foreground)" }}>{s.startTime} – {s.endTime}</p>
+                              <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>{s.grade?.name ?? "—"} · {s.section?.name ?? "—"}</p>
+                              {s.classroom && <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>Aula: {s.classroom}</p>}
                             </div>
                           ))}
                         </div>
@@ -110,18 +127,19 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
                     )}
                     {eveningScheds.length > 0 && (
                       <div>
-                        <p className="text-[10px] uppercase tracking-widest text-gray-400 dark:text-zinc-500 font-semibold mb-2">Tarde</p>
+                        <p className="text-[10px] uppercase tracking-widest font-semibold mb-2" style={{ color: "var(--muted-foreground)" }}>Tarde</p>
                         <div className="space-y-2">
                           {eveningScheds.map((s) => (
                             <div
                               key={s.id}
                               onClick={() => setDetail(s)}
-                              className="bg-gray-50 dark:bg-zinc-800 rounded-xl p-3 border border-gray-100 dark:border-zinc-700 cursor-pointer hover:shadow-sm dark:hover:shadow-black/20 transition-all"
+                              className="rounded-xl p-3 border cursor-pointer transition-all"
+                              style={{ background: "var(--surface-2)", borderColor: "var(--surface-border)" }}
                             >
-                              <p className="font-semibold text-xs text-gray-900 dark:text-white/90">{s.course.name}</p>
-                              <p className="text-[11px] text-gray-400 dark:text-zinc-500 mt-1">{s.startTime} – {s.endTime}</p>
-                              <p className="text-[11px] text-gray-400 dark:text-zinc-500">{s.grade?.name ?? "—"} · {s.section?.name ?? "—"}</p>
-                              {s.classroom && <p className="text-[11px] text-gray-400 dark:text-zinc-500">Aula: {s.classroom}</p>}
+                              <p className="font-semibold text-xs" style={{ color: "var(--foreground)" }}>{s.course.name}</p>
+                              <p className="text-[11px] mt-1" style={{ color: "var(--muted-foreground)" }}>{s.startTime} – {s.endTime}</p>
+                              <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>{s.grade?.name ?? "—"} · {s.section?.name ?? "—"}</p>
+                              {s.classroom && <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>Aula: {s.classroom}</p>}
                             </div>
                           ))}
                         </div>
@@ -129,7 +147,7 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
                     )}
                   </>
                 )}
-              </div>
+              </motion.div>
             )
           })}
         </div>
@@ -139,47 +157,47 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
         <Modal isOpen onOpenChange={(v) => { if (!v) setDetail(null) }}>
           <Modal.Backdrop />
           <Modal.Container size="cover" scroll="outside">
-              <Modal.Dialog className="z-[60] dark:bg-zinc-900 dark:text-white">
+              <Modal.Dialog className="z-[60]" style={{ background: "var(--surface)" }}>
                 <Modal.CloseTrigger />
                 <Modal.Header>
-                  <Modal.Heading className="dark:text-white">Detalle del Horario</Modal.Heading>
+                  <Modal.Heading style={{ color: "var(--foreground)" }}>Detalle del Horario</Modal.Heading>
                 </Modal.Header>
                 <Modal.Body>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Día</p>
-                        <p className="font-medium dark:text-white">{dayLabels[detail.dayOfWeek]}</p>
+                        <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Día</p>
+                        <p className="font-medium" style={{ color: "var(--foreground)" }}>{dayLabels[detail.dayOfWeek]}</p>
                       </div>
                       <div>
-                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Turno</p>
-                        <p className="font-medium dark:text-white">{detail.shift}</p>
+                        <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Turno</p>
+                        <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.shift}</p>
                       </div>
                       <div>
-                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Inicio</p>
-                        <p className="font-medium dark:text-white">{detail.startTime}</p>
+                        <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Inicio</p>
+                        <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.startTime}</p>
                       </div>
                       <div>
-                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Fin</p>
-                        <p className="font-medium dark:text-white">{detail.endTime}</p>
+                        <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Fin</p>
+                        <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.endTime}</p>
                       </div>
                     </div>
-                    <div className="border-t border-gray-100 dark:border-zinc-800 pt-4">
-                      <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Curso</p>
-                      <p className="font-semibold text-lg dark:text-white">{detail.course.name}</p>
+                    <div className="border-t pt-4" style={{ borderColor: "var(--surface-border)" }}>
+                      <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Curso</p>
+                      <p className="font-semibold text-lg" style={{ color: "var(--foreground)" }}>{detail.course.name}</p>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Grado</p>
-                        <p className="font-medium dark:text-white">{detail.grade?.name ?? "—"}</p>
+                        <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Grado</p>
+                        <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.grade?.name ?? "—"}</p>
                       </div>
                       <div>
-                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Sección</p>
-                        <p className="font-medium dark:text-white">{detail.section?.name ?? "—"}</p>
+                        <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Sección</p>
+                        <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.section?.name ?? "—"}</p>
                       </div>
                       <div>
-                        <p className="text-[11px] uppercase tracking-wider text-gray-400 dark:text-zinc-500 mb-1">Aula</p>
-                        <p className="font-medium dark:text-white">{detail.classroom ?? "—"}</p>
+                        <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Aula</p>
+                        <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.classroom ?? "—"}</p>
                       </div>
                     </div>
                   </div>

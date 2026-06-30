@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo, memo } from "react"
 import { useRouter } from "next/navigation"
+import { motion } from "framer-motion"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
@@ -100,117 +101,114 @@ const TeacherFormFields = memo(function TeacherFormFields({
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Datos Personales</p>
+        <p className="sa-eyebrow mb-3">Datos Personales</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Nombres *</label>
-            <input value={form.firstName} onChange={(e) => setField("firstName", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Juan" />
+            <label className="block sa-eyebrow mb-1.5">Nombres *</label>
+            <input value={form.firstName} onChange={(e) => setField("firstName", e.target.value)} className="sa-input w-full" placeholder="Juan" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Apellidos *</label>
-            <input value={form.lastName} onChange={(e) => setField("lastName", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Pérez" />
+            <label className="block sa-eyebrow mb-1.5">Apellidos *</label>
+            <input value={form.lastName} onChange={(e) => setField("lastName", e.target.value)} className="sa-input w-full" placeholder="Pérez" />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 mt-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">DNI / CE</label>
-            <input value={form.documentId} onChange={(e) => setField("documentId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="12345678" maxLength={20} />
+            <label className="block sa-eyebrow mb-1.5">DNI / CE</label>
+            <input value={form.documentId} onChange={(e) => setField("documentId", e.target.value)} className="sa-input w-full" placeholder="12345678" maxLength={20} />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
-            <input type="tel" value={form.phone} onChange={(e) => setField("phone", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="987654321" maxLength={15} />
+            <label className="block sa-eyebrow mb-1.5">Teléfono</label>
+            <input type="tel" value={form.phone} onChange={(e) => setField("phone", e.target.value)} className="sa-input w-full" placeholder="987654321" maxLength={15} />
           </div>
         </div>
         <div className="mt-3">
-          <label className="block text-xs font-medium text-gray-500 mb-1">Dirección</label>
-          <input value={form.address} onChange={(e) => setField("address", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Av. Principal 123" />
+          <label className="block sa-eyebrow mb-1.5">Dirección</label>
+          <input value={form.address} onChange={(e) => setField("address", e.target.value)} className="sa-input w-full" placeholder="Av. Principal 123" />
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Datos Profesionales</p>
+        <p className="sa-eyebrow mb-3">Datos Profesionales</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Título Profesional</label>
-            <input value={form.professionalTitle} onChange={(e) => setField("professionalTitle", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Lic. en Educación" />
+            <label className="block sa-eyebrow mb-1.5">Título Profesional</label>
+            <input value={form.professionalTitle} onChange={(e) => setField("professionalTitle", e.target.value)} className="sa-input w-full" placeholder="Lic. en Educación" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Especialidad</label>
-            <input value={form.speciality} onChange={(e) => setField("speciality", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Matemáticas" />
+            <label className="block sa-eyebrow mb-1.5">Especialidad</label>
+            <input value={form.speciality} onChange={(e) => setField("speciality", e.target.value)} className="sa-input w-full" placeholder="Matemáticas" />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 mt-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Nivel de Estudios</label>
+            <label className="block sa-eyebrow mb-1.5">Nivel de Estudios</label>
             <Select value={form.educationLevel} onChange={(val) => setField("educationLevel", val)} options={educationLevels.map(l => ({value: l, label: l}))} placeholder="Seleccionar" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Tipo de Contrato</label>
+            <label className="block sa-eyebrow mb-1.5">Tipo de Contrato</label>
             <Select value={form.contractType} onChange={(val) => setField("contractType", val)} options={contractTypes.map(c => ({value: c, label: c}))} placeholder="Seleccionar" />
           </div>
         </div>
         <div className="mt-3">
-          <label className="block text-xs font-medium text-gray-500 mb-1">Fecha de Contratación</label>
-          <input type="date" value={form.hireDate} onChange={(e) => setField("hireDate", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+          <label className="block sa-eyebrow mb-1.5">Fecha de Contratación</label>
+          <input type="date" value={form.hireDate} onChange={(e) => setField("hireDate", e.target.value)} className="sa-input w-full" />
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Niveles Asignados</p>
-        <p className="text-xs text-gray-400 mb-3">Selecciona los niveles educativos en los que el profesor dicta clases.</p>
+        <p className="sa-eyebrow mb-3">Niveles Asignados</p>
+        <p className="text-xs mb-3" style={{ color: "var(--muted-foreground)" }}>Selecciona los niveles educativos en los que el profesor dicta clases.</p>
         <div className="flex flex-wrap gap-2">
           {assignedLevelOptions.map((opt) => {
             const selected = form.assignedLevels.includes(opt.value)
             return (
-              <button
+              <motion.button
                 key={opt.value}
                 type="button"
+                whileTap={{ scale: 0.97 }}
                 onClick={() => {
                   const next = selected
                     ? form.assignedLevels.filter((v) => v !== opt.value)
                     : [...form.assignedLevels, opt.value]
                   setField("assignedLevels", next)
                 }}
-                className={
-                  "rounded-full px-4 py-1.5 text-xs font-medium border transition-all " +
-                  (selected
-                    ? "bg-emerald-500 border-emerald-500 text-white"
-                    : "bg-white border-gray-200 text-gray-500 hover:border-emerald-300")
-                }
+                className={"sa-chip text-xs cursor-pointer " + (selected ? "sa-accent sa-accent-border" : "")}
+                style={selected ? { background: "var(--accent)", color: "var(--background)", borderColor: "var(--accent)" } : {}}
               >
                 {opt.label}
-              </button>
+              </motion.button>
             )
           })}
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Contacto de Emergencia</p>
+        <p className="sa-eyebrow mb-3">Contacto de Emergencia</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
-            <input value={form.emergencyContactName} onChange={(e) => setField("emergencyContactName", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="María López" />
+            <label className="block sa-eyebrow mb-1.5">Nombre</label>
+            <input value={form.emergencyContactName} onChange={(e) => setField("emergencyContactName", e.target.value)} className="sa-input w-full" placeholder="María López" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
-            <input type="tel" value={form.emergencyContactPhone} onChange={(e) => setField("emergencyContactPhone", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="987654321" maxLength={15} />
+            <label className="block sa-eyebrow mb-1.5">Teléfono</label>
+            <input type="tel" value={form.emergencyContactPhone} onChange={(e) => setField("emergencyContactPhone", e.target.value)} className="sa-input w-full" placeholder="987654321" maxLength={15} />
           </div>
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Asignación de Cursos (opcional)</p>
-        <p className="text-xs text-gray-400 mb-3">Si lo asignas ahora, el profesor ya podrá dictar clases sin pasos adicionales.</p>
+        <p className="sa-eyebrow mb-3">Asignación de Cursos (opcional)</p>
+        <p className="text-xs mb-3" style={{ color: "var(--muted-foreground)" }}>Si lo asignas ahora, el profesor ya podrá dictar clases sin pasos adicionales.</p>
         {form.assignments.map((a, idx) => {
           const filteredSections = a.gradeId
             ? sections.filter((s) => String(s.gradeId) === a.gradeId)
             : []
           return (
-            <div key={idx} className="border border-gray-100 rounded-[20px] p-3 mb-2">
+            <div key={idx} className="sa-surface-flat p-3 mb-2">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Curso</label>
+                  <label className="block sa-eyebrow mb-1.5">Curso</label>
                   <Select
                     value={a.courseId}
                     onChange={(val) => setAssignment(idx, "courseId", val)}
@@ -219,7 +217,7 @@ const TeacherFormFields = memo(function TeacherFormFields({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+                  <label className="block sa-eyebrow mb-1.5">Grado</label>
                   <Select
                     value={a.gradeId}
                     onChange={(val) => { setAssignment(idx, "gradeId", val); setAssignment(idx, "sectionId", "") }}
@@ -228,7 +226,7 @@ const TeacherFormFields = memo(function TeacherFormFields({
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+                  <label className="block sa-eyebrow mb-1.5">Sección</label>
                   <Select
                     key={`assign-sec-${idx}-${a.gradeId}`}
                     value={a.sectionId}
@@ -239,37 +237,39 @@ const TeacherFormFields = memo(function TeacherFormFields({
                 </div>
               </div>
               {form.assignments.length > 1 && (
-                <button
+                <motion.button
                   type="button"
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => removeAssignment(idx)}
-                  className="mt-2 text-xs text-red-500 hover:text-red-700"
+                  className="mt-2 text-xs" style={{ color: "#ef4444" }}
                 >
                   Quitar asignación
-                </button>
+                </motion.button>
               )}
             </div>
           )
         })}
-        <button
+        <motion.button
           type="button"
+          whileTap={{ scale: 0.97 }}
           onClick={addAssignment}
-          className="text-xs text-blue-600 hover:text-blue-800"
+          className="text-xs" style={{ color: "var(--accent)" }}
         >
           + Agregar otro curso
-        </button>
+        </motion.button>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Acceso al Sistema</p>
+        <p className="sa-eyebrow mb-3">Acceso al Sistema</p>
         {email && (
-          <div className="bg-gray-50 rounded-[20px] px-4 py-2.5 mb-3">
-            <p className="text-[11px] text-gray-400">Email generado automáticamente:</p>
-            <p className="text-sm font-medium text-gray-700">{email}</p>
+          <div className="px-4 py-2.5 rounded-[var(--radius-tile)] mb-3" style={{ background: "var(--surface-2)" }}>
+            <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>Email generado automáticamente:</p>
+            <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{email}</p>
           </div>
         )}
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">{passwordRequired ? "Contraseña *" : "Nueva contraseña (dejar vacío para mantener)"}</label>
-          <input type="password" value={form.password} onChange={(e) => setField("password", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" minLength={6} />
+          <label className="block sa-eyebrow mb-1.5">{passwordRequired ? "Contraseña *" : "Nueva contraseña (dejar vacío para mantener)"}</label>
+          <input type="password" value={form.password} onChange={(e) => setField("password", e.target.value)} className="sa-input w-full" minLength={6} />
         </div>
       </div>
     </div>
@@ -442,69 +442,76 @@ export default function ProfesoresList({
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Profesores</h1>
-        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium text-center">+ Contratar Profesor</button>
-      </div>
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+          <div>
+            <p className="sa-eyebrow">Planilla docente</p>
+            <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Profesores</h1>
+          </div>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setShowCreate(true); resetForm() }} className="sa-btn sa-btn-primary">+ Contratar Profesor</motion.button>
+        </div>
+      </motion.div>
 
-      <DataTable
-        data={teachers}
-        emptyMessage="No hay profesores registrados."
-        onEdit={openEdit}
-        onDelete={(t) => setDeleting(t)}
-        columns={[
-          {
-            key: "name",
-            label: "Profesor",
-            sortable: true,
-            render: (t) => (
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 dark:from-zinc-700 dark:to-zinc-800 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-zinc-200 shrink-0">
-                  {t.user.name.charAt(0)}
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}>
+        <DataTable
+          data={teachers}
+          emptyMessage="No hay profesores registrados."
+          onEdit={openEdit}
+          onDelete={(t) => setDeleting(t)}
+          columns={[
+            {
+              key: "name",
+              label: "Profesor",
+              sortable: true,
+              render: (t) => (
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium shrink-0" style={{ background: "var(--surface-3)", color: "var(--muted-foreground)" }}>
+                    {t.user.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{t.user.name}</p>
+                    <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>{t.user.email}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{t.user.name}</p>
-                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">{t.user.email}</p>
+              ),
+            },
+            {
+              key: "speciality",
+              label: "Especialidad",
+              sortable: true,
+              render: (t) => t.speciality ? <span className="sa-chip">{t.speciality}</span> : <span className="text-xs" style={{ color: "var(--muted-foreground)" }}>—</span>,
+            },
+            {
+              key: "contractType",
+              label: "Contrato",
+              sortable: true,
+              render: (t) => t.contractType ? <span className="sa-chip">{t.contractType}</span> : <span className="text-xs" style={{ color: "var(--muted-foreground)" }}>—</span>,
+            },
+            {
+              key: "educationLevel",
+              label: "Estudios",
+              render: (t) => (t.educationLevel || t.professionalTitle) ? <span className="sa-chip" style={{ color: "#d97706", background: "rgba(217, 119, 6, 0.14)", borderColor: "rgba(217, 119, 6, 0.2)" }}>{t.educationLevel || t.professionalTitle}</span> : <span className="text-xs" style={{ color: "var(--muted-foreground)" }}>—</span>,
+            },
+            {
+              key: "assignedLevels",
+              label: "Niveles",
+              render: (t) => t.assignedLevels && t.assignedLevels.length > 0 ? (
+                <div className="flex flex-wrap gap-1">
+                  {t.assignedLevels.map((lvl) => {
+                    const chipStyle: Record<string, React.CSSProperties> = {
+                      INICIAL: { color: "#d946ef", background: "rgba(217, 70, 239, 0.12)", borderColor: "rgba(217, 70, 239, 0.2)" },
+                      PRIMARIA: { color: "var(--accent)", background: "color-mix(in srgb, var(--accent) 14%, transparent)", borderColor: "color-mix(in srgb, var(--accent) 25%, transparent)" },
+                      SECUNDARIA: { color: "#6366f1", background: "rgba(99, 102, 241, 0.12)", borderColor: "rgba(99, 102, 241, 0.2)" },
+                    }
+                    const label = lvl.charAt(0) + lvl.slice(1).toLowerCase()
+                    return <span key={lvl} className="sa-chip" style={chipStyle[lvl] ?? {}}>{label}</span>
+                  })}
                 </div>
-              </div>
-            ),
-          },
-          {
-            key: "speciality",
-            label: "Especialidad",
-            sortable: true,
-            render: (t) => t.speciality ? <span className="badge-blue text-xs rounded-full px-2.5 py-0.5 border">{t.speciality}</span> : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
-          },
-          {
-            key: "contractType",
-            label: "Contrato",
-            sortable: true,
-            render: (t) => t.contractType ? <span className="badge-gray text-xs rounded-full px-2.5 py-0.5 border">{t.contractType}</span> : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
-          },
-          {
-            key: "educationLevel",
-            label: "Estudios",
-            render: (t) => (t.educationLevel || t.professionalTitle) ? <span className="badge-amber text-xs rounded-full px-2.5 py-0.5 border">{t.educationLevel || t.professionalTitle}</span> : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
-          },
-          {
-            key: "assignedLevels",
-            label: "Niveles",
-            render: (t) => t.assignedLevels && t.assignedLevels.length > 0 ? (
-              <div className="flex flex-wrap gap-1">
-                {t.assignedLevels.map((lvl) => {
-                  const badgeClass: Record<string, string> = {
-                    INICIAL: "badge-pink",
-                    PRIMARIA: "badge-emerald",
-                    SECUNDARIA: "badge-indigo",
-                  }
-                  const label = lvl.charAt(0) + lvl.slice(1).toLowerCase()
-                  return <span key={lvl} className={`text-xs rounded-full px-2.5 py-0.5 border ${badgeClass[lvl] ?? "badge-gray"}`}>{label}</span>
-                })}
-              </div>
-            ) : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
-          },
-        ]}
-      />
+              ) : <span className="text-xs" style={{ color: "var(--muted-foreground)" }}>—</span>,
+            },
+          ]}
+        />
+      </motion.div>
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Contratar Profesor" size="lg">
         <TeacherFormFields
@@ -519,10 +526,10 @@ export default function ProfesoresList({
           passwordRequired
         />
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleCreate} disabled={loading} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowCreate(false)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={handleCreate} disabled={loading} className="sa-btn sa-btn-primary flex-1">
             {loading ? "Guardando..." : "Contratar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
 
@@ -539,20 +546,20 @@ export default function ProfesoresList({
           passwordRequired={false}
         />
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setEditing(null)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={handleSave} disabled={loading} className="sa-btn sa-btn-primary flex-1">
             {loading ? "Guardando..." : "Guardar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar profesor" size="sm">
-        <p className="text-sm text-gray-500 text-center">Se eliminará {deleting?.user?.name}. Esta acción no se puede deshacer.</p>
+        <p className="text-sm text-center" style={{ color: "var(--muted-foreground)" }}>Se eliminará {deleting?.user?.name}. Esta acción no se puede deshacer.</p>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setDeleting(null)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={handleDelete} disabled={loading} className="sa-btn flex-1" style={{ background: "#ef4444", color: "white", border: "1px solid #ef4444" }}>
             {loading ? "Eliminando..." : "Eliminar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
     </>

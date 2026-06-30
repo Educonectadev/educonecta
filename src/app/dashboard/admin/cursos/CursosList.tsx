@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import { motion } from "framer-motion"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
@@ -258,108 +259,117 @@ export default function CursosList({
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Cursos</h1>
-          <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">{courses.length} cursos registrados · {teachers.length} profesores disponibles</p>
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+          <div>
+            <p className="sa-eyebrow">Oferta académica</p>
+            <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Cursos</h1>
+            <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>{courses.length} cursos registrados · {teachers.length} profesores disponibles</p>
+          </div>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={openCreate} className="sa-btn sa-btn-primary">
+            + Nuevo Curso
+          </motion.button>
         </div>
-        <button onClick={openCreate} className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium text-center">
-          + Nuevo Curso
-        </button>
-      </div>
+      </motion.div>
 
-      <DataTable
-        data={courses}
-        emptyMessage="No hay cursos registrados."
-        onEdit={openEdit}
-        onDelete={(c) => setDeleting(c)}
-        columns={[
-          {
-            key: "name",
-            label: "Curso",
-            sortable: true,
-            render: (c) => (
-              <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white/90">{c.name}</p>
-                {c.code && <p className="text-[11px] text-gray-500 dark:text-zinc-400">Código: {c.code}</p>}
-              </div>
-            ),
-          },
-          {
-            key: "description",
-            label: "Descripción",
-            sortable: false,
-            render: (c) => c.description ? <span className="text-sm text-gray-700 dark:text-zinc-300 line-clamp-1">{c.description}</span> : <span className="text-sm text-gray-400 dark:text-zinc-600">—</span>,
-          },
-          {
-            key: "scheduleCount",
-            label: "Horarios",
-            sortable: false,
-            render: (c) => (
-              <span className="badge-gray text-xs rounded-full px-2.5 py-0.5 border">
-                {c.scheduleCount ?? 0}
-              </span>
-            ),
-          },
-          {
-            key: "teachers",
-            label: "Profesores",
-            sortable: false,
-            render: (c) => (
-              <div className="flex items-center gap-2">
-                {c.teachers.length > 0 ? (
-                  <div className="flex flex-wrap gap-1">
-                    {c.teachers.slice(0, 2).map((ct) => (
-                      <span key={ct.id} className="badge-blue text-[11px] rounded-full px-2 py-0.5 border">
-                        {ct.teacher.user.name}
-                        {(ct.grade || ct.section) && ` (${ct.grade?.name || ""}${ct.grade && ct.section ? " / " : ""}${ct.section?.name || ""})`}
-                      </span>
-                    ))}
-                    {c.teachers.length > 2 && (
-                      <span className="text-[11px] text-gray-500 dark:text-zinc-400">+{c.teachers.length - 2}</span>
-                    )}
-                  </div>
-                ) : (
-                  <span className="text-sm text-gray-400 dark:text-zinc-500">Sin asignar</span>
-                )}
-                <button
-                  onClick={(e) => { e.stopPropagation(); onAssign(c) }}
-                  className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 ml-1"
-                >
-                  Asignar
-                </button>
-              </div>
-            ),
-          },
-        ]}
-      />
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}>
+        <DataTable
+          data={courses}
+          emptyMessage="No hay cursos registrados."
+          onEdit={openEdit}
+          onDelete={(c) => setDeleting(c)}
+          columns={[
+            {
+              key: "name",
+              label: "Curso",
+              sortable: true,
+              render: (c) => (
+                <div>
+                  <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{c.name}</p>
+                  {c.code && <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>Código: {c.code}</p>}
+                </div>
+              ),
+            },
+            {
+              key: "description",
+              label: "Descripción",
+              sortable: false,
+              render: (c) => c.description ? <span className="text-sm line-clamp-1" style={{ color: "var(--foreground)" }}>{c.description}</span> : <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>—</span>,
+            },
+            {
+              key: "scheduleCount",
+              label: "Horarios",
+              sortable: false,
+              render: (c) => (
+                <span className="sa-chip">
+                  {c.scheduleCount ?? 0}
+                </span>
+              ),
+            },
+            {
+              key: "teachers",
+              label: "Profesores",
+              sortable: false,
+              render: (c) => (
+                <div className="flex items-center gap-2">
+                  {c.teachers.length > 0 ? (
+                    <div className="flex flex-wrap gap-1">
+                      {c.teachers.slice(0, 2).map((ct) => (
+                        <span key={ct.id} className="sa-chip" style={{ color: "var(--accent)", background: "color-mix(in srgb, var(--accent) 14%, transparent)", borderColor: "color-mix(in srgb, var(--accent) 25%, transparent)" }}>
+                          {ct.teacher.user.name}
+                          {(ct.grade || ct.section) && ` (${ct.grade?.name || ""}${ct.grade && ct.section ? " / " : ""}${ct.section?.name || ""})`}
+                        </span>
+                      ))}
+                      {c.teachers.length > 2 && (
+                        <span className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>+{c.teachers.length - 2}</span>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>Sin asignar</span>
+                  )}
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    onClick={(e) => { e.stopPropagation(); onAssign(c) }}
+                    className="text-xs ml-1" style={{ color: "var(--accent)" }}
+                  >
+                    Asignar
+                  </motion.button>
+                </div>
+              ),
+            },
+          ]}
+        />
+      </motion.div>
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Nuevo Curso" size="lg" scroll="inside">
         <div className="space-y-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Información del Curso</p>
+            <p className="sa-eyebrow mb-3">Información del Curso</p>
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Nombre *</label>
+                <label className="block sa-eyebrow mb-1.5">Nombre *</label>
                 <input
                   value={form.name}
                   onChange={(e) => onNameChange(e.target.value)}
-                  className={`w-full rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${nameError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-black focus:ring-black"}`}
+                  className={`sa-input w-full ${nameError ? "border-red-400" : ""}`}
                   placeholder="Ej. Matemática"
+                  style={nameError ? { borderColor: "#f87171" } : {}}
                 />
-                {nameError && <p className="text-xs text-red-500 mt-1">{nameError}</p>}
+                {nameError && <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{nameError}</p>}
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Código</label>
+                <label className="block sa-eyebrow mb-1.5">Código</label>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <input
                     value={form.code}
                     onChange={(e) => { setForm({ ...form, code: e.target.value }); setAutoCode(false) }}
-                    className={`w-full sm:flex-1 rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${codeError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-black focus:ring-black"}`}
+                    className={`sa-input w-full sm:flex-1 ${codeError ? "border-red-400" : ""}`}
                     placeholder="MAT"
+                    style={codeError ? { borderColor: "#f87171" } : {}}
                   />
-                  <button
+                  <motion.button
                     type="button"
+                    whileTap={{ scale: 0.97 }}
                     role="switch"
                     aria-checked={autoCode}
                     onClick={() => {
@@ -369,36 +379,30 @@ export default function CursosList({
                         setForm({ ...form, code: generateCode(form.name) })
                       }
                     }}
-                    className={`inline-flex items-center justify-between sm:justify-start gap-2 shrink-0 rounded-full border px-3 py-2 text-xs font-medium transition-all duration-150 active:scale-95 ${
-                      autoCode
-                        ? "bg-black text-white border-black"
-                        : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"
-                    }`}
+                    className={"sa-chip text-xs cursor-pointer shrink-0 " + (autoCode ? "sa-accent sa-accent-border" : "")}
+                    style={autoCode ? { background: "var(--accent)", color: "var(--background)", borderColor: "var(--accent)" } : {}}
                   >
                     <span className="flex items-center gap-2">
                       <span
-                        className={`relative inline-block w-8 h-[18px] rounded-full transition-colors duration-200 ${
-                          autoCode ? "bg-white/30" : "bg-gray-300"
-                        }`}
+                        className={`relative inline-block w-8 h-[18px] rounded-full transition-colors duration-200 ${autoCode ? "opacity-70" : ""}`}
+                        style={{ background: autoCode ? "rgba(255,255,255,0.3)" : "var(--surface-border)" }}
                       >
                         <span
-                          className={`absolute top-[2px] size-3.5 rounded-full bg-white shadow transition-all duration-200 ${
-                            autoCode ? "left-[16px]" : "left-[2px]"
-                          }`}
+                          className={`absolute top-[2px] size-3.5 rounded-full bg-white shadow transition-all duration-200 ${autoCode ? "left-[16px]" : "left-[2px]"}`}
                         />
                       </span>
                       <span>Auto</span>
                     </span>
-                  </button>
+                  </motion.button>
                 </div>
-                {codeError && <p className="text-xs text-red-500 mt-1">{codeError}</p>}
+                {codeError && <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{codeError}</p>}
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Descripción</label>
+                <label className="block sa-eyebrow mb-1.5">Descripción</label>
                 <textarea
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                  className="sa-input w-full"
                   rows={2}
                   placeholder="Breve descripción del curso (opcional)"
                   maxLength={255}
@@ -408,11 +412,11 @@ export default function CursosList({
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Asignar Profesor (opcional)</p>
-            <p className="text-xs text-gray-400 mb-3">Si asignas un profesor ahora, podrá dictar este curso inmediatamente.</p>
+            <p className="sa-eyebrow mb-3">Asignar Profesor (opcional)</p>
+            <p className="text-xs mb-3" style={{ color: "var(--muted-foreground)" }}>Si asignas un profesor ahora, podrá dictar este curso inmediatamente.</p>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Profesor</label>
+                <label className="block sa-eyebrow mb-1.5">Profesor</label>
                 <Select
                   value={form.initialTeacherId}
                   onChange={(val) => setForm({ ...form, initialTeacherId: val })}
@@ -421,7 +425,7 @@ export default function CursosList({
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+                <label className="block sa-eyebrow mb-1.5">Grado</label>
                 <Select
                   value={form.initialGradeId}
                   onChange={(val) => setForm({ ...form, initialGradeId: val, initialSectionId: "" })}
@@ -430,7 +434,7 @@ export default function CursosList({
                 />
               </div>
               <div className="col-span-2">
-                <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+                <label className="block sa-eyebrow mb-1.5">Sección</label>
                 <Select
                   key={`create-sec-${form.initialGradeId}`}
                   value={form.initialSectionId}
@@ -443,54 +447,57 @@ export default function CursosList({
           </div>
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowCreate(false)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             onClick={handleCreate}
             disabled={loading || !form.name.trim() || !!nameError || !!codeError}
-            className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+            className="sa-btn sa-btn-primary flex-1"
           >
             {loading ? "Creando..." : "Crear Curso"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
 
       <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Curso" size="md" scroll="inside">
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Nombre *</label>
+            <label className="block sa-eyebrow mb-1.5">Nombre *</label>
             <input
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className={`w-full rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${nameError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-black focus:ring-black"}`}
+              className={`sa-input w-full ${nameError ? "border-red-400" : ""}`}
+              style={nameError ? { borderColor: "#f87171" } : {}}
             />
-            {nameError && <p className="text-xs text-red-500 mt-1">{nameError}</p>}
+            {nameError && <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{nameError}</p>}
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Código</label>
+            <label className="block sa-eyebrow mb-1.5">Código</label>
             <input
               value={form.code}
               onChange={(e) => setForm({ ...form, code: e.target.value })}
-              className={`w-full rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${codeError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-black focus:ring-black"}`}
+              className={`sa-input w-full ${codeError ? "border-red-400" : ""}`}
+              style={codeError ? { borderColor: "#f87171" } : {}}
             />
-            {codeError && <p className="text-xs text-red-500 mt-1">{codeError}</p>}
+            {codeError && <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{codeError}</p>}
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Descripción</label>
+            <label className="block sa-eyebrow mb-1.5">Descripción</label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+              className="sa-input w-full"
               rows={3}
               maxLength={255}
             />
           </div>
           {editing && editing.teachers.length > 0 && (
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-2">Profesores actualmente asignados</label>
+              <label className="block sa-eyebrow mb-2">Profesores actualmente asignados</label>
               <div className="space-y-1.5">
                 {editing.teachers.map((ct) => (
-                  <div key={ct.id} className="text-xs flex items-center justify-between bg-gray-50 rounded-[20px] px-3 py-2">
-                    <span>
+                  <div key={ct.id} className="text-xs flex items-center justify-between px-3 py-2 rounded-[var(--radius-tile)]" style={{ background: "var(--surface-2)" }}>
+                    <span style={{ color: "var(--foreground)" }}>
                       {ct.teacher.user.name}
                       {(ct.grade || ct.section) && ` (${ct.grade?.name ?? ""}${ct.grade && ct.section ? " / " : ""}${ct.section?.name ?? ""})`}
                     </span>
@@ -501,42 +508,43 @@ export default function CursosList({
           )}
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setEditing(null)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             onClick={handleSave}
             disabled={loading || !form.name.trim() || !!nameError || !!codeError}
-            className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+            className="sa-btn sa-btn-primary flex-1"
           >
             {loading ? "Guardando..." : "Guardar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
 
       <Modal open={!!assigning} onClose={closeAssign} title="Asignar Profesor" size="md" scroll="inside">
-        <p className="text-sm text-gray-500 mb-1">Curso: <strong className="text-gray-900">{assigning?.name}</strong></p>
+        <p className="text-sm mb-1" style={{ color: "var(--muted-foreground)" }}>Curso: <strong style={{ color: "var(--foreground)" }}>{assigning?.name}</strong></p>
         {assigning && assigning.scheduleCount && assigning.scheduleCount > 0 && (
-          <p className="text-xs text-amber-600 mb-4">⚠ Este curso tiene {assigning.scheduleCount} horario(s) creado(s)</p>
+          <p className="text-xs mb-4" style={{ color: "#d97706" }}>⚠ Este curso tiene {assigning.scheduleCount} horario(s) creado(s)</p>
         )}
 
         {assigning && assigning.teachers.length > 0 && (
           <div className="mb-4">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Asignados actualmente</p>
+            <p className="sa-eyebrow mb-2">Asignados actualmente</p>
             <div className="space-y-1.5">
               {assigning.teachers.map((ct) => (
-                <div key={ct.id} className="flex items-center justify-between text-sm bg-gray-50 rounded-[20px] px-3 py-2">
-                  <span className="text-gray-600">
+                <div key={ct.id} className="flex items-center justify-between text-sm px-3 py-2 rounded-[var(--radius-tile)]" style={{ background: "var(--surface-2)" }}>
+                  <span style={{ color: "var(--foreground)" }}>
                     {ct.teacher.user.name} {ct.grade ? `(${ct.grade.name}${ct.section ? ` / ${ct.section.name}` : ""})` : "(Todos los grados)"}
                   </span>
-                  <button onClick={() => handleRemoveAssignment(ct.id)} className="text-xs text-red-500 hover:text-red-700">Quitar</button>
+                  <motion.button whileTap={{ scale: 0.9 }} onClick={() => handleRemoveAssignment(ct.id)} className="text-xs" style={{ color: "#ef4444" }}>Quitar</motion.button>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        <div className="border-t border-gray-100 pt-4 space-y-4">
+        <div className="pt-4 space-y-4" style={{ borderTop: "1px solid var(--surface-border)" }}>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Profesor *</label>
+            <label className="block sa-eyebrow mb-1.5">Profesor *</label>
             <Select
               value={assignForm.teacherId}
               onChange={(val) => setAssignForm({ ...assignForm, teacherId: val })}
@@ -545,7 +553,7 @@ export default function CursosList({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+            <label className="block sa-eyebrow mb-1.5">Grado</label>
             <Select
               value={assignForm.gradeId}
               onChange={(val) => setAssignForm({ ...assignForm, gradeId: val, sectionId: "" })}
@@ -554,7 +562,7 @@ export default function CursosList({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+            <label className="block sa-eyebrow mb-1.5">Sección</label>
             <Select
               key={`assign-sec-${assignForm.gradeId}`}
               value={assignForm.sectionId}
@@ -566,37 +574,38 @@ export default function CursosList({
         </div>
 
         <div className="flex gap-3 mt-8">
-          <button onClick={closeAssign} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cerrar</button>
-          <button
+          <motion.button whileTap={{ scale: 0.97 }} onClick={closeAssign} className="sa-btn sa-btn-ghost flex-1">Cerrar</motion.button>
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             onClick={handleAssign}
             disabled={loading || !assignForm.teacherId}
-            className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+            className="sa-btn sa-btn-primary flex-1"
           >
             {loading ? "Asignando..." : "Asignar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar curso" size="sm">
-        <p className="text-sm text-gray-500 text-center">
-          Se eliminará <strong className="text-gray-900">{deleting?.name}</strong>.
+        <p className="text-sm text-center" style={{ color: "var(--muted-foreground)" }}>
+          Se eliminará <strong style={{ color: "var(--foreground)" }}>{deleting?.name}</strong>.
         </p>
         {deleting && deleting.scheduleCount && deleting.scheduleCount > 0 && (
-          <p className="text-xs text-amber-600 text-center mt-2">
+          <p className="text-xs text-center mt-2" style={{ color: "#d97706" }}>
             ⚠ Este curso tiene {deleting.scheduleCount} horario(s) que también se eliminarán.
           </p>
         )}
         {deleting && deleting.teachers.length > 0 && (
-          <p className="text-xs text-amber-600 text-center mt-2">
+          <p className="text-xs text-center mt-2" style={{ color: "#d97706" }}>
             ⚠ Tiene {deleting.teachers.length} asignación(es) de profesor que se eliminarán.
           </p>
         )}
-        <p className="text-xs text-gray-400 text-center mt-2">Esta acción no se puede deshacer.</p>
+        <p className="text-xs text-center mt-2" style={{ color: "var(--muted-foreground)" }}>Esta acción no se puede deshacer.</p>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setDeleting(null)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={handleDelete} disabled={loading} className="sa-btn flex-1" style={{ background: "#ef4444", color: "white", border: "1px solid #ef4444" }}>
             {loading ? "Eliminando..." : "Eliminar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
     </>

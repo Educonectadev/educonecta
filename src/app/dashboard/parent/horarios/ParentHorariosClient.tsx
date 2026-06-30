@@ -1,10 +1,11 @@
 "use client"
 
 import { useState } from "react"
+import { motion } from "framer-motion"
 import { Modal } from "@heroui/react"
 
 const dayLabels: Record<number, string> = {
-  1: "Lunes", 2: "Martes", 3: "Miércoles", 4: "Jueves", 5: "Viernes",
+  1: "Lunes", 2: "Martes", 3: "Mi&eacute;rcoles", 4: "Jueves", 5: "Viernes",
 }
 
 interface ScheduleItem {
@@ -32,7 +33,7 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
   const [detail, setDetail] = useState<ScheduleItem | null>(null)
   const [detailChild, setDetailChild] = useState<ChildData | null>(null)
 
-  const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+  const days = ["Lunes", "Martes", "Mi&eacute;rcoles", "Jueves", "Viernes", "S&aacute;bado", "Domingo"]
 
   function handlePrint(child: ChildData) {
     const printWin = window.open("", "_blank")
@@ -47,13 +48,13 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
       th { background: #f5f5f5; font-weight: 600; }
     </style></head><body>
     <h1>Horario de Clases</h1>
-    <h2>${child.firstName} ${child.lastName} — ${child.grade?.name ?? "—"} · ${child.section?.name ?? "—"}</h2>`
+    <h2>${child.firstName} ${child.lastName} &mdash; ${child.grade?.name ?? "&mdash;"} &middot; ${child.section?.name ?? "&mdash;"}</h2>`
     for (const day of days) {
       const dayScheds = child.schedules.filter((s) => s.dayName === day)
       if (dayScheds.length === 0) continue
       html += `<h3>${day}</h3><table><thead><tr><th>Inicio</th><th>Fin</th><th>Turno</th><th>Curso</th><th>Profesor</th><th>Aula</th></tr></thead><tbody>`
       for (const s of dayScheds) {
-        html += `<tr><td>${s.startTime}</td><td>${s.endTime}</td><td>${s.shift}</td><td>${s.course.name}</td><td>${s.teacherName}</td><td>${s.classroom ?? "—"}</td></tr>`
+        html += `<tr><td>${s.startTime}</td><td>${s.endTime}</td><td>${s.shift}</td><td>${s.course.name}</td><td>${s.teacherName}</td><td>${s.classroom ?? "&mdash;"}</td></tr>`
       }
       html += `</tbody></table>`
     }
@@ -64,19 +65,27 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
   }
 
   return (
-    <div>
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Horarios</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Horario semanal de clases</p>
-        </div>
-      </div>
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6">
+      <header>
+        <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Horarios</p>
+        <h1 className="text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Horarios</h1>
+        <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>Horario semanal de clases</p>
+      </header>
 
       {childrenData.length === 0 && (
-        <div className="mt-12 text-center text-gray-500 dark:text-zinc-400">No hay estudiantes vinculados.</div>
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--muted-foreground)" }}>
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>Sin estudiantes vinculados</p>
+          <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>No hay estudiantes vinculados.</p>
+        </div>
       )}
 
-      <div className="mt-6 space-y-8">
+      <div className="space-y-8">
         {childrenData.map((child) => {
           const byDay: Record<string, ScheduleItem[]> = {}
           for (const d of days) byDay[d] = []
@@ -85,49 +94,63 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
           }
 
           return (
-            <section key={child.id}>
+            <motion.section
+              key={child.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            >
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>
                   {child.firstName} {child.lastName}
-                  <span className="ml-2 text-sm font-normal text-gray-500 dark:text-zinc-400">
-                    {child.grade?.name ?? "—"} · {child.section?.name ?? "—"}
+                  <span className="ml-2 text-sm font-normal" style={{ color: "var(--muted-foreground)" }}>
+                    {child.grade?.name ?? "—"} &middot; {child.section?.name ?? "—"}
                   </span>
                 </h2>
                 <button
                   onClick={() => handlePrint(child)}
-                  className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-4 py-2 text-xs font-medium text-gray-600 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all"
+                  className="sa-btn sa-btn-outline text-xs"
                 >
                   Imprimir
                 </button>
               </div>
 
               {child.schedules.length === 0 ? (
-                <p className="text-sm text-gray-500 dark:text-zinc-400">No hay horarios registrados.</p>
+                <div className="sa-surface py-10 text-center">
+                  <div className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--muted-foreground)" }}>
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                  </div>
+                  <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>Sin horarios</p>
+                  <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>No hay horarios registrados.</p>
+                </div>
               ) : (
-                <div className="bg-gray-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-700 rounded-[30px] overflow-x-auto">
+                <div className="sa-surface overflow-x-auto">
                   <table className="w-full text-left text-sm">
-                    <thead className="hidden md:table-header-group border-b border-gray-200 dark:border-zinc-700 bg-white/40 dark:bg-zinc-900/60">
+                    <thead className="hidden md:table-header-group" style={{ borderBottom: "1px solid var(--surface-border)", background: "var(--surface-2)" }}>
                       <tr>
-                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Día</th>
-                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Turno</th>
-                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Horario</th>
-                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Curso</th>
-                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Profesor</th>
-                        <th className="px-6 py-4 font-semibold text-gray-700 dark:text-zinc-300 text-xs uppercase tracking-widest">Aula</th>
+                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>D&iacute;a</th>
+                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>Turno</th>
+                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>Horario</th>
+                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>Curso</th>
+                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>Profesor</th>
+                        <th className="px-6 py-4 font-semibold text-xs uppercase tracking-widest" style={{ color: "var(--foreground)" }}>Aula</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-50 dark:divide-zinc-800/50 md:divide-y-0">
+                    <tbody style={{ borderBottom: "1px solid var(--surface-border)" }}>
                       {days.map((day) => {
                         const daySchedules = byDay[day] ?? []
                         if (daySchedules.length === 0) {
                           return (
-                            <tr key={day} className="flex flex-col md:table-row border border-gray-100 dark:border-zinc-800 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0">
+                            <tr key={day} className="flex flex-col md:table-row rounded-[var(--radius-card)] p-4 md:p-0 mb-3 md:mb-0 border border-[var(--surface-border)] md:border-0">
                               <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 font-medium">
-                                <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Día</span>
-                                <span className="text-gray-500 dark:text-zinc-400">{day}</span>
+                                <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>D&iacute;a</span>
+                                <span style={{ color: "var(--muted-foreground)" }}>{day}</span>
                               </td>
-                              <td colSpan={5} className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
-                                <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Clases</span>
+                              <td colSpan={5} className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--muted-foreground)" }}>
+                                <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Clases</span>
                                 <span>Sin clases</span>
                               </td>
                             </tr>
@@ -137,33 +160,38 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
                           <tr
                             key={`${day}-${s.id}`}
                             onClick={() => { setDetail(s); setDetailChild(child) }}
-                            className="flex flex-col md:table-row border border-gray-100 dark:border-zinc-800 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer hover:bg-gray-100/50 dark:hover:bg-zinc-800/30 transition-colors"
+                            className="flex flex-col md:table-row rounded-[var(--radius-card)] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer border border-[var(--surface-border)] md:border-0"
+                            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-2)" }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = "" }}
                           >
                             {idx === 0 && (
-                              <td rowSpan={daySchedules.length} className="hidden md:table-cell px-6 py-4 font-medium">{day}</td>
+                              <td rowSpan={daySchedules.length} className="hidden md:table-cell px-6 py-4 font-medium" style={{ color: "var(--foreground)" }}>{day}</td>
                             )}
                             <td className="md:hidden flex justify-between px-0 py-1">
-                              <span className="text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Día</span>
-                              <span>{day}</span>
+                              <span className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>D&iacute;a</span>
+                              <span style={{ color: "var(--foreground)" }}>{day}</span>
                             </td>
                             <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
-                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Turno</span>
-                              <span className={`text-xs font-semibold uppercase ${s.shift === "MAÑANA" ? "text-amber-600 dark:text-amber-400" : "text-blue-600 dark:text-blue-400"}`}>{s.shift}</span>
+                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Turno</span>
+                              <span className="text-xs font-semibold uppercase"
+                                style={{ color: s.shift === "MAÑANA" || s.shift === "MA&Ntilde;ANA" ? "#d97706" : "var(--accent)" }}>
+                                {s.shift}
+                              </span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
-                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Horario</span>
-                              <span>{s.startTime} – {s.endTime}</span>
+                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--muted-foreground)" }}>
+                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Horario</span>
+                              <span>{s.startTime} &ndash; {s.endTime}</span>
                             </td>
                             <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
-                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Curso</span>
-                              <span>{s.course.name}</span>
+                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Curso</span>
+                              <span style={{ color: "var(--foreground)" }}>{s.course.name}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
-                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Profesor</span>
+                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--muted-foreground)" }}>
+                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Profesor</span>
                               <span>{s.teacherName ?? "—"}</span>
                             </td>
-                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-500 dark:text-zinc-400">
-                              <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-400">Aula</span>
+                            <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--muted-foreground)" }}>
+                              <span className="md:hidden sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Aula</span>
                               <span>{s.classroom ?? "—"}</span>
                             </td>
                           </tr>
@@ -173,7 +201,7 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
                   </table>
                 </div>
               )}
-            </section>
+            </motion.section>
           )
         })}
       </div>
@@ -185,40 +213,40 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
             <Modal.Dialog className="z-[60]">
               <Modal.CloseTrigger />
               <Modal.Header>
-                <Modal.Heading>Detalle del Horario</Modal.Heading>
+                <Modal.Heading style={{ color: "var(--foreground)" }}>Detalle del Horario</Modal.Heading>
               </Modal.Header>
               <Modal.Body>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Estudiante</p>
-                      <p className="font-medium">{detailChild?.firstName} {detailChild?.lastName}</p>
+                      <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Estudiante</p>
+                      <p className="font-medium" style={{ color: "var(--foreground)" }}>{detailChild?.firstName} {detailChild?.lastName}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Día</p>
-                      <p className="font-medium">{detail.dayName}</p>
+                      <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>D&iacute;a</p>
+                      <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.dayName}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Turno</p>
-                      <p className="font-medium">{detail.shift}</p>
+                      <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Turno</p>
+                      <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.shift}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Inicio – Fin</p>
-                      <p className="font-medium">{detail.startTime} – {detail.endTime}</p>
+                      <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Inicio &ndash; Fin</p>
+                      <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.startTime} &ndash; {detail.endTime}</p>
                     </div>
                   </div>
-                  <div className="border-t border-gray-100 dark:border-zinc-800 pt-4">
-                    <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Curso</p>
-                    <p className="font-medium text-lg">{detail.course.name}</p>
+                  <div className="pt-4" style={{ borderTop: "1px solid var(--surface-border)" }}>
+                    <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Curso</p>
+                    <p className="font-medium text-lg" style={{ color: "var(--foreground)" }}>{detail.course.name}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Profesor</p>
-                      <p className="font-medium">{detail.teacherName ?? "—"}</p>
+                      <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Profesor</p>
+                      <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.teacherName ?? "—"}</p>
                     </div>
                     <div>
-                      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Aula</p>
-                      <p className="font-medium">{detail.classroom ?? "—"}</p>
+                      <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Aula</p>
+                      <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.classroom ?? "—"}</p>
                     </div>
                   </div>
                 </div>

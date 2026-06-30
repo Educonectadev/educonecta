@@ -48,103 +48,105 @@ export default async function TeacherPerfilPage() {
   }
 
   return (
-    <div>
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6">
+      <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mi Perfil</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Información personal y cursos asignados</p>
+          <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Docente / Perfil</p>
+          <h1 className="text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Mi Perfil</h1>
+          <p className="text-sm mt-1" style={{ color: "var(--muted-foreground)" }}>Información personal y cursos asignados</p>
         </div>
         {levelsToShow.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Niveles:</span>
+            <span className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Niveles:</span>
             {levelsToShow.map((lvl) => {
               const style = levelStyles[lvl] ?? { bg: "bg-gray-100 dark:bg-gray-800", text: "text-gray-700 dark:text-gray-300" }
               const label = lvl.charAt(0) + lvl.slice(1).toLowerCase()
               return (
-                <span key={lvl} className={`text-xs font-medium rounded-full px-3 py-1 ${style.bg} ${style.text}`}>
+                <span key={lvl} className={`sa-chip text-xs font-medium ${style.bg} ${style.text}`}>
                   {label}
                 </span>
               )
             })}
           </div>
         )}
-      </div>
+      </header>
 
-      <section className="mb-8">
-        <h2 className="text-xs font-semibold uppercase tracking-widest text-emerald-500 mb-3">Datos del Docente</h2>
-        <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900 rounded-[25px] p-6">
+      <section>
+        <h2 className="sa-eyebrow mb-3" style={{ color: "var(--accent)" }}>Datos del Docente</h2>
+        <div className="sa-surface p-6" style={{ borderColor: "var(--accent-soft)" }}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Nombre</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{user[0]?.name}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Nombre</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{user[0]?.name}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Email</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{user[0]?.email}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Email</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{user[0]?.email}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Institución</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{t?.institutionName ?? "—"}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Institución</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{t?.institutionName ?? "—"}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Especialidad</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{t?.speciality ?? "—"}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Especialidad</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{t?.speciality ?? "—"}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Documento</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{t?.documentId ?? "—"}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Documento</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{t?.documentId ?? "—"}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Título Profesional</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{t?.title ?? "—"}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Título Profesional</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{t?.title ?? "—"}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Nivel de Educación</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{t?.educationLevel ?? "—"}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Nivel de Educación</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{t?.educationLevel ?? "—"}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Tipo de Contrato</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{t?.contractType ?? "—"}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Tipo de Contrato</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{t?.contractType ?? "—"}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Fecha de Contratación</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{t?.hireDate ? new Date(t.hireDate).toLocaleDateString("es-PE") : "—"}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Fecha de Contratación</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{t?.hireDate ? new Date(t.hireDate).toLocaleDateString("es-PE") : "—"}</p>
             </div>
             <div className="sm:col-span-2">
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Dirección</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{t?.address ?? "—"}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Dirección</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{t?.address ?? "—"}</p>
             </div>
             <div>
-              <p className="text-xs text-gray-400 dark:text-zinc-500">Contacto Emergencia</p>
-              <p className="font-medium text-gray-900 dark:text-white/90">{t?.emergencyContact ? `${t.emergencyContact} (${t.emergencyPhone ?? "—"})` : "—"}</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Contacto Emergencia</p>
+              <p className="font-medium" style={{ color: "var(--foreground)" }}>{t?.emergencyContact ? `${t.emergencyContact} (${t.emergencyPhone ?? "—"})` : "—"}</p>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mb-8">
+      <section>
         <BrandColorPicker />
       </section>
 
-      <section className="mb-8 max-w-md">
+      <section className="max-w-md">
         <ChangePasswordForm apiEndpoint="/api/teacher/password" />
       </section>
 
-      <section className="mb-8">
+      <section>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Cursos Asignados</h2>
+          <h2 className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Cursos Asignados</h2>
           {courses.length > 0 && (
             <a
               href="/dashboard/teacher/courses"
-              className="text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:underline"
+              className="text-xs font-medium hover:underline"
+              style={{ color: "var(--accent)" }}
             >
               Ver tabla completa →
             </a>
           )}
         </div>
         {courses.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-[25px] p-8 text-center text-sm">
-            No tienes cursos asignados.
+          <div className="sa-surface py-14 md:py-16 text-center">
+            <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>No tienes cursos asignados.</p>
           </div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -164,9 +166,9 @@ export default async function TeacherPerfilPage() {
               const lvlLabel = lvl ? lvl.charAt(0) + lvl.slice(1).toLowerCase() : null
               const subline = [gradeName, sectionName].filter(Boolean).join(" · ")
               return (
-                <div key={c.id} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-[20px] p-5">
+                <div key={c.id} className="sa-surface">
                   <div className="flex items-start justify-between gap-2">
-                    <p className="font-semibold text-sm text-gray-900 dark:text-white/90">
+                    <p className="font-semibold text-sm" style={{ color: "var(--foreground)" }}>
                       {courseName ?? "Curso sin nombre"}
                     </p>
                     {lvlLabel && (
@@ -175,7 +177,7 @@ export default async function TeacherPerfilPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>
                     {subline || "Grado y sección por asignar"}
                   </p>
                 </div>

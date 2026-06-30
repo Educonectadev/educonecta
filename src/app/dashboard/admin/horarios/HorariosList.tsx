@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
+import { motion } from "framer-motion"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
 import TimePickerField from "@/components/TimePickerField"
@@ -292,96 +293,109 @@ export default function HorariosList({
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Horarios</h1>
-        <div className="flex gap-2">
-          <button onClick={handlePrint} className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-gray-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">
-            Imprimir
-          </button>
-          <button onClick={() => { setShowJornada(true); setJornadaDay("1"); setJornadaShift("MAÑANA"); setBlocks([emptyBlock(), emptyBlock(), emptyBlock()]) }} className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-gray-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">
-            + Crear Jornada
-          </button>
-          <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] btn-primary px-5 py-2.5 text-sm font-medium">
-            + Nuevo Horario
-          </button>
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
+          <div>
+            <p className="sa-eyebrow">Planificación semanal</p>
+            <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Horarios</h1>
+          </div>
+          <div className="flex gap-2">
+            <motion.button whileTap={{ scale: 0.97 }} onClick={handlePrint} className="sa-btn sa-btn-outline">
+              Imprimir
+            </motion.button>
+            <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setShowJornada(true); setJornadaDay("1"); setJornadaShift("MAÑANA"); setBlocks([emptyBlock(), emptyBlock(), emptyBlock()]) }} className="sa-btn sa-btn-outline">
+              + Crear Jornada
+            </motion.button>
+            <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setShowCreate(true); resetForm() }} className="sa-btn sa-btn-primary">
+              + Nuevo Horario
+            </motion.button>
+          </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[30px] overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="hidden md:table-header-group">
-            <tr className="border-b border-gray-200 dark:border-zinc-800 text-left text-xs font-semibold uppercase tracking-widest text-gray-700 dark:text-zinc-300 bg-gray-50 dark:bg-zinc-900/60">
-              <th className="px-6 py-4 whitespace-nowrap">Día</th>
-              <th className="px-6 py-4 whitespace-nowrap">Turno</th>
-              <th className="px-6 py-4 whitespace-nowrap">Curso</th>
-              <th className="px-6 py-4 whitespace-nowrap">Profesor</th>
-              <th className="px-6 py-4 whitespace-nowrap">Grado</th>
-              <th className="px-6 py-4 whitespace-nowrap">Sección</th>
-              <th className="px-6 py-4 whitespace-nowrap">Inicio</th>
-              <th className="px-6 py-4 whitespace-nowrap">Fin</th>
-              <th className="px-6 py-4 whitespace-nowrap">Aula</th>
-              <th className="px-6 py-4 w-24 whitespace-nowrap">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-zinc-800/50 md:divide-y-0">
-            {schedules.length === 0 ? (
-              <tr><td colSpan={10} className="px-6 py-12 text-center text-gray-500 dark:text-zinc-500">No hay horarios registrados.</td></tr>
-            ) : (
-              schedules.map((s) => (
-                <tr
-                  key={s.id}
-                  onClick={() => setDetail(s)}
-                  className="flex flex-col md:table-row border border-gray-200 dark:border-zinc-800 md:border-0 rounded-[30px] p-4 md:p-0 mb-3 md:mb-0 cursor-pointer transition-colors hover:bg-gray-100/50 dark:hover:bg-zinc-800/30"
-                >
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 font-medium text-gray-900 dark:text-white/90">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Día</span>
-                    <span>{dayLabels[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Turno</span>
-                    <span className={`text-xs font-semibold uppercase ${s.shift === "MAÑANA" ? "text-amber-600 dark:text-amber-400" : "text-blue-600 dark:text-blue-400"}`}>{s.shift}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Curso</span>
-                    <span>{s.course.name}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Profesor</span>
-                    <span>{s.teacher?.name ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Grado</span>
-                    <span>{s.grade?.name ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Sección</span>
-                    <span>{s.section?.name ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Inicio</span>
-                    <span>{s.startTime}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Fin</span>
-                    <span>{s.endTime}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 text-gray-700 dark:text-zinc-300">
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Aula</span>
-                    <span>{s.classroom ?? "—"}</span>
-                  </td>
-                  <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" onClick={(e) => e.stopPropagation()}>
-                    <span className="md:hidden text-xs uppercase tracking-widest text-gray-500 dark:text-zinc-500">Acciones</span>
-                    <div className="flex gap-2">
-                      <button onClick={() => openEdit(s)} className="text-xs text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white/90 transition-all border border-gray-200 dark:border-zinc-700 rounded-[30px] px-3 py-1">Editar</button>
-                      <button onClick={() => setDeleting(s)} className="text-xs text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-all border border-red-200 dark:border-red-900 rounded-[30px] px-3 py-1">Eliminar</button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}>
+        <div className="sa-surface overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="hidden md:table-header-group">
+              <tr className="text-left text-xs font-semibold uppercase tracking-widest" style={{ borderBottom: "1px solid var(--surface-border)", background: "var(--surface-2)", color: "var(--muted-foreground)" }}>
+                <th className="px-6 py-4 whitespace-nowrap">Día</th>
+                <th className="px-6 py-4 whitespace-nowrap">Turno</th>
+                <th className="px-6 py-4 whitespace-nowrap">Curso</th>
+                <th className="px-6 py-4 whitespace-nowrap">Profesor</th>
+                <th className="px-6 py-4 whitespace-nowrap">Grado</th>
+                <th className="px-6 py-4 whitespace-nowrap">Sección</th>
+                <th className="px-6 py-4 whitespace-nowrap">Inicio</th>
+                <th className="px-6 py-4 whitespace-nowrap">Fin</th>
+                <th className="px-6 py-4 whitespace-nowrap">Aula</th>
+                <th className="px-6 py-4 w-24 whitespace-nowrap">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y" style={{ borderColor: "var(--surface-border)" }}>
+              {schedules.length === 0 ? (
+                <tr><td colSpan={10} className="px-6 py-12 text-center" style={{ color: "var(--muted-foreground)" }}>No hay horarios registrados.</td></tr>
+              ) : (
+                schedules.map((s, idx) => (
+                  <motion.tr
+                    key={s.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: idx * 0.02, ease: [0.16, 1, 0.3, 1] as const }}
+                    onClick={() => setDetail(s)}
+                    className="flex flex-col md:table-row cursor-pointer"
+                    style={{ borderBottom: "1px solid var(--surface-border)" }}
+                    onMouseEnter={(e) => { if (window.innerWidth >= 768) e.currentTarget.style.background = "var(--surface-2)" }}
+                    onMouseLeave={(e) => { if (window.innerWidth >= 768) e.currentTarget.style.background = "transparent" }}
+                  >
+                    <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4 font-medium" style={{ color: "var(--foreground)" }}>
+                      <span className="md:hidden text-xs uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Día</span>
+                      <span>{dayLabels[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`}</span>
+                    </td>
+                    <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4">
+                      <span className="md:hidden text-xs uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Turno</span>
+                      <span className="text-xs font-semibold uppercase" style={{ color: s.shift === "MAÑANA" ? "#d97706" : "var(--accent)" }}>{s.shift}</span>
+                    </td>
+                    <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--foreground)" }}>
+                      <span className="md:hidden text-xs uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Curso</span>
+                      <span>{s.course.name}</span>
+                    </td>
+                    <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--foreground)" }}>
+                      <span className="md:hidden text-xs uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Profesor</span>
+                      <span>{s.teacher?.name ?? "—"}</span>
+                    </td>
+                    <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--foreground)" }}>
+                      <span className="md:hidden text-xs uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Grado</span>
+                      <span>{s.grade?.name ?? "—"}</span>
+                    </td>
+                    <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--foreground)" }}>
+                      <span className="md:hidden text-xs uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Sección</span>
+                      <span>{s.section?.name ?? "—"}</span>
+                    </td>
+                    <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--foreground)" }}>
+                      <span className="md:hidden text-xs uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Inicio</span>
+                      <span>{s.startTime}</span>
+                    </td>
+                    <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--foreground)" }}>
+                      <span className="md:hidden text-xs uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Fin</span>
+                      <span>{s.endTime}</span>
+                    </td>
+                    <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" style={{ color: "var(--foreground)" }}>
+                      <span className="md:hidden text-xs uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Aula</span>
+                      <span>{s.classroom ?? "—"}</span>
+                    </td>
+                    <td className="flex justify-between md:table-cell px-0 md:px-6 py-1 md:py-4" onClick={(e) => e.stopPropagation()}>
+                      <span className="md:hidden text-xs uppercase tracking-widest" style={{ color: "var(--muted-foreground)" }}>Acciones</span>
+                      <div className="flex gap-2">
+                        <motion.button whileTap={{ scale: 0.9 }} onClick={() => openEdit(s)} className="sa-chip cursor-pointer" style={{ background: "var(--surface-2)", borderColor: "var(--surface-border)" }}>Editar</motion.button>
+                        <motion.button whileTap={{ scale: 0.9 }} onClick={() => setDeleting(s)} className="sa-chip cursor-pointer" style={{ color: "#ef4444", background: "rgba(239, 68, 68, 0.1)", borderColor: "rgba(239, 68, 68, 0.2)" }}>Eliminar</motion.button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </motion.div>
 
       <style>{`
         @media print {
@@ -396,49 +410,49 @@ export default function HorariosList({
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Día</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{dayLabels[detail.dayOfWeek]}</p>
+                  <p className="sa-eyebrow mb-1">Día</p>
+                  <p className="font-medium" style={{ color: "var(--foreground)" }}>{dayLabels[detail.dayOfWeek]}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Turno</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.shift}</p>
+                  <p className="sa-eyebrow mb-1">Turno</p>
+                  <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.shift}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Inicio</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.startTime}</p>
+                  <p className="sa-eyebrow mb-1">Inicio</p>
+                  <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.startTime}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Fin</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.endTime}</p>
+                  <p className="sa-eyebrow mb-1">Fin</p>
+                  <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.endTime}</p>
                 </div>
               </div>
-              <div className="border-t border-gray-100 dark:border-zinc-800 pt-4">
-                <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Curso</p>
-                <p className="font-medium text-lg text-gray-900 dark:text-white/90">{detail.course.name}</p>
+              <div className="pt-4" style={{ borderTop: "1px solid var(--surface-border)" }}>
+                <p className="sa-eyebrow mb-1">Curso</p>
+                <p className="font-medium text-lg" style={{ color: "var(--foreground)" }}>{detail.course.name}</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Profesor</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.teacher?.name ?? "—"}</p>
-                  {detail.teacher?.speciality && <p className="text-xs text-gray-400 dark:text-zinc-500">{detail.teacher.speciality}</p>}
+                  <p className="sa-eyebrow mb-1">Profesor</p>
+                  <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.teacher?.name ?? "—"}</p>
+                  {detail.teacher?.speciality && <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>{detail.teacher.speciality}</p>}
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Aula</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.classroom ?? "—"}</p>
+                  <p className="sa-eyebrow mb-1">Aula</p>
+                  <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.classroom ?? "—"}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Grado</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.grade?.name ?? "—"}</p>
+                  <p className="sa-eyebrow mb-1">Grado</p>
+                  <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.grade?.name ?? "—"}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Sección</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.section?.name ?? "—"}</p>
+                  <p className="sa-eyebrow mb-1">Sección</p>
+                  <p className="font-medium" style={{ color: "var(--foreground)" }}>{detail.section?.name ?? "—"}</p>
                 </div>
               </div>
             </div>
             <div className="flex gap-3 mt-8">
-              <button onClick={() => { setDetail(null); openEdit(detail) }} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">Editar</button>
-              <button onClick={() => setDetail(null)} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">Cerrar</button>
+              <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setDetail(null); openEdit(detail) }} className="sa-btn sa-btn-ghost flex-1">Editar</motion.button>
+              <motion.button whileTap={{ scale: 0.97 }} onClick={() => setDetail(null)} className="sa-btn sa-btn-primary flex-1">Cerrar</motion.button>
             </div>
           </>
         )}
@@ -447,16 +461,16 @@ export default function HorariosList({
       <Modal open={showCreate || !!editing} onClose={() => { setShowCreate(false); setEditing(null) }} title={showCreate ? "Nuevo Horario" : "Editar Horario"} size="lg">
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Curso</label>
+              <label className="block sa-eyebrow mb-1.5">Curso</label>
               <Select value={form.courseId} onChange={(val) => updateField("courseId", val)} options={courses.map(c => ({value: String(c.id), label: c.name}))} placeholder="Seleccionar..." />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Profesor</label>
+              <label className="block sa-eyebrow mb-1.5">Profesor</label>
               <Select value={form.teacherId} onChange={(val) => updateField("teacherId", val)} options={teachers.map(t => ({value: String(t.id), label: t.name + (t.speciality ? ` — ${t.speciality}` : "")}))} placeholder="Seleccionar..." />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Grado</label>
+                <label className="block sa-eyebrow mb-1.5">Grado</label>
               <Select value={form.gradeId} onChange={(val) => {
                 updateField("gradeId", val)
                 updateField("sectionId", "")
@@ -470,20 +484,20 @@ export default function HorariosList({
               }} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Seleccionar..." />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Sección</label>
+              <label className="block sa-eyebrow mb-1.5">Sección</label>
               <Select key={`sec-${form.gradeId}`} value={form.sectionId} onChange={(val) => updateField("sectionId", val)} options={filteredSections.map(sec => ({value: String(sec.id), label: sec.name}))} placeholder="Seleccionar..." />
             </div>
           </div>
           {previewStudents.length > 0 && (
-            <div className="bg-gray-50 dark:bg-zinc-900 rounded-[20px] p-4 max-h-48 overflow-y-auto scrollbar-hide">
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-2">
+            <div className="p-4 max-h-48 overflow-y-auto scrollbar-hide rounded-[var(--radius-tile)]" style={{ background: "var(--surface-2)" }}>
+              <p className="sa-eyebrow mb-2">
                 Alumnos ({previewStudents.length}) y sus padres
               </p>
               <div className="space-y-1.5">
                 {previewStudents.map(({ student, parents }) => (
                   <div key={student.studentId} className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-gray-700 dark:text-zinc-300">{student.lastName}, {student.firstName}</span>
-                    <span className="text-xs text-gray-400 dark:text-zinc-500 truncate ml-2 max-w-[180px]">
+                    <span className="font-medium" style={{ color: "var(--foreground)" }}>{student.lastName}, {student.firstName}</span>
+                    <span className="text-xs truncate ml-2 max-w-[180px]" style={{ color: "var(--muted-foreground)" }}>
                       {parents.length > 0 ? parents.join(", ") : "Sin padre asignado"}
                     </span>
                   </div>
@@ -492,11 +506,11 @@ export default function HorariosList({
             </div>
           )}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Día</label>
+            <label className="block sa-eyebrow mb-1.5">Día</label>
             <Select value={form.dayOfWeek} onChange={(val) => updateField("dayOfWeek", val)} options={Object.entries(dayLabels).map(([k, v]) => ({value: k, label: v}))} placeholder="" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Turno</label>
+            <label className="block sa-eyebrow mb-1.5">Turno</label>
             <Select value={form.shift} onChange={(val) => {
               updateField("shift", val)
               updateField("startTime", val === "MAÑANA" ? "06:10" : "12:00")
@@ -505,37 +519,37 @@ export default function HorariosList({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Inicio</label>
+              <label className="block sa-eyebrow mb-1.5">Inicio</label>
               <TimePickerField value={form.startTime} onChange={(val) => updateField("startTime", val)} />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Fin</label>
+              <label className="block sa-eyebrow mb-1.5">Fin</label>
               <TimePickerField value={form.endTime} onChange={(val) => updateField("endTime", val)} />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Aula</label>
+            <label className="block sa-eyebrow mb-1.5">Aula</label>
             <Select value={form.classroom} onChange={(val) => updateField("classroom", val)} options={classrooms.map(a => ({value: a.name, label: a.name + (a.code ? ` (${a.code})` : "")}))} placeholder="Sin aula" />
           </div>
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => { setShowCreate(false); setEditing(null) }} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">Cancelar</button>
-          <button onClick={showCreate ? handleCreate : handleSave} disabled={loading || !form.courseId} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setShowCreate(false); setEditing(null) }} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={showCreate ? handleCreate : handleSave} disabled={loading || !form.courseId} className="sa-btn sa-btn-primary flex-1">
             {loading ? "Guardando..." : showCreate ? "Crear" : "Guardar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
 
       <Modal open={showJornada} onClose={() => setShowJornada(false)} title="Crear Jornada" size="2xl" scroll="inside">
-        <p className="text-sm text-gray-500 dark:text-zinc-400 mb-6">Define los bloques de curso para un día completo. El receso se agrega automáticamente.</p>
+        <p className="text-sm mb-6" style={{ color: "var(--muted-foreground)" }}>Define los bloques de curso para un día completo. El receso se agrega automáticamente.</p>
 
         <div className="flex gap-4 mb-6">
           <div className="flex-1">
-            <label className="block text-xs font-medium text-gray-500 mb-1">Día</label>
+            <label className="block sa-eyebrow mb-1.5">Día</label>
             <Select value={jornadaDay} onChange={setJornadaDay} options={Object.entries(dayLabels).map(([k, v]) => ({value: k, label: v}))} placeholder="" />
           </div>
           <div className="flex-1">
-            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Turno</label>
+            <label className="block sa-eyebrow mb-1.5">Turno</label>
             <Select value={jornadaShift} onChange={setJornadaShift} options={[{value: "MAÑANA", label: "Mañana (6:10 - 12:00)"}, {value: "TARDE", label: "Tarde (12:00 - 18:00)"}]} />
           </div>
         </div>
@@ -545,56 +559,56 @@ export default function HorariosList({
             ? sections.filter((s) => String(s.gradeId) === blocks[idx].gradeId)
             : []
           return (
-            <div key={idx} className="border border-gray-200 dark:border-zinc-700 rounded-[25px] p-5 mb-4">
+            <div key={idx} className="sa-surface-flat p-5 mb-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-sm text-gray-900 dark:text-white/90">{block.label}</h3>
-                <span className="text-xs text-gray-400 dark:text-zinc-500">{block.start} – {block.end}</span>
+                <h3 className="font-semibold text-sm" style={{ color: "var(--foreground)" }}>{block.label}</h3>
+                <span className="text-xs" style={{ color: "var(--muted-foreground)" }}>{block.start} – {block.end}</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Curso</label>
+                  <label className="block sa-eyebrow mb-1.5">Curso</label>
                   <Select value={blocks[idx]?.courseId ?? ""} onChange={(val) => updateBlock(idx, "courseId", val)} options={courses.map(c => ({value: String(c.id), label: c.name}))} placeholder="Seleccionar..." />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Profesor</label>
+                  <label className="block sa-eyebrow mb-1.5">Profesor</label>
                   <Select value={blocks[idx]?.teacherId ?? ""} onChange={(val) => updateBlock(idx, "teacherId", val)} options={teachers.map(t => ({value: String(t.id), label: t.name + (t.speciality ? ` — ${t.speciality}` : "")}))} placeholder="Seleccionar..." />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Grado</label>
+                  <label className="block sa-eyebrow mb-1.5">Grado</label>
                   <Select value={blocks[idx]?.gradeId ?? ""} onChange={(val) => { updateBlock(idx, "gradeId", val); updateBlock(idx, "sectionId", "") }} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Seleccionar..." />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Sección</label>
+                  <label className="block sa-eyebrow mb-1.5">Sección</label>
                   <Select key={`blk-sec-${idx}-${blocks[idx]?.gradeId ?? ""}`} value={blocks[idx]?.sectionId ?? ""} onChange={(val) => updateBlock(idx, "sectionId", val)} options={blocks[idx]?.gradeId ? sections.filter((s) => String(s.gradeId) === blocks[idx].gradeId).map(sec => ({value: String(sec.id), label: sec.name})) : []} placeholder="Seleccionar..." />
                 </div>
                 <div className="col-span-2">
-<label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Aula</label>
+                  <label className="block sa-eyebrow mb-1.5">Aula</label>
                   <Select value={blocks[idx]?.classroom ?? ""} onChange={(val) => updateBlock(idx, "classroom", val)} options={classrooms.map(a => ({value: a.name, label: a.name + (a.code ? ` (${a.code})` : "")}))} placeholder="Sin aula" />
                 </div>
-                  </div>
-                </div>
-              )
-            })}
+              </div>
+            </div>
+          )
+        })}
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 rounded-[20px] p-4 text-sm text-amber-700 dark:text-amber-300 mb-4">
+        <div className="p-4 mb-4 rounded-[var(--radius-tile)] text-sm" style={{ background: "rgba(217, 119, 6, 0.1)", color: "#d97706", border: "1px solid rgba(217, 119, 6, 0.2)" }}>
           <span className="font-semibold">Receso:</span> {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].find((b) => b.recess)?.start} – {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].find((b) => b.recess)?.end} (15 min) — se agrega automáticamente
         </div>
 
         <div className="flex gap-3 mt-6">
-          <button onClick={() => setShowJornada(false)} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">Cancelar</button>
-          <button onClick={handleCreateJornada} disabled={loading || blocks.every((b) => !b.courseId)} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowJornada(false)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={handleCreateJornada} disabled={loading || blocks.every((b) => !b.courseId)} className="sa-btn sa-btn-primary flex-1">
             {loading ? "Guardando..." : "Guardar Jornada"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar horario" size="sm">
-        <p className="text-sm text-gray-500 dark:text-zinc-400 text-center">{deleting ? `${dayLabels[deleting.dayOfWeek]} — ${deleting.course.name} (${deleting.startTime} - ${deleting.endTime}). Esta acción no se puede deshacer.` : ""}</p>
+        <p className="text-sm text-center" style={{ color: "var(--muted-foreground)" }}>{deleting ? `${dayLabels[deleting.dayOfWeek]} — ${deleting.course.name} (${deleting.startTime} - ${deleting.endTime}). Esta acción no se puede deshacer.` : ""}</p>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">Cancelar</button>
-          <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
+          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setDeleting(null)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
+          <motion.button whileTap={{ scale: 0.97 }} onClick={handleDelete} disabled={loading} className="sa-btn flex-1" style={{ background: "#ef4444", color: "white", border: "1px solid #ef4444" }}>
             {loading ? "Eliminando..." : "Eliminar"}
-          </button>
+          </motion.button>
         </div>
       </Modal>
     </>

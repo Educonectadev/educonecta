@@ -2,7 +2,9 @@
 
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
+import { motion } from "framer-motion"
 import { toast } from "@heroui/react"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 interface CarouselImage {
   id: number
@@ -111,58 +113,56 @@ export default function CarouselAdminClient({ initialImages }: { initialImages: 
   }
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white/90">Agregar imagen por URL</h2>
-        <p className="mt-1 text-xs text-gray-500 dark:text-zinc-400">Pega una URL externa (CDN, Unsplash, tu servidor, etc.).</p>
+    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }} className="space-y-6">
+      <div className="sa-surface p-5">
+        <h2 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>Agregar imagen por URL</h2>
+        <p className="mt-1 text-xs" style={{ color: "var(--muted-foreground)" }}>Pega una URL externa (CDN, Unsplash, tu servidor, etc.).</p>
         <form onSubmit={addByUrl} className="mt-4 grid grid-cols-1 sm:grid-cols-[1fr_220px_auto] gap-3">
           <input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://ejemplo.com/foto.jpg"
-            className="w-full rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+            className="sa-input w-full"
           />
           <input
             value={alt}
             onChange={(e) => setAlt(e.target.value)}
             placeholder="Descripción (opcional)"
-            className="w-full rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+            className="sa-input w-full"
           />
-          <button
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             type="submit"
             disabled={loading || !url.trim()}
-            className="rounded-[30px] bg-emerald-600 hover:bg-emerald-700 transition-colors duration-200 px-5 py-2.5 text-sm font-medium text-white disabled:opacity-50"
+            className="sa-btn sa-btn-primary"
           >
             {loading ? "…" : "Agregar"}
-          </button>
+          </motion.button>
         </form>
       </div>
 
-      <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white/90">Subir desde tu dispositivo</h2>
-        <p className="mt-1 text-xs text-gray-500 dark:text-zinc-400">Elige una foto de tu celular o computador. JPG, PNG o WebP · 2MB máx.</p>
+      <div className="sa-surface p-5">
+        <h2 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>Subir desde tu dispositivo</h2>
+        <p className="mt-1 text-xs" style={{ color: "var(--muted-foreground)" }}>Elige una foto de tu celular o computador. JPG, PNG o WebP · 2MB máx.</p>
 
         <div className="mt-4 flex flex-col sm:flex-row gap-3">
           <input
             value={alt}
             onChange={(e) => setAlt(e.target.value)}
             placeholder="Descripción (opcional)"
-            className="flex-1 rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+            className="flex-1 sa-input"
             disabled={loading}
           />
-          <button
+          <motion.button
+            whileTap={{ scale: 0.97 }}
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={loading}
-            className="inline-flex items-center justify-center gap-2 rounded-[30px] bg-emerald-600 hover:bg-emerald-700 transition-colors duration-200 px-6 py-2.5 text-sm font-medium text-white disabled:opacity-50"
+            className="sa-btn sa-btn-primary inline-flex items-center justify-center gap-2"
           >
-            <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
+            {getIcon("upload", { size: 16 })}
             {pendingFile ? "Cambiar imagen" : "Subir imagen"}
-          </button>
+          </motion.button>
         </div>
 
         <input
@@ -178,72 +178,81 @@ export default function CarouselAdminClient({ initialImages }: { initialImages: 
         />
 
         {pendingFile && (
-          <div className="mt-4 rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30 p-4">
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 sa-surface p-4" style={{ borderColor: "var(--accent)" }}>
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-              <div className="w-32 h-32 sm:w-40 sm:h-40 shrink-0 rounded-xl overflow-hidden border border-emerald-200 dark:border-emerald-800 bg-white dark:bg-zinc-900">
+              <div className="w-32 h-32 sm:w-40 sm:h-40 shrink-0 rounded-xl overflow-hidden" style={{ background: "var(--surface)" }}>
                 <img src={pendingFile.preview} alt="Vista previa" className="size-full object-cover" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 dark:text-white/90 truncate">{pendingFile.file.name}</p>
-                <p className="mt-1 text-xs text-gray-500 dark:text-zinc-400">
+                <p className="text-sm font-semibold truncate" style={{ color: "var(--foreground)" }}>{pendingFile.file.name}</p>
+                <p className="mt-1 text-xs" style={{ color: "var(--muted-foreground)" }}>
                   {(pendingFile.file.size / 1024).toFixed(1)} KB · {pendingFile.file.type || "imagen"}
                 </p>
                 <div className="mt-3 flex gap-2">
-                  <button
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
                     type="button"
                     onClick={confirmUpload}
                     disabled={loading}
-                    className="rounded-[30px] bg-emerald-600 hover:bg-emerald-700 transition-colors duration-200 px-5 py-2 text-xs font-medium text-white disabled:opacity-50"
+                    className="sa-btn sa-btn-primary text-xs"
                   >
                     {loading ? "Subiendo…" : "Confirmar y agregar"}
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
                     type="button"
                     onClick={cancelFile}
                     disabled={loading}
-                    className="rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-5 py-2 text-xs font-medium text-gray-600 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors"
+                    className="sa-btn sa-btn-ghost text-xs"
                   >
                     Cancelar
-                  </button>
+                  </motion.button>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
 
-      <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white/90">
+      <div className="sa-surface p-5">
+        <h2 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
           Imágenes actuales ({images.length})
         </h2>
         {images.length === 0 ? (
-          <p className="mt-3 text-sm text-gray-400 dark:text-zinc-500">Aún no agregaste imágenes.</p>
+          <div className="text-center py-10" style={{ color: "var(--muted-foreground)" }}>
+            {getIcon("image", { size: 32, className: "mx-auto mb-2", style: { color: "var(--muted-foreground)" } })}
+            <p className="text-sm">Aún no agregaste imágenes.</p>
+          </div>
         ) : (
           <ul className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {images.map((img) => (
-              <li key={img.id} className="relative group rounded-xl overflow-hidden border border-gray-100 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800/40">
+              <motion.li
+                key={img.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="relative group rounded-xl overflow-hidden sa-surface"
+              >
                 <div className="aspect-square">
                   <img src={img.url} alt={img.alt ?? ""} className="size-full object-cover" loading="lazy" />
                 </div>
                 {img.alt && (
-                  <p className="px-2 py-1.5 text-[11px] text-gray-600 dark:text-zinc-400 truncate">{img.alt}</p>
+                  <p className="px-2 py-1.5 text-xs truncate" style={{ color: "var(--muted-foreground)" }}>{img.alt}</p>
                 )}
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
                   type="button"
                   onClick={() => remove(img.id)}
                   aria-label="Eliminar imagen"
-                  className="absolute top-2 right-2 inline-flex items-center justify-center size-8 rounded-full bg-black/60 text-white hover:bg-red-600 transition-colors backdrop-blur"
+                  className="absolute top-2 right-2 inline-flex items-center justify-center size-8 rounded-full"
+                  style={{ background: "rgba(0,0,0,0.6)", color: "white" }}
                 >
-                  <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6 17.5 20a2 2 0 0 1-2 2h-7a2 2 0 0 1-2-2L5 6" />
-                  </svg>
-                </button>
-              </li>
+                  {getIcon("trash", { size: 14 })}
+                </motion.button>
+              </motion.li>
             ))}
           </ul>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }

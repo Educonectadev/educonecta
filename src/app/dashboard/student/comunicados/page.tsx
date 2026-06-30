@@ -1,6 +1,7 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
+import { motion } from "framer-motion"
 
 export default async function StudentComunicadosPage() {
   const session = await getServerSession()
@@ -25,42 +26,61 @@ export default async function StudentComunicadosPage() {
   )
 
   const priorityTone = (p: string) => {
-    if (p === "urgente" || p === "high") return "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 border-red-200 dark:border-red-900"
-    if (p === "normal") return "bg-sky-50 text-sky-700 dark:bg-sky-950/30 dark:text-sky-400 border-sky-200 dark:border-sky-900"
-    return "bg-gray-100 text-gray-600 dark:bg-zinc-800 dark:text-zinc-400 border-gray-200 dark:border-zinc-700"
+    if (p === "urgente" || p === "high") return { color: "#ef4444", background: "rgba(239, 68, 68, 0.12)" }
+    if (p === "normal") return { color: "#06b6d4", background: "rgba(6, 182, 212, 0.12)" }
+    return { color: "var(--muted-foreground)", background: "var(--surface-3)" }
   }
 
   return (
-    <div className="space-y-6" data-tour="announcements">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Comunicados</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Avisos de tu institución y de tus docentes.</p>
-      </div>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="space-y-5 md:space-y-6 pt-3 md:pt-6"
+      data-tour="announcements"
+    >
+      <header>
+        <p className="sa-eyebrow" style={{ color: "#8b5cf6" }}>Comunicación</p>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Comunicados</h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--muted-foreground)" }}>Avisos de tu institución y de tus docentes.</p>
+      </header>
 
       {items.length === 0 ? (
-        <div className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-10 text-center text-sm text-gray-400">
-          Sin comunicados por ahora.
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            <svg className="size-6" style={{ color: "var(--muted-foreground)" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium mt-3" style={{ color: "var(--foreground)" }}>Sin comunicados</p>
+          <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>Sin comunicados por ahora.</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {items.map((c) => (
-            <article key={c.id} className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5">
+          {items.map((c, idx) => (
+            <motion.article
+              key={c.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: idx * 0.025, ease: [0.16, 1, 0.3, 1] }}
+              className="sa-surface p-5 md:p-6"
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h2 className="text-base font-semibold text-gray-900 dark:text-white/90">{c.title}</h2>
-                  <p className="mt-1 text-xs text-gray-400 dark:text-zinc-500">
+                  <h2 className="text-base font-semibold" style={{ color: "var(--foreground)" }}>{c.title}</h2>
+                  <p className="mt-1 text-xs" style={{ color: "var(--muted-foreground)" }}>
                     {c.authorName ?? "Institución"} · {new Date(c.createdAt).toLocaleString("es-PE")}
                   </p>
                 </div>
-                <span className={"shrink-0 text-[10px] uppercase tracking-wider rounded-full px-2 py-0.5 font-semibold border " + priorityTone(c.priority)}>
+                <span className="sa-chip shrink-0" style={priorityTone(c.priority)}>
                   {c.priority ?? "normal"}
                 </span>
               </div>
-              <p className="mt-3 text-sm text-gray-600 dark:text-zinc-300 whitespace-pre-wrap">{c.content}</p>
-            </article>
+              <p className="mt-3 text-sm whitespace-pre-wrap" style={{ color: "var(--foreground)" }}>{c.content}</p>
+            </motion.article>
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   )
 }

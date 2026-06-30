@@ -2,6 +2,7 @@ import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
 import StudentPerfilClient from "./StudentPerfilClient"
+import { motion } from "framer-motion"
 
 export default async function StudentPerfilPage() {
   const session = await getServerSession()
@@ -19,5 +20,14 @@ export default async function StudentPerfilPage() {
   )
 
   const student = rows[0] ?? {}
-  return <StudentPerfilClient student={student} email={session.user.email} />
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className="pt-3 md:pt-6"
+    >
+      <StudentPerfilClient student={student} email={session.user.email} />
+    </motion.div>
+  )
 }

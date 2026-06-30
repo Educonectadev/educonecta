@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import Modal from "@/components/Modal"
 import Select from "@/components/Select"
+import { motion } from "framer-motion"
 
 export default function NuevoComunicadoPage() {
   const router = useRouter()
@@ -47,30 +48,37 @@ export default function NuevoComunicadoPage() {
   return (
     <Modal open={open} onClose={close} title="Nuevo Comunicado" size="lg" scroll="inside">
       <div className="space-y-4">
-        <p className="text-xs text-gray-500 dark:text-zinc-500">Publica un aviso para la comunidad educativa</p>
+        <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Publica un aviso para la comunidad educativa</p>
 
         {error && (
-          <p className="text-sm border border-gray-100 dark:border-zinc-800 rounded-2xl p-4 bg-gray-50 dark:bg-zinc-900 text-gray-600 dark:text-zinc-400">{error}</p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm sa-surface p-4"
+            style={{ color: "#ef4444" }}
+          >
+            {error}
+          </motion.p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Título *</label>
+            <label className="block sa-eyebrow mb-1.5" style={{ color: "var(--muted-foreground)" }}>Título *</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-[30px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+              className="sa-input w-full"
               required
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Contenido *</label>
+            <label className="block sa-eyebrow mb-1.5" style={{ color: "var(--muted-foreground)" }}>Contenido *</label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="w-full rounded-[25px] border border-gray-200 dark:border-zinc-800 px-5 py-3 text-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:border-black dark:focus:border-zinc-600 focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-zinc-600 transition-all"
+              className="sa-input w-full"
               rows={5}
               required
             />
@@ -78,7 +86,7 @@ export default function NuevoComunicadoPage() {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Tipo</label>
+              <label className="block sa-eyebrow mb-1.5" style={{ color: "var(--muted-foreground)" }}>Tipo</label>
               <Select
                 value={type}
                 onChange={setType}
@@ -89,7 +97,7 @@ export default function NuevoComunicadoPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-500 mb-1.5">Prioridad</label>
+              <label className="block sa-eyebrow mb-1.5" style={{ color: "var(--muted-foreground)" }}>Prioridad</label>
               <Select
                 value={priority}
                 onChange={setPriority}
@@ -102,13 +110,13 @@ export default function NuevoComunicadoPage() {
           </div>
 
           <div className="flex gap-3 pt-2">
-            <button type="button" onClick={close} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">
+            <button type="button" onClick={close} className="sa-btn sa-btn-ghost flex-1 text-sm py-2.5">
               Cancelar
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+              className="sa-btn sa-btn-primary flex-1 text-sm py-2.5"
             >
               {submitting ? "Guardando..." : "Publicar Comunicado"}
             </button>

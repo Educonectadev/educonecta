@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { motion } from "framer-motion"
 import { Modal } from "@heroui/react"
 
 interface Communication {
@@ -14,16 +15,16 @@ interface Communication {
   teacher: { user: { name: string } } | null
 }
 
-function getPriorityBadge(priority: string) {
+function getPriorityStyle(priority: string) {
   switch (priority) {
     case "alta":
     case "high":
-      return "bg-black dark:bg-white text-white dark:text-black border-black dark:border-white"
+      return { color: "#ef4444", background: "rgba(239, 68, 68, 0.12)" }
     case "media":
     case "medium":
-      return "bg-gray-100 dark:bg-zinc-800 text-gray-600 dark:text-zinc-400 border-gray-200 dark:border-zinc-700"
+      return { color: "#d97706", background: "rgba(217, 119, 6, 0.14)" }
     default:
-      return "bg-gray-50 dark:bg-zinc-800/30 text-gray-400 dark:text-zinc-500 border-gray-200 dark:border-zinc-700"
+      return { color: "var(--muted-foreground)", background: "var(--surface-3)" }
   }
 }
 
@@ -46,48 +47,59 @@ export default function CommunicationsList({ communications }: { communications:
   return (
     <>
       {communications.length === 0 ? (
-        <div className="mt-12 text-center text-gray-500 dark:text-zinc-400">
-          No hay comunicados disponibles.
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--muted-foreground)" }}>
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>Sin comunicados</p>
+          <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>No hay comunicados disponibles.</p>
         </div>
       ) : (
-        <div className="mt-6 space-y-3">
-          {communications.map((c) => (
-            <button
+        <div className="space-y-3">
+          {communications.map((c, idx) => (
+            <motion.div
               key={c.id}
-              onClick={() => setSelected(c)}
-              className="w-full text-left bg-gray-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-zinc-700 rounded-[25px] p-6 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-all duration-200 cursor-pointer"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: idx * 0.02, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 dark:text-white/90">{c.title}</h3>
-                  <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400 leading-relaxed line-clamp-2">
-                    {c.content}
-                  </p>
+              <button
+                onClick={() => setSelected(c)}
+                className="w-full text-left sa-surface p-6 sa-surface-hover cursor-pointer"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold" style={{ color: "var(--foreground)" }}>{c.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed line-clamp-2" style={{ color: "var(--muted-foreground)" }}>
+                      {c.content}
+                    </p>
+                  </div>
+                  <span className="shrink-0 sa-chip text-xs font-medium" style={getPriorityStyle(c.priority)}>
+                    {getPriorityLabel(c.priority)}
+                  </span>
                 </div>
-                <span
-                  className={`shrink-0 inline-block rounded-[30px] border px-3 py-1 text-xs font-medium ${getPriorityBadge(c.priority)}`}
-                >
-                  {getPriorityLabel(c.priority)}
-                </span>
-              </div>
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 dark:text-zinc-500">
-                <span>
-                  {new Date(c.createdAt).toLocaleDateString("es-ES", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </span>
-                <span className="text-gray-200 dark:text-zinc-700">·</span>
-                <span>{c.author.name}</span>
-                {c.teacher && (
-                  <>
-                    <span className="text-gray-200 dark:text-zinc-700">·</span>
-                    <span>Prof. {c.teacher.user.name}</span>
-                  </>
-                )}
-              </div>
-            </button>
+                <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs" style={{ color: "var(--muted-foreground)" }}>
+                  <span>
+                    {new Date(c.createdAt).toLocaleDateString("es-ES", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                  <span style={{ color: "var(--surface-border)" }}>&middot;</span>
+                  <span>{c.author.name}</span>
+                  {c.teacher && (
+                    <>
+                      <span style={{ color: "var(--surface-border)" }}>&middot;</span>
+                      <span>Prof. {c.teacher.user.name}</span>
+                    </>
+                  )}
+                </div>
+              </button>
+            </motion.div>
           ))}
         </div>
       )}
@@ -102,8 +114,8 @@ export default function CommunicationsList({ communications }: { communications:
                 <Modal.Heading>
                   <div className="flex items-start justify-between gap-4 w-full">
                     <div className="flex-1 min-w-0">
-                      <span className="truncate block">{selected.title}</span>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 dark:text-zinc-500 font-normal">
+                      <span className="truncate block" style={{ color: "var(--foreground)" }}>{selected.title}</span>
+                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-normal" style={{ color: "var(--muted-foreground)" }}>
                         <span>
                           {new Date(selected.createdAt).toLocaleDateString("es-ES", {
                             year: "numeric",
@@ -111,26 +123,24 @@ export default function CommunicationsList({ communications }: { communications:
                             day: "numeric",
                           })}
                         </span>
-                        <span className="text-gray-200 dark:text-zinc-700">·</span>
+                        <span style={{ color: "var(--surface-border)" }}>&middot;</span>
                         <span>{selected.author.name}</span>
                         {selected.teacher && (
                           <>
-                            <span className="text-gray-200 dark:text-zinc-700">·</span>
+                            <span style={{ color: "var(--surface-border)" }}>&middot;</span>
                             <span>Prof. {selected.teacher.user.name}</span>
                           </>
                         )}
                       </div>
                     </div>
-                    <span
-                      className={`shrink-0 inline-block rounded-[30px] border px-3 py-1 text-xs font-medium ${getPriorityBadge(selected.priority)}`}
-                    >
+                    <span className="shrink-0 sa-chip text-xs font-medium" style={getPriorityStyle(selected.priority)}>
                       {getPriorityLabel(selected.priority)}
                     </span>
                   </div>
                 </Modal.Heading>
               </Modal.Header>
               <Modal.Body>
-                <p className="text-sm text-gray-600 dark:text-zinc-300 leading-relaxed whitespace-pre-line">
+                <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: "var(--foreground)" }}>
                   {selected.content}
                 </p>
               </Modal.Body>

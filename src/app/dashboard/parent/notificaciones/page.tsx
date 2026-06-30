@@ -2,6 +2,7 @@
 
 import { useSession } from "@/lib/auth-context"
 import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 
 type Notification = {
   id: number
@@ -27,22 +28,49 @@ export default function NotificationsPage() {
   }, [status])
 
   if (loading) {
-    return <div className="text-sm text-gray-500 dark:text-zinc-400">Cargando...</div>
+    return (
+      <div className="space-y-5 md:space-y-6 pt-3 md:pt-6">
+        <p style={{ color: "var(--muted-foreground)" }}>Cargando...</p>
+      </div>
+    )
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-lg font-semibold text-gray-900 dark:text-white/90 mb-6">Notificaciones</h1>
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6 max-w-2xl mx-auto">
+      <header>
+        <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>Notificaciones</p>
+        <h1 className="text-lg font-semibold font-display" style={{ color: "var(--foreground)" }}>Notificaciones</h1>
+      </header>
+
       {notifications.length === 0 ? (
-        <p className="text-sm text-gray-400 dark:text-zinc-500">No tienes notificaciones.</p>
+        <div className="sa-surface py-14 md:py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ background: "var(--surface-3)" }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--muted-foreground)" }}>
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>Sin notificaciones</p>
+          <p className="text-xs max-w-xs mx-auto mt-1" style={{ color: "var(--muted-foreground)" }}>No tienes notificaciones.</p>
+        </div>
       ) : (
         <ul className="space-y-3">
-          {notifications.map((n) => (
-            <li key={n.id} className={`p-4 rounded-xl border ${n.isRead ? "bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800" : "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800"}`}>
-              <p className="text-sm font-medium text-gray-900 dark:text-white/90">{n.title}</p>
-              <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">{n.message}</p>
-              <p className="text-[10px] text-gray-400 dark:text-zinc-500 mt-2">{new Date(n.createdAt).toLocaleDateString()}</p>
-            </li>
+          {notifications.map((n, idx) => (
+            <motion.li
+              key={n.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: idx * 0.025, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div
+                className="sa-surface p-4"
+                style={!n.isRead ? { borderColor: "#d97706" } : undefined}
+              >
+                <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{n.title}</p>
+                <p className="text-xs mt-1" style={{ color: "var(--muted-foreground)" }}>{n.message}</p>
+                <p className="text-[10px] mt-2" style={{ color: "var(--muted-foreground)" }}>{new Date(n.createdAt).toLocaleDateString()}</p>
+              </div>
+            </motion.li>
           ))}
         </ul>
       )}

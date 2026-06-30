@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { toast } from "@heroui/react"
+import { motion } from "framer-motion"
 
 export default function StudentPerfilClient({ student, email }: { student: any; email: string }) {
   const [current, setCurrent] = useState("")
@@ -52,47 +53,58 @@ export default function StudentPerfilClient({ student, email }: { student: any; 
   }
 
   return (
-    <div className="space-y-8 max-w-3xl">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Mi perfil</h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-zinc-400">Gestiona tu información, contraseña y constancias.</p>
-      </div>
+    <div className="space-y-5 md:space-y-6 max-w-3xl">
+      <header>
+        <p className="sa-eyebrow" style={{ color: "#8b5cf6" }}>Cuenta</p>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Mi perfil</h1>
+        <p className="mt-1 text-sm" style={{ color: "var(--muted-foreground)" }}>Gestiona tu información, contraseña y constancias.</p>
+      </header>
 
-      <section className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white/90">Datos personales</h2>
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="sa-surface p-5 md:p-6"
+      >
+        <h2 className="text-base font-semibold" style={{ color: "var(--foreground)" }}>Datos personales</h2>
         <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div>
-            <dt className="text-xs text-gray-400 dark:text-zinc-500">Nombre</dt>
-            <dd className="font-medium text-gray-900 dark:text-white/90">{fullName}</dd>
+            <dt className="text-xs" style={{ color: "var(--muted-foreground)" }}>Nombre</dt>
+            <dd className="font-medium" style={{ color: "var(--foreground)" }}>{fullName}</dd>
           </div>
           <div>
-            <dt className="text-xs text-gray-400 dark:text-zinc-500">Email</dt>
-            <dd className="font-medium text-gray-900 dark:text-white/90">{email}</dd>
+            <dt className="text-xs" style={{ color: "var(--muted-foreground)" }}>Email</dt>
+            <dd className="font-medium" style={{ color: "var(--foreground)" }}>{email}</dd>
           </div>
           {student?.grade?.name && (
             <div>
-              <dt className="text-xs text-gray-400 dark:text-zinc-500">Grado</dt>
-              <dd className="font-medium text-gray-900 dark:text-white/90">{student.grade.name}</dd>
+              <dt className="text-xs" style={{ color: "var(--muted-foreground)" }}>Grado</dt>
+              <dd className="font-medium" style={{ color: "var(--foreground)" }}>{student.grade.name}</dd>
             </div>
           )}
           {student?.section?.name && (
             <div>
-              <dt className="text-xs text-gray-400 dark:text-zinc-500">Sección</dt>
-              <dd className="font-medium text-gray-900 dark:text-white/90">{student.section.name}</dd>
+              <dt className="text-xs" style={{ color: "var(--muted-foreground)" }}>Sección</dt>
+              <dd className="font-medium" style={{ color: "var(--foreground)" }}>{student.section.name}</dd>
             </div>
           )}
           {student?.documentId && (
             <div>
-              <dt className="text-xs text-gray-400 dark:text-zinc-500">Documento</dt>
-              <dd className="font-medium text-gray-900 dark:text-white/90">{student.documentId}</dd>
+              <dt className="text-xs" style={{ color: "var(--muted-foreground)" }}>Documento</dt>
+              <dd className="font-medium" style={{ color: "var(--foreground)" }}>{student.documentId}</dd>
             </div>
           )}
         </dl>
-      </section>
+      </motion.section>
 
-      <section className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white/90">Cambiar contraseña</h2>
-        <p className="mt-1 text-xs text-gray-400 dark:text-zinc-500">Usa al menos 6 caracteres.</p>
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+        className="sa-surface p-5 md:p-6"
+      >
+        <h2 className="text-base font-semibold" style={{ color: "var(--foreground)" }}>Cambiar contraseña</h2>
+        <p className="mt-1 text-xs" style={{ color: "var(--muted-foreground)" }}>Usa al menos 6 caracteres.</p>
         <form onSubmit={changePassword} className="mt-4 space-y-3 max-w-md">
           <input
             type="password"
@@ -100,7 +112,7 @@ export default function StudentPerfilClient({ student, email }: { student: any; 
             onChange={(e) => setCurrent(e.target.value)}
             required
             placeholder="Contraseña actual"
-            className="w-full rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+            className="sa-input"
           />
           <input
             type="password"
@@ -108,7 +120,7 @@ export default function StudentPerfilClient({ student, email }: { student: any; 
             onChange={(e) => setNext(e.target.value)}
             required
             placeholder="Nueva contraseña"
-            className="w-full rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+            className="sa-input"
           />
           <input
             type="password"
@@ -116,62 +128,74 @@ export default function StudentPerfilClient({ student, email }: { student: any; 
             onChange={(e) => setConfirm(e.target.value)}
             required
             placeholder="Confirmar nueva contraseña"
-            className="w-full rounded-[30px] border border-gray-200 bg-white text-gray-900 px-4 py-2.5 text-sm focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-colors"
+            className="sa-input"
           />
           <button
             type="submit"
             disabled={loading}
-            className="rounded-[30px] bg-violet-600 hover:bg-violet-700 transition-colors duration-200 px-6 py-2.5 text-sm font-medium text-white disabled:opacity-50"
+            className="sa-btn sa-btn-primary"
           >
             {loading ? "Guardando…" : "Cambiar contraseña"}
           </button>
         </form>
-      </section>
+      </motion.section>
 
-      <section className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white/90">Carnet digital</h2>
-        <p className="mt-1 text-xs text-gray-400 dark:text-zinc-500">Imprime o comparte tu carnet con QR para tomar asistencia al instante.</p>
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        className="sa-surface p-5 md:p-6"
+      >
+        <h2 className="text-base font-semibold" style={{ color: "var(--foreground)" }}>Carnet digital</h2>
+        <p className="mt-1 text-xs" style={{ color: "var(--muted-foreground)" }}>Imprime o comparte tu carnet con QR para tomar asistencia al instante.</p>
         <button
           onClick={descargarCarnet}
-          className="mt-4 inline-flex items-center gap-2 rounded-[30px] border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-5 py-2.5 text-sm font-medium text-gray-800 dark:text-zinc-200 hover:border-violet-300 hover:text-violet-600 transition-colors duration-200"
+          className="sa-btn sa-btn-ghost mt-4"
         >
           <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" /><rect x="18" y="18" width="3" height="3" />
           </svg>
           Descargar carnet
         </button>
-      </section>
+      </motion.section>
 
-      <section className="rounded-2xl border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6">
-        <h2 className="text-base font-semibold text-gray-900 dark:text-white/90">Constancias</h2>
-        <p className="mt-1 text-xs text-gray-400 dark:text-zinc-500">Descarga tus documentos académicos en PDF.</p>
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        className="sa-surface p-5 md:p-6"
+      >
+        <h2 className="text-base font-semibold" style={{ color: "var(--foreground)" }}>Constancias</h2>
+        <p className="mt-1 text-xs" style={{ color: "var(--muted-foreground)" }}>Descarga tus documentos académicos en PDF.</p>
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl">
           <button
             onClick={() => descargarConstancia("estudios")}
-            className="flex items-center justify-between gap-3 rounded-2xl border border-gray-100 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-3 text-left hover:border-violet-300 transition-colors duration-200"
+            className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left transition-colors duration-200"
+            style={{ background: "var(--surface)", border: "1px solid var(--surface-border)" }}
           >
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-white/90">Constancia de estudios</p>
-              <p className="text-[11px] text-gray-400 dark:text-zinc-500">Documento oficial del colegio.</p>
+              <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>Constancia de estudios</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Documento oficial del colegio.</p>
             </div>
-            <svg className="size-5 text-violet-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="size-5 shrink-0" style={{ color: "#8b5cf6" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
             </svg>
           </button>
           <button
             onClick={() => descargarConstancia("notas")}
-            className="flex items-center justify-between gap-3 rounded-2xl border border-gray-100 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-3 text-left hover:border-violet-300 transition-colors duration-200"
+            className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-left transition-colors duration-200"
+            style={{ background: "var(--surface)", border: "1px solid var(--surface-border)" }}
           >
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-white/90">Boleta de notas</p>
-              <p className="text-[11px] text-gray-400 dark:text-zinc-500">Todas tus calificaciones.</p>
+              <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>Boleta de notas</p>
+              <p className="text-xs" style={{ color: "var(--muted-foreground)" }}>Todas tus calificaciones.</p>
             </div>
-            <svg className="size-5 text-violet-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="size-5 shrink-0" style={{ color: "#8b5cf6" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
             </svg>
           </button>
         </div>
-      </section>
+      </motion.section>
     </div>
   )
 }
