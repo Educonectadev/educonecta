@@ -26,9 +26,9 @@ export default function HomeworkTable({
   return (
     <Table>
       <Table.ScrollContainer>
-        <Table.Content className="min-w-[600px]">
+        <Table.Content aria-label="Tabla de tareas" className="min-w-[600px]">
           <Table.Header>
-            <Table.Column>Título</Table.Column>
+            <Table.Column isRowHeader>Título</Table.Column>
             <Table.Column>Curso</Table.Column>
             <Table.Column>Fecha límite</Table.Column>
             <Table.Column>Estado</Table.Column>

@@ -72,9 +72,9 @@ export default function AttendanceList({
             ) : (
               <Table>
                 <Table.ScrollContainer>
-                  <Table.Content className="min-w-[600px]">
+                  <Table.Content aria-label="Tabla de asistencia" className="min-w-[600px]">
                     <Table.Header>
-                      <Table.Column>Fecha</Table.Column>
+                      <Table.Column isRowHeader>Fecha</Table.Column>
                       <Table.Column>Estado</Table.Column>
                       <Table.Column>Nota</Table.Column>
                     </Table.Header>

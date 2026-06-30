@@ -332,9 +332,9 @@ export default function HorariosList({
       <div className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[30px]">
         <Table aria-label="Horarios">
           <Table.ScrollContainer>
-            <Table.Content className="min-w-[900px]" sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}>
+            <Table.Content aria-label="Tabla de horarios" className="min-w-[900px]" sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}>
               <Table.Header>
-                <Table.Column allowsSorting className="max-w-[100px] after:hidden" id="dayOfWeek">
+                <Table.Column isRowHeader allowsSorting className="max-w-[100px] after:hidden" id="dayOfWeek">
                   {({ sortDirection }) => <Table.SortableColumnHeader sortDirection={sortDirection}>Día</Table.SortableColumnHeader>}
                 </Table.Column>
                 <Table.Column allowsSorting className="after:hidden" id="shift">

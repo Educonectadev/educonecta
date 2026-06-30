@@ -42,9 +42,9 @@ export default function GradesTable({
   return (
     <Table>
       <Table.ScrollContainer>
-        <Table.Content className="min-w-[600px]">
+        <Table.Content aria-label="Tabla de calificaciones" className="min-w-[600px]">
           <Table.Header>
-            <Table.Column>Curso</Table.Column>
+            <Table.Column isRowHeader>Curso</Table.Column>
             <Table.Column>Evaluación</Table.Column>
             <Table.Column>Nota</Table.Column>
             <Table.Column>Fecha</Table.Column>

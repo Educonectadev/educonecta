@@ -129,9 +129,9 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
               ) : (
                 <Table>
                   <Table.ScrollContainer>
-                    <Table.Content className="min-w-[600px]">
+                    <Table.Content aria-label="Tabla de horarios" className="min-w-[600px]">
                       <Table.Header>
-                        <Table.Column>Día</Table.Column>
+                        <Table.Column isRowHeader>Día</Table.Column>
                         <Table.Column>Turno</Table.Column>
                         <Table.Column>Horario</Table.Column>
                         <Table.Column>Curso</Table.Column>

@@ -19,9 +19,9 @@ export default function DisciplineTable({
   return (
     <Table>
       <Table.ScrollContainer>
-        <Table.Content className="min-w-[600px]">
+        <Table.Content aria-label="Tabla de disciplina" className="min-w-[600px]">
           <Table.Header>
-            <Table.Column>Fecha</Table.Column>
+            <Table.Column isRowHeader>Fecha</Table.Column>
             <Table.Column>Tipo</Table.Column>
             <Table.Column>Descripción</Table.Column>
             <Table.Column>Estado</Table.Column>
