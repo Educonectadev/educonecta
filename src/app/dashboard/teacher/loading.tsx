@@ -1,9 +1,14 @@
-import { DashboardSkeleton } from "@/components/DashboardSkeleton"
+import { Label, ProgressBar } from "@heroui/react"
 
 export default function TeacherLoading() {
   return (
-    <div className="p-4 md:p-8">
-      <DashboardSkeleton sections={3} />
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <ProgressBar isIndeterminate aria-label="Loading..." className="w-64 max-w-full">
+        <Label className="text-sm" style={{ color: "var(--muted-foreground)" }}>Cargando...</Label>
+        <ProgressBar.Track>
+          <ProgressBar.Fill />
+        </ProgressBar.Track>
+      </ProgressBar>
     </div>
   )
 }

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { getIcon } from "@/components/premium/iconRegistry"
+import { GooeyInput } from "@/components/ui/gooey-input"
 
 export default function MatriculaPage() {
   const [file, setFile] = useState<File | null>(null)
@@ -71,20 +72,11 @@ export default function MatriculaPage() {
           <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
             Busca un estudiante por DNI o nombres para matriculario en un grado y sección específicos.
           </p>
-          <div className="flex gap-3">
-            <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2">
-                {getIcon("search", { size: 16, style: { color: "var(--muted-foreground)" } })}
-              </span>
-              <input
-                placeholder="Buscar por DNI, nombres o apellidos..."
-                className="sa-input w-full pl-10"
-              />
-            </div>
-            <motion.button whileTap={{ scale: 0.97 }} className="sa-btn sa-btn-ghost">
-              Buscar
-            </motion.button>
-          </div>
+          <GooeyInput
+            placeholder="Buscar por DNI, nombres o apellidos..."
+            expandedWidth={320}
+            expandedOffset={60}
+          />
         </div>
       </div>
     </motion.div>

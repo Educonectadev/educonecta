@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import InstitutionModal from "./InstitutionModal"
 import { getIcon } from "@/components/premium/iconRegistry"
+import { GooeyInput } from "@/components/ui/gooey-input"
 
 interface Institution {
   id: number
@@ -46,7 +47,6 @@ export default function InstitutionList({
   const [toggling, setToggling] = useState<number | null>(null)
   const [query, setQuery] = useState("")
   const [filter, setFilter] = useState<FilterKey>("all")
-  const [focused, setFocused] = useState(false)
 
   async function toggleActive(inst: Institution) {
     setToggling(inst.id)
@@ -103,37 +103,13 @@ export default function InstitutionList({
           boxShadow: "var(--surface-shadow)",
         }}
       >
-        <div
-          className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl transition-all duration-200"
-          style={{
-            background: focused ? "var(--surface-2)" : "var(--surface-3)",
-            border: `1px solid ${focused ? "var(--foreground)" : "var(--surface-border)"}`,
-            boxShadow: focused ? "0 0 0 3px color-mix(in srgb, var(--foreground) 10%, transparent)" : "none",
-          }}
-        >
-          <span className="shrink-0" style={{ color: focused ? "var(--foreground)" : "var(--muted-foreground)" }}>
-            {getIcon("search", { size: 15, strokeWidth: 2 })}
-          </span>
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            placeholder="Buscar por nombre, código o director…"
-            className="flex-1 bg-transparent text-sm outline-none border-none"
-            style={{ color: "var(--foreground)", minHeight: 20 }}
-          />
-          {query && (
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              onClick={() => setQuery("")}
-              className="shrink-0 p-0.5 rounded-full opacity-50 hover:opacity-100 transition-opacity"
-            >
-              {getIcon("x", { size: 14, strokeWidth: 2.5 })}
-            </motion.button>
-          )}
-        </div>
+        <GooeyInput
+          value={query}
+          onValueChange={setQuery}
+          placeholder="Buscar por nombre, código o director…"
+          expandedWidth={280}
+          collapsedWidth={130}
+        />
 
         <div className="flex items-center gap-1.5">
           {FILTERS_CONFIG.map((f) => {
