@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import InstitutionModal from "./InstitutionModal"
-import IconTile from "@/components/premium/IconTile"
 import { getIcon } from "@/components/premium/iconRegistry"
 
 interface Institution {
@@ -31,6 +30,12 @@ interface Institution {
 
 type FilterKey = "all" | "active" | "inactive"
 
+const FILTERS_CONFIG: { key: FilterKey; label: string }[] = [
+  { key: "all", label: "Todas" },
+  { key: "active", label: "Activas" },
+  { key: "inactive", label: "Inactivas" },
+]
+
 export default function InstitutionList({
   institutions: initial,
   total,
@@ -47,6 +52,7 @@ export default function InstitutionList({
   const [toggling, setToggling] = useState<number | null>(null)
   const [query, setQuery] = useState("")
   const [filter, setFilter] = useState<FilterKey>("all")
+  const [focused, setFocused] = useState(false)
 
   async function toggleActive(inst: Institution) {
     setToggling(inst.id)
@@ -83,70 +89,114 @@ export default function InstitutionList({
     )
   }, [institutions, query, filter])
 
-  const filters: { key: FilterKey; label: string; count: number }[] = [
-    { key: "all", label: "Todas", count: counts.all },
-    { key: "active", label: "Activas", count: counts.active },
-    { key: "inactive", label: "Inactivas", count: counts.inactive },
-  ]
-
   return (
-    <div className="space-y-4">
-      <div className="sa-surface p-3 md:p-4 flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
-        <div className="flex items-center gap-2 flex-1 max-w-md">
-          <span className="flex items-center justify-center w-9 h-9 rounded-full shrink-0" style={{ background: "var(--surface-3)", border: "1px solid var(--surface-border)" }}>
-            {getIcon("search", { size: 14, strokeWidth: 2 })}
+    <div className="space-y-3 md:space-y-4">
+      <div
+        className="flex flex-col gap-3 p-3 md:p-4 rounded-[22px]"
+        style={{
+          background: "var(--surface)",
+          border: "1px solid var(--surface-border)",
+          boxShadow: "var(--surface-shadow)",
+        }}
+      >
+        <div
+          className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl transition-all duration-200"
+          style={{
+            background: focused ? "var(--surface-2)" : "var(--surface-3)",
+            border: `1px solid ${focused ? "var(--foreground)" : "var(--surface-border)"}`,
+            boxShadow: focused ? "0 0 0 3px color-mix(in srgb, var(--foreground) 10%, transparent)" : "none",
+          }}
+        >
+          <span className="shrink-0" style={{ color: focused ? "var(--foreground)" : "var(--muted-foreground)" }}>
+            {getIcon("search", { size: 15, strokeWidth: 2 })}
           </span>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por nombre, código, director o distrito…"
-            className="sa-input"
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            placeholder="Buscar por nombre, código o director…"
+            className="flex-1 bg-transparent text-sm outline-none border-none"
+            style={{ color: "var(--foreground)", minHeight: 20 }}
           />
+          {query && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              onClick={() => setQuery("")}
+              className="shrink-0 p-0.5 rounded-full opacity-50 hover:opacity-100 transition-opacity"
+            >
+              {getIcon("x", { size: 14, strokeWidth: 2.5 })}
+            </motion.button>
+          )}
         </div>
 
-        <div className="flex items-center gap-1 sa-rail" style={{ padding: "0.3rem" }}>
-          {filters.map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setFilter(f.key)}
-              data-active={filter === f.key}
-              className="sa-rail-item"
-              style={{ padding: "0.4rem 0.85rem", fontSize: "0.8rem" }}
-            >
-              <span>{f.label}</span>
-              <span
-                className="sa-chip"
+        <div className="flex items-center gap-1.5">
+          {FILTERS_CONFIG.map((f) => {
+            const isActive = filter === f.key
+            const count = counts[f.key]
+            return (
+              <motion.button
+                key={f.key}
+                onClick={() => setFilter(f.key)}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200"
                 style={{
-                  padding: "0.05rem 0.4rem",
-                  fontSize: "0.65rem",
-                  backgroundColor: filter === f.key ? "rgba(0,0,0,0.12)" : "var(--surface-3)",
-                  color: filter === f.key ? "#0a0a0c" : "var(--muted-foreground)",
-                  borderColor: "transparent",
+                  background: isActive
+                    ? "var(--foreground)"
+                    : "var(--surface-3)",
+                  color: isActive
+                    ? "var(--background)"
+                    : "var(--muted-foreground)",
+                  border: "1px solid transparent",
                 }}
               >
-                {f.count}
-              </span>
-            </button>
-          ))}
+                <span>{f.label}</span>
+                <span
+                  className="inline-flex items-center justify-center min-w-[18px] h-[18px] rounded-full text-[10px] font-semibold px-1"
+                  style={{
+                    background: isActive
+                      ? "color-mix(in srgb, var(--background) 20%, transparent)"
+                      : "color-mix(in srgb, var(--muted-foreground) 15%, transparent)",
+                    color: isActive ? "var(--background)" : "var(--muted-foreground)",
+                  }}
+                >
+                  {count}
+                </span>
+              </motion.button>
+            )
+          })}
         </div>
       </div>
 
       {filtered.length === 0 ? (
-        <div className="sa-surface py-14 md:py-16 text-center">
-          <span className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4" style={{ background: "var(--surface-3)" }}>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-[22px] py-14 md:py-16 text-center"
+          style={{
+            background: "var(--surface)",
+            border: "1px solid var(--surface-border)",
+            boxShadow: "var(--surface-shadow)",
+          }}
+        >
+          <span
+            className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
+            style={{ background: "var(--surface-3)" }}
+          >
             {getIcon("building", { size: 28, strokeWidth: 1.6 })}
           </span>
-          <p className="text-sm font-medium mb-1">
+          <p className="text-sm font-medium mb-1" style={{ color: "var(--foreground)" }}>
             {query ? "Sin resultados" : "Aún no hay instituciones"}
           </p>
-          <p className="text-xs text-[color:var(--muted-foreground)] max-w-xs mx-auto">
+          <p className="text-xs max-w-xs mx-auto" style={{ color: "var(--muted-foreground)" }}>
             {query
               ? "No encontramos instituciones con ese criterio. Intenta con otros términos."
               : "Las instituciones registradas aparecerán aquí. Usa el botón superior para añadir la primera."}
           </p>
-        </div>
+        </motion.div>
       ) : (
-        <motion.ul layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
+        <motion.ul layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5 md:gap-4">
           <AnimatePresence mode="popLayout">
             {filtered.map((inst, idx) => (
               <motion.li
@@ -155,126 +205,173 @@ export default function InstitutionList({
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: idx * 0.03 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1], delay: idx * 0.025 }}
               >
                 <article
                   onClick={() => setSelected(inst)}
-                  className="sa-surface sa-surface-hover p-5 cursor-pointer h-full flex flex-col gap-4"
+                  className="group cursor-pointer h-full flex flex-col rounded-[22px] transition-all duration-200"
+                  style={{
+                    background: "var(--surface)",
+                    border: "1px solid var(--surface-border)",
+                    boxShadow: "var(--surface-shadow)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = "var(--surface-shadow-hover)"
+                    e.currentTarget.style.transform = "translateY(-2px)"
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = "var(--surface-shadow)"
+                    e.currentTarget.style.transform = "translateY(0)"
+                  }}
                 >
-                  <header className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span
-                        className="w-11 h-11 rounded-2xl flex items-center justify-center font-semibold text-sm shrink-0"
+                  <div className="p-3.5 md:p-5 flex flex-col gap-2.5 md:gap-3 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                        <span
+                          className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center font-bold text-xs md:text-sm shrink-0 transition-all duration-200"
+                          style={{
+                            background: inst.isActive
+                              ? "color-mix(in srgb, var(--accent) 18%, transparent)"
+                              : "var(--surface-3)",
+                            border: "1px solid var(--surface-border)",
+                            color: inst.isActive ? "var(--accent)" : "var(--muted-foreground)",
+                          }}
+                        >
+                          {inst.name.charAt(0).toUpperCase()}
+                        </span>
+                        <div className="min-w-0">
+                          <h3
+                            className="font-semibold text-sm md:text-base truncate leading-tight"
+                            style={{ color: "var(--foreground)" }}
+                          >
+                            {inst.name}
+                          </h3>
+                          <p
+                            className="text-[10px] md:text-[11px] truncate mt-0.5"
+                            style={{ color: "var(--muted-foreground)" }}
+                          >
+                            {inst.code}
+                          </p>
+                        </div>
+                      </div>
+                      <motion.span
+                        whileTap={{ scale: 0.93 }}
+                        className="shrink-0 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold transition-all duration-200"
                         style={{
+                          color: inst.isActive ? "var(--accent)" : "#f87171",
                           background: inst.isActive
-                            ? "color-mix(in srgb, var(--accent) 18%, transparent)"
-                            : "var(--surface-3)",
-                          border: "1px solid var(--surface-border)",
-                          color: inst.isActive ? "var(--accent)" : "var(--muted-foreground)",
+                            ? "color-mix(in srgb, var(--accent) 14%, transparent)"
+                            : "rgba(248, 113, 113, 0.14)",
                         }}
                       >
-                        {inst.name.charAt(0).toUpperCase()}
-                      </span>
-                      <div className="min-w-0">
-                        <h3 className="font-semibold truncate">{inst.name}</h3>
-                        <p className="text-[11px] text-[color:var(--muted-foreground)] truncate">
-                          {inst.code}
-                          {inst.directorName ? ` · Dir. ${inst.directorName}` : ""}
-                        </p>
-                      </div>
+                        <span
+                          className="inline-block w-1.5 h-1.5 rounded-full"
+                          style={{ background: inst.isActive ? "var(--accent)" : "#f87171" }}
+                        />
+                        {inst.isActive ? "Activa" : "Inactiva"}
+                      </motion.span>
                     </div>
-                    <span
-                      className="sa-chip"
-                      style={
-                        inst.isActive
-                          ? {
-                              color: "var(--accent)",
-                              borderColor: "transparent",
-                              backgroundColor: "color-mix(in srgb, var(--accent) 14%, transparent)",
-                            }
-                          : {
-                              color: "#f87171",
-                              borderColor: "transparent",
-                              backgroundColor: "rgba(248, 113, 113, 0.14)",
-                            }
-                      }
-                    >
-                      <span
-                        className="inline-block w-1.5 h-1.5 rounded-full"
-                        style={{ background: inst.isActive ? "var(--accent)" : "#f87171" }}
-                      />
-                      {inst.isActive ? "Activa" : "Inactiva"}
-                    </span>
-                  </header>
 
-                  <div className="grid grid-cols-2 gap-2 text-[11px]">
-                    <div className="sa-surface-flat px-3 py-2">
-                      <p className="sa-eyebrow !text-[9px] mb-0.5">Tipo</p>
-                      <p className="font-medium">{inst.type === "private" ? "Privada" : "Pública"}</p>
-                    </div>
-                    <div className="sa-surface-flat px-3 py-2">
-                      <p className="sa-eyebrow !text-[9px] mb-0.5">Niveles</p>
-                      <p className="font-medium truncate">{formatLevels(inst.educationalLevel)}</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1 text-[11px] text-[color:var(--muted-foreground)]">
                     {(inst.district || inst.province || inst.department) && (
-                      <div className="flex items-center gap-1.5">
-                        {getIcon("map", { size: 12, strokeWidth: 2 })}
+                      <div
+                        className="flex items-center gap-1.5 text-[10px] md:text-[11px]"
+                        style={{ color: "var(--muted-foreground)" }}
+                      >
+                        {getIcon("map", { size: 11, strokeWidth: 2 })}
                         <span className="truncate">
                           {[inst.district, inst.province, inst.department].filter(Boolean).join(", ")}
                         </span>
                       </div>
                     )}
-                    {inst.createdAt && (
-                      <div className="flex items-center gap-1.5">
-                        {getIcon("calendar", { size: 12, strokeWidth: 2 })}
-                        <span>{new Date(inst.createdAt).toLocaleDateString("es-PE", { year: "numeric", month: "short", day: "numeric" })}</span>
-                      </div>
-                    )}
-                  </div>
 
-                  <footer className="flex items-center justify-between pt-2 border-t border-[color:var(--surface-border)]">
-                    <div className="flex items-center gap-2 text-[11px] text-[color:var(--muted-foreground)]">
+                    <div className="flex flex-wrap items-center gap-1.5 mt-auto">
+                      <span
+                        className="inline-flex items-center rounded-full px-2.5 py-1 text-[9px] md:text-[10px] font-medium"
+                        style={{
+                          background: "var(--surface-3)",
+                          border: "1px solid var(--surface-border)",
+                          color: "var(--muted-foreground)",
+                        }}
+                      >
+                        {inst.type === "private" ? "Privada" : "Pública"}
+                      </span>
+                      {inst.educationalLevel && (
+                        <span
+                          className="inline-flex items-center rounded-full px-2.5 py-1 text-[9px] md:text-[10px] font-medium"
+                          style={{
+                            background: "var(--surface-3)",
+                            border: "1px solid var(--surface-border)",
+                            color: "var(--muted-foreground)",
+                          }}
+                        >
+                          {formatLevels(inst.educationalLevel)}
+                        </span>
+                      )}
                       {inst.studentCount !== undefined && (
-                        <span className="flex items-center gap-1">
-                          {getIcon("person", { size: 12, strokeWidth: 2 })}
-                          {inst.studentCount} alumnos
+                        <span
+                          className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[9px] md:text-[10px] font-medium"
+                          style={{
+                            background: "color-mix(in srgb, var(--accent) 10%, transparent)",
+                            border: "1px solid transparent",
+                            color: "var(--accent)",
+                          }}
+                        >
+                          {getIcon("person", { size: 10, strokeWidth: 2.5 })}
+                          {inst.studentCount}
                         </span>
                       )}
                     </div>
+                  </div>
+
+                  <div
+                    className="flex items-center justify-between gap-2 px-3.5 md:px-5 py-2.5 md:py-3 rounded-b-[22px]"
+                    style={{
+                      borderTop: "1px solid var(--surface-border)",
+                      background: "var(--surface-2)",
+                    }}
+                  >
+                    <div className="flex items-center gap-1.5 text-[10px] md:text-[11px]" style={{ color: "var(--muted-foreground)" }}>
+                      {inst.createdAt ? (
+                        <span className="flex items-center gap-1">
+                          {getIcon("calendar", { size: 10, strokeWidth: 2 })}
+                          {new Date(inst.createdAt).toLocaleDateString("es-PE", { day: "2-digit", month: "short", year: "numeric" })}
+                        </span>
+                      ) : null}
+                    </div>
                     <div className="flex items-center gap-1">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setSelected(inst)
+                      <motion.button
+                        whileTap={{ scale: 0.92 }}
+                        onClick={(e) => { e.stopPropagation(); setSelected(inst) }}
+                        className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] md:text-[11px] font-medium transition-all duration-150"
+                        style={{
+                          background: "transparent",
+                          color: "var(--muted-foreground)",
+                          border: "1px solid var(--surface-border)",
                         }}
-                        className="sa-btn-ghost"
-                        style={{ padding: "0.3rem 0.6rem", fontSize: "0.7rem", borderRadius: "999px" }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--surface-3)"; e.currentTarget.style.color = "var(--foreground)" }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--muted-foreground)" }}
                       >
-                        {getIcon("eye", { size: 12, strokeWidth: 2 })}
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          toggleActive(inst)
-                        }}
+                        {getIcon("eye", { size: 11, strokeWidth: 2 })}
+                        <span className="hidden sm:inline">Ver</span>
+                      </motion.button>
+                      <motion.button
+                        whileTap={{ scale: 0.92 }}
+                        onClick={(e) => { e.stopPropagation(); toggleActive(inst) }}
                         disabled={toggling === inst.id}
-                        className={
-                          "sa-btn text-[11px] py-1 px-3 " +
-                          (inst.isActive ? "sa-btn-outline" : "sa-btn-primary")
-                        }
-                        style={inst.isActive ? { color: "#f87171", borderColor: "rgba(248,113,113,0.4)" } : undefined}
+                        className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] md:text-[11px] font-medium transition-all duration-150"
+                        style={{
+                          background: inst.isActive ? "rgba(248, 113, 113, 0.1)" : "color-mix(in srgb, var(--accent) 14%, transparent)",
+                          color: inst.isActive ? "#f87171" : "var(--accent)",
+                          border: `1px solid ${inst.isActive ? "rgba(248, 113, 113, 0.3)" : "transparent"}`,
+                        }}
                       >
                         {toggling === inst.id
                           ? "…"
-                          : inst.isActive
-                          ? "Desactivar"
-                          : "Activar"}
-                      </button>
+                          : getIcon(inst.isActive ? "power" : "check", { size: 11, strokeWidth: 2.5 })}
+                        <span>{toggling === inst.id ? "" : inst.isActive ? "Desactivar" : "Activar"}</span>
+                      </motion.button>
                     </div>
-                  </footer>
+                  </div>
                 </article>
               </motion.li>
             ))}

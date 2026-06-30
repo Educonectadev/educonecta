@@ -26,40 +26,25 @@ export default async function InstitucionesPage() {
   const inactive = total - activas
 
   return (
-    <div className="space-y-6 md:space-y-8 pt-4 md:pt-6">
-      <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6">
+      <div className="flex items-center justify-between gap-3">
         <div>
           <p className="sa-eyebrow">Gestión de red</p>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-1">Instituciones</h1>
+          <h1 className="text-2xl md:text-4xl font-bold tracking-tight mt-0.5">Instituciones</h1>
         </div>
         <Link
           href="/dashboard/super-admin/instituciones/nueva"
-          className="sa-btn sa-btn-primary self-start md:self-auto"
+          className="sa-btn sa-btn-primary shrink-0"
         >
-          {getIcon("plus", { size: 16, strokeWidth: 2.4 })}
-          <span>Registrar Institución</span>
+          {getIcon("plus", { size: 15, strokeWidth: 2.4 })}
+          <span className="hidden sm:inline">Registrar</span>
         </Link>
-      </header>
+      </div>
 
-      <div className="grid grid-cols-3 gap-3 md:gap-4">
-        <MetricCard
-          icon="building"
-          label="Total"
-          value={total}
-          color="var(--accent)"
-        />
-        <MetricCard
-          icon="check"
-          label="Activas"
-          value={activas}
-          color="#22c55e"
-        />
-        <MetricCard
-          icon="x"
-          label="Inactivas"
-          value={inactive}
-          color="#f87171"
-        />
+      <div className="grid grid-cols-3 gap-2.5 md:gap-4">
+        <StatCard icon="building" label="Total" value={total} />
+        <StatCard icon="check" label="Activas" value={activas} accent />
+        <StatCard icon="x" label="Inactivas" value={inactive} muted />
       </div>
 
       <InstitutionList institutions={enriched} total={total} active={activas} inactive={inactive} />
@@ -67,28 +52,47 @@ export default async function InstitucionesPage() {
   )
 }
 
-function MetricCard({
+function StatCard({
   icon,
   label,
   value,
-  color,
+  accent,
+  muted,
 }: {
   icon: string
   label: string
   value: number
-  color: string
+  accent?: boolean
+  muted?: boolean
 }) {
+  const color = accent ? "var(--accent)" : muted ? "#f87171" : "var(--foreground)"
   return (
-    <div className="sa-surface p-4 md:p-5 flex items-center gap-3 md:gap-4">
+    <div
+      className="relative overflow-hidden rounded-[22px] p-3.5 md:p-5 flex flex-col gap-2.5"
+      style={{
+        background: accent
+          ? "var(--surface)"
+          : muted
+          ? "var(--surface)"
+          : "var(--surface)",
+        border: "1px solid var(--surface-border)",
+        boxShadow: "var(--surface-shadow)",
+      }}
+    >
       <span
-        className="w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shrink-0"
-        style={{ backgroundColor: `color-mix(in srgb, ${color} 16%, transparent)`, color }}
+        className="w-9 h-9 md:w-11 md:h-11 rounded-xl flex items-center justify-center shrink-0"
+        style={{
+          backgroundColor: `color-mix(in srgb, ${color} 14%, transparent)`,
+          color,
+        }}
       >
-        {getIcon(icon, { size: 20, strokeWidth: 2 })}
+        {getIcon(icon, { size: 18, strokeWidth: 2 })}
       </span>
-      <div className="min-w-0">
-        <p className="text-2xl md:text-3xl font-bold tracking-tight">{value}</p>
-        <p className="text-[11px] text-[color:var(--muted-foreground)] font-medium">{label}</p>
+      <div>
+        <p className="text-xl md:text-3xl font-bold tracking-tight">{value}</p>
+        <p className="text-[10px] md:text-[11px] text-[color:var(--muted-foreground)] font-medium mt-0.5">
+          {label}
+        </p>
       </div>
     </div>
   )
