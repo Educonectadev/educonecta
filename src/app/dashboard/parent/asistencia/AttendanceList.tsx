@@ -108,14 +108,14 @@ export default function AttendanceList({
         )
       })}
 
-      {selected && (
-        <Modal isOpen onOpenChange={(v) => { if (!v) setSelected(null) }}>
-          <Modal.Backdrop />
-          <Modal.Container size="lg" scroll="inside">
-            <Modal.Dialog className="z-[60]">
-              <Modal.CloseTrigger />
-              <Modal.Header>
-                <Modal.Heading>
+      <Modal isOpen={!!selected} onOpenChange={(v) => { if (!v) setSelected(null) }}>
+        <Modal.Backdrop />
+        <Modal.Container size="lg" scroll="inside">
+          <Modal.Dialog className="z-[60]">
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Heading>
+                {selected && (
                   <div className="flex items-start justify-between gap-4 w-full">
                     <div className="flex-1 min-w-0">
                       <span className="truncate block" style={{ color: "var(--foreground)" }}>Registro de Asistencia</span>
@@ -133,9 +133,11 @@ export default function AttendanceList({
                       {selected.isPresent ? "Presente" : "Ausente"}
                     </span>
                   </div>
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                )}
+              </Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>
+              {selected && (
                 <div className="space-y-4">
                   <div>
                     <p className="sa-eyebrow mb-1" style={{ color: "var(--muted-foreground)" }}>Registrado por</p>
@@ -148,11 +150,11 @@ export default function AttendanceList({
                     </div>
                   )}
                 </div>
-              </Modal.Body>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal>
-      )}
+              )}
+            </Modal.Body>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal>
     </div>
   )
 }
