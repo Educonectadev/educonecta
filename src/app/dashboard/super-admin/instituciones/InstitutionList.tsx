@@ -38,14 +38,8 @@ const FILTERS_CONFIG: { key: FilterKey; label: string }[] = [
 
 export default function InstitutionList({
   institutions: initial,
-  total,
-  active,
-  inactive,
 }: {
   institutions: Institution[]
-  total: number
-  active: number
-  inactive: number
 }) {
   const [institutions, setInstitutions] = useState(initial)
   const [selected, setSelected] = useState<Institution | null>(null)
@@ -72,7 +66,11 @@ export default function InstitutionList({
     setSelected(updated)
   }
 
-  const counts = { all: total, active, inactive }
+  const liveCounts = useMemo(() => ({
+    all: institutions.length,
+    active: institutions.filter((i) => i.isActive).length,
+    inactive: institutions.filter((i) => !i.isActive).length,
+  }), [institutions])
 
   const filtered = useMemo(() => {
     let list = institutions
@@ -91,6 +89,12 @@ export default function InstitutionList({
 
   return (
     <div className="space-y-3 md:space-y-4">
+      <div className="grid grid-cols-3 gap-2.5 md:gap-4">
+        <StatCard icon="building" label="Total" value={liveCounts.all} />
+        <StatCard icon="check" label="Activas" value={liveCounts.active} accent />
+        <StatCard icon="x" label="Inactivas" value={liveCounts.inactive} muted />
+      </div>
+
       <div
         className="flex flex-col gap-3 p-3 md:p-4 rounded-[22px]"
         style={{
@@ -134,7 +138,7 @@ export default function InstitutionList({
         <div className="flex items-center gap-1.5">
           {FILTERS_CONFIG.map((f) => {
             const isActive = filter === f.key
-            const count = counts[f.key]
+            const count = liveCounts[f.key]
             return (
               <motion.button
                 key={f.key}
@@ -387,6 +391,59 @@ export default function InstitutionList({
         />
       )}
     </div>
+  )
+}
+
+function StatCard({
+  icon,
+  label,
+  value,
+  accent,
+  muted,
+}: {
+  icon: string
+  label: string
+  value: number
+  accent?: boolean
+  muted?: boolean
+}) {
+  const color = accent ? "var(--accent)" : muted ? "#f87171" : "var(--foreground)"
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      className="relative overflow-hidden rounded-[22px] p-3.5 md:p-5 flex flex-col gap-2.5"
+      style={{
+        background: "var(--surface)",
+        border: "1px solid var(--surface-border)",
+        boxShadow: "var(--surface-shadow)",
+      }}
+    >
+      <span
+        className="w-9 h-9 md:w-11 md:h-11 rounded-xl flex items-center justify-center shrink-0"
+        style={{
+          backgroundColor: `color-mix(in srgb, ${color} 14%, transparent)`,
+          color,
+        }}
+      >
+        {getIcon(icon, { size: 18, strokeWidth: 2 })}
+      </span>
+      <div>
+        <motion.p
+          key={value}
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="text-xl md:text-3xl font-bold tracking-tight"
+        >
+          {value}
+        </motion.p>
+        <p className="text-[10px] md:text-[11px] text-[color:var(--muted-foreground)] font-medium mt-0.5">
+          {label}
+        </p>
+      </div>
+    </motion.div>
   )
 }
 
