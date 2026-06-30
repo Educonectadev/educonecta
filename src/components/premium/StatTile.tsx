@@ -1,8 +1,4 @@
-"use client"
-
-import { motion } from "framer-motion"
 import IconTile from "./IconTile"
-import Sparkline from "./Sparkline"
 import AnimatedNumber from "./AnimatedNumber"
 
 interface StatTileProps {
@@ -28,28 +24,14 @@ export default function StatTile({
   value,
   icon,
   delta,
-  series,
   accent = "neon",
-  delay = 0,
   href,
 }: StatTileProps) {
   const color = accentMap[accent]
   const Inner = (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay }}
-      whileHover={{ y: -3 }}
-      className="sa-tile group cursor-default"
-    >
+    <div className="sa-tile group cursor-default">
       <div className="flex items-start justify-between mb-3">
-        <IconTile
-          name={icon}
-          filled
-          size={16}
-          active
-          className="!w-8 !h-8"
-        />
+        <IconTile name={icon} filled size={16} active className="!w-8 !h-8" />
         {typeof delta === "number" && (
           <span
             className="sa-chip"
@@ -70,12 +52,7 @@ export default function StatTile({
       <p className="sa-num text-3xl mt-1.5">
         <AnimatedNumber value={value} />
       </p>
-      {series && series.length > 0 && (
-        <div className="mt-3 -mx-1">
-          <Sparkline values={series} stroke={color} fill={color} height={36} />
-        </div>
-      )}
-    </motion.div>
+    </div>
   )
 
   if (href) {

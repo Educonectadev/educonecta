@@ -3,11 +3,9 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { getSupabaseAdmin } from "@/lib/supabase"
 import AnimatedNumber from "@/components/premium/AnimatedNumber"
-import NeonCard from "@/components/premium/NeonCard"
-import IconTile from "@/components/premium/IconTile"
-import { getIcon } from "@/components/premium/iconRegistry"
 import TodayLabel from "@/components/premium/TodayLabel"
 import GreetingLabel from "@/components/premium/GreetingLabel"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 async function supabaseCount(table: string, match?: Record<string, unknown>): Promise<number> {
   const admin = getSupabaseAdmin()
@@ -72,13 +70,11 @@ export default async function SuperAdminDashboardPage() {
     { href: "/dashboard/super-admin/versiones", icon: "rocket", label: "Publicar versión" },
   ]
 
-  // The greeting is computed client-side via TodayLabel-like helper to avoid
-  // hydration mismatches across server/client timezones.
   return (
     <div className="space-y-8 md:space-y-10 pt-4 md:pt-8 pb-10">
       {/* HERO */}
-      <NeonCard hoverable={false} glow padded={false} className="sa-hero overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 p-6 md:p-10">
+      <section className="sa-hero overflow-hidden rounded-[28px] border p-6 md:p-10">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="flex items-center gap-4">
             <div
               className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center font-semibold text-lg md:text-xl shrink-0"
@@ -121,36 +117,42 @@ export default async function SuperAdminDashboardPage() {
             </Link>
           </div>
         </div>
-      </NeonCard>
+      </section>
 
       {/* STATS GRID */}
       <section>
         <p className="sa-eyebrow mb-3">Resumen general</p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {stats.map((s, idx) => {
+          {stats.map((s) => {
             const val =
               "format" in s && typeof s.format === "function" ? s.format(s.value) : s.value
-            return (
-              <Link
-                key={s.label}
-                href={"href" in s ? (s.href as string) : "#"}
-                className="sa-tile group block"
-                style={{ animationDelay: `${idx * 30}ms` }}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <IconTile name={s.icon as string} size={16} />
+            const Inner = (
+              <div className="sa-tile group cursor-default">
+                <div className="flex items-start justify-between mb-3">
                   <span
-                    className="sa-chip opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ padding: "0.1rem 0.5rem", fontSize: "0.65rem" }}
+                    className="inline-flex items-center justify-center rounded-full"
+                    style={{
+                      width: 30,
+                      height: 30,
+                      background: "var(--surface-2)",
+                      border: "1px solid var(--surface-border)",
+                    }}
                   >
-                    ver
+                    {getIcon(s.icon as string, { size: 14, strokeWidth: 2 })}
                   </span>
                 </div>
                 <p className="sa-eyebrow">{s.label}</p>
                 <p className="sa-num text-3xl mt-1.5">
                   {typeof val === "number" ? <AnimatedNumber value={val} /> : val}
                 </p>
+              </div>
+            )
+            return "href" in s ? (
+              <Link key={s.label} href={s.href as string} className="block">
+                {Inner}
               </Link>
+            ) : (
+              <div key={s.label}>{Inner}</div>
             )
           })}
         </div>
@@ -166,11 +168,19 @@ export default async function SuperAdminDashboardPage() {
               href={a.href}
               className="sa-surface sa-surface-hover p-4 flex items-center gap-3 group"
             >
-              <IconTile name={a.icon} size={16} />
-              <span className="text-sm font-medium">{a.label}</span>
               <span
-                className="ml-auto opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all"
+                className="inline-flex items-center justify-center rounded-full shrink-0"
+                style={{
+                  width: 30,
+                  height: 30,
+                  background: "var(--surface-2)",
+                  border: "1px solid var(--surface-border)",
+                }}
               >
+                {getIcon(a.icon, { size: 14, strokeWidth: 2 })}
+              </span>
+              <span className="text-sm font-medium">{a.label}</span>
+              <span className="ml-auto opacity-40 group-hover:opacity-100 transition-opacity">
                 {getIcon("arrow_up_right", { size: 14, strokeWidth: 2.2 })}
               </span>
             </Link>
@@ -180,7 +190,7 @@ export default async function SuperAdminDashboardPage() {
 
       {/* ACTIVIDAD + ESTADO */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-        <NeonCard className="lg:col-span-2" delay={0.1}>
+        <div className="sa-surface p-6 lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className="sa-eyebrow">Actividad reciente</p>
@@ -198,7 +208,17 @@ export default async function SuperAdminDashboardPage() {
 
           {institucionesRecientes.length === 0 ? (
             <div className="text-center py-10">
-              <IconTile name="building" size={28} className="mb-3 opacity-50" />
+              <span
+                className="inline-flex items-center justify-center rounded-full mb-3 opacity-50"
+                style={{
+                  width: 42,
+                  height: 42,
+                  background: "var(--surface-2)",
+                  border: "1px solid var(--surface-border)",
+                }}
+              >
+                {getIcon("building", { size: 18, strokeWidth: 1.6 })}
+              </span>
               <p className="text-sm" style={{ color: "var(--muted-foreground)" }}>
                 Aún no hay instituciones registradas.
               </p>
@@ -261,9 +281,9 @@ export default async function SuperAdminDashboardPage() {
               ))}
             </ul>
           )}
-        </NeonCard>
+        </div>
 
-        <NeonCard delay={0.15}>
+        <div className="sa-surface p-6">
           <p className="sa-eyebrow">Sistema</p>
           <h2 className="text-lg font-semibold mt-1 mb-4">Estado general</h2>
 
@@ -302,7 +322,7 @@ export default async function SuperAdminDashboardPage() {
               Plataforma en línea
             </span>
           </div>
-        </NeonCard>
+        </div>
       </section>
     </div>
   )
