@@ -16,11 +16,13 @@ export default async function VersionesPage() {
     .order("createdAt", { ascending: false })
 
   return (
-    <div className="pt-4 md:pt-6">
-      <header className="mb-6 md:mb-8">
+    <div className="pt-4 md:pt-6 space-y-6 md:space-y-8">
+      <header>
         <p className="sa-eyebrow">Release management</p>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-1">Versiones del Sistema</h1>
-        <p className="text-sm text-[color:var(--muted-foreground)] mt-1.5">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mt-1" style={{ fontFamily: "var(--font-display)" }}>
+          Versiones del Sistema
+        </h1>
+        <p className="text-sm mt-1.5" style={{ color: "var(--muted-foreground)" }}>
           Registra y gestiona las versiones lanzadas de EduConecta
         </p>
       </header>
