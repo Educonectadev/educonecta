@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 import DataTable from "@/components/DataTable"
@@ -105,93 +104,86 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
 
   return (
     <>
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-          <div>
-            <p className="sa-eyebrow">Comunidad educativa</p>
-            <h1 className="text-2xl font-bold tracking-tight mt-0.5" style={{ fontFamily: "var(--font-display)", color: "var(--foreground)" }}>Padres</h1>
-          </div>
-          <motion.button whileTap={{ scale: 0.97 }} onClick={() => { setShowCreate(true); resetForm() }} className="sa-btn sa-btn-primary">+ Registrar Padre</motion.button>
-        </div>
-      </motion.div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Padres</h1>
+        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium text-center">+ Registrar Padre</button>
+      </div>
 
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}>
-        <DataTable
-          data={parents}
-          emptyMessage="No hay padres registrados."
-          onEdit={openEdit}
-          onDelete={(p) => setDeleting(p)}
-          columns={[
-            {
-              key: "name",
-              label: "Padre",
-              sortable: true,
-              render: (p) => (
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium shrink-0" style={{ background: "var(--surface-3)", color: "var(--muted-foreground)" }}>
-                    {p.user.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{p.user.name}</p>
-                    <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>{p.user.email}</p>
-                  </div>
+      <DataTable
+        data={parents}
+        emptyMessage="No hay padres registrados."
+        onEdit={openEdit}
+        onDelete={(p) => setDeleting(p)}
+        columns={[
+          {
+            key: "name",
+            label: "Padre",
+            sortable: true,
+            render: (p) => (
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-zinc-300 shrink-0">
+                  {p.user.name.charAt(0)}
                 </div>
-              ),
-            },
-            {
-              key: "phone",
-              label: "Teléfono",
-              render: (p) => p.user.phone ? <span className="text-sm" style={{ color: "var(--foreground)" }}>{p.user.phone}</span> : <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>—</span>,
-            },
-            {
-              key: "childrenCount",
-              label: "Hijos",
-              render: (p) => (
                 <div>
-                  <span className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{p.children.length}</span>
-                  {p.children.length > 0 && (
-                    <div className="text-[11px] mt-0.5" style={{ color: "var(--muted-foreground)" }}>
-                      {p.children.map((c) => c.student.firstName).join(", ")}
-                    </div>
-                  )}
+                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{p.user.name}</p>
+                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">{p.user.email}</p>
                 </div>
-              ),
-            },
-          ]}
-        />
-      </motion.div>
+              </div>
+            ),
+          },
+          {
+            key: "phone",
+            label: "Teléfono",
+            render: (p) => p.user.phone ? <span className="text-sm text-gray-700 dark:text-zinc-300">{p.user.phone}</span> : <span className="text-sm text-gray-400 dark:text-zinc-600">—</span>,
+          },
+          {
+            key: "childrenCount",
+            label: "Hijos",
+            render: (p) => (
+              <div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white/90">{p.children.length}</span>
+                {p.children.length > 0 && (
+                  <div className="text-[11px] text-gray-500 dark:text-zinc-400 mt-0.5">
+                    {p.children.map((c) => c.student.firstName).join(", ")}
+                  </div>
+                )}
+              </div>
+            ),
+          },
+        ]}
+      />
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Padre" size="md" scroll="inside">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block sa-eyebrow mb-1.5">Nombres</label>
-              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="sa-input w-full" placeholder="Juan" />
+              <label className="block text-xs font-medium text-gray-500 mb-1">Nombres</label>
+              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Juan" />
             </div>
             <div>
-              <label className="block sa-eyebrow mb-1.5">Apellidos</label>
-              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="sa-input w-full" placeholder="Pérez" />
+              <label className="block text-xs font-medium text-gray-500 mb-1">Apellidos</label>
+              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Pérez" />
             </div>
           </div>
           {form.firstName && form.lastName && (
-            <div className="px-4 py-2.5 rounded-[var(--radius-tile)]" style={{ background: "var(--surface-2)" }}>
-              <p className="text-[11px]" style={{ color: "var(--muted-foreground)" }}>Email generado automáticamente:</p>
-              <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>{form.firstName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}.{form.lastName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}@colegio.edu.pe</p>
+            <div className="bg-gray-50 rounded-[20px] px-4 py-2.5">
+              <p className="text-[11px] text-gray-400">Email generado automáticamente:</p>
+              <p className="text-sm font-medium text-gray-700">{form.firstName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}.{form.lastName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}@colegio.edu.pe</p>
             </div>
           )}
           <div>
-            <label className="block sa-eyebrow mb-1.5">Contraseña</label>
-            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="sa-input w-full" />
+            <label className="block text-xs font-medium text-gray-500 mb-1">Contraseña</label>
+            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
           </div>
           <div>
-            <label className="block sa-eyebrow mb-1.5">Teléfono</label>
-            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="sa-input w-full" />
+            <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
+            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
           </div>
           <div>
-            <label className="block sa-eyebrow mb-1.5">Hijos vinculados</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Hijos vinculados</label>
             <div className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-hide">
               {allStudents.map((s) => (
-                <label key={s.id} className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: "var(--foreground)" }}>
+                <label key={s.id} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
                   <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} />
                   {s.firstName} {s.lastName}
                 </label>
@@ -200,10 +192,10 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
           </div>
         </div>
         <div className="flex gap-3 mt-8">
-          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowCreate(false)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
-          <motion.button whileTap={{ scale: 0.97 }} onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.password} className="sa-btn sa-btn-primary flex-1">
+          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.password} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Registrar"}
-          </motion.button>
+          </button>
         </div>
       </Modal>
 
@@ -211,27 +203,27 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block sa-eyebrow mb-1.5">Nombres</label>
-              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="sa-input w-full" />
+              <label className="block text-xs font-medium text-gray-500 mb-1">Nombres</label>
+              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
             </div>
             <div>
-              <label className="block sa-eyebrow mb-1.5">Apellidos</label>
-              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="sa-input w-full" />
+              <label className="block text-xs font-medium text-gray-500 mb-1">Apellidos</label>
+              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
             </div>
           </div>
           <div>
-            <label className="block sa-eyebrow mb-1.5">Nueva contraseña (vacío = mantener)</label>
-            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="sa-input w-full" />
+            <label className="block text-xs font-medium text-gray-500 mb-1">Nueva contraseña (vacío = mantener)</label>
+            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
           </div>
           <div>
-            <label className="block sa-eyebrow mb-1.5">Teléfono</label>
-            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="sa-input w-full" />
+            <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
+            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
           </div>
           <div>
-            <label className="block sa-eyebrow mb-1.5">Hijos vinculados</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1">Hijos vinculados</label>
             <div className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-hide">
               {allStudents.map((s) => (
-                <label key={s.id} className="flex items-center gap-2 text-sm cursor-pointer" style={{ color: "var(--foreground)" }}>
+                <label key={s.id} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
                   <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} />
                   {s.firstName} {s.lastName}
                 </label>
@@ -240,20 +232,20 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
           </div>
         </div>
         <div className="flex gap-3 mt-8">
-          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setEditing(null)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
-          <motion.button whileTap={{ scale: 0.97 }} onClick={handleSave} disabled={loading} className="sa-btn sa-btn-primary flex-1">
+          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Guardar"}
-          </motion.button>
+          </button>
         </div>
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar padre" size="sm">
-        <p className="text-sm text-center" style={{ color: "var(--muted-foreground)" }}>Se eliminará {deleting?.user?.name}. Esta acción no se puede deshacer.</p>
+        <p className="text-sm text-gray-500 text-center">Se eliminará {deleting?.user?.name}. Esta acción no se puede deshacer.</p>
         <div className="flex gap-3 mt-8">
-          <motion.button whileTap={{ scale: 0.97 }} onClick={() => setDeleting(null)} className="sa-btn sa-btn-ghost flex-1">Cancelar</motion.button>
-          <motion.button whileTap={{ scale: 0.97 }} onClick={handleDelete} disabled={loading} className="sa-btn flex-1" style={{ background: "#ef4444", color: "white", border: "1px solid #ef4444" }}>
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
             {loading ? "Eliminando..." : "Eliminar"}
-          </motion.button>
+          </button>
         </div>
       </Modal>
     </>
