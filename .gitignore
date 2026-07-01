@@ -47,6 +47,10 @@ next-env.d.ts
 /src/generated/prisma
 *.db
 
+# Electron build output
+/public/installers
+/release
+
 # Android TWA build output
 android/app/build/
 android/.gradle/

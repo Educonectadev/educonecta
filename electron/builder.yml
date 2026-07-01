@@ -1,7 +1,7 @@
 appId: com.educonecta.${env.ROLE}
 productName: EduConecta ${env.ROLE}
 directories:
-  output: release/${env.ROLE}
+  output: public/installers
   buildResources: electron
 files:
   - electron/**/*
@@ -12,19 +12,15 @@ files:
 win:
   target:
     - nsis
-  icon: electron/icon.png
+  artifactName: educonecta-${env.ROLE}-setup.${ext}
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
-  installerIcon: electron/icon.png
-  uninstallerIcon: electron/icon.png
-  installerHeaderIcon: electron/icon.png
 mac:
   target:
     - dmg
-  icon: electron/icon.png
+  artifactName: educonecta-${env.ROLE}.${ext}
 linux:
   target:
     - AppImage
-    - deb
-  icon: electron/icon.png
+  artifactName: educonecta-${env.ROLE}.${ext}

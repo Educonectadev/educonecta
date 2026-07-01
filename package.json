@@ -16,11 +16,12 @@
     "electron:docente": "ROLE=docente electron .",
     "electron:padre": "ROLE=padre electron .",
     "electron:alumno": "ROLE=alumno electron .",
-    "electron:build:dev": "electron-builder --config electron/builder.yml --win --linux --mac --ia32",
-    "electron:build:director": "cross-env ROLE=director electron-builder --config electron/builder.yml --win --linux --mac",
-    "electron:build:docente": "cross-env ROLE=docente electron-builder --config electron/builder.yml --win --linux --mac",
-    "electron:build:padre": "cross-env ROLE=padre electron-builder --config electron/builder.yml --win --linux --mac",
-    "electron:build:alumno": "cross-env ROLE=alumno electron-builder --config electron/builder.yml --win --linux --mac"
+    "electron:build:dev": "cross-env ROLE=dev electron-builder --config electron/builder.yml --win --linux",
+    "electron:build:director": "cross-env ROLE=director electron-builder --config electron/builder.yml --win --linux",
+    "electron:build:docente": "cross-env ROLE=docente electron-builder --config electron/builder.yml --win --linux",
+    "electron:build:padre": "cross-env ROLE=padre electron-builder --config electron/builder.yml --win --linux",
+    "electron:build:alumno": "cross-env ROLE=alumno electron-builder --config electron/builder.yml --win --linux",
+    "electron:build:all": "npm run build && npm run electron:build:dev && npm run electron:build:director && npm run electron:build:docente && npm run electron:build:padre && npm run electron:build:alumno"
   },
   "dependencies": {
     "@gravity-ui/icons": "^2.18.0",
@@ -36,7 +37,6 @@
     "dotenv": "^17.4.2",
     "framer-motion": "^12.41.0",
     "html5-qrcode": "^2.3.8",
-    "jszip": "^3.10.1",
     "lucide-react": "^1.22.0",
     "motion": "^12.42.0",
     "mysql2": "^3.22.5",

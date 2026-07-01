@@ -143,9 +143,8 @@ export default async function RolPage({ params }: { params: Promise<{ role: stri
                 <path d="M10 3v10m0 0-4-4m4 4 4-4M4 17h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </a>
-            <p className="mt-4 text-xs text-gray-400 dark:text-zinc-500">
-              App de escritorio:
-              <code className="ml-1 text-[11px] bg-gray-100 dark:bg-zinc-800 px-2 py-0.5 rounded">npm run electron:{role}</code>
+            <p className="mt-3 text-xs text-gray-400 dark:text-zinc-500">
+              App de escritorio — descarga e instala en Windows.
             </p>
           </div>
 
