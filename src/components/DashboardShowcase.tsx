@@ -16,7 +16,7 @@ const dashboards: Dashboard[] = [
     id: "dev",
     role: "Desarrollador",
     title: "Panel de Desarrollo",
-    description: "Vista técnica con métricas de rendimiento, logs y estado del sistema.",
+    description: "Métricas de rendimiento, logs y estado del sistema en tiempo real.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
   },
   {
@@ -44,10 +44,32 @@ const dashboards: Dashboard[] = [
     id: "student",
     role: "Alumno",
     title: "Panel del Alumno",
-    description: "Tus cursos, tareas pendientes, horarios y calificaciones en un solo lugar.",
+    description: "Cursos, tareas pendientes, horarios y calificaciones en un solo lugar.",
     image: "https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=800&q=80",
   },
 ]
+
+function CornerSVG({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M6.018 19.789C4.705 20 3.137 20 0 20H20V0C20 3.137 20 4.705 19.789 6.018C18.65 13.098 13.098 18.65 6.018 19.789Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+function CornerSVGBottom({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M6.018 0.211C4.705 0 3.137 0 0 0H20V20C20 16.863 20 15.295 19.789 13.982C18.65 6.902 13.098 1.35 6.018 0.211Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
 
 export default function DashboardShowcase() {
   const [active, setActive] = useState(dashboards[0].id)
@@ -55,67 +77,87 @@ export default function DashboardShowcase() {
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-16 sm:py-24">
-      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
-        {/* Tabs */}
-        <div className="w-full lg:w-[380px] shrink-0 space-y-2">
+      <div className="flex flex-col lg:flex-row gap-0 items-stretch">
+        {/* Tabs panel */}
+        <div className="w-full lg:w-auto shrink-0 flex flex-col justify-center gap-0 py-10 lg:pr-0">
           {dashboards.map((db) => {
             const isActive = active === db.id
             return (
               <button
                 key={db.id}
                 type="button"
-                onClick={() => setActive(db.id)}
-                className={`relative w-full text-left p-4 sm:p-5 rounded-2xl transition-all duration-300 ${
-                  isActive
-                    ? "bg-emerald-50 dark:bg-emerald-950/30 shadow-sm"
-                    : "hover:bg-gray-50 dark:hover:bg-zinc-800/50"
+                onMouseEnter={() => setActive(db.id)}
+                className={`relative w-full lg:w-[300px] text-left px-5 py-[18px] transition-colors duration-200 ${
+                  isActive ? "bg-slate-200 dark:bg-zinc-700" : "bg-transparent hover:bg-slate-100 dark:hover:bg-zinc-800/50"
                 }`}
+                style={{
+                  borderRadius: isActive
+                    ? "12px 0 0 12px"
+                    : "12px 0 0 12px",
+                }}
               >
+                {/* Top corner decoration */}
+                <div
+                  className={`absolute -top-5 right-0 size-5 transition-opacity duration-200 ${
+                    isActive ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  <CornerSVG className="size-5 text-slate-200 dark:text-zinc-700" />
+                </div>
+
+                {/* Bottom corner decoration */}
+                <div
+                  className={`absolute -bottom-5 right-0 size-5 transition-opacity duration-200 ${
+                    isActive ? "opacity-100" : "opacity-0"
+                  }`}
+                >
+                  <CornerSVGBottom className="size-5 text-slate-200 dark:text-zinc-700" />
+                </div>
+
+                {/* Right edge filler for selected state */}
+                <div
+                  className={`absolute top-0 right-0 w-5 h-full bg-slate-200 dark:bg-zinc-700 transition-opacity duration-200 ${
+                    isActive ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+
+                <p className="text-[11px] font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
+                  {db.role}
+                </p>
+                <h3
+                  className="mt-1 text-xl font-semibold tracking-tight text-gray-900 dark:text-white"
+                  style={{ letterSpacing: "-0.02em" }}
+                >
+                  {db.title}
+                </h3>
                 {isActive && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute inset-0 rounded-2xl border border-emerald-200 dark:border-emerald-800"
-                    transition={{ type: "spring", stiffness: 400, damping: 35 }}
-                  />
+                  <motion.p
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-2 text-sm leading-relaxed text-gray-500 dark:text-zinc-400"
+                    style={{ letterSpacing: "-0.04em" }}
+                  >
+                    {db.description}
+                  </motion.p>
                 )}
-                <div className="relative z-10">
+                {!isActive && (
                   <p
-                    className={`text-xs font-semibold uppercase tracking-widest ${
-                      isActive
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-gray-400 dark:text-zinc-500"
-                    }`}
-                  >
-                    {db.role}
-                  </p>
-                  <p
-                    className={`mt-1 font-semibold ${
-                      isActive
-                        ? "text-gray-900 dark:text-white"
-                        : "text-gray-700 dark:text-zinc-300"
-                    }`}
-                  >
-                    {db.title}
-                  </p>
-                  <p
-                    className={`mt-1 text-sm leading-relaxed ${
-                      isActive
-                        ? "text-gray-600 dark:text-zinc-400"
-                        : "text-gray-400 dark:text-zinc-500"
-                    }`}
+                    className="mt-2 text-sm leading-relaxed text-gray-500 dark:text-zinc-400 truncate"
+                    style={{ letterSpacing: "-0.04em" }}
                   >
                     {db.description}
                   </p>
-                </div>
+                )}
               </button>
             )
           })}
         </div>
 
-        {/* Image */}
+        {/* Image panel */}
         <div className="flex-1 w-full">
-          <div className="relative w-full overflow-hidden rounded-2xl border border-gray-200 dark:border-zinc-700 bg-gray-100 dark:bg-zinc-900">
-            <div className="aspect-[16/10] w-full relative">
+          <div className="relative w-full h-full overflow-hidden rounded-2xl border border-gray-200 dark:border-zinc-700 bg-gray-100 dark:bg-zinc-900">
+            <div className="aspect-[16/10] lg:aspect-auto lg:h-full w-full relative min-h-[300px]">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={activeDashboard.id}
