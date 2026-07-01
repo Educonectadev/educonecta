@@ -72,11 +72,11 @@ function CornerSVGBottom({ className }: { className?: string }) {
 }
 
 const roleMeta: Record<string, { badge: string; cta: string }> = {
-  dev: { badge: "Desarrollador", cta: "Descargar demo Dev" },
-  admin: { badge: "Director / Admin", cta: "Descargar demo Director" },
-  teacher: { badge: "Docente", cta: "Descargar demo Docente" },
-  parent: { badge: "Padre de Familia", cta: "Descargar demo Padre" },
-  student: { badge: "Alumno", cta: "Descargar demo Alumno" },
+  dev: { badge: "Desarrollador", cta: "Descargar Dev" },
+  admin: { badge: "Director / Admin", cta: "Descargar Director" },
+  teacher: { badge: "Docente", cta: "Descargar Docente" },
+  parent: { badge: "Padre de Familia", cta: "Descargar Padre" },
+  student: { badge: "Alumno", cta: "Descargar Alumno" },
 }
 
 export default function DashboardShowcase() {
@@ -88,13 +88,13 @@ export default function DashboardShowcase() {
     <section id="demos" className="max-w-6xl mx-auto px-6 py-16 sm:py-24 scroll-mt-24">
       <div className="text-center mb-12">
         <p className="text-sm font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
-          Explora la plataforma
+          Dashboards por rol
         </p>
         <h2 className="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
           Elige tu rol
         </h2>
         <p className="mt-3 text-gray-500 dark:text-zinc-400 max-w-xl mx-auto">
-          Cada perfil tiene una vista única. Selecciona el tuyo y descubre cómo funciona EduConecta para ti.
+          Cada perfil tiene su propio dashboard. Selecciona el tuyo y descarga tu acceso.
         </p>
       </div>
 
@@ -196,7 +196,7 @@ export default function DashboardShowcase() {
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white/90 dark:from-zinc-900/90 to-transparent">
               <div className="flex items-center gap-2">
                 <a
-                  href={`/api/download-demo/${activeDashboard.id}`}
+                  href={`/api/download/${activeDashboard.id}`}
                   download
                   className="inline-flex items-center gap-1.5 btn-primary px-5 py-2.5 rounded-3xl text-sm font-medium transition cursor-pointer"
                 >

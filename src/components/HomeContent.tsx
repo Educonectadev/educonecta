@@ -222,7 +222,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
               href="#demos"
               className="inline-flex items-center gap-1.5 btn-primary px-6 py-2.5 rounded-3xl text-sm font-medium transition cursor-pointer"
             >
-              Ver Demos
+              Acceder
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -307,7 +307,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                   onClick={() => setMobileOpen(false)}
                   className="inline-flex items-center gap-2 btn-primary px-6 py-3 rounded-3xl text-base font-medium transition cursor-pointer"
                 >
-                  Ver Demos
+                  Acceder
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
