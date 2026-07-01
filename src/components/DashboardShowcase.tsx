@@ -6,47 +6,15 @@ import { motion, AnimatePresence } from "framer-motion"
 type Dashboard = {
   id: string
   role: string
-  title: string
-  description: string
   image: string
 }
 
 const dashboards: Dashboard[] = [
-  {
-    id: "dev",
-    role: "Desarrollador",
-    title: "Panel de Desarrollo",
-    description: "Métricas de rendimiento, logs y estado del sistema en tiempo real.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-  },
-  {
-    id: "admin",
-    role: "Director",
-    title: "Panel del Administrador",
-    description: "Gestión institucional completa: usuarios, cursos, reportes y configuración general.",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
-  },
-  {
-    id: "teacher",
-    role: "Docente",
-    title: "Panel del Docente",
-    description: "Registro de calificaciones, asistencia, tareas y comunicación con padres.",
-    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80",
-  },
-  {
-    id: "parent",
-    role: "Padre de Familia",
-    title: "Panel del Padre",
-    description: "Seguimiento académico de tus hijos: notas, asistencia y comunicados.",
-    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&q=80",
-  },
-  {
-    id: "student",
-    role: "Alumno",
-    title: "Panel del Alumno",
-    description: "Cursos, tareas pendientes, horarios y calificaciones en un solo lugar.",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=800&q=80",
-  },
+  { id: "dev", role: "Desarrollador", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80" },
+  { id: "admin", role: "Director", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80" },
+  { id: "teacher", role: "Docente", image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80" },
+  { id: "parent", role: "Padre de Familia", image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&q=80" },
+  { id: "student", role: "Alumno", image: "https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=800&q=80" },
 ]
 
 function CornerSVG({ className }: { className?: string }) {
@@ -138,27 +106,8 @@ export default function DashboardShowcase() {
                   className="mt-1 text-xl font-semibold tracking-tight text-gray-900 dark:text-white"
                   style={{ letterSpacing: "-0.02em" }}
                 >
-                  {db.title}
+                  {db.role}
                 </h3>
-                {isActive && (
-                  <motion.p
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="mt-2 text-sm leading-relaxed text-gray-500 dark:text-zinc-400"
-                    style={{ letterSpacing: "-0.04em" }}
-                  >
-                    {db.description}
-                  </motion.p>
-                )}
-                {!isActive && (
-                  <p
-                    className="mt-2 text-sm leading-relaxed text-gray-500 dark:text-zinc-400 truncate"
-                    style={{ letterSpacing: "-0.04em" }}
-                  >
-                    {db.description}
-                  </p>
-                )}
               </button>
             )
           })}
@@ -172,7 +121,7 @@ export default function DashboardShowcase() {
                 <motion.img
                   key={activeDashboard.id}
                   src={activeDashboard.image}
-                  alt={activeDashboard.title}
+                  alt={activeDashboard.role}
                   initial={{ opacity: 0, scale: 1.05 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
