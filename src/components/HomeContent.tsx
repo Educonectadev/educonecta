@@ -218,15 +218,15 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-2">
             <ThemeToggle />
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-1.5 bg-black dark:bg-white text-white dark:text-black hover:opacity-90 px-4 py-2 rounded-lg text-sm font-medium transition-all active:scale-95"
+            <a
+              href="#demos"
+              className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all active:scale-95"
             >
-              Iniciar Sesión
+              Explorar Demo
               <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-            </Link>
+            </a>
           </div>
 
           {/* Mobile hamburger */}
@@ -302,16 +302,16 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
               </div>
 
               <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
-                <Link
-                  href="/login"
+                <a
+                  href="#demos"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full bg-black dark:bg-white text-white dark:text-black hover:opacity-90 px-4 py-3 rounded-lg text-sm font-medium transition-all active:scale-95"
+                  className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-lg text-sm font-medium transition-all active:scale-95"
                 >
-                  Iniciar Sesión
+                  Explorar Demo
                   <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                </Link>
+                </a>
               </div>
             </motion.div>
           </motion.div>
