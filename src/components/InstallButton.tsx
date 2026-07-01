@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { getDeferredPrompt, onDeferredPrompt, clearDeferredPrompt } from "@/lib/deferred-prompt"
 
 export default function InstallButton({ label }: { label: string }) {
-  const [canInstall, setCanInstall] = useState(false)
+  const [canInstall, setCanInstall] = useState<boolean | null>(null)
 
   useEffect(() => {
     const existing = getDeferredPrompt()
@@ -29,6 +29,8 @@ export default function InstallButton({ label }: { label: string }) {
     }
     clearDeferredPrompt()
   }
+
+  if (canInstall === null) return null
 
   if (!canInstall) {
     return (

@@ -1,3 +1,5 @@
+"use client"
+
 let deferredPrompt: any = null
 let listeners: Array<(p: any) => void> = []
 
