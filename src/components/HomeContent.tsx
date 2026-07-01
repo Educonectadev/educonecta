@@ -279,19 +279,6 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
               </svg>
             </Link>
           </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1 }}
-            className="w-full px-4 md:px-0 mt-13"
-          >
-            <img
-              className="max-h-64 md:max-h-96 object-cover object-top w-full max-w-6xl mx-auto border border-gray-200 dark:border-zinc-800 rounded-[20px]"
-              src="https://assets.prebuiltui.com/images/components/hero-section/hero-modern-dashboard.png"
-              alt="Dashboard EduConecta"
-            />
-          </motion.div>
         </motion.section>
 
         <DashboardShowcase />
