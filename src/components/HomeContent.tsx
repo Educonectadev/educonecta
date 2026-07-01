@@ -12,6 +12,7 @@ import { TextRoll } from "@/components/ui/skiper-ui/skiper58"
 import { FlipWords } from "@/components/ui/flip-words"
 import Logo from "@/components/Logo"
 import InstitutionLogos from "@/components/InstitutionLogos"
+import DashboardShowcase from "@/components/DashboardShowcase"
 
 interface ImpactData {
   institutionCount: number
@@ -292,6 +293,8 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
             />
           </motion.div>
         </motion.section>
+
+        <DashboardShowcase />
 
         <motion.section
           initial={{ opacity: 0 }}
