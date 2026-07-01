@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { motion } from "framer-motion"
+import { useState, useRef, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { Card } from "@heroui/react"
 import IconClient from "@/components/IconClient"
@@ -126,7 +126,6 @@ interface Partner {
 
 export default function HomeContent({ data, partners = [] }: { data: ImpactData; partners?: Partner[] }) {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [pagesOpen, setPagesOpen] = useState(false)
 
   const pageLinks = [
     { href: "/funcionalidades", label: "Funcionalidades" },
@@ -134,82 +133,197 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
     { href: "/contacto", label: "Contacto" },
   ]
 
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-black overflow-x-hidden">
       <motion.header
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="flex flex-col items-center justify-center px-4"
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center px-4"
       >
-        <nav className="flex flex-col items-center w-full">
-          <div className="flex items-center justify-between p-4 md:px-24 lg:px-32 xl:px-40 md:py-4 w-full relative">
-            <Link href="/" className="flex items-center gap-2">
-              <Logo size={22} className="text-black dark:text-white/90" />
-              <span className="text-lg font-bold tracking-tight text-black dark:text-white/90">EduConecta</span>
+        <nav className="flex items-center justify-between w-full max-w-7xl mx-auto mt-3 px-4 sm:px-6 h-14 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl border border-gray-200/60 dark:border-zinc-700/60 shadow-sm">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <Logo size={20} className="text-black dark:text-white/90" />
+            <span className="text-base font-bold tracking-tight text-black dark:text-white/90">EduConecta</span>
+          </Link>
+
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-1">
+            <div ref={dropdownRef} className="relative">
+              <button
+                type="button"
+                onMouseEnter={() => setDropdownOpen(true)}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  dropdownOpen
+                    ? "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30"
+                    : "text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800"
+                }`}
+              >
+                Plataforma
+                <motion.svg
+                  animate={{ rotate: dropdownOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="m5 7.5 5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </motion.svg>
+              </button>
+
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    onMouseLeave={() => setDropdownOpen(false)}
+                    className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-56 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-xl shadow-black/5 dark:shadow-black/20 p-1.5"
+                  >
+                    {pageLinks.map((page, i) => (
+                      <motion.div
+                        key={page.href}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.03 }}
+                      >
+                        <Link
+                          href={page.href}
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white transition-colors"
+                        >
+                          <span className="font-medium">{page.label}</span>
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Desktop actions */}
+          <div className="hidden md:flex items-center gap-2">
+            <ThemeToggle />
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1.5 bg-black dark:bg-white text-white dark:text-black hover:opacity-90 px-4 py-2 rounded-lg text-sm font-medium transition-all active:scale-95"
+            >
+              Iniciar Sesión
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </Link>
+          </div>
 
-            <div id="menu" className={`${mobileOpen ? "max-md:w-full" : "max-md:w-0"} max-md:fixed max-md:top-0 max-md:z-50 max-md:left-0 max-md:transition-all max-md:duration-300 max-md:overflow-hidden max-md:h-screen max-md:bg-white/25 max-md:backdrop-blur max-md:flex-col max-md:justify-center flex items-center gap-7.5 text-sm`}>
-              <div className="group relative max-md:hidden">
-                <button type="button" className="flex items-center gap-1 text-gray-800 dark:text-zinc-300 hover:text-gray-600 dark:hover:text-zinc-400">
-                  Plataforma
-                  <svg className="transition-transform duration-200 md:group-hover:rotate-180" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="m5 7.5 5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-                <div className="hidden flex-col gap-1 md:absolute md:left-1/2 md:top-full md:mt-2 md:flex md:min-w-32 md:-translate-x-1/2 md:rounded-2xl md:border md:border-gray-200 dark:md:border-zinc-700 md:bg-white dark:md:bg-zinc-900 md:p-1.5 md:shadow-[0_18px_50px_rgba(0,0,0,0.08)] md:opacity-0 md:invisible md:-translate-y-2 md:transition-all md:duration-200 md:group-hover:visible md:group-hover:translate-y-0 md:group-hover:opacity-100">
-                  {pageLinks.map((page) => (
-                    <Link key={page.href} href={page.href} onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-center text-gray-700 dark:text-zinc-300 transition hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white">
-                      {page.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <div className="hidden max-md:flex flex-col items-center gap-3">
-                {pageLinks.map((page) => (
-                  <Link key={page.href} href={page.href} onClick={() => setMobileOpen(false)} className="rounded-[30px] px-8 py-3 text-center text-base font-medium text-gray-800 dark:text-zinc-300 hover:bg-gray-100 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white transition-all w-full max-w-xs">
-                    {page.label}
-                  </Link>
-                ))}
-              </div>
-              <button onClick={() => { setMobileOpen(false); setPagesOpen(false) }} className="md:hidden bg-gray-100 dark:bg-zinc-900 hover:bg-gray-200 dark:hover:bg-zinc-800 text-gray-900 dark:text-white p-3 rounded-[30px] aspect-square font-medium transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 6 6 18" /><path d="m6 6 12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <ThemeToggle />
-              <Link href="/login" className="hidden md:inline-flex items-center gap-1 btn-primary px-6 py-2.5 rounded-3xl text-sm font-medium transition cursor-pointer">
-                Iniciar Sesión
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </Link>
-              <Link href="/login" className="md:hidden btn-primary p-3 rounded-[30px] aspect-square font-medium transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                  <polyline points="10 17 15 12 10 7" />
-                  <line x1="15" y1="12" x2="3" y2="12" />
-                </svg>
-              </Link>
-              <button onClick={() => setMobileOpen(true)} className="md:hidden bg-gray-100 dark:bg-zinc-900 hover:bg-gray-200 dark:hover:bg-zinc-800 text-gray-900 dark:text-white p-3 rounded-[30px] aspect-square font-medium transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 12h16" /><path d="M4 18h16" /><path d="M4 6h16" />
-                </svg>
-              </button>
-            </div>
+          {/* Mobile hamburger */}
+          <div className="flex md:hidden items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="p-2 rounded-lg text-gray-600 dark:text-zinc-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+              aria-label="Abrir menú"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" />
+              </svg>
+            </button>
           </div>
         </nav>
       </motion.header>
+
+      {/* Mobile menu overlay */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 md:hidden"
+          >
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="absolute right-0 top-0 bottom-0 w-72 max-w-[85vw] bg-white dark:bg-zinc-900 shadow-2xl p-6 flex flex-col"
+            >
+              <div className="flex items-center justify-between mb-8">
+                <Link href="/" className="flex items-center gap-2">
+                  <Logo size={20} className="text-black dark:text-white/90" />
+                  <span className="text-base font-bold tracking-tight text-black dark:text-white/90">EduConecta</span>
+                </Link>
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="p-2 rounded-lg text-gray-600 dark:text-zinc-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+                  aria-label="Cerrar menú"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-1 flex-1">
+                <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-2 px-3">
+                  Plataforma
+                </p>
+                {pageLinks.map((page, i) => (
+                  <motion.div
+                    key={page.href}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.05 + i * 0.04 }}
+                  >
+                    <Link
+                      href={page.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="block rounded-lg px-3 py-3 text-base font-medium text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white transition-colors"
+                    >
+                      {page.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
+                <Link
+                  href="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full bg-black dark:bg-white text-white dark:text-black hover:opacity-90 px-4 py-3 rounded-lg text-sm font-medium transition-all active:scale-95"
+                >
+                  Iniciar Sesión
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </Link>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <main className="flex-1">
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="flex flex-col items-center text-center px-6 pt-16 pb-16 sm:pt-20 sm:pb-24 max-w-6xl mx-auto"
+          className="flex flex-col items-center text-center px-6 pt-[88px] pb-16 sm:pt-[96px] sm:pb-24 max-w-6xl mx-auto"
         >
           <motion.div
             initial={{ opacity: 0, y: 10 }}
