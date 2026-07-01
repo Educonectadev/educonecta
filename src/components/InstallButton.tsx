@@ -24,9 +24,7 @@ export default function InstallButton({ label }: { label: string }) {
     if (!prompt) return
     prompt.prompt()
     const { outcome } = await prompt.userChoice
-    if (outcome === "accepted") {
-      setCanInstall(false)
-    }
+    if (outcome === "accepted") setCanInstall(false)
     clearDeferredPrompt()
   }
 
@@ -34,8 +32,8 @@ export default function InstallButton({ label }: { label: string }) {
 
   if (!canInstall) {
     return (
-      <p className="text-sm text-gray-400 dark:text-zinc-500 italic">
-        Abre esta página en Chrome o Edge y espera unos segundos para instalar.
+      <p className="text-sm text-gray-500 dark:text-zinc-400 italic">
+        Abre esta página en Chrome o Edge para instalar la app.
       </p>
     )
   }

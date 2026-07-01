@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import SiteFooter from "@/components/SiteFooter"
+import InstallButton from "@/components/InstallButton"
 
 type Role = {
   id: string
@@ -133,16 +134,9 @@ export default async function RolPage({ params }: { params: Promise<{ role: stri
               ))}
             </ul>
 
-            <a
-              href={`/api/download/${role}`}
-              download
-              className="inline-flex items-center gap-2 mt-8 btn-primary px-6 py-3 rounded-3xl text-sm font-medium transition cursor-pointer"
-            >
-              Descargar {r.name}
-              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 3v10m0 0-4-4m4 4 4-4M4 17h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </a>
+            <div className="mt-8">
+              <InstallButton label={`Instalar ${r.name}`} />
+            </div>
           </div>
 
           <div className="w-full lg:w-[500px] shrink-0">
