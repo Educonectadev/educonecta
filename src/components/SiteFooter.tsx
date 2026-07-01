@@ -142,7 +142,7 @@ export default function SiteFooter() {
 
         {/* Brand watermark */}
         <div className="w-full flex justify-center mt-6 md:mt-12 md:mb-[-0.5%]">
-          <h1 className="text-center font-extrabold tracking-tighter leading-[0.70] text-gray-100 dark:text-zinc-900 text-[clamp(4.5rem,19.5vw,25rem)] pointer-events-none select-none">
+          <h1 className="text-center font-extrabold tracking-tighter leading-[0.70] text-black dark:text-white text-[clamp(4.5rem,19.5vw,25rem)] pointer-events-none select-none">
             EduConecta
           </h1>
         </div>
