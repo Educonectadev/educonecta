@@ -12,7 +12,6 @@ import { TextRoll } from "@/components/ui/skiper-ui/skiper58"
 import { FlipWords } from "@/components/ui/flip-words"
 import Logo from "@/components/Logo"
 import InstitutionLogos from "@/components/InstitutionLogos"
-import DashboardShowcase from "@/components/DashboardShowcase"
 
 interface ImpactData {
   institutionCount: number
@@ -263,15 +262,6 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-2">
             <ThemeToggle />
-            <a
-              href="#demos"
-              className="inline-flex items-center gap-1.5 btn-primary px-6 py-2.5 rounded-3xl text-sm font-medium transition cursor-pointer"
-            >
-              Acceder
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </a>
           </div>
 
           {/* Mobile hamburger */}
@@ -370,23 +360,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                 ))}
               </nav>
 
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25 }}
-                className="mt-10"
-              >
-                <a
-                  href="#demos"
-                  onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center gap-2 btn-primary px-6 py-3 rounded-3xl text-base font-medium transition cursor-pointer"
-                >
-                  Acceder
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </a>
-              </motion.div>
+
             </motion.div>
           </motion.div>
         )}
@@ -469,7 +443,6 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
           </motion.div>
         </motion.section>
 
-        <DashboardShowcase />
 
         <motion.section
           initial={{ opacity: 0 }}
