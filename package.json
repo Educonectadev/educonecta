@@ -1,6 +1,7 @@
 {
   "name": "educonecta",
   "version": "0.1.0",
+  "main": "electron/main.js",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +10,17 @@
     "lint": "eslint",
     "seed": "npx tsx prisma/seed.ts",
     "seed:supabase": "npx tsx scripts/seed-supabase.ts",
-    "setup:storage": "node --env-file .env scripts/setup-storage.mjs"
+    "setup:storage": "node --env-file .env scripts/setup-storage.mjs",
+    "electron:dev": "ROLE=dev electron .",
+    "electron:director": "ROLE=director electron .",
+    "electron:docente": "ROLE=docente electron .",
+    "electron:padre": "ROLE=padre electron .",
+    "electron:alumno": "ROLE=alumno electron .",
+    "electron:build:dev": "electron-builder --config electron/builder.yml --win --linux --mac --ia32",
+    "electron:build:director": "cross-env ROLE=director electron-builder --config electron/builder.yml --win --linux --mac",
+    "electron:build:docente": "cross-env ROLE=docente electron-builder --config electron/builder.yml --win --linux --mac",
+    "electron:build:padre": "cross-env ROLE=padre electron-builder --config electron/builder.yml --win --linux --mac",
+    "electron:build:alumno": "cross-env ROLE=alumno electron-builder --config electron/builder.yml --win --linux --mac"
   },
   "dependencies": {
     "@gravity-ui/icons": "^2.18.0",
@@ -25,6 +36,7 @@
     "dotenv": "^17.4.2",
     "framer-motion": "^12.41.0",
     "html5-qrcode": "^2.3.8",
+    "jszip": "^3.10.1",
     "lucide-react": "^1.22.0",
     "motion": "^12.42.0",
     "mysql2": "^3.22.5",
@@ -45,11 +57,16 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/web-push": "^3.6.4",
+    "concurrently": "^10.0.3",
+    "cross-env": "^10.1.0",
+    "electron": "^43.0.0",
+    "electron-builder": "^26.15.3",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wait-on": "^9.0.10"
   },
   "optionalDependencies": {
     "@next/swc-linux-x64-gnu": "^16.2.9"
