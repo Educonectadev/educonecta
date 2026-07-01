@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function PrivacidadPage() {
   return (
     <LegalLayout>
-      <article className="max-w-3xl w-full mx-auto px-6 pt-[160px] pb-12 text-black/60 dark:text-white/70">
+      <article className="max-w-3xl w-full mx-auto px-6 pt-[160px] pb-[160px] text-black/60 dark:text-white/70">
         <Link
           href="/"
           className="text-xs text-gray-500 dark:text-zinc-400 hover:underline"
