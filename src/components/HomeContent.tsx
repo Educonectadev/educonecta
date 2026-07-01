@@ -220,10 +220,10 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
             <ThemeToggle />
             <a
               href="#demos"
-              className="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all active:scale-95"
+              className="inline-flex items-center gap-1.5 btn-primary px-6 py-2.5 rounded-3xl text-sm font-medium transition cursor-pointer"
             >
-              Explorar Demo
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              Ver Demos
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </a>
@@ -305,10 +305,10 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                 <a
                   href="#demos"
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl text-base font-medium transition-all active:scale-95"
+                  className="inline-flex items-center gap-2 btn-primary px-6 py-3 rounded-3xl text-base font-medium transition cursor-pointer"
                 >
-                  Explorar Demo
-                  <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  Ver Demos
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </a>

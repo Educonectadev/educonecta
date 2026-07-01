@@ -72,11 +72,11 @@ function CornerSVGBottom({ className }: { className?: string }) {
 }
 
 const roleMeta: Record<string, { badge: string; cta: string }> = {
-  dev: { badge: "Desarrollador", cta: "Ver dashboard de desarrollo" },
-  admin: { badge: "Director / Admin", cta: "Ver dashboard de administración" },
-  teacher: { badge: "Docente", cta: "Ver dashboard docente" },
-  parent: { badge: "Padre de Familia", cta: "Ver dashboard de padres" },
-  student: { badge: "Alumno", cta: "Ver dashboard del alumno" },
+  dev: { badge: "Desarrollador", cta: "Descargar demo Dev" },
+  admin: { badge: "Director / Admin", cta: "Descargar demo Director" },
+  teacher: { badge: "Docente", cta: "Descargar demo Docente" },
+  parent: { badge: "Padre de Familia", cta: "Descargar demo Padre" },
+  student: { badge: "Alumno", cta: "Descargar demo Alumno" },
 }
 
 export default function DashboardShowcase() {
@@ -194,15 +194,17 @@ export default function DashboardShowcase() {
               </AnimatePresence>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white/90 dark:from-zinc-900/90 to-transparent">
-              <a
-                href="/login"
-                className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-all active:scale-95"
-              >
-                {meta.cta}
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
+              <div className="flex items-center gap-2">
+                <a
+                  href="/login"
+                  className="inline-flex items-center gap-1.5 btn-primary px-5 py-2.5 rounded-3xl text-sm font-medium transition cursor-pointer"
+                >
+                  {meta.cta}
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
         </div>
