@@ -245,7 +245,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
         </nav>
       </motion.header>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile full-screen modal */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
@@ -255,64 +255,64 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-50 md:hidden"
           >
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
             <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="absolute right-0 top-0 bottom-0 w-72 max-w-[85vw] bg-white dark:bg-zinc-900 shadow-2xl p-6 flex flex-col"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 28, stiffness: 350 }}
+              className="absolute inset-0 bg-white dark:bg-zinc-900 flex flex-col items-center justify-center p-8"
             >
-              <div className="flex items-center justify-between mb-8">
-                <Link href="/" className="flex items-center gap-2">
-                  <Logo size={20} className="text-black dark:text-white/90" />
-                  <span className="text-base font-bold tracking-tight text-black dark:text-white/90">EduConecta</span>
-                </Link>
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="p-2 rounded-lg text-gray-600 dark:text-zinc-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
-                  aria-label="Cerrar menú"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <path d="M18 6 6 18" /><path d="m6 6 12 12" />
-                  </svg>
-                </button>
-              </div>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="absolute top-5 right-5 p-2 rounded-full text-gray-600 dark:text-zinc-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+                aria-label="Cerrar menú"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+                </svg>
+              </button>
 
-              <div className="flex flex-col gap-1 flex-1">
-                <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-2 px-3">
-                  Plataforma
-                </p>
+              <Link href="/" className="flex items-center gap-2 mb-12" onClick={() => setMobileOpen(false)}>
+                <Logo size={28} className="text-black dark:text-white/90" />
+                <span className="text-xl font-bold tracking-tight text-black dark:text-white/90">EduConecta</span>
+              </Link>
+
+              <nav className="flex flex-col items-center gap-1">
                 {pageLinks.map((page, i) => (
                   <motion.div
                     key={page.href}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.05 + i * 0.04 }}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.08 + i * 0.05 }}
                   >
                     <Link
                       href={page.href}
                       onClick={() => setMobileOpen(false)}
-                      className="block rounded-lg px-3 py-3 text-base font-medium text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white transition-colors"
+                      className="block text-center px-8 py-3 text-lg font-medium text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                     >
                       {page.label}
                     </Link>
                   </motion.div>
                 ))}
-              </div>
+              </nav>
 
-              <div className="pt-4 border-t border-gray-100 dark:border-zinc-800">
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="mt-10"
+              >
                 <a
                   href="#demos"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-lg text-sm font-medium transition-all active:scale-95"
+                  className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl text-base font-medium transition-all active:scale-95"
                 >
                   Explorar Demo
-                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="m5.685 14.164 8.122-8.333M5.685 5.83h8.122v8.334" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </a>
-              </div>
+              </motion.div>
             </motion.div>
           </motion.div>
         )}
