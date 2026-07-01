@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import LegalLayout from "@/components/legal/LegalLayout"
 
 export const metadata: Metadata = {
   title: "Política de Cookies — EduConecta",
@@ -8,58 +9,60 @@ export const metadata: Metadata = {
 
 export default function CookiesPage() {
   return (
-    <article className="max-w-3xl mx-auto px-6 py-12">
-      <Link
-        href="/"
-        className="text-xs text-gray-500 dark:text-zinc-400 hover:underline"
-      >
-        ← Volver al inicio
-      </Link>
-      <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white/90">
-        Política de Cookies
-      </h1>
-      <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400">
-        Última actualización: {new Date().toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" })}
-      </p>
-
-      <Section title="¿Qué son las cookies?">
-        <p>
-          Son pequeños archivos que el navegador almacena en tu dispositivo para recordar
-          información entre visitas. EduConecta utiliza cookies estrictamente necesarias
-          para el funcionamiento del servicio y, opcionalmente, cookies de preferencia.
+    <LegalLayout>
+      <article className="max-w-3xl w-full mx-auto px-6 py-12 text-black/60 dark:text-white/70">
+        <Link
+          href="/"
+          className="text-xs text-gray-500 dark:text-zinc-400 hover:underline"
+        >
+          ← Volver al inicio
+        </Link>
+        <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white/90">
+          Política de Cookies
+        </h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400">
+          Última actualización: {new Date().toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" })}
         </p>
-      </Section>
 
-      <Section title="Cookies que usamos">
-        <ul>
-          <li>
-            <strong>Sesión:</strong> mantienen iniciada la sesión del usuario.
-          </li>
-          <li>
-            <strong>Tema:</strong> recuerdan si prefieres el modo claro u oscuro.
-          </li>
-          <li>
-            <strong>Seguridad:</strong> ayudan a detectar accesos sospechosos.
-          </li>
-        </ul>
-      </Section>
+        <Section title="¿Qué son las cookies?">
+          <p>
+            Son pequeños archivos que el navegador almacena en tu dispositivo para recordar
+            información entre visitas. EduConecta utiliza cookies estrictamente necesarias
+            para el funcionamiento del servicio y, opcionalmente, cookies de preferencia.
+          </p>
+        </Section>
 
-      <Section title="Cookies de terceros">
-        <p>
-          No utilizamos cookies publicitarias ni de seguimiento de terceros. Los proveedores
-          de infraestructura (Supabase, Vercel) pueden colocar cookies estrictamente
-          necesarias para prestar el servicio.
-        </p>
-      </Section>
+        <Section title="Cookies que usamos">
+          <ul>
+            <li>
+              <strong>Sesión:</strong> mantienen iniciada la sesión del usuario.
+            </li>
+            <li>
+              <strong>Tema:</strong> recuerdan si prefieres el modo claro u oscuro.
+            </li>
+            <li>
+              <strong>Seguridad:</strong> ayudan a detectar accesos sospechosos.
+            </li>
+          </ul>
+        </Section>
 
-      <Section title="Gestión">
-        <p>
-          Puedes bloquear o eliminar cookies desde la configuración de tu navegador. Ten en
-          cuenta que deshabilitar las cookies estrictamente necesarias puede impedir el
-          correcto funcionamiento de la plataforma.
-        </p>
-      </Section>
-    </article>
+        <Section title="Cookies de terceros">
+          <p>
+            No utilizamos cookies publicitarias ni de seguimiento de terceros. Los proveedores
+            de infraestructura (Supabase, Vercel) pueden colocar cookies estrictamente
+            necesarias para prestar el servicio.
+          </p>
+        </Section>
+
+        <Section title="Gestión">
+          <p>
+            Puedes bloquear o eliminar cookies desde la configuración de tu navegador. Ten en
+            cuenta que deshabilitar las cookies estrictamente necesarias puede impedir el
+            correcto funcionamiento de la plataforma.
+          </p>
+        </Section>
+      </article>
+    </LegalLayout>
   )
 }
 
