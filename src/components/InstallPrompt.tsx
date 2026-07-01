@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { setDeferredPrompt, clearDeferredPrompt } from "@/lib/deferred-prompt"
 
 export default function InstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [localPrompt, setLocalPrompt] = useState<any>(null)
   const [show, setShow] = useState(false)
   const [installed, setInstalled] = useState(false)
   const [dismissed, setDismissed] = useState(false)
@@ -17,6 +18,7 @@ export default function InstallPrompt() {
     const handler = (e: Event) => {
       e.preventDefault()
       setDeferredPrompt(e)
+      setLocalPrompt(e)
       setShow(true)
     }
 
@@ -37,14 +39,15 @@ export default function InstallPrompt() {
   }, [])
 
   async function handleInstall() {
-    if (!deferredPrompt) return
-    deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
+    if (!localPrompt) return
+    localPrompt.prompt()
+    const { outcome } = await localPrompt.userChoice
     if (outcome === "accepted") {
       setInstalled(true)
       setShow(false)
     }
-    setDeferredPrompt(null)
+    clearDeferredPrompt()
+    setLocalPrompt(null)
   }
 
   if (installed || dismissed || !show) return null

@@ -1,26 +1,41 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { getDeferredPrompt, onDeferredPrompt, clearDeferredPrompt } from "@/lib/deferred-prompt"
 
 export default function InstallButton({ label }: { label: string }) {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
+  const [canInstall, setCanInstall] = useState(false)
 
   useEffect(() => {
-    const handler = (e: Event) => {
-      e.preventDefault()
-      setDeferredPrompt(e)
+    const existing = getDeferredPrompt()
+    if (existing) {
+      setCanInstall(true)
+      return
     }
-    window.addEventListener("beforeinstallprompt", handler)
-    return () => window.removeEventListener("beforeinstallprompt", handler)
+
+    const unsub = onDeferredPrompt((p) => {
+      if (p) setCanInstall(true)
+    })
+    return unsub
   }, [])
 
   async function handleInstall() {
-    if (!deferredPrompt) return
-    deferredPrompt.prompt()
-    const { outcome } = await deferredPrompt.userChoice
+    const prompt = getDeferredPrompt()
+    if (!prompt) return
+    prompt.prompt()
+    const { outcome } = await prompt.userChoice
     if (outcome === "accepted") {
-      setDeferredPrompt(null)
+      setCanInstall(false)
     }
+    clearDeferredPrompt()
+  }
+
+  if (!canInstall) {
+    return (
+      <p className="text-sm text-gray-400 dark:text-zinc-500 italic">
+        Abre esta página en Chrome o Edge y espera unos segundos para instalar.
+      </p>
+    )
   }
 
   return (
