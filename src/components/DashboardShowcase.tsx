@@ -86,18 +86,6 @@ export default function DashboardShowcase() {
 
   return (
     <section id="demos" className="max-w-6xl mx-auto px-6 py-16 sm:py-24 scroll-mt-24">
-      <div className="text-center mb-12">
-        <p className="text-sm font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">
-          Dashboards por rol
-        </p>
-        <h2 className="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Elige tu rol
-        </h2>
-        <p className="mt-3 text-gray-500 dark:text-zinc-400 max-w-xl mx-auto">
-          Cada perfil tiene su propio dashboard. Selecciona el tuyo y descarga tu acceso.
-        </p>
-      </div>
-
       <div className="flex flex-col lg:flex-row gap-0 items-stretch">
         {/* Tabs panel */}
         <div className="w-full lg:w-auto shrink-0 flex flex-col justify-center gap-0 py-10 lg:pr-0">

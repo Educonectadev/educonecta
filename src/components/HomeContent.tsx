@@ -191,8 +191,11 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                     exit={{ opacity: 0, y: 8, scale: 0.96 }}
                     transition={{ duration: 0.15, ease: "easeOut" }}
                     onMouseLeave={() => setDropdownOpen(false)}
-                    className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-56 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-xl shadow-black/5 dark:shadow-black/20 p-1.5"
+                    className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-64 rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 shadow-xl shadow-black/5 dark:shadow-black/20 p-1.5"
                   >
+                    <p className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">
+                      Páginas
+                    </p>
                     {pageLinks.map((page, i) => (
                       <motion.div
                         key={page.href}
@@ -209,10 +212,52 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                         </Link>
                       </motion.div>
                     ))}
+                    <div className="my-1.5 border-t border-gray-100 dark:border-zinc-800" />
+                    <p className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">
+                      Roles
+                    </p>
+                    {[
+                      { href: "/rol/dev", label: "Desarrollador" },
+                      { href: "/rol/director", label: "Director" },
+                      { href: "/rol/docente", label: "Docente" },
+                      { href: "/rol/padre", label: "Padre de Familia" },
+                      { href: "/rol/alumno", label: "Alumno" },
+                    ].map((role, i) => (
+                      <motion.div
+                        key={role.href}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.15 + i * 0.03 }}
+                      >
+                        <Link
+                          href={role.href}
+                          onClick={() => setDropdownOpen(false)}
+                          className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-white transition-colors"
+                        >
+                          <span className="font-medium">{role.label}</span>
+                        </Link>
+                      </motion.div>
+                    ))}
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
+
+            {[
+              { href: "/rol/dev", label: "Dev" },
+              { href: "/rol/director", label: "Director" },
+              { href: "/rol/docente", label: "Docente" },
+              { href: "/rol/padre", label: "Padre" },
+              { href: "/rol/alumno", label: "Alumno" },
+            ].map((role) => (
+              <Link
+                key={role.href}
+                href={role.href}
+                className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+              >
+                {role.label}
+              </Link>
+            ))}
           </div>
 
           {/* Desktop actions */}
@@ -278,6 +323,9 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
               </Link>
 
               <nav className="flex flex-col items-center gap-1">
+                <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">
+                  Páginas
+                </p>
                 {pageLinks.map((page, i) => (
                   <motion.div
                     key={page.href}
@@ -288,9 +336,35 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                     <Link
                       href={page.href}
                       onClick={() => setMobileOpen(false)}
-                      className="block text-center px-8 py-3 text-lg font-medium text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                      className="block text-center px-8 py-2 text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                     >
                       {page.label}
+                    </Link>
+                  </motion.div>
+                ))}
+                <div className="w-16 h-px bg-gray-200 dark:bg-zinc-700 my-3" />
+                <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">
+                  Roles
+                </p>
+                {[
+                  { href: "/rol/dev", label: "Desarrollador" },
+                  { href: "/rol/director", label: "Director" },
+                  { href: "/rol/docente", label: "Docente" },
+                  { href: "/rol/padre", label: "Padre de Familia" },
+                  { href: "/rol/alumno", label: "Alumno" },
+                ].map((role, i) => (
+                  <motion.div
+                    key={role.href}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + i * 0.04 }}
+                  >
+                    <Link
+                      href={role.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="block text-center px-8 py-2 text-base font-medium text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                    >
+                      {role.label}
                     </Link>
                   </motion.div>
                 ))}

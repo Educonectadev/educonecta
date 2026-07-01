@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server"
 
+const alias: Record<string, string> = {
+  director: "admin",
+  docente: "teacher",
+  padre: "parent",
+  alumno: "student",
+}
+
 const apps: Record<string, { title: string; credentials: string }> = {
   dev: {
     title: "Acceso Desarrollador",
@@ -24,7 +31,8 @@ const apps: Record<string, { title: string; credentials: string }> = {
 }
 
 export async function GET(_request: Request, { params }: { params: Promise<{ role: string }> }) {
-  const { role } = await params
+  const { role: rawRole } = await params
+  const role = alias[rawRole] ?? rawRole
   const app = apps[role]
 
   if (!app) {
