@@ -3,10 +3,16 @@
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react"
 import type { TourRole, TourStep } from "./types"
 import { getStepsForRoute } from "./registry"
-import { isTourCompleted, markTourCompleted } from "./storage"
+import {
+  isTourCompleted,
+  markTourCompleted,
+  getForceRestart,
+  clearForceRestart,
+} from "./storage"
 
 interface TourContextType {
   isOpen: boolean
+  showCompletion: boolean
   currentIndex: number
   steps: TourStep[]
   start: () => void
@@ -14,11 +20,13 @@ interface TourContextType {
   prev: () => void
   skip: () => void
   finish: () => void
+  dismissCompletion: () => void
   handleRouteChange: (route: string, role: TourRole) => void
 }
 
 const TourContext = createContext<TourContextType>({
   isOpen: false,
+  showCompletion: false,
   currentIndex: 0,
   steps: [],
   start: () => {},
@@ -26,6 +34,7 @@ const TourContext = createContext<TourContextType>({
   prev: () => {},
   skip: () => {},
   finish: () => {},
+  dismissCompletion: () => {},
   handleRouteChange: () => {},
 })
 
@@ -41,6 +50,7 @@ export function TourProvider({
   children: ReactNode
 }) {
   const [isOpen, setIsOpen] = useState(false)
+  const [showCompletion, setShowCompletion] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [steps, setSteps] = useState<TourStep[]>([])
   const [hasStarted, setHasStarted] = useState(false)
@@ -50,10 +60,14 @@ export function TourProvider({
       const s = getStepsForRoute(route, r)
       if (s.length > 0) {
         setSteps(s)
-        if (!isTourCompleted() && !hasStarted) {
-          setHasStarted(true)
-          setCurrentIndex(0)
-          setIsOpen(true)
+        if (!hasStarted) {
+          const force = getForceRestart()
+          if (force || !isTourCompleted()) {
+            setHasStarted(true)
+            setShowCompletion(false)
+            setCurrentIndex(0)
+            setIsOpen(true)
+          }
         }
       }
     },
@@ -61,6 +75,7 @@ export function TourProvider({
   )
 
   const start = useCallback(() => {
+    setShowCompletion(false)
     setCurrentIndex(0)
     setIsOpen(true)
   }, [])
@@ -75,28 +90,37 @@ export function TourProvider({
 
   const skip = useCallback(() => {
     setIsOpen(false)
+    setShowCompletion(false)
     markTourCompleted()
+    clearForceRestart()
   }, [])
 
   const finish = useCallback(() => {
-    setIsOpen(false)
+    setShowCompletion(true)
     markTourCompleted()
+    clearForceRestart()
+  }, [])
+
+  const dismissCompletion = useCallback(() => {
+    setIsOpen(false)
+    setShowCompletion(false)
   }, [])
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen || showCompletion) return
     const step = steps[currentIndex]
     if (!step) return
     const el = document.querySelector(step.selector)
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "center" })
     }
-  }, [currentIndex, steps, isOpen])
+  }, [currentIndex, steps, isOpen, showCompletion])
 
   return (
     <TourContext.Provider
       value={{
         isOpen,
+        showCompletion,
         currentIndex,
         steps,
         start,
@@ -104,6 +128,7 @@ export function TourProvider({
         prev,
         skip,
         finish,
+        dismissCompletion,
         handleRouteChange,
       }}
     >

@@ -1,12 +1,13 @@
 "use client"
 
-import { useTour, resetTour } from "./index"
+import { useTour } from "./TourContext"
+import { setForceRestart } from "./storage"
 
 export default function TourTrigger() {
   const { start, isOpen } = useTour()
 
   function handleRestart() {
-    resetTour()
+    setForceRestart()
     if (!isOpen) start()
   }
 

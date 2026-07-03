@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useTour } from "./TourContext"
 
 export default function TourCompleted() {
-  const { isOpen, finish } = useTour()
+  const { showCompletion, dismissCompletion } = useTour()
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {showCompletion && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -30,7 +30,7 @@ export default function TourCompleted() {
               Ahora puedes comenzar a utilizar el sistema.
             </p>
             <button
-              onClick={finish}
+              onClick={dismissCompletion}
               className="mt-8 rounded-full bg-emerald-600 px-8 py-3 text-sm font-medium text-white hover:bg-emerald-700 transition-colors"
             >
               Comenzar

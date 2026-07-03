@@ -10,7 +10,7 @@ function getCoords(el: Element) {
 }
 
 export default function TourEngine() {
-  const { isOpen, currentIndex, steps, next, prev, skip, finish } = useTour()
+  const { isOpen, showCompletion, currentIndex, steps, next, prev, skip, finish } = useTour()
   const [coords, setCoords] = useState({ top: 0, left: 0, width: 0, height: 0 })
   const tooltipRef = useRef<HTMLDivElement>(null)
   const [tooltipPos, setTooltipPos] = useState<"top" | "bottom">("bottom")
@@ -18,7 +18,7 @@ export default function TourEngine() {
   const step = steps[currentIndex]
 
   useEffect(() => {
-    if (!isOpen || !step) return
+    if (!isOpen || showCompletion || !step) return
 
     function update() {
       const el = document.querySelector(step.selector)
@@ -40,7 +40,7 @@ export default function TourEngine() {
     return () => window.removeEventListener("resize", update)
   }, [isOpen, step, currentIndex])
 
-  if (!isOpen || !step) return null
+  if (!isOpen || showCompletion || !step) return null
 
   const isFirst = currentIndex === 0
   const isLast = currentIndex === steps.length - 1

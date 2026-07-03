@@ -1,5 +1,5 @@
 export { TourProvider, useTour } from "./TourContext"
 export { default as TourEngine } from "./TourEngine"
 export { registerTourSteps, getStepsForRole, getStepsForRoute } from "./registry"
-export { isTourCompleted, markTourCompleted, resetTour } from "./storage"
+export { isTourCompleted, markTourCompleted, setForceRestart } from "./storage"
 export type { TourStep, TourRole } from "./types"
