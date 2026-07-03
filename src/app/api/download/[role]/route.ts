@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server"
-import { existsSync } from "fs"
-import path from "path"
 
 const alias: Record<string, string> = {
   admin: "director",
@@ -10,8 +8,6 @@ const alias: Record<string, string> = {
 }
 
 const validRoles = ["dev", "director", "docente", "padre", "alumno"]
-
-const INSTALLERS_DIR = path.join(process.cwd(), "public", "installers")
 
 function detectPlatform(userAgent: string): "win" | "linux" | "mac" | "android" | "ios" {
   if (userAgent.includes("Windows")) return "win"
@@ -45,8 +41,6 @@ const desktopFiles: Record<string, Record<string, string>> = {
   },
 }
 
-const mobileRedirect = "/"
-
 export async function GET(request: Request, { params }: { params: Promise<{ role: string }> }) {
   let { role } = await params
   if (alias[role]) role = alias[role]
@@ -57,10 +51,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ role
   const { searchParams } = new URL(request.url)
   let platform = searchParams.get("platform") || detectPlatform(request.headers.get("user-agent") || "")
 
-  if (platform === "ios") platform = "win"
-
-  if (platform === "android") {
-    return NextResponse.redirect(mobileRedirect, { status: 302 })
+  if (platform === "ios" || platform === "android") {
+    return NextResponse.redirect(new URL("/", request.url), { status: 302 })
   }
 
   const file = desktopFiles[platform]?.[role]
@@ -68,13 +60,5 @@ export async function GET(request: Request, { params }: { params: Promise<{ role
     return NextResponse.json({ error: "Plataforma no soportada" }, { status: 400 })
   }
 
-  const localPath = path.join(INSTALLERS_DIR, file)
-  if (existsSync(localPath)) {
-    return NextResponse.redirect(`/installers/${file}`, { status: 302 })
-  }
-
-  return NextResponse.json(
-    { error: `Archivo no encontrado: ${file}. Aún no hay instalador disponible para esta plataforma.` },
-    { status: 404 },
-  )
+  return NextResponse.redirect(new URL(`/installers/${file}`, request.url), { status: 302 })
 }
