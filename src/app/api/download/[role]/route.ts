@@ -51,17 +51,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ role
   }
 
   const { searchParams } = new URL(request.url)
-  const platform = searchParams.get("platform") || detectPlatform(request.headers.get("user-agent") || "")
+  let platform = searchParams.get("platform") || detectPlatform(request.headers.get("user-agent") || "")
 
-  if (platform === "android" || platform === "ios") {
-    return NextResponse.json(
-      {
-        error: "App de escritorio no disponible en dispositivos móviles",
-        pwa: "Usa la versión web desde el navegador o instala la PWA",
-      },
-      { status: 400 }
-    )
-  }
+  if (platform === "android" || platform === "ios") platform = "win"
 
   const file = files[platform]?.[role]
   if (!file) {
