@@ -28,11 +28,11 @@ const files: Record<string, Record<string, string>> = {
     alumno: "educonecta-alumno-setup.exe",
   },
   linux: {
-    dev: "educonecta-dev.AppImage",
-    director: "educonecta-director.AppImage",
-    docente: "educonecta-docente.AppImage",
-    padre: "educonecta-padre.AppImage",
-    alumno: "educonecta-alumno.AppImage",
+    dev: "educonecta-dev.deb",
+    director: "educonecta-director.deb",
+    docente: "educonecta-docente.deb",
+    padre: "educonecta-padre.deb",
+    alumno: "educonecta-alumno.deb",
   },
   mac: {
     dev: "educonecta-dev.dmg",
