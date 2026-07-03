@@ -1,16 +1,77 @@
 /* Service Worker de EduConecta
- * - Maneja eventos 'push' entrantes (notificaciones del servidor)
- * - Muestra notificaciones del sistema operativo incluso con la app
- *   cerrada o la pantalla bloqueada, igual que WhatsApp
- * - Al hacer click, enfoca o abre la app en la URL indicada
+ * - Cachea assets estáticos para funcionamiento offline parcial
+ * - Muestra notificaciones push incluso con la app cerrada
+ * - Re-suscribe automáticamente cuando expira la suscripción
  */
 
+const CACHE = "educonecta-v1"
+const STATIC_ASSETS = [
+  "/",
+  "/manifest.json",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
+  "/icons/icon.svg",
+  "/icons/apple-touch-icon.png",
+  "/icons/favicon-16x16.png",
+  "/icons/favicon-32x32.png",
+]
+
 self.addEventListener("install", (event) => {
-  self.skipWaiting()
+  event.waitUntil(
+    (async () => {
+      try {
+        const cache = await caches.open(CACHE)
+        await cache.addAll(STATIC_ASSETS)
+      } catch {}
+      await self.skipWaiting()
+    })(),
+  )
 })
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim())
+  event.waitUntil(
+    (async () => {
+      await self.clients.claim()
+      const keys = await caches.keys()
+      await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
+    })(),
+  )
+})
+
+self.addEventListener("fetch", (event) => {
+  const { request } = event
+  const url = new URL(request.url)
+
+  if (url.pathname.startsWith("/api/")) {
+    return
+  }
+
+  if (
+    request.method !== "GET" ||
+    url.pathname.startsWith("/installers") ||
+    url.pathname.match(/\.(exe|deb|dmg|apk)$/i)
+  ) {
+    return
+  }
+
+  event.respondWith(
+    (async () => {
+      const cached = await caches.match(request)
+      if (cached) return cached
+      try {
+        const response = await fetch(request)
+        if (response.ok && response.type === "basic") {
+          const cache = await caches.open(CACHE)
+          cache.put(request, response.clone())
+        }
+        return response
+      } catch {
+        const fallback = await caches.match("/")
+        if (fallback) return fallback
+        return new Response("Sin conexión", { status: 503 })
+      }
+    })(),
+  )
 })
 
 self.addEventListener("push", (event) => {
@@ -36,30 +97,25 @@ self.addEventListener("push", (event) => {
         tag: incoming.tag,
         data: incoming.data ?? {},
       }
-    } catch (e) {
+    } catch {
       try { payload.body = event.data.text() } catch {}
     }
   }
 
-  const options = {
-    body: payload.body,
-    icon: payload.icon,
-    badge: payload.badge,
-    tag: payload.tag,
-    renotify: !!payload.tag,
-    requireInteraction: false,
-    silent: false,
-    vibrate: [200, 100, 200],
-    data: { url: payload.url, ...(payload.data || {}) },
-    actions: [
-      { action: "open", title: "Abrir" },
-      { action: "dismiss", title: "Cerrar" },
-    ],
-  }
-
   event.waitUntil(
-    self.registration.showNotification(payload.title, options).catch((err) => {
-      console.error("[sw] showNotification error", err)
+    self.registration.showNotification(payload.title, {
+      body: payload.body,
+      icon: payload.icon,
+      badge: payload.badge,
+      tag: payload.tag,
+      renotify: !!payload.tag,
+      requireInteraction: false,
+      vibrate: [200, 100, 200],
+      data: { url: payload.url, ...payload.data },
+      actions: [
+        { action: "open", title: "Abrir" },
+        { action: "dismiss", title: "Cerrar" },
+      ],
     }),
   )
 })
@@ -89,7 +145,11 @@ self.addEventListener("pushsubscriptionchange", (event) => {
   event.waitUntil(
     (async () => {
       try {
-        const newSub = await self.registration.pushManager.subscribe(event.oldSubscription.options)
+        let options = {}
+        if (event.oldSubscription) {
+          options = event.oldSubscription.options
+        }
+        const newSub = await self.registration.pushManager.subscribe(options)
         await fetch("/api/push/subscribe", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -102,6 +162,4 @@ self.addEventListener("pushsubscriptionchange", (event) => {
   )
 })
 
-self.addEventListener("message", (event) => {
-  // mensajes de la página (debug)
-})
+self.addEventListener("message", (event) => {})

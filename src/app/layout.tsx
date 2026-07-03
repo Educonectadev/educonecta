@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Provider from "@/components/Provider"
 import InstallPrompt from "@/components/InstallPrompt"
-import PushBootstrap from "@/components/PushBootstrap"
+import PushSetupDialog from "@/components/PushSetupDialog"
 import ThemeBootstrap from "@/components/ThemeBootstrap"
 import ToastProvider from "@/components/ToastProvider"
 import "./globals.css"
@@ -69,13 +69,13 @@ export default function RootLayout({
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&display=swap" precedence="default" />
       <meta name="theme-color" content="#0f172a" />
       <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
-        <PushBootstrap />
         <ThemeBootstrap />
         <Provider>
           <ToastProvider />
           {children}
         </Provider>
         <InstallPrompt />
+        <PushSetupDialog />
       </body>
     </html>
   )

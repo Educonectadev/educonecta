@@ -29,7 +29,7 @@ export async function POST(req: Request) {
     const userAgent = req.headers.get("user-agent") ?? null
 
     console.log("[push/subscribe] Upsert en PushSubscription, userId:", userId)
-    const { data, error } = await supabase.from("PushSubscription").upsert(
+    const { error: upsertError } = await supabase.from("PushSubscription").upsert(
       {
         userId,
         endpoint: subscription.endpoint,
@@ -40,19 +40,40 @@ export async function POST(req: Request) {
       { onConflict: "endpoint", ignoreDuplicates: false },
     )
 
-    if (error) {
+    if (upsertError) {
       console.error("[push/subscribe] Error Supabase upsert:", {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
+        message: upsertError.message,
+        details: upsertError.details,
+        hint: upsertError.hint,
+        code: upsertError.code,
       })
       return NextResponse.json(
-        { error: error.message, code: error.code, details: error.details, hint: error.hint },
+        { error: upsertError.message, code: upsertError.code, details: upsertError.details, hint: upsertError.hint },
         { status: 500 },
       )
     }
-    console.log("[push/subscribe] OK, id:", data)
+
+    const { count } = await supabase
+      .from("PushSubscription")
+      .select("id", { count: "exact", head: true })
+      .eq("userId", userId)
+
+    if (count && count > 5) {
+      const { data: old } = await supabase
+        .from("PushSubscription")
+        .select("id, endpoint")
+        .eq("userId", userId)
+        .order("createdAt", { ascending: true })
+        .limit(count - 5)
+
+      if (old && old.length > 0) {
+        const ids = old.map((r: any) => r.id)
+        await supabase.from("PushSubscription").delete().in("id", ids)
+        console.log("[push/subscribe] Limpiadas suscripciones antiguas:", ids.length)
+      }
+    }
+
+    console.log("[push/subscribe] OK, userId:", userId)
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("[push/subscribe] Excepción:", error)
