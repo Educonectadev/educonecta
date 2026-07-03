@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSession } from "@/lib/auth-context"
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4)
@@ -22,8 +23,11 @@ type Step = "explain" | "requesting" | "success" | "error" | "unsupported" | "de
 const DISMISS_KEY = "ec-push-dismissed"
 
 export default function PushSetupDialog() {
+  const { status } = useSession()
   const [step, setStep] = useState<Step>("explain")
   const [initialized, setInitialized] = useState(false)
+
+  if (status !== "authenticated") return null
 
   useEffect(() => {
     if (typeof window === "undefined") return

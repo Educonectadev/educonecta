@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Script from "next/script"
 import Provider from "@/components/Provider"
 import InstallPrompt from "@/components/InstallPrompt"
 import PushSetupDialog from "@/components/PushSetupDialog"
@@ -35,33 +36,31 @@ export default function RootLayout({
     <html lang="es" className="h-full antialiased scrollbar-hide">
       <head>
         <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              try {
-                var theme = localStorage.getItem('theme');
-                var html = document.documentElement;
-                if (theme !== 'dark') {
-                  html.classList.remove('dark');
-                } else {
-                  html.classList.add('dark');
-                }
-                var mql = window.matchMedia('(prefers-color-scheme: dark)');
-                if (mql && mql.addEventListener) {
-                  mql.addEventListener('change', function(e) {
-                    try {
-                      var t = localStorage.getItem('theme');
-                      if (t !== 'light' && t !== 'dark') {
-                        if (e.matches) html.classList.add('dark');
-                        else html.classList.remove('dark');
-                      }
-                    } catch(e2) {}
-                  });
-                }
-              } catch(e) {}
-            })();
-          `
-        }} />
+        <Script id="theme-init" strategy="beforeInteractive">{`
+          (function() {
+            try {
+              var theme = localStorage.getItem('theme');
+              var html = document.documentElement;
+              if (theme !== 'dark') {
+                html.classList.remove('dark');
+              } else {
+                html.classList.add('dark');
+              }
+              var mql = window.matchMedia('(prefers-color-scheme: dark)');
+              if (mql && mql.addEventListener) {
+                mql.addEventListener('change', function(e) {
+                  try {
+                    var t = localStorage.getItem('theme');
+                    if (t !== 'light' && t !== 'dark') {
+                      if (e.matches) html.classList.add('dark');
+                      else html.classList.remove('dark');
+                    }
+                  } catch(e2) {}
+                });
+              }
+            } catch(e) {}
+          })();
+        `}</Script>
       </head>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
