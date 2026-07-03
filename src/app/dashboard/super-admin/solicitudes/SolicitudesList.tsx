@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
-import NeonCard from "@/components/premium/NeonCard"
 import { getIcon } from "@/components/premium/iconRegistry"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -259,8 +258,8 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
           </p>
         </div>
       ) : (
-        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-          <AnimatePresence mode="popLayout">
+        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-3 overflow-hidden">
+          <AnimatePresence>
             {filteredLeads.map((l, idx) => {
               const ss = statusStyle(l.status)
               return (
