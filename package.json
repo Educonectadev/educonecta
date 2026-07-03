@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "main": "electron/main.js",
   "private": true,
+  "description": "Plataforma educativa integral",
+  "author": {
+    "name": "EduConecta",
+    "email": "soporte@educonecta.dev"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
