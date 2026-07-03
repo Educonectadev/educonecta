@@ -21,7 +21,7 @@ function detectPlatform(userAgent: string): "win" | "linux" | "mac" | "android" 
   return "linux"
 }
 
-const files: Record<string, Record<string, string>> = {
+const desktopFiles: Record<string, Record<string, string>> = {
   win: {
     dev: "educonecta-dev-setup.exe",
     director: "educonecta-director-setup.exe",
@@ -43,14 +43,9 @@ const files: Record<string, Record<string, string>> = {
     padre: "educonecta-padre.dmg",
     alumno: "educonecta-alumno.dmg",
   },
-  android: {
-    dev: "educonecta-app.apk",
-    director: "educonecta-app.apk",
-    docente: "educonecta-app.apk",
-    padre: "educonecta-app.apk",
-    alumno: "educonecta-app.apk",
-  },
 }
+
+const mobileRedirect = "/"
 
 export async function GET(request: Request, { params }: { params: Promise<{ role: string }> }) {
   let { role } = await params
@@ -64,7 +59,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ role
 
   if (platform === "ios") platform = "win"
 
-  const file = files[platform]?.[role]
+  if (platform === "android") {
+    return NextResponse.redirect(mobileRedirect, { status: 302 })
+  }
+
+  const file = desktopFiles[platform]?.[role]
   if (!file) {
     return NextResponse.json({ error: "Plataforma no soportada" }, { status: 400 })
   }
