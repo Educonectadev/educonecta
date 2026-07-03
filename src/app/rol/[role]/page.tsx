@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import SiteFooter from "@/components/SiteFooter"
+import RoleDownloadButtons from "./RoleDownloadButtons"
 
 type Role = {
   id: string
@@ -133,12 +134,12 @@ export default async function RolPage({ params }: { params: Promise<{ role: stri
               ))}
             </ul>
 
-            <p className="mt-8 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-zinc-400">
-              Descargar aplicación
-            </p>
-            <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400">
-              Inicia sesión en tu panel para descargar el instalador correspondiente a tu rol.
-            </p>
+            <div className="mt-8">
+              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-zinc-400">
+                Descargar aplicación
+              </p>
+              <RoleDownloadButtons role={role} />
+            </div>
           </div>
 
           <div className="w-full lg:w-[500px] shrink-0">
