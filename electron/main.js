@@ -48,7 +48,7 @@ function createWindow() {
     },
   })
 
-  mainWindow.loadURL(`http://localhost:${PORT}/rol/${ROLE}`)
+  mainWindow.loadURL(`http://localhost:${PORT}/login`)
   mainWindow.on("closed", () => { mainWindow = null })
 }
 
