@@ -1,5 +1,5 @@
-appId: com.educonecta.${env.ROLE}
-productName: EduConecta ${env.ROLE}
+appId: com.educonecta.app
+productName: EduConecta
 directories:
   output: public/installers
   buildResources: electron
@@ -7,12 +7,14 @@ files:
   - electron/**/*
   - package.json
   - .next/**/*
+  - "!.next/dev/**"
   - public/**/*
-  - node_modules/**/*
+  - "!public/installers/**"
 win:
   target:
     - nsis
   artifactName: educonecta-${env.ROLE}-setup.${ext}
+
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
