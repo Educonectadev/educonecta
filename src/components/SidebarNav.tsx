@@ -3,6 +3,7 @@
 import { memo, useMemo, useEffect, useCallback } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
+import DownloadAppButton from "./DownloadAppButton"
 
 interface NavLink {
   href: string
@@ -84,6 +85,9 @@ export default function SidebarNav({
             active={!!activeMap.get(link.href)}
           />
         ))}
+        <div className="mt-auto pt-4 border-t border-default-200 dark:border-default-50">
+          <DownloadAppButton />
+        </div>
       </nav>
     </aside>
   )

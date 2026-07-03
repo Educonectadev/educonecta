@@ -1,7 +1,7 @@
 appId: com.educonecta.app
 productName: EduConecta
 directories:
-  output: public/installers
+  output: private-installers
   buildResources: electron
 files:
   - electron/**/*

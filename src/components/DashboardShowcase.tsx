@@ -131,24 +131,10 @@ export default function DashboardShowcase() {
               </AnimatePresence>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-white/90 dark:from-zinc-900/90 to-transparent">
-              <div className="flex flex-wrap gap-1.5">
-                <a href={`/api/download/${activeDashboard.id}?platform=win`} download className="btn-primary px-3.5 py-2 rounded-2xl text-[11px] font-medium inline-flex items-center gap-1.5 transition cursor-pointer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l7.5.7v6.8H4z"/><path d="M4 20l7.5-.7v-6.8H4z"/><path d="M12.5 3.5L20 4v7h-7.5z"/><path d="M12.5 20.5L20 20v-7h-7.5z"/></svg>
-                  Windows
-                </a>
-                <a href={`/api/download/${activeDashboard.id}?platform=linux`} download className="border border-white/30 hover:border-white/60 text-white/80 hover:text-white px-3.5 py-2 rounded-2xl text-[11px] font-medium inline-flex items-center gap-1.5 transition cursor-pointer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3L9 7m3-4l3 4m-3-4v4M6 11l3-1m-3 1l-3 4m3-4h12m0 0l3 4m-3-4l-3-1"/><path d="M6 11l3 5h6l3-5"/><path d="M12 16v2"/></svg>
-                  Linux
-                </a>
-                <a href={`/api/download/${activeDashboard.id}?platform=mac`} download className="border border-white/30 hover:border-white/60 text-white/80 hover:text-white px-3.5 py-2 rounded-2xl text-[11px] font-medium inline-flex items-center gap-1.5 transition cursor-pointer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/><path d="M10 2c1 .5 2 2 2 5"/></svg>
-                  macOS
-                </a>
-                <a href={`/api/download/${activeDashboard.id}?platform=android`} download className="border border-white/30 hover:border-white/60 text-white/80 hover:text-white px-3.5 py-2 rounded-2xl text-[11px] font-medium inline-flex items-center gap-1.5 transition cursor-pointer">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="6" x2="15" y2="6"/></svg>
-                  Android
-                </a>
-              </div>
+              <p className="text-[11px] text-white/70 text-center">
+                Inicia sesión en tu dashboard para descargar la aplicación
+              </p>
+            </div>
             </div>
           </div>
         </div>

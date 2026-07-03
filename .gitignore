@@ -48,7 +48,6 @@ next-env.d.ts
 *.db
 
 # Electron build output
-/public/installers
 /release
 
 # Android TWA build output
