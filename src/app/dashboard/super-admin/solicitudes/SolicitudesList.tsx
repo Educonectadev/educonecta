@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react"
 import { toast } from "@heroui/react"
 import Modal from "@/components/Modal"
 import { getIcon } from "@/components/premium/iconRegistry"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 
 interface Lead {
   id: number
@@ -258,19 +258,11 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
           </p>
         </div>
       ) : (
-        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-3 overflow-hidden">
-          <AnimatePresence>
-            {filteredLeads.map((l, idx) => {
-              const ss = statusStyle(l.status)
-              return (
-                <motion.li
-                  layout
-                  key={l.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.97 }}
-                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1], delay: idx * 0.02 }}
-                >
+        <ul className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          {filteredLeads.map((l) => {
+            const ss = statusStyle(l.status)
+            return (
+              <li key={l.id}>  
                   <article
                     onClick={() => openLead(l)}
                     className={
@@ -345,10 +337,9 @@ export default function SolicitudesList({ initialLeads }: { initialLeads: Lead[]
                       </span>
                     </div>
                   </article>
-                </motion.li>
+                </li>
               )
             })}
-          </AnimatePresence>
         </ul>
       )}
 
