@@ -84,7 +84,7 @@ export type InstallerResult = {
 
 const platformExtensions: Record<InstallerPlatform, string> = {
   win: "-setup.exe",
-  linux: ".deb",
+  linux: ".AppImage",
   mac: ".dmg",
 }
 
@@ -92,6 +92,7 @@ const contentTypes: Record<string, string> = {
   exe: "application/vnd.microsoft.portable-executable",
   deb: "application/vnd.debian.binary-package",
   dmg: "application/x-apple-diskimage",
+  AppImage: "application/x-appimage",
 }
 
 const roleToElectron: Record<string, string> = {
@@ -120,7 +121,8 @@ export function getInstallerFilename(electronRole: string, platform: InstallerPl
 }
 
 function getContentType(filename: string): string {
-  const ext = filename.split(".").pop()?.replace("-setup", "") ?? ""
+  const parts = filename.split(".")
+  const ext = parts.length > 1 ? parts[parts.length - 1] : ""
   return contentTypes[ext] || "application/octet-stream"
 }
 
