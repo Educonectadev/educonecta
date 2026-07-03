@@ -135,7 +135,6 @@ export default function DashboardShowcase() {
                 Inicia sesión en tu dashboard para descargar la aplicación
               </p>
             </div>
-            </div>
           </div>
         </div>
       </div>
