@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
-
-const BASE = "https://github.com/Educonectadev/educonecta/releases/latest/download"
+import { existsSync } from "fs"
+import path from "path"
 
 const alias: Record<string, string> = {
   admin: "director",
@@ -10,6 +10,8 @@ const alias: Record<string, string> = {
 }
 
 const validRoles = ["dev", "director", "docente", "padre", "alumno"]
+
+const INSTALLERS_DIR = path.join(process.cwd(), "public", "installers")
 
 function detectPlatform(userAgent: string): "win" | "linux" | "mac" | "android" | "ios" {
   if (userAgent.includes("Windows")) return "win"
@@ -67,5 +69,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ role
     return NextResponse.json({ error: "Plataforma no soportada" }, { status: 400 })
   }
 
-  return NextResponse.redirect(`${BASE}/${file}`, { status: 302 })
+  const localPath = path.join(INSTALLERS_DIR, file)
+  if (existsSync(localPath)) {
+    return NextResponse.redirect(`/installers/${file}`, { status: 302 })
+  }
+
+  return NextResponse.json(
+    { error: `Archivo no encontrado: ${file}. Aún no hay instalador disponible para esta plataforma.` },
+    { status: 404 },
+  )
 }
