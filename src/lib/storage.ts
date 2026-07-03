@@ -1,6 +1,7 @@
 import { readFile } from "fs/promises"
 import { existsSync } from "fs"
 import path from "path"
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3"
 
 export type InstallerPlatform = "win" | "linux" | "mac"
 
@@ -74,6 +75,54 @@ class LocalInstallerStorage implements InstallerStorage {
   }
 }
 
+class S3InstallerStorage implements InstallerStorage {
+  private client: S3Client
+  private bucket: string
+
+  constructor() {
+    const endpoint = process.env.S3_ENDPOINT
+    if (!endpoint) throw new Error("S3_ENDPOINT env var is required for S3 storage")
+
+    this.bucket = process.env.S3_BUCKET || "educonecta-installers"
+
+    this.client = new S3Client({
+      endpoint,
+      region: process.env.S3_REGION || "auto",
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY_ID || "",
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || "",
+      },
+      forcePathStyle: true,
+    })
+  }
+
+  async getInstaller(electronRole: string, platform: InstallerPlatform): Promise<InstallerResult> {
+    const filename = getInstallerFilename(electronRole, platform)
+
+    try {
+      const response = await this.client.send(
+        new GetObjectCommand({
+          Bucket: this.bucket,
+          Key: filename,
+        }),
+      )
+
+      if (!response.Body) return null
+
+      const bytes = await response.Body.transformToByteArray()
+      const buffer = Buffer.from(bytes)
+
+      return {
+        buffer,
+        filename,
+        contentType: getContentType(filename),
+      }
+    } catch {
+      return null
+    }
+  }
+}
+
 let storageInstance: InstallerStorage | null = null
 
 export function getInstallerStorage(): InstallerStorage {
@@ -81,6 +130,9 @@ export function getInstallerStorage(): InstallerStorage {
     const provider = process.env.INSTALLER_STORAGE_PROVIDER || "local"
 
     switch (provider) {
+      case "s3":
+        storageInstance = new S3InstallerStorage()
+        break
       case "local":
       default:
         const dir = process.env.INSTALLERS_DIR || path.join(process.cwd(), "private-installers")

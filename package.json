@@ -29,6 +29,7 @@
     "electron:build:all": "rm -rf .next/dev && npm run build && cross-env ROLE=dev electron-builder --config electron/builder.yml --win --linux && cross-env ROLE=director electron-builder --config electron/builder.yml --win --linux && cross-env ROLE=docente electron-builder --config electron/builder.yml --win --linux && cross-env ROLE=padre electron-builder --config electron/builder.yml --win --linux && cross-env ROLE=alumno electron-builder --config electron/builder.yml --win --linux"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1079.0",
     "@gravity-ui/icons": "^2.18.0",
     "@headlessui/react": "^2.2.10",
     "@heroui/react": "^3.2.1",
