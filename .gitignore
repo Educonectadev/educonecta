@@ -50,6 +50,8 @@ next-env.d.ts
 # Electron build output
 /release
 
+# Private installer files (tracked via private-installers/.gitignore)
+
 # Android TWA build output
 android/app/build/
 android/.gradle/

@@ -1,83 +1,92 @@
-import { getSupabaseAdmin } from "./supabase"
+import { readFile } from "fs/promises"
+import { existsSync } from "fs"
+import path from "path"
 
-const BUCKET = "institution-files"
+export type InstallerPlatform = "win" | "linux" | "mac"
 
-export type UploadedFile = {
-  path: string
-  url: string
-  name: string
-  size: number
-  mimeType: string
+export type InstallerResult = {
+  buffer: Buffer
+  filename: string
+  contentType: string
+} | null
+
+const platformExtensions: Record<InstallerPlatform, string> = {
+  win: "-setup.exe",
+  linux: ".deb",
+  mac: ".dmg",
 }
 
-export async function uploadFile(
-  institutionId: number,
-  file: File | Buffer,
-  fileName: string,
-  mimeType: string,
-): Promise<UploadedFile> {
-  const ext = fileName.split(".").pop() || "bin"
-  const uniqueName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-  const filePath = `${institutionId}/${uniqueName}`
+const contentTypes: Record<string, string> = {
+  exe: "application/vnd.microsoft.portable-executable",
+  deb: "application/vnd.debian.binary-package",
+  dmg: "application/x-apple-diskimage",
+}
 
-  const { data, error } = await getSupabaseAdmin()
-    .storage
-    .from(BUCKET)
-    .upload(filePath, file, {
-      contentType: mimeType,
-      upsert: false,
-    })
+const roleToElectron: Record<string, string> = {
+  SUPER_ADMIN: "dev",
+  INSTITUTIONAL_ADMIN: "director",
+  TEACHER: "docente",
+  PARENT: "padre",
+  STUDENT: "alumno",
+}
 
-  if (error) throw new Error(`Storage upload failed: ${error.message}`)
+export function getElectronRole(dashboardRole: string): string | null {
+  return roleToElectron[dashboardRole] ?? null
+}
 
-  const { data: urlData } = await getSupabaseAdmin()
-    .storage
-    .from(BUCKET)
-    .createSignedUrl(filePath, 3600 * 24 * 7)
+export function detectPlatform(userAgent: string): InstallerPlatform {
+  if (userAgent.includes("Windows")) return "win"
+  if (userAgent.includes("Mac OS") || userAgent.includes("iPad") || userAgent.includes("iPhone")) return "mac"
+  if (userAgent.includes("Android")) return "win"
+  if (userAgent.includes("Mac")) return "mac"
+  return "linux"
+}
 
-  return {
-    path: data.path,
-    url: urlData?.signedUrl || "",
-    name: fileName,
-    size: file instanceof File ? file.size : Buffer.byteLength(file as Buffer),
-    mimeType,
+export function getInstallerFilename(electronRole: string, platform: InstallerPlatform): string {
+  const ext = platformExtensions[platform]
+  return `educonecta-${electronRole}${ext}`
+}
+
+function getContentType(filename: string): string {
+  const ext = filename.split(".").pop()?.replace("-setup", "") ?? ""
+  return contentTypes[ext] || "application/octet-stream"
+}
+
+export interface InstallerStorage {
+  getInstaller(electronRole: string, platform: InstallerPlatform): Promise<InstallerResult>
+}
+
+class LocalInstallerStorage implements InstallerStorage {
+  private dir: string
+
+  constructor(dir: string) {
+    this.dir = dir
+  }
+
+  async getInstaller(electronRole: string, platform: InstallerPlatform): Promise<InstallerResult> {
+    const filename = getInstallerFilename(electronRole, platform)
+    const filePath = path.join(this.dir, filename)
+
+    if (!existsSync(filePath)) return null
+
+    const buffer = await readFile(filePath)
+    return { buffer, filename, contentType: getContentType(filename) }
   }
 }
 
-export async function deleteFile(path: string): Promise<void> {
-  const { error } = await getSupabaseAdmin()
-    .storage
-    .from(BUCKET)
-    .remove([path])
+let storageInstance: InstallerStorage | null = null
 
-  if (error) throw new Error(`Storage delete failed: ${error.message}`)
-}
+export function getInstallerStorage(): InstallerStorage {
+  if (!storageInstance) {
+    const provider = process.env.INSTALLER_STORAGE_PROVIDER || "local"
 
-export async function getFileUrl(path: string, expiresIn = 3600): Promise<string | null> {
-  const { data } = await getSupabaseAdmin()
-    .storage
-    .from(BUCKET)
-    .createSignedUrl(path, expiresIn)
-
-  return data?.signedUrl || null
-}
-
-export async function listFiles(
-  institutionId: number,
-  folder?: string,
-): Promise<{ name: string; url: string | null }[]> {
-  const prefix = folder ? `${institutionId}/${folder}` : `${institutionId}/`
-  const { data, error } = await getSupabaseAdmin()
-    .storage
-    .from(BUCKET)
-    .list(prefix)
-
-  if (error) throw new Error(`Storage list failed: ${error.message}`)
-
-  return Promise.all(
-    data.map(async (item) => ({
-      name: item.name,
-      url: await getFileUrl(`${prefix}${item.name}`),
-    })),
-  )
+    switch (provider) {
+      case "local":
+      default:
+        const dir = process.env.INSTALLERS_DIR || path.join(process.cwd(), "private-installers")
+        storageInstance = new LocalInstallerStorage(dir)
+        break
+    }
+  }
+  return storageInstance
 }
