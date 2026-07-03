@@ -134,12 +134,7 @@ export default async function RolPage({ params }: { params: Promise<{ role: stri
               ))}
             </ul>
 
-            <div className="mt-8">
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-zinc-400">
-                Descargar aplicación
-              </p>
-              <RoleDownloadButtons role={role} />
-            </div>
+            <RoleDownloadButtons role={role} />
           </div>
 
           <div className="w-full lg:w-[500px] shrink-0">
