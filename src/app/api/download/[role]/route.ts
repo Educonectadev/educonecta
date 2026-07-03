@@ -41,6 +41,13 @@ const files: Record<string, Record<string, string>> = {
     padre: "educonecta-padre.dmg",
     alumno: "educonecta-alumno.dmg",
   },
+  android: {
+    dev: "educonecta-app.apk",
+    director: "educonecta-app.apk",
+    docente: "educonecta-app.apk",
+    padre: "educonecta-app.apk",
+    alumno: "educonecta-app.apk",
+  },
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ role: string }> }) {
@@ -53,7 +60,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ role
   const { searchParams } = new URL(request.url)
   let platform = searchParams.get("platform") || detectPlatform(request.headers.get("user-agent") || "")
 
-  if (platform === "android" || platform === "ios") platform = "win"
+  if (platform === "ios") platform = "win"
 
   const file = files[platform]?.[role]
   if (!file) {
