@@ -1,55 +1,60 @@
 import { NextResponse } from "next/server"
-import fs from "fs"
-import path from "path"
 
-const roles: Record<string, { fileName: string }> = {
-  dev: { fileName: "educonecta-dev-setup.exe" },
-  admin: { fileName: "educonecta-admin-setup.exe" },
-  teacher: { fileName: "educonecta-teacher-setup.exe" },
-  parent: { fileName: "educonecta-parent-setup.exe" },
-  student: { fileName: "educonecta-student-setup.exe" },
-}
+const BASE = "https://github.com/Educonectadev/educonecta/releases/latest/download"
 
 const alias: Record<string, string> = {
-  director: "admin",
-  docente: "teacher",
-  padre: "parent",
-  alumno: "student",
+  admin: "director",
+  teacher: "docente",
+  parent: "padre",
+  student: "alumno",
 }
 
-export async function GET(_request: Request, { params }: { params: Promise<{ role: string }> }) {
-  const { role: rawRole } = await params
-  const key = alias[rawRole] ?? rawRole
-  const r = roles[key]
+const validRoles = ["dev", "director", "docente", "padre", "alumno"]
 
-  if (!r) {
+function detectPlatform(userAgent: string): "win" | "linux" | "mac" {
+  if (userAgent.includes("Windows")) return "win"
+  if (userAgent.includes("Mac")) return "mac"
+  return "linux"
+}
+
+const files: Record<string, Record<string, string>> = {
+  win: {
+    dev: "educonecta-dev-setup.exe",
+    director: "educonecta-director-setup.exe",
+    docente: "educonecta-docente-setup.exe",
+    padre: "educonecta-padre-setup.exe",
+    alumno: "educonecta-alumno-setup.exe",
+  },
+  linux: {
+    dev: "educonecta-dev.AppImage",
+    director: "educonecta-director.AppImage",
+    docente: "educonecta-docente.AppImage",
+    padre: "educonecta-padre.AppImage",
+    alumno: "educonecta-alumno.AppImage",
+  },
+  mac: {
+    dev: "educonecta-dev.dmg",
+    director: "educonecta-director.dmg",
+    docente: "educonecta-docente.dmg",
+    padre: "educonecta-padre.dmg",
+    alumno: "educonecta-alumno.dmg",
+  },
+}
+
+export async function GET(request: Request, { params }: { params: Promise<{ role: string }> }) {
+  let { role } = await params
+  if (alias[role]) role = alias[role]
+  if (!validRoles.includes(role)) {
     return NextResponse.json({ error: "Rol no válido" }, { status: 404 })
   }
 
-  const filePath = path.join(process.cwd(), "public", "installers", r.fileName)
+  const { searchParams } = new URL(request.url)
+  const platform = searchParams.get("platform") || detectPlatform(request.headers.get("user-agent") || "")
 
-  if (!fs.existsSync(filePath)) {
-    return NextResponse.json(
-      { error: "Instalador no encontrado. Ejecuta: npm run electron:build:all" },
-      { status: 404 }
-    )
+  const file = files[platform]?.[role]
+  if (!file) {
+    return NextResponse.json({ error: "Plataforma no soportada" }, { status: 400 })
   }
 
-  const fileBuffer = fs.readFileSync(filePath)
-  const ext = path.extname(r.fileName)
-
-  const mimeTypes: Record<string, string> = {
-    ".exe": "application/vnd.microsoft.portable-executable",
-    ".dmg": "application/x-apple-diskimage",
-    ".AppImage": "application/x-executable",
-    ".deb": "application/vnd.debian.binary-package",
-  }
-
-  return new NextResponse(fileBuffer as unknown as BodyInit, {
-    headers: {
-      "Content-Type": mimeTypes[ext] || "application/octet-stream",
-      "Content-Disposition": `attachment; filename="${r.fileName}"`,
-      "Content-Length": String(fileBuffer.length),
-    },
-  })
+  return NextResponse.redirect(`${BASE}/${file}`, { status: 302 })
 }
