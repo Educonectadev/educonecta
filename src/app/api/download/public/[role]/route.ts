@@ -22,6 +22,16 @@ export async function GET(
   const storage = getInstallerStorage()
   const result = await storage.getInstaller(role, platform as any)
 
+  const isCheck = searchParams.get("check") === "1"
+  if (isCheck) {
+    return NextResponse.json({
+      available: !!result,
+      filename: result?.filename ?? null,
+      platform,
+      role,
+    })
+  }
+
   if (!result) {
     return NextResponse.json(
       { error: "Instalador no disponible para esta plataforma" },

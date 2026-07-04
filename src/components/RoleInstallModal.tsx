@@ -16,6 +16,8 @@ const roleSlugMap: Record<string, string> = {
 
 type Platform = "win" | "mac" | "linux"
 
+const allPlatforms: Platform[] = ["win", "mac", "linux"]
+
 const platformExtensions: Record<Platform, string> = {
   win: "-setup.exe",
   mac: ".dmg",
@@ -52,16 +54,12 @@ function isIOS(): boolean {
   return /iPhone|iPad|iPod/i.test(navigator.userAgent)
 }
 
-function getInstallerUrl(role: string, platform: Platform): string {
-  return `/api/download/public/${role}?platform=${platform}`
-}
-
 const DISMISS_PREFIX = "ec-role-modal-dismissed-"
 
 function PlatformIcon({ platform }: { platform: Platform }) {
   if (platform === "win") {
     return (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
         <line x1="3" y1="9" x2="21" y2="9" />
         <line x1="9" y1="21" x2="9" y2="9" />
@@ -70,7 +68,7 @@ function PlatformIcon({ platform }: { platform: Platform }) {
   }
   if (platform === "mac") {
     return (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 2L2 7l10 5 10-5-10-5z" />
         <path d="M2 17l10 5 10-5" />
         <path d="M2 12l10 5 10-5" />
@@ -78,7 +76,7 @@ function PlatformIcon({ platform }: { platform: Platform }) {
     )
   }
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M4 8V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4" />
       <path d="M4 16v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />
       <path d="M12 2v8" />
@@ -95,6 +93,8 @@ export default function RoleInstallModal() {
   const [deferredPrompt, setDeferredState] = useState<any>(null)
   const [installed, setInstalled] = useState(false)
   const [downloading, setDownloading] = useState<Platform | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [available, setAvailable] = useState<Platform[] | null>(null)
 
   useEffect(() => {
     if (isStandalone()) {
@@ -131,9 +131,39 @@ export default function RoleInstallModal() {
 
   const slug = session?.user?.role ? roleSlugMap[session.user.role] : undefined
   const config = slug ? getInstallRoleBySlug(slug) : undefined
+  const mobile = isMobile()
+  const detectedOS = detectOS()
+
+  useEffect(() => {
+    if (!open || !config || mobile) return
+
+    const electronRole = config.electronRole
+    let cancelled = false
+
+    async function check() {
+      const results: Platform[] = []
+      for (const p of allPlatforms) {
+        try {
+          const res = await fetch(`/api/download/public/${electronRole}?platform=${p}&check=1`)
+          if (cancelled) return
+          if (res.ok) {
+            const data = await res.json()
+            if (data.available) results.push(p)
+          }
+        } catch {
+          // ignore check errors
+        }
+      }
+      if (!cancelled) setAvailable(results)
+    }
+
+    check()
+    return () => { cancelled = true }
+  }, [open, config, mobile])
 
   function handleClose(permanent = false) {
     setOpen(false)
+    setError(null)
     if (permanent && slug) {
       localStorage.setItem(DISMISS_PREFIX + slug, "true")
     }
@@ -151,23 +181,41 @@ export default function RoleInstallModal() {
     }
   }
 
-  const triggerDownload = useCallback((platform: Platform) => {
+  async function handleDownload(platform: Platform) {
     if (!config) return
     setDownloading(platform)
-    const a = document.createElement("a")
-    a.href = getInstallerUrl(config.electronRole, platform)
-    a.download = `educonecta-${config.electronRole}${platformExtensions[platform]}`
-    a.rel = "noopener noreferrer"
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    setTimeout(() => setDownloading(null), 2000)
-  }, [config])
+    setError(null)
 
-  const detectedOS = detectOS()
-  const mobile = isMobile()
+    try {
+      const res = await fetch(`/api/download/public/${config.electronRole}?platform=${platform}`)
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({ error: "Error al descargar" }))
+        throw new Error(data.error || "Error al descargar")
+      }
+
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `educonecta-${config.electronRole}${platformExtensions[platform]}`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al descargar")
+    } finally {
+      setDownloading(null)
+    }
+  }
 
   if (status !== "authenticated" || !config || installed) return null
+
+  const showDownload =
+    !mobile && (available === null || available.length > 0)
+
+  const hasResult =
+    available !== null
 
   return (
     <Modal open={open} onClose={() => handleClose(false)} title={config.name} size="sm">
@@ -223,54 +271,95 @@ export default function RoleInstallModal() {
               </a>
             )}
           </div>
-        ) : detectedOS !== "other" ? (
-          <div className="space-y-2">
-            <button
-              onClick={() => triggerDownload(detectedOS)}
-              disabled={downloading === detectedOS}
-              className="sa-btn sa-btn-primary w-full justify-center gap-2.5 text-sm py-2.5 disabled:opacity-60"
-            >
-              <PlatformIcon platform={detectedOS} />
-              {downloading === detectedOS ? "Descargando..." : `Descargar para ${platformLabels[detectedOS]}`}
-            </button>
-            <p className="text-[11px] text-muted-foreground text-center">
-              {`educonecta-${config.electronRole}${platformExtensions[detectedOS]}`}
-            </p>
-            <div className="flex gap-2 pt-1">
-              {(["win", "mac", "linux"] as Platform[])
-                .filter((p) => p !== detectedOS)
-                .map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => triggerDownload(p)}
-                    disabled={downloading === p}
-                    className="sa-btn sa-btn-ghost flex-1 justify-center gap-1.5 text-xs py-2 disabled:opacity-60"
-                  >
-                    <PlatformIcon platform={p} />
-                    {platformLabels[p]}
-                  </button>
-                ))}
-            </div>
-          </div>
         ) : (
           <div className="space-y-2">
-            <p className="text-xs text-muted-foreground text-center">
-              Selecciona tu sistema operativo:
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              {(["win", "mac", "linux"] as Platform[]).map((p) => (
+            {!hasResult ? (
+              <div className="flex items-center justify-center gap-2 py-4 text-xs text-muted-foreground">
+                <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+                Verificando plataformas disponibles...
+              </div>
+            ) : available.length === 0 ? (
+              <div className="sa-surface-flat p-4 rounded-2xl text-center">
+                <p className="text-sm font-medium text-foreground">Instalador no disponible</p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  No hay instaladores disponibles para este rol. Usa la versión web desde el navegador.
+                </p>
+              </div>
+            ) : detectedOS !== "other" && available.includes(detectedOS) ? (
+              <>
                 <button
-                  key={p}
-                  onClick={() => triggerDownload(p)}
-                  disabled={downloading === p}
-                  className="sa-btn sa-btn-outline flex-col gap-1.5 py-3 text-xs disabled:opacity-60"
+                  onClick={() => handleDownload(detectedOS)}
+                  disabled={downloading !== null}
+                  className="sa-btn sa-btn-primary w-full justify-center gap-2.5 text-sm py-2.5 disabled:opacity-60"
                 >
-                  <PlatformIcon platform={p} />
-                  {platformLabels[p]}
-                  {downloading === p && "..."}
+                  {downloading === detectedOS ? (
+                    <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                    </svg>
+                  ) : (
+                    <PlatformIcon platform={detectedOS} />
+                  )}
+                  {downloading === detectedOS ? "Descargando..." : `Descargar para ${platformLabels[detectedOS]}`}
                 </button>
-              ))}
-            </div>
+                <p className="text-[11px] text-muted-foreground text-center">
+                  {`educonecta-${config.electronRole}${platformExtensions[detectedOS]}`}
+                </p>
+                {available.filter((p) => p !== detectedOS).length > 0 && (
+                  <div className="flex gap-2 pt-1">
+                    {available
+                      .filter((p) => p !== detectedOS)
+                      .map((p) => (
+                        <button
+                          key={p}
+                          onClick={() => handleDownload(p)}
+                          disabled={downloading !== null}
+                          className="sa-btn sa-btn-ghost flex-1 justify-center gap-1.5 text-xs py-2 disabled:opacity-60"
+                        >
+                          <PlatformIcon platform={p} />
+                          {platformLabels[p]}
+                        </button>
+                      ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <p className="text-xs text-muted-foreground text-center">
+                  {detectedOS !== "other" && !available.includes(detectedOS)
+                    ? `Instalador no disponible para ${platformLabels[detectedOS]}. Selecciona otra plataforma:`
+                    : "Selecciona tu sistema operativo:"}
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {allPlatforms.map((p) => {
+                    const platAvailable = available.includes(p)
+                    return (
+                      <button
+                        key={p}
+                        onClick={() => platAvailable && handleDownload(p)}
+                        disabled={!platAvailable || downloading !== null}
+                        className={`flex-col gap-1.5 py-3 text-xs disabled:opacity-40 ${
+                          platAvailable ? "sa-btn sa-btn-outline" : "sa-btn sa-btn-ghost cursor-not-allowed"
+                        }`}
+                      >
+                        <PlatformIcon platform={p} />
+                        {platformLabels[p]}
+                        {!platAvailable && (
+                          <span className="text-[10px] text-muted-foreground">—</span>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              </>
+            )}
+
+            {error && (
+              <div className="sa-surface-flat p-3 rounded-2xl text-xs text-red-500 dark:text-red-400 text-center leading-relaxed border border-red-500/20">
+                {error}
+              </div>
+            )}
           </div>
         )}
 
