@@ -4,10 +4,6 @@ import path from "path"
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3"
 import { getSupabaseAdmin } from "./supabase"
 
-// ──────────────────────────────────────────
-// File upload (Supabase Storage)
-// ──────────────────────────────────────────
-
 const BUCKET = "institution-files"
 
 export type UploadedFile = {
@@ -71,7 +67,7 @@ export async function getFileUrl(p: string, expiresIn = 3600): Promise<string | 
 }
 
 // ──────────────────────────────────────────
-// Installer storage (local / S3 / Supabase)
+// Installer distribution
 // ──────────────────────────────────────────
 
 export type InstallerPlatform = "win" | "linux" | "mac"
@@ -83,10 +79,10 @@ export type InstallerResult = {
   signedUrl?: string
 } | null
 
-const platformExtensions: Record<InstallerPlatform, string> = {
-  win: "-setup.exe",
-  linux: ".AppImage",
-  mac: ".dmg",
+const installerFilenames: Record<InstallerPlatform, string> = {
+  win: "educonecta-setup.exe",
+  linux: "educonecta.AppImage",
+  mac: "educonecta.dmg",
 }
 
 const contentTypes: Record<string, string> = {
@@ -96,29 +92,16 @@ const contentTypes: Record<string, string> = {
   AppImage: "application/x-appimage",
 }
 
-const roleToElectron: Record<string, string> = {
-  SUPER_ADMIN: "dev",
-  INSTITUTIONAL_ADMIN: "director",
-  TEACHER: "docente",
-  PARENT: "padre",
-  STUDENT: "alumno",
-}
-
-export function getElectronRole(dashboardRole: string): string | null {
-  return roleToElectron[dashboardRole] ?? null
-}
-
 export function detectPlatform(userAgent: string): InstallerPlatform {
   if (userAgent.includes("Windows")) return "win"
-  if (userAgent.includes("Mac OS") || userAgent.includes("iPad") || userAgent.includes("iPhone")) return "mac"
   if (userAgent.includes("Android")) return "win"
+  if (userAgent.includes("Mac OS") || userAgent.includes("iPad") || userAgent.includes("iPhone")) return "mac"
   if (userAgent.includes("Mac")) return "mac"
   return "linux"
 }
 
-export function getInstallerFilename(electronRole: string, platform: InstallerPlatform): string {
-  const ext = platformExtensions[platform]
-  return `educonecta-${electronRole}${ext}`
+export function getInstallerFilename(platform: InstallerPlatform): string {
+  return installerFilenames[platform]
 }
 
 function getContentType(filename: string): string {
@@ -128,7 +111,7 @@ function getContentType(filename: string): string {
 }
 
 export interface InstallerStorage {
-  getInstaller(electronRole: string, platform: InstallerPlatform): Promise<InstallerResult>
+  getInstaller(platform: InstallerPlatform): Promise<InstallerResult>
 }
 
 class LocalInstallerStorage implements InstallerStorage {
@@ -138,8 +121,8 @@ class LocalInstallerStorage implements InstallerStorage {
     this.dir = dir
   }
 
-  async getInstaller(electronRole: string, platform: InstallerPlatform): Promise<InstallerResult> {
-    const filename = getInstallerFilename(electronRole, platform)
+  async getInstaller(platform: InstallerPlatform): Promise<InstallerResult> {
+    const filename = getInstallerFilename(platform)
     const filePath = path.join(this.dir, filename)
 
     if (!existsSync(filePath)) return null
@@ -170,8 +153,8 @@ class S3InstallerStorage implements InstallerStorage {
     })
   }
 
-  async getInstaller(electronRole: string, platform: InstallerPlatform): Promise<InstallerResult> {
-    const filename = getInstallerFilename(electronRole, platform)
+  async getInstaller(platform: InstallerPlatform): Promise<InstallerResult> {
+    const filename = getInstallerFilename(platform)
 
     try {
       const response = await this.client.send(
@@ -204,15 +187,14 @@ class SupabaseInstallerStorage implements InstallerStorage {
     this.bucket = process.env.SUPABASE_INSTALLER_BUCKET || "installers"
   }
 
-  async getInstaller(electronRole: string, platform: InstallerPlatform): Promise<InstallerResult> {
-    const filename = getInstallerFilename(electronRole, platform)
-    const key = `${electronRole}/${filename}`
+  async getInstaller(platform: InstallerPlatform): Promise<InstallerResult> {
+    const filename = getInstallerFilename(platform)
 
     try {
       const { data } = await getSupabaseAdmin()
         .storage
         .from(this.bucket)
-        .createSignedUrl(key, 3600)
+        .createSignedUrl(filename, 3600)
 
       if (!data?.signedUrl) return null
 

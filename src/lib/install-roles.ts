@@ -1,7 +1,6 @@
 export type InstallRoleConfig = {
   slug: string
   dashboardRole: string
-  electronRole: string
   name: string
   title: string
   description: string
@@ -12,7 +11,6 @@ export const installRoles: InstallRoleConfig[] = [
   {
     slug: "developer",
     dashboardRole: "SUPER_ADMIN",
-    electronRole: "dev",
     name: "Desarrollador",
     title: "Panel de Desarrollo",
     description: "Métricas de rendimiento, logs y estado del sistema en tiempo real.",
@@ -26,7 +24,6 @@ export const installRoles: InstallRoleConfig[] = [
   {
     slug: "super-admin",
     dashboardRole: "SUPER_ADMIN",
-    electronRole: "dev",
     name: "Super Admin",
     title: "Panel de Super Administración",
     description: "Gestión global de instituciones, usuarios y configuración del sistema.",
@@ -40,7 +37,6 @@ export const installRoles: InstallRoleConfig[] = [
   {
     slug: "director",
     dashboardRole: "INSTITUTIONAL_ADMIN",
-    electronRole: "director",
     name: "Director",
     title: "Panel del Administrador",
     description: "Gestión institucional completa: usuarios, cursos, reportes y configuración general.",
@@ -54,7 +50,6 @@ export const installRoles: InstallRoleConfig[] = [
   {
     slug: "docente",
     dashboardRole: "TEACHER",
-    electronRole: "docente",
     name: "Docente",
     title: "Panel del Docente",
     description: "Registro de calificaciones, asistencia, tareas y comunicación con padres.",
@@ -68,7 +63,6 @@ export const installRoles: InstallRoleConfig[] = [
   {
     slug: "padres",
     dashboardRole: "PARENT",
-    electronRole: "padre",
     name: "Padre de Familia",
     title: "Panel del Padre",
     description: "Seguimiento académico de tus hijos: notas, asistencia y comunicados.",
@@ -82,7 +76,6 @@ export const installRoles: InstallRoleConfig[] = [
   {
     slug: "alumnos",
     dashboardRole: "STUDENT",
-    electronRole: "alumno",
     name: "Alumno",
     title: "Panel del Alumno",
     description: "Cursos, tareas pendientes, horarios y calificaciones en un solo lugar.",

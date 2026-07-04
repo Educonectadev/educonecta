@@ -66,7 +66,7 @@ export default function RoleInstallPage({ config }: { config: InstallRoleConfig 
   function handleDownload() {
     setDownloading(true)
     const p = platform === "other" ? "win" : platform
-    window.location.href = `/api/download/public/${config.electronRole}?platform=${p}`
+    window.location.href = `/api/download?platform=${p}`
   }
 
   const platformLabel =
