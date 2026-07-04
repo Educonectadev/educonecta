@@ -33,18 +33,27 @@ export async function GET(
   }
 
   if (!result) {
+    const baseUrl = process.env.INSTALLER_BASE_URL
+    if (baseUrl) {
+      const filename = getInstallerFilename(role, platform as any)
+      return NextResponse.redirect(`${baseUrl.replace(/\/$/, "")}/${filename}`)
+    }
     return NextResponse.json(
       { error: "Instalador no disponible para esta plataforma" },
       { status: 404 },
     )
   }
 
-  return new NextResponse(new Uint8Array(result.buffer), {
+  if (result.signedUrl) {
+    return NextResponse.redirect(result.signedUrl)
+  }
+
+  return new NextResponse(new Uint8Array(result.buffer!), {
     status: 200,
     headers: {
       "Content-Type": result.contentType,
       "Content-Disposition": `attachment; filename="${result.filename}"`,
-      "Content-Length": String(result.buffer.length),
+      "Content-Length": String(result.buffer!.length),
     },
   })
 }

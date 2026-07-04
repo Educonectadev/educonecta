@@ -31,12 +31,16 @@ export async function GET(request: Request) {
     )
   }
 
-  return new NextResponse(new Uint8Array(result.buffer), {
+  if (result.signedUrl) {
+    return NextResponse.redirect(result.signedUrl)
+  }
+
+  return new NextResponse(new Uint8Array(result.buffer!), {
     status: 200,
     headers: {
       "Content-Type": result.contentType,
       "Content-Disposition": `attachment; filename="${result.filename}"`,
-      "Content-Length": String(result.buffer.length),
+      "Content-Length": String(result.buffer!.length),
     },
   })
 }

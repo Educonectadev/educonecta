@@ -71,15 +71,16 @@ export async function getFileUrl(p: string, expiresIn = 3600): Promise<string | 
 }
 
 // ──────────────────────────────────────────
-// Installer storage (local / S3)
+// Installer storage (local / S3 / Supabase)
 // ──────────────────────────────────────────
 
 export type InstallerPlatform = "win" | "linux" | "mac"
 
 export type InstallerResult = {
-  buffer: Buffer
+  buffer?: Buffer
   filename: string
   contentType: string
+  signedUrl?: string
 } | null
 
 const platformExtensions: Record<InstallerPlatform, string> = {
@@ -196,6 +197,36 @@ class S3InstallerStorage implements InstallerStorage {
   }
 }
 
+class SupabaseInstallerStorage implements InstallerStorage {
+  private bucket: string
+
+  constructor() {
+    this.bucket = process.env.SUPABASE_INSTALLER_BUCKET || "installers"
+  }
+
+  async getInstaller(electronRole: string, platform: InstallerPlatform): Promise<InstallerResult> {
+    const filename = getInstallerFilename(electronRole, platform)
+    const key = `${electronRole}/${filename}`
+
+    try {
+      const { data } = await getSupabaseAdmin()
+        .storage
+        .from(this.bucket)
+        .createSignedUrl(key, 3600)
+
+      if (!data?.signedUrl) return null
+
+      return {
+        signedUrl: data.signedUrl,
+        filename,
+        contentType: getContentType(filename),
+      }
+    } catch {
+      return null
+    }
+  }
+}
+
 let storageInstance: InstallerStorage | null = null
 
 export function getInstallerStorage(): InstallerStorage {
@@ -205,6 +236,9 @@ export function getInstallerStorage(): InstallerStorage {
     switch (provider) {
       case "s3":
         storageInstance = new S3InstallerStorage()
+        break
+      case "supabase":
+        storageInstance = new SupabaseInstallerStorage()
         break
       case "local":
       default:
