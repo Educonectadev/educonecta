@@ -64,12 +64,13 @@ export default function RoleInstallToast() {
   const [deferredPrompt, setDeferredState] = useState<any>(null)
   const [installed, setInstalled] = useState(false)
   const [downloading, setDownloading] = useState<Platform | null>(null)
-  const [nativeAvailable, setNativeAvailable] = useState<boolean | null>(null)
+  const [fallbackToPwa, setFallbackToPwa] = useState(false)
 
   const platform = detectPlatform()
   const isDesktop = desktopPlatforms.includes(platform)
   const isAndroid = platform === "android"
   const isIOS = platform === "ios"
+  const dl = isDesktop ? platformToDownload(platform) : null
 
   useEffect(() => {
     if (isStandalone()) {
@@ -99,29 +100,9 @@ export default function RoleInstallToast() {
   const slug = session?.user?.role ? roleSlugMap[session.user.role] : undefined
   const config = slug ? getInstallRoleBySlug(slug) : undefined
 
-  useEffect(() => {
-    if (!visible || !config || !isDesktop) return
-    setNativeAvailable(null)
-    const dl = platformToDownload(platform)
-    if (!dl) return
-    const electronRole = config.electronRole
-    let cancelled = false
-    async function check() {
-      try {
-        const res = await fetch(`/api/download/public/${electronRole}?platform=${dl}&check=1`)
-        if (cancelled) return
-        const data = await res.json()
-        if (!cancelled) setNativeAvailable(!!data.available)
-      } catch {
-        if (!cancelled) setNativeAvailable(false)
-      }
-    }
-    check()
-    return () => { cancelled = true }
-  }, [visible, config, isDesktop, platform])
-
   function dismiss(permanent = false) {
     setVisible(false)
+    setFallbackToPwa(false)
     if (permanent && slug) {
       localStorage.setItem(DISMISS_PREFIX + slug, "true")
     }
@@ -140,16 +121,11 @@ export default function RoleInstallToast() {
   }
 
   async function handleDownload() {
-    if (!config) return
-    const dl = platformToDownload(platform)
-    if (!dl) return
+    if (!config || !dl) return
     setDownloading(dl)
     try {
       const res = await fetch(`/api/download/public/${config.electronRole}?platform=${dl}`)
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({ error: "Error al descargar" }))
-        throw new Error(data.error || "Error al descargar")
-      }
+      if (!res.ok) throw new Error()
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
@@ -160,7 +136,7 @@ export default function RoleInstallToast() {
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
     } catch {
-      setNativeAvailable(false)
+      setFallbackToPwa(true)
     } finally {
       setDownloading(null)
     }
@@ -169,9 +145,8 @@ export default function RoleInstallToast() {
   if (status !== "authenticated" || !config || installed) return null
   if (!visible) return null
 
-  const usePwa = isAndroid || isIOS || (isDesktop && nativeAvailable === false)
-  const useNative = isDesktop && nativeAvailable === true
-  const checkingNative = isDesktop && nativeAvailable === null
+  const useNative = isDesktop && !fallbackToPwa
+  const usePwa = isAndroid || isIOS || fallbackToPwa
 
   const subtitle = useNative
     ? `Descargar para ${platformLabel[platform]}`
@@ -179,9 +154,7 @@ export default function RoleInstallToast() {
       ? "Instala la app desde el navegador"
       : isIOS
         ? "Añade la app a tu pantalla de inicio"
-        : checkingNative
-          ? "Verificando disponibilidad..."
-          : "Instala la app desde el navegador"
+        : "Instala la app desde el navegador"
 
   return (
     <div className="fixed bottom-20 md:bottom-8 right-4 left-4 md:left-auto md:right-8 z-50 mx-auto md:mx-0 max-w-sm animate-fade-in">
