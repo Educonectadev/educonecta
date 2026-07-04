@@ -64,7 +64,7 @@ export default function RoleInstallToast() {
   const [deferredPrompt, setDeferredState] = useState<any>(null)
   const [installed, setInstalled] = useState(false)
   const [downloading, setDownloading] = useState<Platform | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [nativeAvailable, setNativeAvailable] = useState<boolean | null>(null)
 
   const platform = detectPlatform()
   const isDesktop = desktopPlatforms.includes(platform)
@@ -99,9 +99,28 @@ export default function RoleInstallToast() {
   const slug = session?.user?.role ? roleSlugMap[session.user.role] : undefined
   const config = slug ? getInstallRoleBySlug(slug) : undefined
 
+  useEffect(() => {
+    if (!visible || !config || !isDesktop) return
+    setNativeAvailable(null)
+    const dl = platformToDownload(platform)
+    if (!dl) return
+    let cancelled = false
+    async function check() {
+      try {
+        const res = await fetch(`/api/download/public/${config.electronRole}?platform=${dl}&check=1`)
+        if (cancelled) return
+        const data = await res.json()
+        if (!cancelled) setNativeAvailable(!!data.available)
+      } catch {
+        if (!cancelled) setNativeAvailable(false)
+      }
+    }
+    check()
+    return () => { cancelled = true }
+  }, [visible, config, isDesktop, platform])
+
   function dismiss(permanent = false) {
     setVisible(false)
-    setError(null)
     if (permanent && slug) {
       localStorage.setItem(DISMISS_PREFIX + slug, "true")
     }
@@ -124,7 +143,6 @@ export default function RoleInstallToast() {
     const dl = platformToDownload(platform)
     if (!dl) return
     setDownloading(dl)
-    setError(null)
     try {
       const res = await fetch(`/api/download/public/${config.electronRole}?platform=${dl}`)
       if (!res.ok) {
@@ -140,8 +158,8 @@ export default function RoleInstallToast() {
       a.click()
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al descargar")
+    } catch {
+      setNativeAvailable(false)
     } finally {
       setDownloading(null)
     }
@@ -150,23 +168,23 @@ export default function RoleInstallToast() {
   if (status !== "authenticated" || !config || installed) return null
   if (!visible) return null
 
-  const subtitle = isDesktop
+  const usePwa = isAndroid || isIOS || (isDesktop && nativeAvailable === false)
+  const useNative = isDesktop && nativeAvailable === true
+  const checkingNative = isDesktop && nativeAvailable === null
+
+  const subtitle = useNative
     ? `Descargar para ${platformLabel[platform]}`
     : isAndroid
       ? "Instala la app desde el navegador"
       : isIOS
         ? "Añade la app a tu pantalla de inicio"
-        : "Descarga la aplicación"
+        : checkingNative
+          ? "Verificando disponibilidad..."
+          : "Instala la app desde el navegador"
 
   return (
     <div className="fixed bottom-20 md:bottom-8 right-4 left-4 md:left-auto md:right-8 z-50 mx-auto md:mx-0 max-w-sm animate-fade-in">
       <div className="sa-surface shadow-lg p-4 rounded-2xl border border-[var(--surface-border)]">
-        {error && (
-          <div className="mb-3 px-3 py-2 rounded-xl text-xs text-red-500 dark:text-red-400 bg-red-500/10 border border-red-500/20 text-center">
-            {error}
-          </div>
-        )}
-
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[var(--accent)]/15 flex items-center justify-center shrink-0">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -184,7 +202,7 @@ export default function RoleInstallToast() {
             <p className="text-xs text-muted-foreground">{subtitle}</p>
           </div>
 
-          {isDesktop ? (
+          {useNative ? (
             <button
               onClick={handleDownload}
               disabled={downloading !== null}
@@ -203,7 +221,7 @@ export default function RoleInstallToast() {
               )}
               {platformLabel[platform]}
             </button>
-          ) : isAndroid ? (
+          ) : usePwa ? (
             deferredPrompt ? (
               <button
                 onClick={handlePwaInstall}
@@ -213,13 +231,11 @@ export default function RoleInstallToast() {
               </button>
             ) : (
               <span className="text-[10px] text-muted-foreground max-w-32 text-right leading-tight shrink-0">
-                Menú → "Instalar app"
+                {isIOS
+                  ? 'Compartir → "Añadir a pantalla de inicio"'
+                  : 'Menú → "Instalar app"'}
               </span>
             )
-          ) : isIOS ? (
-            <span className="text-[10px] text-muted-foreground max-w-32 text-right leading-tight shrink-0">
-              Compartir → "Añadir a pantalla de inicio"
-            </span>
           ) : null}
 
           <button
