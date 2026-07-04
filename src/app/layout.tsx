@@ -3,6 +3,7 @@ import Script from "next/script"
 import Provider from "@/components/Provider"
 import InstallPrompt from "@/components/InstallPrompt"
 import PushSetupDialog from "@/components/PushSetupDialog"
+import RoleInstallModal from "@/components/RoleInstallModal"
 import ThemeBootstrap from "@/components/ThemeBootstrap"
 import ToastProvider from "@/components/ToastProvider"
 import "./globals.css"
@@ -75,6 +76,7 @@ export default function RootLayout({
         </Provider>
         <InstallPrompt />
         <PushSetupDialog />
+        <RoleInstallModal />
       </body>
     </html>
   )
