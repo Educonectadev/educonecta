@@ -3,7 +3,7 @@
 import { useRouter, usePathname } from "next/navigation"
 import { ToggleButton } from "@heroui/react"
 import { themes } from "@/lib/themes"
-import DownloadAppButton from "./DownloadAppButton"
+
 
 interface NavLink {
   href: string
@@ -50,9 +50,6 @@ export default function SuperAdminSidebar({
             </ToggleButton>
           )
         })}
-        <div className="mt-auto pt-4 border-t border-default-200 dark:border-default-50">
-          <DownloadAppButton />
-        </div>
       </nav>
     </aside>
   )

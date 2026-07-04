@@ -3,7 +3,7 @@
 import { useRouter, usePathname } from "next/navigation"
 import { ToggleButton } from "@heroui/react"
 import { themes } from "@/lib/themes"
-import DownloadAppButton from "@/components/DownloadAppButton"
+
 
 const links = [
   { href: "/dashboard/admin", label: "Dashboard", icon: "dashboard" },
@@ -51,9 +51,6 @@ export default function AdminSidebar() {
             </ToggleButton>
           )
         })}
-        <div className="mt-auto pt-4 border-t border-default-200 dark:border-default-50">
-          <DownloadAppButton />
-        </div>
       </nav>
     </aside>
   )

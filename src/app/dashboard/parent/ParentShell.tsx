@@ -3,7 +3,7 @@
 import Navbar from "@/components/Navbar"
 import BottomNav from "@/components/BottomNav"
 import DashboardContent from "@/components/DashboardContent"
-import DownloadAppButton from "@/components/DownloadAppButton"
+
 import { useRouter, usePathname } from "next/navigation"
 import { ToggleButton } from "@heroui/react"
 import TourDashboardShell from "@/lib/tour/TourDashboardShell"
@@ -68,9 +68,6 @@ export default function ParentShell({ children }: { children: React.ReactNode })
                   </ToggleButton>
                 )
               })}
-              <div className="mt-auto pt-4 border-t border-default-200 dark:border-default-50">
-                <DownloadAppButton icon="download" />
-              </div>
             </nav>
           </aside>
           <DashboardContent>
