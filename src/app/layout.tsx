@@ -73,10 +73,10 @@ export default function RootLayout({
         <Provider>
           <ToastProvider />
           {children}
+          <RoleInstallToast />
         </Provider>
         <InstallPrompt />
         <PushSetupDialog />
-        <RoleInstallToast />
       </body>
     </html>
   )
