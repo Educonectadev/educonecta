@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useSession } from "@/lib/auth-context"
 import { getDeferredPrompt, onDeferredPrompt } from "@/lib/deferred-prompt"
 import { getInstallRoleBySlug } from "@/lib/install-roles"
@@ -14,7 +14,21 @@ const roleSlugMap: Record<string, string> = {
   STUDENT: "alumnos",
 }
 
-function detectPlatform(): "win" | "mac" | "linux" | "other" {
+type Platform = "win" | "mac" | "linux"
+
+const platformExtensions: Record<Platform, string> = {
+  win: "-setup.exe",
+  mac: ".dmg",
+  linux: ".AppImage",
+}
+
+const platformLabels: Record<Platform, string> = {
+  win: "Windows",
+  mac: "macOS",
+  linux: "Linux",
+}
+
+function detectOS(): Platform | "other" {
   if (typeof navigator === "undefined") return "other"
   const ua = navigator.userAgent
   if (ua.includes("Windows")) return "win"
@@ -33,13 +47,54 @@ function isStandalone(): boolean {
   return window.matchMedia("(display-mode: standalone)").matches || (navigator as any).standalone === true
 }
 
+function isIOS(): boolean {
+  if (typeof navigator === "undefined") return false
+  return /iPhone|iPad|iPod/i.test(navigator.userAgent)
+}
+
+function getInstallerUrl(role: string, platform: Platform): string {
+  return `/api/download/public/${role}?platform=${platform}`
+}
+
 const DISMISS_PREFIX = "ec-role-modal-dismissed-"
+
+function PlatformIcon({ platform }: { platform: Platform }) {
+  if (platform === "win") {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+        <line x1="3" y1="9" x2="21" y2="9" />
+        <line x1="9" y1="21" x2="9" y2="9" />
+      </svg>
+    )
+  }
+  if (platform === "mac") {
+    return (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+        <path d="M2 17l10 5 10-5" />
+        <path d="M2 12l10 5 10-5" />
+      </svg>
+    )
+  }
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 8V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4" />
+      <path d="M4 16v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />
+      <path d="M12 2v8" />
+      <path d="M8 10h8" />
+      <path d="M8 14h8" />
+      <path d="M8 18h8" />
+    </svg>
+  )
+}
 
 export default function RoleInstallModal() {
   const { data: session, status } = useSession()
   const [open, setOpen] = useState(false)
   const [deferredPrompt, setDeferredState] = useState<any>(null)
   const [installed, setInstalled] = useState(false)
+  const [downloading, setDownloading] = useState<Platform | null>(null)
 
   useEffect(() => {
     if (isStandalone()) {
@@ -96,19 +151,23 @@ export default function RoleInstallModal() {
     }
   }
 
-  function handleDownload() {
+  const triggerDownload = useCallback((platform: Platform) => {
     if (!config) return
-    const platform = detectPlatform() === "other" ? "win" : detectPlatform()
-    window.location.href = `/api/download/public/${config.electronRole}?platform=${platform}`
-    handleClose(true)
-  }
+    setDownloading(platform)
+    const a = document.createElement("a")
+    a.href = getInstallerUrl(config.electronRole, platform)
+    a.download = `educonecta-${config.electronRole}${platformExtensions[platform]}`
+    a.rel = "noopener noreferrer"
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    setTimeout(() => setDownloading(null), 2000)
+  }, [config])
+
+  const detectedOS = detectOS()
+  const mobile = isMobile()
 
   if (status !== "authenticated" || !config || installed) return null
-
-  const mobile = isMobile()
-  const platform = detectPlatform()
-  const platformLabel =
-    platform === "win" ? "Windows" : platform === "mac" ? "macOS" : platform === "linux" ? "Linux" : "tu dispositivo"
 
   return (
     <Modal open={open} onClose={() => handleClose(false)} title={config.name} size="sm">
@@ -125,60 +184,106 @@ export default function RoleInstallModal() {
             </svg>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-foreground">Descargar {config.name}</p>
-            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+            <p className="text-base font-semibold text-foreground">{config.title}</p>
+            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
               {mobile
                 ? "Instala la aplicación en tu dispositivo para acceder más rápido."
-                : `Descarga el instalador nativo para ${platformLabel} y aprovecha al máximo EduConecta.`}
+                : "Descarga el instalador nativo y aprovecha al máximo EduConecta."}
             </p>
           </div>
         </div>
 
-        <div className="space-y-2">
-          {mobile ? (
-            deferredPrompt ? (
-              <button onClick={handlePwaInstall} className="sa-btn sa-btn-primary w-full justify-center text-sm py-2.5">
+        {mobile ? (
+          <div className="space-y-2">
+            {deferredPrompt ? (
+              <button
+                onClick={handlePwaInstall}
+                className="sa-btn sa-btn-primary w-full justify-center text-sm py-2.5"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
                 Instalar aplicación
               </button>
             ) : (
               <div className="sa-surface-flat p-3 rounded-2xl text-xs text-muted-foreground text-center leading-relaxed">
-                {/iPhone|iPad|iPod/i.test(navigator.userAgent)
-                  ? 'Presiona Compartir y luego "Agregar a pantalla de inicio".'
+                {isIOS()
+                  ? `Presiona Compartir y luego "Agregar a pantalla de inicio".`
                   : 'Abre el menú del navegador y selecciona "Instalar app".'}
               </div>
-            )
-          ) : (
-            <button onClick={handleDownload} className="sa-btn sa-btn-primary w-full justify-center text-sm py-2.5">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              Descargar para {platformLabel}
-            </button>
-          )}
-
-          {config && (
-            <a
-              href={"/" + slug}
-              className="sa-btn sa-btn-ghost w-full justify-center text-xs py-2"
+            )}
+            {config && (
+              <a
+                href={"/" + slug}
+                className="sa-btn sa-btn-ghost w-full justify-center text-xs py-2"
+              >
+                Ver más información
+              </a>
+            )}
+          </div>
+        ) : detectedOS !== "other" ? (
+          <div className="space-y-2">
+            <button
+              onClick={() => triggerDownload(detectedOS)}
+              disabled={downloading === detectedOS}
+              className="sa-btn sa-btn-primary w-full justify-center gap-2.5 text-sm py-2.5 disabled:opacity-60"
             >
-              Ver página de instalación
-            </a>
-          )}
-        </div>
+              <PlatformIcon platform={detectedOS} />
+              {downloading === detectedOS ? "Descargando..." : `Descargar para ${platformLabels[detectedOS]}`}
+            </button>
+            <p className="text-[11px] text-muted-foreground text-center">
+              {`educonecta-${config.electronRole}${platformExtensions[detectedOS]}`}
+            </p>
+            <div className="flex gap-2 pt-1">
+              {(["win", "mac", "linux"] as Platform[])
+                .filter((p) => p !== detectedOS)
+                .map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => triggerDownload(p)}
+                    disabled={downloading === p}
+                    className="sa-btn sa-btn-ghost flex-1 justify-center gap-1.5 text-xs py-2 disabled:opacity-60"
+                  >
+                    <PlatformIcon platform={p} />
+                    {platformLabels[p]}
+                  </button>
+                ))}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground text-center">
+              Selecciona tu sistema operativo:
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              {(["win", "mac", "linux"] as Platform[]).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => triggerDownload(p)}
+                  disabled={downloading === p}
+                  className="sa-btn sa-btn-outline flex-col gap-1.5 py-3 text-xs disabled:opacity-60"
+                >
+                  <PlatformIcon platform={p} />
+                  {platformLabels[p]}
+                  {downloading === p && "..."}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
-        <div className="flex items-center gap-2 pt-1">
+        <div className="flex items-center justify-between pt-1 border-t border-[var(--surface-border)]">
           <button
             onClick={() => handleClose(true)}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
             No volver a mostrar
           </button>
-          <span className="text-xs text-muted-foreground">·</span>
           <button
             onClick={() => handleClose(false)}
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="text-xs font-medium text-foreground hover:text-foreground/80 transition-colors"
           >
             Ahora no
           </button>
