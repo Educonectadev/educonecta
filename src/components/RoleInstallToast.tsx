@@ -14,14 +14,7 @@ const roleSlugMap: Record<string, string> = {
 }
 
 type Platform = "win" | "mac" | "linux"
-
-const allPlatforms: Platform[] = ["win", "mac", "linux"]
-
-const platformLabels: Record<Platform, string> = {
-  win: "Windows",
-  mac: "macOS",
-  linux: "Linux",
-}
+type PlatformType = "windows" | "macos" | "linux" | "android" | "ios" | "other"
 
 const platformExtensions: Record<Platform, string> = {
   win: "-setup.exe",
@@ -29,18 +22,24 @@ const platformExtensions: Record<Platform, string> = {
   linux: ".AppImage",
 }
 
-function detectOS(): Platform | "other" {
+const desktopPlatforms: PlatformType[] = ["windows", "macos", "linux"]
+
+function detectPlatform(): PlatformType {
   if (typeof navigator === "undefined") return "other"
   const ua = navigator.userAgent
-  if (ua.includes("Windows")) return "win"
-  if (ua.includes("Mac")) return "mac"
+  if (ua.includes("Windows")) return "windows"
+  if (ua.includes("Android")) return "android"
+  if (/iPhone|iPad|iPod/i.test(ua)) return "ios"
+  if (ua.includes("Mac")) return "macos"
   if (ua.includes("Linux")) return "linux"
   return "other"
 }
 
-function isMobile(): boolean {
-  if (typeof navigator === "undefined") return false
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+function platformToDownload(p: PlatformType): Platform | null {
+  if (p === "windows") return "win"
+  if (p === "macos") return "mac"
+  if (p === "linux") return "linux"
+  return null
 }
 
 function isStandalone(): boolean {
@@ -48,42 +47,15 @@ function isStandalone(): boolean {
   return window.matchMedia("(display-mode: standalone)").matches || (navigator as any).standalone === true
 }
 
-function isIOS(): boolean {
-  if (typeof navigator === "undefined") return false
-  return /iPhone|iPad|iPod/i.test(navigator.userAgent)
-}
-
 const DISMISS_PREFIX = "ec-role-toast-dismissed-"
 
-function PlatformIcon({ platform }: { platform: Platform }) {
-  if (platform === "win") {
-    return (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-        <line x1="3" y1="9" x2="21" y2="9" />
-        <line x1="9" y1="21" x2="9" y2="9" />
-      </svg>
-    )
-  }
-  if (platform === "mac") {
-    return (
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-        <path d="M2 17l10 5 10-5" />
-        <path d="M2 12l10 5 10-5" />
-      </svg>
-    )
-  }
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M4 8V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4" />
-      <path d="M4 16v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" />
-      <path d="M12 2v8" />
-      <path d="M8 10h8" />
-      <path d="M8 14h8" />
-      <path d="M8 18h8" />
-    </svg>
-  )
+const platformLabel: Record<PlatformType, string> = {
+  windows: "Windows",
+  macos: "macOS",
+  linux: "Linux",
+  android: "Android",
+  ios: "iOS",
+  other: "",
 }
 
 export default function RoleInstallToast() {
@@ -93,7 +65,11 @@ export default function RoleInstallToast() {
   const [installed, setInstalled] = useState(false)
   const [downloading, setDownloading] = useState<Platform | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [available, setAvailable] = useState<Platform[] | null>(null)
+
+  const platform = detectPlatform()
+  const isDesktop = desktopPlatforms.includes(platform)
+  const isAndroid = platform === "android"
+  const isIOS = platform === "ios"
 
   useEffect(() => {
     if (isStandalone()) {
@@ -122,30 +98,6 @@ export default function RoleInstallToast() {
 
   const slug = session?.user?.role ? roleSlugMap[session.user.role] : undefined
   const config = slug ? getInstallRoleBySlug(slug) : undefined
-  const mobile = isMobile()
-  const detectedOS = detectOS()
-
-  useEffect(() => {
-    if (!visible || !config || mobile) return
-    const electronRole = config.electronRole
-    let cancelled = false
-    async function check() {
-      const results: Platform[] = []
-      for (const p of allPlatforms) {
-        try {
-          const res = await fetch(`/api/download/public/${electronRole}?platform=${p}&check=1`)
-          if (cancelled) return
-          if (res.ok) {
-            const data = await res.json()
-            if (data.available) results.push(p)
-          }
-        } catch { /* ignore */ }
-      }
-      if (!cancelled) setAvailable(results)
-    }
-    check()
-    return () => { cancelled = true }
-  }, [visible, config, mobile])
 
   function dismiss(permanent = false) {
     setVisible(false)
@@ -167,12 +119,14 @@ export default function RoleInstallToast() {
     }
   }
 
-  async function handleDownload(platform: Platform) {
+  async function handleDownload() {
     if (!config) return
-    setDownloading(platform)
+    const dl = platformToDownload(platform)
+    if (!dl) return
+    setDownloading(dl)
     setError(null)
     try {
-      const res = await fetch(`/api/download/public/${config.electronRole}?platform=${platform}`)
+      const res = await fetch(`/api/download/public/${config.electronRole}?platform=${dl}`)
       if (!res.ok) {
         const data = await res.json().catch(() => ({ error: "Error al descargar" }))
         throw new Error(data.error || "Error al descargar")
@@ -181,7 +135,7 @@ export default function RoleInstallToast() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `educonecta-${config.electronRole}${platformExtensions[platform]}`
+      a.download = `educonecta-${config.electronRole}${platformExtensions[dl]}`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -195,6 +149,14 @@ export default function RoleInstallToast() {
 
   if (status !== "authenticated" || !config || installed) return null
   if (!visible) return null
+
+  const subtitle = isDesktop
+    ? `Descargar para ${platformLabel[platform]}`
+    : isAndroid
+      ? "Instala la app desde el navegador"
+      : isIOS
+        ? "Añade la app a tu pantalla de inicio"
+        : "Descarga la aplicación"
 
   return (
     <div className="fixed bottom-20 md:bottom-8 right-4 left-4 md:left-auto md:right-8 z-50 mx-auto md:mx-0 max-w-sm animate-fade-in">
@@ -219,70 +181,46 @@ export default function RoleInstallToast() {
 
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-foreground">{config.title}</p>
-            <p className="text-xs text-muted-foreground">
-              {mobile
-                ? "Instala la app en tu dispositivo"
-                : `Descarga el instalador nativo`}
-            </p>
+            <p className="text-xs text-muted-foreground">{subtitle}</p>
           </div>
 
-          {mobile ? (
+          {isDesktop ? (
+            <button
+              onClick={handleDownload}
+              disabled={downloading !== null}
+              className="sa-btn sa-btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5 shrink-0 disabled:opacity-60"
+            >
+              {downloading ? (
+                <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+              ) : (
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              )}
+              {platformLabel[platform]}
+            </button>
+          ) : isAndroid ? (
             deferredPrompt ? (
               <button
                 onClick={handlePwaInstall}
                 className="sa-btn sa-btn-primary text-xs px-3 py-1.5 shrink-0"
               >
-                Instalar
+                Instalar aplicación
               </button>
             ) : (
-              <span className="text-[10px] text-muted-foreground max-w-28 text-right leading-tight shrink-0">
-                {isIOS()
-                  ? 'Compartir → "Agregar a pantalla de inicio"'
-                  : 'Menú → "Instalar app"'}
+              <span className="text-[10px] text-muted-foreground max-w-32 text-right leading-tight shrink-0">
+                Menú → "Instalar app"
               </span>
             )
-          ) : (
-            <div className="flex items-center gap-1 shrink-0">
-              {available === null ? (
-                <span className="text-[10px] text-muted-foreground">Verificando...</span>
-              ) : available.length === 0 ? (
-                <span className="text-[10px] text-muted-foreground">No disponible</span>
-              ) : detectedOS !== "other" && available.includes(detectedOS) ? (
-                <button
-                  onClick={() => handleDownload(detectedOS)}
-                  disabled={downloading !== null}
-                  className="sa-btn sa-btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5 disabled:opacity-60"
-                >
-                  {downloading === detectedOS ? (
-                    <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                    </svg>
-                  ) : (
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                  )}
-                  {downloading === detectedOS ? "" : platformLabels[detectedOS]}
-                </button>
-              ) : (
-                <div className="flex gap-1">
-                  {available.map((p) => (
-                    <button
-                      key={p}
-                      onClick={() => handleDownload(p)}
-                      disabled={downloading !== null}
-                      className="sa-btn sa-btn-outline text-[10px] px-2 py-1 flex items-center gap-1 disabled:opacity-60"
-                    >
-                      <PlatformIcon platform={p} />
-                      {platformLabels[p]}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          ) : isIOS ? (
+            <span className="text-[10px] text-muted-foreground max-w-32 text-right leading-tight shrink-0">
+              Compartir → "Añadir a pantalla de inicio"
+            </span>
+          ) : null}
 
           <button
             onClick={() => dismiss(false)}
