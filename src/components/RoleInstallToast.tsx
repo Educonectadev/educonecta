@@ -104,10 +104,11 @@ export default function RoleInstallToast() {
     setNativeAvailable(null)
     const dl = platformToDownload(platform)
     if (!dl) return
+    const electronRole = config.electronRole
     let cancelled = false
     async function check() {
       try {
-        const res = await fetch(`/api/download/public/${config.electronRole}?platform=${dl}&check=1`)
+        const res = await fetch(`/api/download/public/${electronRole}?platform=${dl}&check=1`)
         if (cancelled) return
         const data = await res.json()
         if (!cancelled) setNativeAvailable(!!data.available)
