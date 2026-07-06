@@ -1,7 +1,6 @@
 "use client"
 
 import { useRouter, usePathname } from "next/navigation"
-import { ToggleButton } from "@heroui/react"
 import { themes } from "@/lib/themes"
 
 
@@ -36,18 +35,16 @@ export default function SuperAdminSidebar({
             (segments.length > 2 && pathname.startsWith(link.href + "/"))
 
           return (
-            <ToggleButton
+            <button
               key={link.href}
-              isSelected={active}
-              onPress={() => router.push(link.href)}
-              variant="ghost"
-              className="justify-start gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium w-full"
+              onClick={() => router.push(link.href)}
+              className="flex items-center gap-3 rounded-[30px] px-4 py-2.5 text-sm font-medium w-full transition-colors hover:bg-gray-100 dark:hover:bg-zinc-800"
               style={active ? { backgroundColor: "var(--brand-color)", color: "var(--brand-text-color)" } : undefined}
             >
               <span className={`material-icons text-lg ${active ? "opacity-100" : "opacity-40"}`}>{link.icon}</span>
               <span>{link.label}</span>
               {link.extra}
-            </ToggleButton>
+            </button>
           )
         })}
       </nav>
