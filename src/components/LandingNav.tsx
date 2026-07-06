@@ -67,53 +67,60 @@ export default function LandingNav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-50 md:hidden"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:hidden"
           >
             <div
-              className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/30 backdrop-blur-sm"
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
+              initial={{ opacity: 0, scale: 0.92, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 8 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute right-0 top-0 bottom-0 w-72 bg-white dark:bg-zinc-900 shadow-xl flex flex-col"
+              className="relative w-full max-w-sm bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200/60 dark:border-zinc-700/60 shadow-2xl shadow-black/10 overflow-hidden"
             >
-              <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 dark:border-zinc-800">
+              <div className="flex items-center justify-between px-5 pt-5 pb-3">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
                   <Logo size={22} className="text-black dark:text-white/90" />
                   <span className="text-base font-bold tracking-tight text-black dark:text-white/90">EduConecta</span>
                 </Link>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="p-2 rounded-lg text-gray-600 dark:text-zinc-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+                  className="size-8 flex items-center justify-center rounded-full text-gray-500 dark:text-zinc-400 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
                   aria-label="Cerrar menú"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M18 6 6 18" /><path d="m6 6 12 12" />
                   </svg>
                 </button>
               </div>
-              <div className="flex-1 py-4 px-3">
+
+              <div className="px-3 py-2 space-y-0.5">
                 {links.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="block px-4 py-3 text-sm font-medium text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-xl transition-colors"
+                    className="flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-800/80 rounded-2xl transition-colors"
                   >
-                    {link.label}
+                    <span>{link.label}</span>
                   </Link>
                 ))}
               </div>
-              <div className="px-5 py-4 border-t border-gray-100 dark:border-zinc-800">
+
+              <div className="px-5 pb-5 pt-3">
                 <Link
                   href="/login"
                   onClick={() => setMobileOpen(false)}
-                  className="block w-full text-center px-4 py-2.5 text-sm font-medium text-white bg-gray-900 dark:bg-white dark:text-black rounded-xl hover:opacity-90 transition-opacity"
+                  className="flex items-center justify-center gap-2 w-full px-4 py-3 text-sm font-semibold text-white bg-gray-900 dark:bg-white dark:text-black rounded-2xl hover:opacity-90 transition-opacity"
                 >
                   Iniciar sesión
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" y1="12" x2="3" y2="12" />
+                  </svg>
                 </Link>
               </div>
             </motion.div>
