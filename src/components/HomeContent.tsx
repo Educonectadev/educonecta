@@ -44,58 +44,43 @@ interface Partner {
   logoUrl: string
 }
 
-const statCards = [
-  {
-    value: "150+",
-    label: "Instituciones activas",
-  },
-  {
-    value: "12K+",
-    label: "Estudiantes",
-  },
-  {
-    value: "98%",
-    label: "Satisfacción",
-  },
-]
-
 export default function HomeContent({ data, partners = [] }: { data: ImpactData; partners?: Partner[] }) {
   return (
-    <div className="flex flex-col min-h-screen overflow-x-hidden">
+    <div className="flex flex-col min-h-screen overflow-x-hidden bg-[var(--background)]">
       <LandingNav />
 
       <main className="flex-1">
-        <section className="relative overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6 pt-28 pb-16 md:pt-36 md:pb-28">
+        <section className="relative overflow-hidden bg-[var(--surface)]">
+          <div className="max-w-7xl mx-auto px-6 pt-28 pb-20 md:pt-36 md:pb-32">
             <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
               <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--surface-border)] bg-[var(--surface-2)] mb-6">
-                  <span className="w-2 h-2 rounded-full bg-[var(--accent)]" />
-                  <span className="text-xs font-semibold tracking-wide text-[var(--muted-foreground)]">
-                    Plataforma 2.0
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--accent)]/30 bg-[var(--accent)]/8 text-[var(--accent)] mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+                  <span className="text-xs font-semibold tracking-wide">
+                    Plataforma 2.0 — Gestión escolar inteligente
                   </span>
                 </div>
 
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.9] text-[var(--foreground)]">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.88] text-[var(--foreground)]">
                   La plataforma
                   <br />
-                  <span className="text-[var(--accent)]">que moderniza</span>
+                  que moderniza
                   <br />
-                  tu colegio
+                  <span className="text-[var(--accent)]">tu colegio</span>
                 </h1>
 
-                <p className="mt-6 text-base md:text-lg text-[var(--muted-foreground)] max-w-md leading-relaxed">
+                <p className="mt-5 text-base md:text-lg text-[var(--muted-foreground)] max-w-md leading-relaxed">
                   Una plataforma integral que conecta a padres, profesores y administradores para facilitar el seguimiento académico y la comunicación en la comunidad educativa.
                 </p>
 
                 <div className="flex gap-3 mt-8">
                   <Link
                     href="/login"
-                    className="sa-btn sa-btn-primary"
+                    className="sa-btn sa-btn-primary text-base px-8 py-3"
                   >
                     Comenzar ahora
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -109,6 +94,20 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                     Conoce más
                   </Link>
                 </div>
+
+                <div className="flex items-center gap-6 mt-10">
+                  <div className="flex -space-x-2">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div
+                        key={i}
+                        className="size-8 rounded-full border-2 border-[var(--surface)] bg-[var(--surface-3)]"
+                      />
+                    ))}
+                  </div>
+                  <p className="text-sm text-[var(--muted-foreground)]">
+                    <span className="font-semibold text-[var(--foreground)]">{data.institutionCount}+</span> instituciones activas
+                  </p>
+                </div>
               </motion.div>
 
               <motion.div
@@ -117,12 +116,11 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                 transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 className="relative"
               >
-                <div className="relative rounded-[var(--radius-card)] overflow-hidden">
-                  <div className="aspect-[4/5] md:aspect-[3/4] w-full">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/10 to-transparent z-10" />
+                <div className="relative rounded-[var(--radius-card)] overflow-hidden border border-[var(--surface-border)]">
+                  <div className="aspect-[4/5] md:aspect-[3/4] w-full bg-[var(--surface-2)]">
                     <img
-                      alt="Estudiantes en aula moderna"
-                      className="h-full w-full object-cover"
+                      alt="Estudiantes"
+                      className="h-full w-full object-cover opacity-90"
                       src="https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=800&q=80"
                     />
                   </div>
@@ -132,14 +130,18 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 flex gap-3"
+                  className="absolute -bottom-5 -left-4 md:-bottom-6 md:-left-6 flex gap-3"
                 >
-                  <div className="sa-surface px-5 py-4 rounded-[var(--radius-tile)] shadow-[var(--surface-shadow-hover)]">
-                    <p className="text-2xl md:text-3xl font-bold text-[var(--foreground)]">{data.institutionCount}</p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Instituciones</p>
+                  <div className="sa-surface px-5 py-4 rounded-[var(--radius-tile)] shadow-[var(--surface-shadow-hover)] min-w-[130px]">
+                    <p className="text-2xl md:text-3xl font-bold text-[var(--foreground)]">
+                      <AnimatedCounter value={data.institutionCount} suffix="" />
+                    </p>
+                    <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Instituciones activas</p>
                   </div>
-                  <div className="sa-surface px-5 py-4 rounded-[var(--radius-tile)] shadow-[var(--surface-shadow-hover)]">
-                    <p className="text-2xl md:text-3xl font-bold text-[var(--accent)]">{data.treesSaved}</p>
+                  <div className="sa-surface px-5 py-4 rounded-[var(--radius-tile)] shadow-[var(--surface-shadow-hover)] min-w-[130px]">
+                    <p className="text-2xl md:text-3xl font-bold text-[var(--accent)]">
+                      <AnimatedCounter value={data.treesSaved} suffix="" />
+                    </p>
                     <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Árboles salvados</p>
                   </div>
                 </motion.div>
@@ -175,7 +177,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                   transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
                   className="sa-surface p-6 md:p-8 hover:shadow-[var(--surface-shadow-hover)] hover:-translate-y-0.5 transition-all duration-300"
                 >
-                  <div className="size-11 rounded-xl flex items-center justify-center bg-[var(--surface-2)] text-[var(--accent)] border border-[var(--surface-border)]">
+                  <div className="size-11 rounded-xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/15">
                     <IconClient icon={feature.icon} className="size-5" />
                   </div>
                   <h3 className="mt-5 text-base font-semibold text-[var(--foreground)]">
@@ -190,7 +192,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
           </div>
         </section>
 
-        <section className="border-t border-[var(--surface-border)]">
+        <section className="border-t border-[var(--surface-border)] bg-[var(--surface)]">
           <div className="max-w-7xl mx-auto px-6 py-20 md:py-28">
             <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
               <motion.div
@@ -231,9 +233,8 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.4, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               >
-                <div className="rounded-[var(--radius-card)] overflow-hidden">
-                  <div className="aspect-[4/3] w-full relative">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/10 to-transparent z-10" />
+                <div className="rounded-[var(--radius-card)] overflow-hidden border border-[var(--surface-border)]">
+                  <div className="aspect-[4/3] w-full bg-[var(--surface-2)]">
                     <img
                       alt="Amazonía peruana"
                       className="h-full w-full object-cover"
@@ -248,7 +249,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
 
         <InstitutionLogos partners={partners} />
 
-        <section className="border-t border-[var(--surface-border)] bg-[var(--surface)]">
+        <section className="border-t border-[var(--surface-border)] bg-[var(--surface-2)]">
           <div className="max-w-7xl mx-auto px-6 py-20 md:py-28 text-center">
             <motion.h2
               initial={{ opacity: 0, y: 16 }}
