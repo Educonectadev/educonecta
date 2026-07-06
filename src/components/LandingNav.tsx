@@ -12,6 +12,14 @@ const links = [
   { href: "/contacto", label: "Contacto" },
 ]
 
+const roleLinks = [
+  { href: "/rol/dev", label: "Dev" },
+  { href: "/rol/director", label: "Director" },
+  { href: "/rol/docente", label: "Docente" },
+  { href: "/rol/padre", label: "Padre" },
+  { href: "/rol/alumno", label: "Alumno" },
+]
+
 export default function LandingNav() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -35,6 +43,16 @@ export default function LandingNav() {
 
           <div className="hidden md:flex items-center gap-1">
             {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="w-px h-5 bg-gray-200 dark:bg-zinc-700 mx-1" />
+            {roleLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -97,12 +115,29 @@ export default function LandingNav() {
               </div>
 
               <div className="px-3 py-2 space-y-0.5">
+                <p className="px-4 py-2 text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">
+                  Páginas
+                </p>
                 {links.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-800/80 rounded-2xl transition-colors"
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-800/80 rounded-2xl transition-colors"
+                  >
+                    <span>{link.label}</span>
+                  </Link>
+                ))}
+                <div className="mx-4 my-2 h-px bg-gray-100 dark:bg-zinc-800" />
+                <p className="px-4 py-2 text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">
+                  Roles
+                </p>
+                {roleLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 dark:text-zinc-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-800/80 rounded-2xl transition-colors"
                   >
                     <span>{link.label}</span>
                   </Link>
