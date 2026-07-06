@@ -7,7 +7,6 @@ import AnimatedCounter from "@/components/AnimatedCounter"
 import SiteFooter from "@/components/SiteFooter"
 import InstitutionLogos from "@/components/InstitutionLogos"
 import LandingNav from "@/components/LandingNav"
-import HeroIllustration from "@/components/HeroIllustration"
 
 interface ImpactData {
   institutionCount: number
@@ -118,9 +117,11 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                 className="relative"
               >
                 <div className="relative rounded-[var(--radius-card)] overflow-hidden border border-[var(--surface-border)]">
-                  <div className="aspect-[4/5] md:aspect-[3/4] w-full bg-[var(--surface-2)] p-8 md:p-12">
-                    <HeroIllustration />
-                  </div>
+                  <img
+                    alt="Estudiantes trabajando"
+                    className="h-full w-full object-cover"
+                    src="https://i.pinimg.com/736x/8d/a2/22/8da2223bb1246b8954e8a6288d9f09f4.jpg"
+                  />
                 </div>
 
                 <motion.div
