@@ -162,12 +162,12 @@ export default function FuncionalidadesPage() {
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
               <span className="text-xs font-semibold tracking-wide">Funcionalidades</span>
             </div>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9] text-[var(--foreground)]">
+            <h1 className="text-[2rem] sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.9] text-[var(--foreground)]">
               Todo lo que tu colegio necesita,
               <br />
               <span className="text-[var(--accent)]">en un solo lugar</span>
             </h1>
-            <p className="mt-5 text-base md:text-lg text-[var(--muted-foreground)] max-w-2xl mx-auto leading-relaxed">
+            <p className="mt-5 text-sm sm:text-base md:text-lg text-[var(--muted-foreground)] max-w-2xl mx-auto leading-relaxed">
               Diseñado para instituciones, docentes, padres y estudiantes. Funciona en
               celular y computador, con o sin conexión estable.
             </p>
@@ -177,10 +177,10 @@ export default function FuncionalidadesPage() {
         <section>
           <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
             <div className="text-center max-w-2xl mx-auto mb-14 md:mb-20">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">
                 {mainModules.title}
               </h2>
-              <p className="mt-4 text-[var(--muted-foreground)] text-base md:text-lg">
+              <p className="mt-4 text-[var(--muted-foreground)] text-sm sm:text-base md:text-lg">
                 {mainModules.intro}
               </p>
             </div>
@@ -196,10 +196,10 @@ export default function FuncionalidadesPage() {
         <section className="border-t border-[var(--surface-border)] bg-[var(--surface-2)]">
           <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
             <div className="text-center max-w-2xl mx-auto mb-14 md:mb-20">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">
                 {technical.title}
               </h2>
-              <p className="mt-4 text-[var(--muted-foreground)] text-base md:text-lg">
+              <p className="mt-4 text-[var(--muted-foreground)] text-sm sm:text-base md:text-lg">
                 {technical.intro}
               </p>
             </div>
@@ -219,10 +219,10 @@ export default function FuncionalidadesPage() {
                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
                 <span className="text-xs font-semibold tracking-wide">Por tipo de usuario</span>
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">
                 Una experiencia pensada para cada rol
               </h2>
-              <p className="mt-4 text-[var(--muted-foreground)] text-base md:text-lg">
+              <p className="mt-4 text-[var(--muted-foreground)] text-sm sm:text-base md:text-lg">
                 Cada usuario entra a EduConecta con su propia cuenta y solo ve lo que le corresponde.
               </p>
             </div>

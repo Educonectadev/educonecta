@@ -65,7 +65,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                   </span>
                 </div>
 
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.88] text-[var(--foreground)]">
+                <h1 className="text-[2.5rem] sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.88] text-[var(--foreground)]">
                   La plataforma
                   <br />
                   que moderniza
@@ -128,19 +128,19 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  className="absolute -bottom-5 -left-4 md:-bottom-6 md:-left-6 flex gap-3"
+                  className="absolute -bottom-3 -left-2 sm:-bottom-5 sm:-left-4 md:-bottom-6 md:-left-6 flex gap-2 sm:gap-3"
                 >
-                  <div className="sa-surface px-5 py-4 rounded-[var(--radius-tile)] shadow-[var(--surface-shadow-hover)] min-w-[130px]">
-                    <p className="text-2xl md:text-3xl font-bold text-[var(--foreground)]">
+                  <div className="sa-surface px-3 py-3 sm:px-5 sm:py-4 rounded-[var(--radius-tile)] shadow-[var(--surface-shadow-hover)] min-w-[100px] sm:min-w-[130px]">
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-[var(--foreground)]">
                       <AnimatedCounter value={data.institutionCount} suffix="" />
                     </p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Instituciones activas</p>
+                    <p className="text-[10px] sm:text-xs text-[var(--muted-foreground)] mt-0.5">Instituciones activas</p>
                   </div>
-                  <div className="sa-surface px-5 py-4 rounded-[var(--radius-tile)] shadow-[var(--surface-shadow-hover)] min-w-[130px]">
-                    <p className="text-2xl md:text-3xl font-bold text-[var(--accent)]">
+                  <div className="sa-surface px-3 py-3 sm:px-5 sm:py-4 rounded-[var(--radius-tile)] shadow-[var(--surface-shadow-hover)] min-w-[100px] sm:min-w-[130px]">
+                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-[var(--accent)]">
                       <AnimatedCounter value={data.treesSaved} suffix="" />
                     </p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Árboles salvados</p>
+                    <p className="text-[10px] sm:text-xs text-[var(--muted-foreground)] mt-0.5">Árboles salvados</p>
                   </div>
                 </motion.div>
               </motion.div>
@@ -157,10 +157,10 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="text-center max-w-2xl mx-auto mb-14 md:mb-20"
             >
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">
                 Todo lo que necesitas
               </h2>
-              <p className="mt-4 text-[var(--muted-foreground)] text-base md:text-lg">
+              <p className="mt-4 text-[var(--muted-foreground)] text-sm sm:text-base md:text-lg">
                 Una plataforma completa para la gestión educativa moderna.
               </p>
             </motion.div>
@@ -199,28 +199,28 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               >
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">
                   Impacto real en
                   <br />
                   <span className="text-[var(--accent)]">educación</span> y medio{" "}
                   <span className="text-[var(--accent)]">ambiente</span>
                 </h2>
-                <p className="mt-4 text-[var(--muted-foreground)] text-base md:text-lg leading-relaxed">
+                <p className="mt-4 text-[var(--muted-foreground)] text-sm sm:text-base md:text-lg leading-relaxed">
                   Cada institución digitalizada reduce el consumo de papel y protege nuestros bosques.
                 </p>
 
-                <div className="mt-8 grid grid-cols-2 gap-4">
-                  <div className="sa-surface-flat p-5">
-                    <p className="text-3xl font-bold text-[var(--foreground)]">
+                <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4">
+                  <div className="sa-surface-flat p-4 sm:p-5">
+                    <p className="text-2xl sm:text-3xl font-bold text-[var(--foreground)]">
                       <AnimatedCounter value={data.paperSaved} suffix="" />
                     </p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-1">Hojas/mes ahorradas</p>
+                    <p className="text-[10px] sm:text-xs text-[var(--muted-foreground)] mt-1">Hojas/mes ahorradas</p>
                   </div>
-                  <div className="sa-surface-flat p-5">
-                    <p className="text-3xl font-bold text-[var(--accent)]">
+                  <div className="sa-surface-flat p-4 sm:p-5">
+                    <p className="text-2xl sm:text-3xl font-bold text-[var(--accent)]">
                       <AnimatedCounter value={data.co2Saved} suffix="" />
                     </p>
-                    <p className="text-xs text-[var(--muted-foreground)] mt-1">kg CO₂/año evitados</p>
+                    <p className="text-[10px] sm:text-xs text-[var(--muted-foreground)] mt-1">kg CO₂/año evitados</p>
                   </div>
                 </div>
               </motion.div>
@@ -254,7 +254,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]"
+              className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]"
             >
               ¿Listo para transformar tu colegio?
             </motion.h2>
@@ -263,7 +263,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-4 text-[var(--muted-foreground)] text-base md:text-lg max-w-lg mx-auto"
+              className="mt-4 text-[var(--muted-foreground)] text-sm sm:text-base md:text-lg max-w-lg mx-auto"
             >
               Únete a las instituciones que ya modernizaron su gestión escolar con EduConecta.
             </motion.p>
