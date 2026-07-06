@@ -25,11 +25,17 @@ export default function LandingNav() {
 
   useEffect(() => {
     if (mobileOpen) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
       document.body.style.overflow = "hidden"
+      document.body.style.paddingRight = `${scrollbarWidth}px`
     } else {
       document.body.style.overflow = ""
+      document.body.style.paddingRight = ""
     }
-    return () => { document.body.style.overflow = "" }
+    return () => {
+      document.body.style.overflow = ""
+      document.body.style.paddingRight = ""
+    }
   }, [mobileOpen])
 
   return (
