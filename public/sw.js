@@ -4,7 +4,7 @@
  * - Re-suscribe automáticamente cuando expira la suscripción
  */
 
-const CACHE = "educonecta-v1"
+const CACHE = "educonecta-v2"
 const STATIC_ASSETS = [
   "/",
   "/login",
@@ -58,8 +58,6 @@ self.addEventListener("fetch", (event) => {
 
   event.respondWith(
     (async () => {
-      const cached = await caches.match(request)
-      if (cached) return cached
       try {
         const response = await fetch(request)
         if (response.ok && response.type === "basic") {
@@ -68,6 +66,8 @@ self.addEventListener("fetch", (event) => {
         }
         return response
       } catch {
+        const cached = await caches.match(request)
+        if (cached) return cached
         const fallback = await caches.match("/")
         if (fallback) return fallback
         return new Response("Sin conexión", { status: 503 })

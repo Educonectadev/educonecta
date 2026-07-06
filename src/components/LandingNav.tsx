@@ -41,7 +41,7 @@ export default function LandingNav() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center px-4">
-        <nav className="flex items-center justify-between w-full max-w-7xl mx-auto mt-3 px-4 sm:px-6 h-14 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl border border-gray-200/60 dark:border-zinc-700/60 shadow-sm">
+        <nav className="flex items-center justify-between w-full max-w-7xl mx-auto mt-3 px-4 sm:px-6 h-14 rounded-[50px] bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl border border-gray-200/60 dark:border-zinc-700/60 shadow-sm">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <Logo size={20} className="text-black dark:text-white/90" />
             <span className="text-base font-bold tracking-tight text-black dark:text-white/90">EduConecta</span>
