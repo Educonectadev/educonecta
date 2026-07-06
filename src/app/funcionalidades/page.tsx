@@ -263,8 +263,7 @@ export default function FuncionalidadesPage() {
 function FeatureCard({ feature, index }: { feature: Feature; index: number }) {
   return (
     <div
-      className="sa-surface p-6 md:p-8 hover:shadow-[var(--surface-shadow-hover)] hover:-translate-y-0.5 transition-all duration-300"
-      style={{ animationDelay: `${index * 60}ms` }}
+      className="sa-surface sa-surface-hover p-6 md:p-8"
     >
       <div className="size-11 rounded-xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/15">
         <IconClient icon={feature.icon} className="size-5" />
@@ -281,7 +280,7 @@ function FeatureCard({ feature, index }: { feature: Feature; index: number }) {
 
 function RoleCard({ role }: { role: Role }) {
   return (
-    <div className="sa-surface p-6 md:p-8 hover:shadow-[var(--surface-shadow-hover)] hover:-translate-y-0.5 transition-all duration-300">
+    <div className="sa-surface sa-surface-hover p-6 md:p-8">
       <h3 className="text-lg font-semibold text-[var(--foreground)]">{role.title}</h3>
       <p className="mt-1 text-sm text-[var(--accent)]">{role.tagline}</p>
       <ul className="mt-5 space-y-2.5">

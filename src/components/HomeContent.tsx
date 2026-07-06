@@ -173,7 +173,7 @@ export default function HomeContent({ data, partners = [] }: { data: ImpactData;
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-                  className="sa-surface p-6 md:p-8 hover:shadow-[var(--surface-shadow-hover)] hover:-translate-y-0.5 transition-all duration-300"
+                  className="sa-surface sa-surface-hover p-6 md:p-8"
                 >
                   <div className="size-11 rounded-xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/15">
                     <IconClient icon={feature.icon} className="size-5" />
