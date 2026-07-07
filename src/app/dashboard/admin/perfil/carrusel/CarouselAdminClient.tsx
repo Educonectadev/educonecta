@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react"
 import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
 import { toast } from "@heroui/react"
 import { getIcon } from "@/components/premium/iconRegistry"
 
@@ -113,37 +112,38 @@ export default function CarouselAdminClient({ initialImages }: { initialImages: 
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }} className="space-y-6">
-      <div className="sa-surface p-5">
-        <h2 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>Agregar imagen por URL</h2>
-        <p className="mt-1 text-xs" style={{ color: "var(--muted-foreground)" }}>Pega una URL externa (CDN, Unsplash, tu servidor, etc.).</p>
-        <form onSubmit={addByUrl} className="mt-4 grid grid-cols-1 sm:grid-cols-[1fr_220px_auto] gap-3">
+    <div className="space-y-4 md:space-y-6">
+      {/* Add by URL */}
+      <div className="sa-surface p-4 md:p-5">
+        <h2 className="text-sm font-semibold text-[var(--foreground)]">Agregar imagen por URL</h2>
+        <p className="mt-1 text-xs text-[var(--muted-foreground)]">Pega una URL externa (CDN, Unsplash, tu servidor, etc.).</p>
+        <form onSubmit={addByUrl} className="mt-4 flex flex-col sm:flex-row gap-3">
           <input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://ejemplo.com/foto.jpg"
-            className="sa-input w-full"
+            className="sa-input w-full sm:flex-1"
           />
           <input
             value={alt}
             onChange={(e) => setAlt(e.target.value)}
             placeholder="Descripción (opcional)"
-            className="sa-input w-full"
+            className="sa-input w-full sm:w-[200px]"
           />
-          <motion.button
-            whileTap={{ scale: 0.97 }}
+          <button
             type="submit"
             disabled={loading || !url.trim()}
-            className="sa-btn sa-btn-primary"
+            className="sa-btn sa-btn-primary w-full sm:w-auto"
           >
             {loading ? "…" : "Agregar"}
-          </motion.button>
+          </button>
         </form>
       </div>
 
-      <div className="sa-surface p-5">
-        <h2 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>Subir desde tu dispositivo</h2>
-        <p className="mt-1 text-xs" style={{ color: "var(--muted-foreground)" }}>Elige una foto de tu celular o computador. JPG, PNG o WebP · 2MB máx.</p>
+      {/* Upload */}
+      <div className="sa-surface p-4 md:p-5">
+        <h2 className="text-sm font-semibold text-[var(--foreground)]">Subir desde tu dispositivo</h2>
+        <p className="mt-1 text-xs text-[var(--muted-foreground)]">Elige una foto de tu celular o computador. JPG, PNG o WebP · 2MB máx.</p>
 
         <div className="mt-4 flex flex-col sm:flex-row gap-3">
           <input
@@ -153,16 +153,15 @@ export default function CarouselAdminClient({ initialImages }: { initialImages: 
             className="flex-1 sa-input"
             disabled={loading}
           />
-          <motion.button
-            whileTap={{ scale: 0.97 }}
+          <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={loading}
-            className="sa-btn sa-btn-primary inline-flex items-center justify-center gap-2"
+            className="sa-btn sa-btn-primary inline-flex items-center justify-center gap-2 w-full sm:w-auto"
           >
             {getIcon("upload", { size: 16 })}
             {pendingFile ? "Cambiar imagen" : "Subir imagen"}
-          </motion.button>
+          </button>
         </div>
 
         <input
@@ -178,81 +177,76 @@ export default function CarouselAdminClient({ initialImages }: { initialImages: 
         />
 
         {pendingFile && (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 sa-surface p-4" style={{ borderColor: "var(--accent)" }}>
+          <div className="mt-4 sa-surface p-4 border-[var(--accent)]">
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-              <div className="w-32 h-32 sm:w-40 sm:h-40 shrink-0 rounded-xl overflow-hidden" style={{ background: "var(--surface)" }}>
+              <div className="w-full sm:w-40 aspect-square sm:aspect-auto sm:h-40 shrink-0 rounded-xl overflow-hidden bg-[var(--surface)]">
                 <img src={pendingFile.preview} alt="Vista previa" className="size-full object-cover" />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate" style={{ color: "var(--foreground)" }}>{pendingFile.file.name}</p>
-                <p className="mt-1 text-xs" style={{ color: "var(--muted-foreground)" }}>
+              <div className="min-w-0 flex-1 w-full">
+                <p className="text-sm font-semibold truncate text-[var(--foreground)]">{pendingFile.file.name}</p>
+                <p className="mt-1 text-xs text-[var(--muted-foreground)]">
                   {(pendingFile.file.size / 1024).toFixed(1)} KB · {pendingFile.file.type || "imagen"}
                 </p>
                 <div className="mt-3 flex gap-2">
-                  <motion.button
-                    whileTap={{ scale: 0.97 }}
+                  <button
                     type="button"
                     onClick={confirmUpload}
                     disabled={loading}
                     className="sa-btn sa-btn-primary text-xs"
                   >
                     {loading ? "Subiendo…" : "Confirmar y agregar"}
-                  </motion.button>
-                  <motion.button
-                    whileTap={{ scale: 0.97 }}
+                  </button>
+                  <button
                     type="button"
                     onClick={cancelFile}
                     disabled={loading}
                     className="sa-btn sa-btn-ghost text-xs"
                   >
                     Cancelar
-                  </motion.button>
+                  </button>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
 
-      <div className="sa-surface p-5">
-        <h2 className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>
+      {/* Image list */}
+      <div className="sa-surface p-4 md:p-5">
+        <h2 className="text-sm font-semibold text-[var(--foreground)]">
           Imágenes actuales ({images.length})
         </h2>
         {images.length === 0 ? (
-          <div className="text-center py-10" style={{ color: "var(--muted-foreground)" }}>
-            {getIcon("image", { size: 32, className: "mx-auto mb-2", style: { color: "var(--muted-foreground)" } })}
+          <div className="text-center py-10 text-[var(--muted-foreground)]">
+            {getIcon("eye", { size: 32, className: "mx-auto mb-2 text-[var(--muted-foreground)]" })}
             <p className="text-sm">Aún no agregaste imágenes.</p>
           </div>
         ) : (
-          <ul className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {images.map((img) => (
-              <motion.li
+              <div
                 key={img.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
                 className="relative group rounded-xl overflow-hidden sa-surface"
               >
                 <div className="aspect-square">
                   <img src={img.url} alt={img.alt ?? ""} className="size-full object-cover" loading="lazy" />
                 </div>
                 {img.alt && (
-                  <p className="px-2 py-1.5 text-xs truncate" style={{ color: "var(--muted-foreground)" }}>{img.alt}</p>
+                  <p className="px-2 py-1.5 text-xs truncate text-[var(--muted-foreground)]">{img.alt}</p>
                 )}
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
+                <button
                   type="button"
                   onClick={() => remove(img.id)}
                   aria-label="Eliminar imagen"
-                  className="absolute top-2 right-2 inline-flex items-center justify-center size-8 rounded-full"
-                  style={{ background: "rgba(0,0,0,0.6)", color: "white" }}
+                  className="absolute top-2 right-2 inline-flex items-center justify-center size-8 rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
                 >
                   {getIcon("trash", { size: 14 })}
-                </motion.button>
-              </motion.li>
+                </button>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
-    </motion.div>
+    </div>
   )
 }
