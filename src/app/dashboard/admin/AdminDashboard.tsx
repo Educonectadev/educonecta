@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { CarouselLg } from "@/components/Carousel"
 import { getIcon } from "@/components/premium/iconRegistry"
 
 interface Stat {
@@ -33,6 +32,35 @@ interface CarouselImg {
   alt: string | null
 }
 
+function StatCard({ stat, max }: { stat: Stat; max: number }) {
+  return (
+    <Link
+      href={stat.href}
+      className="block bg-[var(--surface)] border border-[var(--surface-border)] rounded-2xl p-4"
+    >
+      <div className="flex items-center gap-3">
+        <div className="size-10 rounded-xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
+          {getIcon(stat.icon, { size: 20 })}
+        </div>
+        <div className="min-w-0">
+          <p className="text-[11px] font-medium text-[var(--muted-foreground)] uppercase tracking-wider truncate">
+            {stat.label}
+          </p>
+          <p className="text-2xl font-bold tracking-tight text-[var(--foreground)]">
+            {stat.value}
+          </p>
+        </div>
+      </div>
+      <div className="mt-3 h-1 rounded-full bg-[var(--surface-3)]">
+        <div
+          className="h-full rounded-full bg-[var(--accent)]"
+          style={{ width: `${max > 0 ? (stat.value / max) * 100 : 0}%` }}
+        />
+      </div>
+    </Link>
+  )
+}
+
 export default function AdminDashboard({
   stats,
   recentStudents,
@@ -56,6 +84,7 @@ export default function AdminDashboard({
 }) {
   const [showGallery, setShowGallery] = useState(false)
   const hasImages = (carouselImages ?? []).length > 0
+  const maxStat = Math.max(1, ...stats.map((s) => s.value))
 
   const quickLinks = [
     { label: "Alumnos", href: "/dashboard/admin/alumnos", icon: "users" },
@@ -68,27 +97,29 @@ export default function AdminDashboard({
   ]
 
   return (
-    <div className="space-y-4 md:space-y-6 py-4 md:pt-6" data-tour="dashboard">
+    <div className="space-y-4 py-4" data-tour="dashboard">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="min-w-0 flex-1">
-          <p className="sa-eyebrow text-[var(--muted-foreground)] truncate">{institutionName || "Institución"}</p>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[var(--foreground)] font-[var(--font-display)]">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-[var(--muted-foreground)] truncate">
+            {institutionName || "Institución"}
+          </p>
+          <h1 className="text-xl font-bold tracking-tight text-[var(--foreground)]">
             Panel del Director
           </h1>
         </div>
-        <div className="hidden sm:flex items-center gap-2 text-xs text-[var(--muted-foreground)] shrink-0 ml-3">
+        <div className="hidden sm:flex items-center gap-2 text-xs text-[var(--muted-foreground)] shrink-0">
           {getIcon("calendar", { size: 14 })}
-          <span className="whitespace-nowrap">{new Date().toLocaleDateString("es-PE", { weekday: "long", day: "numeric", month: "long" })}</span>
+          <span className="whitespace-nowrap">{new Date().toLocaleDateString("es-PE", { day: "numeric", month: "long" })}</span>
         </div>
       </div>
 
-      {/* Gallery */}
+      {/* Gallery toggle */}
       {hasImages && (
         <div>
           <button
             onClick={() => setShowGallery(!showGallery)}
-            className="flex items-center gap-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            className="flex items-center gap-2 text-xs text-[var(--muted-foreground)]"
           >
             {getIcon("eye", { size: 14 })}
             <span>Galería del colegio</span>
@@ -101,112 +132,89 @@ export default function AdminDashboard({
           </button>
           {showGallery && (
             <div className="mt-3">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="sa-eyebrow text-[var(--muted-foreground)]">Tu colegio</h2>
-                <Link href="/dashboard/admin/perfil/carrusel" className="text-xs text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--muted-foreground)]">
+                  Tu colegio
+                </span>
+                <Link href="/dashboard/admin/perfil/carrusel" className="text-xs text-[var(--muted-foreground)]">
                   Editar
                 </Link>
               </div>
-              <CarouselLg
-                images={carouselImages!}
-                autoPlay
-                intervalMs={6000}
-                aspectClass="aspect-[16/9] sm:aspect-[21/9]"
-              />
+              <div className="rounded-2xl overflow-hidden bg-[var(--surface-3)]">
+                <div className="relative w-full aspect-[16/9]">
+                  <img
+                    src={carouselImages![0].url}
+                    alt={carouselImages![0].alt ?? "Colegio"}
+                    className="size-full object-cover"
+                  />
+                </div>
+                {carouselImages!.length > 1 && (
+                  <div className="flex gap-1.5 justify-center py-2 bg-[var(--surface)]">
+                    {carouselImages!.map((_, i) => (
+                      <div key={i} className={`size-1.5 rounded-full ${i === 0 ? "bg-[var(--accent)] w-4" : "bg-[var(--surface-3)]"}`} />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
       )}
 
-      {/* Metric tiles */}
-      <div className="grid grid-cols-2 gap-2 md:gap-4">
+      {/* Metric stats */}
+      <div className="grid grid-cols-2 gap-2">
         {stats.map((s) => (
-          <Link
-            key={s.label}
-            href={s.href}
-            className="sa-surface sa-surface-hover block p-4 md:p-6"
-          >
-            <div className="flex items-center gap-3 md:gap-4 mb-2 md:mb-3">
-              <div className="size-9 md:size-12 rounded-2xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
-                {getIcon(s.icon, { size: 18 })}
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px] md:text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wider truncate">
-                  {s.label}
-                </p>
-                <p className="text-xl md:text-3xl font-bold tracking-tight text-[var(--foreground)]">
-                  {s.value}
-                </p>
-              </div>
-            </div>
-            <div className="h-1 md:h-1.5 rounded-full bg-[var(--surface-3)]">
-              <div
-                className="h-full rounded-full bg-[var(--accent)]"
-                style={{ width: `${Math.min(100, (s.value / Math.max(1, stats[0]?.value || 1)) * 100)}%` }}
-              />
-            </div>
-          </Link>
+          <StatCard key={s.label} stat={s} max={maxStat} />
         ))}
       </div>
 
       {/* Quick links */}
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2 md:gap-3">
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
         {quickLinks.map((l) => (
           <Link
             key={l.label}
             href={l.href}
-            className="sa-surface sa-surface-hover flex flex-col items-center justify-center gap-1.5 p-2.5 md:p-4 min-h-[70px] md:min-h-[90px] text-center"
+            className="shrink-0 bg-[var(--surface)] border border-[var(--surface-border)] rounded-2xl p-3 flex flex-col items-center gap-1.5 min-w-[72px]"
           >
-            <div className="size-8 md:size-10 rounded-xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)]">
+            <div className="size-8 rounded-xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)]">
               {getIcon(l.icon, { size: 16 })}
             </div>
-            <span className="text-[10px] md:text-xs font-semibold text-[var(--foreground)] leading-tight">
+            <span className="text-[10px] font-semibold text-[var(--foreground)] text-center leading-tight">
               {l.label}
             </span>
           </Link>
         ))}
       </div>
 
-      {/* Activity */}
-      <div className="grid gap-3 md:gap-5 lg:grid-cols-2">
+      {/* Recent activity */}
+      <div className="grid gap-3">
         {/* Students */}
-        <div className="sa-surface p-4 md:p-6">
-          <div className="flex items-center justify-between mb-3 md:mb-4">
+        <div className="bg-[var(--surface)] border border-[var(--surface-border)] rounded-2xl p-4">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className="size-7 md:size-8 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center shrink-0">
+              <div className="size-7 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center shrink-0">
                 {getIcon("users", { size: 14 })}
               </div>
               <span className="text-xs font-semibold text-[var(--foreground)]">Alumnos</span>
             </div>
-            <Link href="/dashboard/admin/alumnos" className="text-[11px] text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors shrink-0 ml-2">
+            <Link href="/dashboard/admin/alumnos" className="text-[11px] text-[var(--muted-foreground)] shrink-0 ml-2">
               Ver todo
             </Link>
           </div>
           {recentStudents.length === 0 ? (
-            <div className="py-8 md:py-10 text-center">
-              <div className="size-10 rounded-xl mx-auto flex items-center justify-center bg-[var(--surface-3)] text-[var(--muted-foreground)] mb-2">
-                {getIcon("users", { size: 18 })}
-              </div>
-              <p className="text-sm font-medium text-[var(--foreground)]">Sin alumnos</p>
-              <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Registra alumnos para verlos aquí.</p>
-            </div>
+            <p className="text-sm text-[var(--muted-foreground)] text-center py-6">Sin alumnos registrados</p>
           ) : (
-            <div className="space-y-0.5 md:space-y-1">
+            <div className="space-y-1">
               {recentStudents.map((s) => (
-                <div
-                  key={s.id}
-                  className="flex items-center justify-between py-2 px-2.5 md:px-3 rounded-xl -mx-2.5 md:-mx-3 hover:bg-[var(--surface-2)] transition-colors"
-                >
-                  <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <div className="size-6 md:size-7 rounded-lg flex items-center justify-center text-[10px] font-semibold bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
-                      {s.firstName.charAt(0)}{s.lastName.charAt(0)}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-[var(--foreground)] truncate">{s.firstName} {s.lastName}</p>
-                      <p className="text-[11px] text-[var(--muted-foreground)] truncate">{s.grade?.name ?? ""} {s.section?.name ?? ""}</p>
-                    </div>
+                <div key={s.id} className="flex items-center gap-2 py-1.5">
+                  <div className="size-6 rounded-lg flex items-center justify-center text-[10px] font-semibold bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
+                    {s.firstName.charAt(0)}{s.lastName.charAt(0)}
                   </div>
-                  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-1 rounded-full shrink-0 ml-1.5">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-[var(--foreground)] truncate">{s.firstName} {s.lastName}</p>
+                    <p className="text-[11px] text-[var(--muted-foreground)] truncate">{s.grade?.name ?? ""} {s.section?.name ?? ""}</p>
+                  </div>
+                  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-0.5 rounded-full shrink-0">
                     {s.documentId}
                   </span>
                 </div>
@@ -216,43 +224,32 @@ export default function AdminDashboard({
         </div>
 
         {/* Teachers */}
-        <div className="sa-surface p-4 md:p-6">
-          <div className="flex items-center justify-between mb-3 md:mb-4">
+        <div className="bg-[var(--surface)] border border-[var(--surface-border)] rounded-2xl p-4">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className="size-7 md:size-8 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center shrink-0">
+              <div className="size-7 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center shrink-0">
                 {getIcon("school", { size: 14 })}
               </div>
               <span className="text-xs font-semibold text-[var(--foreground)]">Docentes</span>
             </div>
-            <Link href="/dashboard/admin/profesores" className="text-[11px] text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors shrink-0 ml-2">
+            <Link href="/dashboard/admin/profesores" className="text-[11px] text-[var(--muted-foreground)] shrink-0 ml-2">
               Ver todo
             </Link>
           </div>
           {recentTeachers.length === 0 ? (
-            <div className="py-8 md:py-10 text-center">
-              <div className="size-10 rounded-xl mx-auto flex items-center justify-center bg-[var(--surface-3)] text-[var(--muted-foreground)] mb-2">
-                {getIcon("school", { size: 18 })}
-              </div>
-              <p className="text-sm font-medium text-[var(--foreground)]">Sin docentes</p>
-              <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Registra docentes para verlos aquí.</p>
-            </div>
+            <p className="text-sm text-[var(--muted-foreground)] text-center py-6">Sin docentes registrados</p>
           ) : (
-            <div className="space-y-0.5 md:space-y-1">
+            <div className="space-y-1">
               {recentTeachers.map((t) => (
-                <div
-                  key={t.id}
-                  className="flex items-center justify-between py-2 px-2.5 md:px-3 rounded-xl -mx-2.5 md:-mx-3 hover:bg-[var(--surface-2)] transition-colors"
-                >
-                  <div className="flex items-center gap-2 min-w-0 flex-1">
-                    <div className="size-6 md:size-7 rounded-lg flex items-center justify-center text-[10px] font-semibold bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
-                      {t.user.name.charAt(0)}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-[var(--foreground)] truncate">{t.user.name}</p>
-                      <p className="text-[11px] text-[var(--muted-foreground)] truncate">{t.user.email}</p>
-                    </div>
+                <div key={t.id} className="flex items-center gap-2 py-1.5">
+                  <div className="size-6 rounded-lg flex items-center justify-center text-[10px] font-semibold bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
+                    {t.user.name.charAt(0)}
                   </div>
-                  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-1 rounded-full shrink-0 ml-1.5">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-[var(--foreground)] truncate">{t.user.name}</p>
+                    <p className="text-[11px] text-[var(--muted-foreground)] truncate">{t.user.email}</p>
+                  </div>
+                  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-0.5 rounded-full shrink-0">
                     {t.speciality ?? "Docente"}
                   </span>
                 </div>
