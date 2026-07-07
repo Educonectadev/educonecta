@@ -525,7 +525,7 @@ input[type="checkbox"]:checked::after {
   --surface-shadow: 0 1px 2px rgba(15, 15, 18, 0.03), 0 4px 16px rgba(15, 15, 18, 0.04);
   --surface-shadow-hover: 0 2px 4px rgba(15, 15, 18, 0.04), 0 12px 28px rgba(15, 15, 18, 0.06);
 
-  --radius-card: 28px;
+  --radius-card: 45px;
   --radius-tile: 22px;
   --radius-pill: 999px;
 }

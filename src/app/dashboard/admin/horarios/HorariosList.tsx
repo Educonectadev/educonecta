@@ -329,7 +329,72 @@ export default function HorariosList({
         </div>
       </div>
 
-      <div className="sa-surface">
+      {/* Mobile cards */}
+      <div className="sm:hidden space-y-3">
+        {sortedSchedules.map((s) => (
+          <div
+            key={s.id}
+            onClick={() => setDetail(s)}
+            className="sa-surface p-4 space-y-2.5 cursor-pointer"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-semibold text-[var(--foreground)]">{dayLabels[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`}</span>
+              <Chip
+                size="sm"
+                variant="soft"
+                className={s.shift === "MAÑANA"
+                  ? "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
+                  : "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                }
+              >
+                {s.shift}
+              </Chip>
+            </div>
+            <div>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] block">Curso</span>
+              <span className="text-sm font-medium text-[var(--foreground)]">{s.course.name}</span>
+            </div>
+            <div>
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] block">Horario</span>
+              <span className="text-sm text-[var(--foreground)]">{s.startTime} — {s.endTime}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] block">Profesor</span>
+                <span className="text-sm text-[var(--foreground)]">{s.teacher?.name ?? "—"}</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] block">Grado</span>
+                <span className="text-sm text-[var(--foreground)]">{s.grade?.name ?? "—"}</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] block">Sección</span>
+                <span className="text-sm text-[var(--foreground)]">{s.section?.name ?? "—"}</span>
+              </div>
+              <div>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] block">Aula</span>
+                <span className="text-sm text-[var(--foreground)]">{s.classroom ?? "—"}</span>
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-[var(--surface-border)]">
+              <Button isIconOnly size="sm" variant="tertiary" onClick={(e) => { e.stopPropagation(); openEdit(s) }}>
+                <Icon className="size-4" icon="gravity-ui:pencil" />
+              </Button>
+              <Button isIconOnly size="sm" variant="danger-soft" onClick={(e) => { e.stopPropagation(); setDeleting(s) }}>
+                <Icon className="size-4" icon="gravity-ui:trash-bin" />
+              </Button>
+            </div>
+          </div>
+        ))}
+        {sortedSchedules.length === 0 && (
+          <div className="sa-surface py-14 text-center">
+            <p className="text-sm text-[var(--muted-foreground)]">No hay horarios registrados.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden sm:block sa-surface">
         <Table aria-label="Horarios">
           <Table.ScrollContainer>
             <Table.Content aria-label="Tabla de horarios" className="min-w-[900px]" sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}>

@@ -65,73 +65,120 @@ export default function DataTable<T extends { id: number }>({
   }
 
   return (
-    <div className="sa-surface overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-[var(--surface-border)]">
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className={`text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] px-4 py-3 ${
-                    col.sortable ? "cursor-pointer hover:text-[var(--foreground)] transition-colors select-none" : ""
-                  } ${col.className ?? ""}`}
-                  onClick={col.sortable ? () => toggleSort(col.key) : undefined}
-                >
-                  <span className="inline-flex items-center gap-1">
-                    {col.label}
-                    {col.sortable && sortKey === col.key && (
-                      <span className="text-[10px]">{sortDir === "asc" ? "▲" : "▼"}</span>
-                    )}
-                  </span>
-                </th>
-              ))}
-              {hasActions && <th className="text-right text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] px-4 py-3">Acciones</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {sorted.map((item, idx) => (
-              <tr
-                key={item.id}
-                onClick={onRowClick ? () => onRowClick(item) : undefined}
-                className={`border-b border-[var(--surface-border)] last:border-b-0 ${
-                  onRowClick ? "cursor-pointer" : ""
-                } hover:bg-[var(--surface-2)]`}
-              >
-                {columns.map((col) => (
-                  <td key={col.key} className={`px-4 py-3.5 text-sm text-[var(--foreground)] ${col.className ?? ""}`}>
-                    {col.render ? col.render(item) : String((item as any)[col.key] ?? "—")}
-                  </td>
-                ))}
-                {hasActions && (
-                  <td className="px-4 py-3.5 text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      {onEdit && (
-                        <button
-                          onClick={(e) => { e.stopPropagation(); onEdit(item) }}
-                          className="size-8 rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:bg-[var(--accent)]/10 hover:text-[var(--accent)]"
-                          aria-label="Editar"
-                        >
-                          {getIcon("edit", { size: 15 })}
-                        </button>
-                      )}
-                      {onDelete && (
-                        <button
-                          onClick={(e) => { e.stopPropagation(); onDelete(item) }}
-                          className="size-8 rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-500"
-                          aria-label="Eliminar"
-                        >
-                          {getIcon("trash", { size: 15 })}
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                )}
-              </tr>
+    <>
+      {/* Mobile cards */}
+      <div className="sm:hidden space-y-3">
+        {sorted.map((item, idx) => (
+          <div
+            key={item.id}
+            onClick={onRowClick ? () => onRowClick(item) : undefined}
+            className={`sa-surface p-4 space-y-2.5 ${onRowClick ? "cursor-pointer" : ""}`}
+          >
+            {columns.map((col) => (
+              <div key={col.key}>
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] block mb-0.5">
+                  {col.label}
+                </span>
+                <div className="text-sm text-[var(--foreground)]">
+                  {col.render ? col.render(item) : String((item as any)[col.key] ?? "—")}
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+            {hasActions && (
+              <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-[var(--surface-border)]">
+                {onEdit && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onEdit(item) }}
+                    className="sa-btn sa-btn-ghost text-xs gap-1.5"
+                  >
+                    {getIcon("edit", { size: 14 })}
+                    Editar
+                  </button>
+                )}
+                {onDelete && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onDelete(item) }}
+                    className="sa-btn sa-btn-ghost text-xs gap-1.5 text-[var(--muted-foreground)]"
+                  >
+                    {getIcon("trash", { size: 14 })}
+                    Eliminar
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-    </div>
+
+      {/* Desktop table */}
+      <div className="hidden sm:block sa-surface overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--surface-border)]">
+                {columns.map((col) => (
+                  <th
+                    key={col.key}
+                    className={`text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] px-4 py-3 ${
+                      col.sortable ? "cursor-pointer hover:text-[var(--foreground)] select-none" : ""
+                    } ${col.className ?? ""}`}
+                    onClick={col.sortable ? () => toggleSort(col.key) : undefined}
+                  >
+                    <span className="inline-flex items-center gap-1">
+                      {col.label}
+                      {col.sortable && sortKey === col.key && (
+                        <span className="text-[10px]">{sortDir === "asc" ? "▲" : "▼"}</span>
+                      )}
+                    </span>
+                  </th>
+                ))}
+                {hasActions && <th className="text-right text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] px-4 py-3">Acciones</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {sorted.map((item) => (
+                <tr
+                  key={item.id}
+                  onClick={onRowClick ? () => onRowClick(item) : undefined}
+                  className={`border-b border-[var(--surface-border)] last:border-b-0 ${
+                    onRowClick ? "cursor-pointer" : ""
+                  } hover:bg-[var(--surface-2)]`}
+                >
+                  {columns.map((col) => (
+                    <td key={col.key} className={`px-4 py-3.5 text-sm text-[var(--foreground)] ${col.className ?? ""}`}>
+                      {col.render ? col.render(item) : String((item as any)[col.key] ?? "—")}
+                    </td>
+                  ))}
+                  {hasActions && (
+                    <td className="px-4 py-3.5 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        {onEdit && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); onEdit(item) }}
+                            className="size-8 rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:bg-[var(--accent)]/10 hover:text-[var(--accent)]"
+                            aria-label="Editar"
+                          >
+                            {getIcon("edit", { size: 15 })}
+                          </button>
+                        )}
+                        {onDelete && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); onDelete(item) }}
+                            className="size-8 rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-500"
+                            aria-label="Eliminar"
+                          >
+                            {getIcon("trash", { size: 15 })}
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
   )
 }
