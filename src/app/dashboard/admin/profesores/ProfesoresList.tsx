@@ -100,64 +100,64 @@ const TeacherFormFields = memo(function TeacherFormFields({
   return (
     <div className="space-y-4">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Datos Personales</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted-foreground)] mb-3">Datos Personales</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Nombres *</label>
-            <input value={form.firstName} onChange={(e) => setField("firstName", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Juan" />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nombres *</label>
+            <input value={form.firstName} onChange={(e) => setField("firstName", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Juan" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Apellidos *</label>
-            <input value={form.lastName} onChange={(e) => setField("lastName", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Pérez" />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Apellidos *</label>
+            <input value={form.lastName} onChange={(e) => setField("lastName", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Pérez" />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 mt-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">DNI / CE</label>
-            <input value={form.documentId} onChange={(e) => setField("documentId", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="12345678" maxLength={20} />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">DNI / CE</label>
+            <input value={form.documentId} onChange={(e) => setField("documentId", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="12345678" maxLength={20} />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
-            <input type="tel" value={form.phone} onChange={(e) => setField("phone", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="987654321" maxLength={15} />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Teléfono</label>
+            <input type="tel" value={form.phone} onChange={(e) => setField("phone", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="987654321" maxLength={15} />
           </div>
         </div>
         <div className="mt-3">
-          <label className="block text-xs font-medium text-gray-500 mb-1">Dirección</label>
-          <input value={form.address} onChange={(e) => setField("address", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Av. Principal 123" />
+          <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Dirección</label>
+          <input value={form.address} onChange={(e) => setField("address", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Av. Principal 123" />
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Datos Profesionales</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted-foreground)] mb-3">Datos Profesionales</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Título Profesional</label>
-            <input value={form.professionalTitle} onChange={(e) => setField("professionalTitle", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Lic. en Educación" />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Título Profesional</label>
+            <input value={form.professionalTitle} onChange={(e) => setField("professionalTitle", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Lic. en Educación" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Especialidad</label>
-            <input value={form.speciality} onChange={(e) => setField("speciality", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Matemáticas" />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Especialidad</label>
+            <input value={form.speciality} onChange={(e) => setField("speciality", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Matemáticas" />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 mt-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Nivel de Estudios</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nivel de Estudios</label>
             <Select value={form.educationLevel} onChange={(val) => setField("educationLevel", val)} options={educationLevels.map(l => ({value: l, label: l}))} placeholder="Seleccionar" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Tipo de Contrato</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Tipo de Contrato</label>
             <Select value={form.contractType} onChange={(val) => setField("contractType", val)} options={contractTypes.map(c => ({value: c, label: c}))} placeholder="Seleccionar" />
           </div>
         </div>
         <div className="mt-3">
-          <label className="block text-xs font-medium text-gray-500 mb-1">Fecha de Contratación</label>
-          <input type="date" value={form.hireDate} onChange={(e) => setField("hireDate", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+          <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Fecha de Contratación</label>
+          <input type="date" value={form.hireDate} onChange={(e) => setField("hireDate", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" />
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Niveles Asignados</p>
-        <p className="text-xs text-gray-400 mb-3">Selecciona los niveles educativos en los que el profesor dicta clases.</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted-foreground)] mb-3">Niveles Asignados</p>
+        <p className="text-xs text-[var(--muted-foreground)] mb-3">Selecciona los niveles educativos en los que el profesor dicta clases.</p>
         <div className="flex flex-wrap gap-2">
           {assignedLevelOptions.map((opt) => {
             const selected = form.assignedLevels.includes(opt.value)
@@ -175,7 +175,7 @@ const TeacherFormFields = memo(function TeacherFormFields({
                   "rounded-full px-4 py-1.5 text-xs font-medium border transition-all " +
                   (selected
                     ? "bg-emerald-500 border-emerald-500 text-white"
-                    : "bg-white border-gray-200 text-gray-500 hover:border-emerald-300")
+                    : "bg-[var(--surface-2)] border-[var(--surface-border)] text-[var(--muted-foreground)]")
                 }
               >
                 {opt.label}
@@ -186,31 +186,31 @@ const TeacherFormFields = memo(function TeacherFormFields({
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Contacto de Emergencia</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted-foreground)] mb-3">Contacto de Emergencia</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
-            <input value={form.emergencyContactName} onChange={(e) => setField("emergencyContactName", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="María López" />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nombre</label>
+            <input value={form.emergencyContactName} onChange={(e) => setField("emergencyContactName", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="María López" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
-            <input type="tel" value={form.emergencyContactPhone} onChange={(e) => setField("emergencyContactPhone", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="987654321" maxLength={15} />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Teléfono</label>
+            <input type="tel" value={form.emergencyContactPhone} onChange={(e) => setField("emergencyContactPhone", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="987654321" maxLength={15} />
           </div>
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Asignación de Cursos (opcional)</p>
-        <p className="text-xs text-gray-400 mb-3">Si lo asignas ahora, el profesor ya podrá dictar clases sin pasos adicionales.</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted-foreground)] mb-3">Asignación de Cursos (opcional)</p>
+        <p className="text-xs text-[var(--muted-foreground)] mb-3">Si lo asignas ahora, el profesor ya podrá dictar clases sin pasos adicionales.</p>
         {form.assignments.map((a, idx) => {
           const filteredSections = a.gradeId
             ? sections.filter((s) => String(s.gradeId) === a.gradeId)
             : []
           return (
-            <div key={idx} className="border border-gray-100 rounded-[20px] p-3 mb-2">
+            <div key={idx} className="border border-[var(--surface-border)] rounded-2xl p-3 mb-2">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Curso</label>
+                  <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Curso</label>
                   <Select
                     value={a.courseId}
                     onChange={(val) => setAssignment(idx, "courseId", val)}
@@ -219,7 +219,7 @@ const TeacherFormFields = memo(function TeacherFormFields({
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+                  <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Grado</label>
                   <Select
                     value={a.gradeId}
                     onChange={(val) => { setAssignment(idx, "gradeId", val); setAssignment(idx, "sectionId", "") }}
@@ -228,7 +228,7 @@ const TeacherFormFields = memo(function TeacherFormFields({
                   />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+                  <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>
                   <Select
                     key={`assign-sec-${idx}-${a.gradeId}`}
                     value={a.sectionId}
@@ -253,23 +253,23 @@ const TeacherFormFields = memo(function TeacherFormFields({
         <button
           type="button"
           onClick={addAssignment}
-          className="text-xs text-blue-600 hover:text-blue-800"
+          className="text-xs text-[var(--accent)]"
         >
           + Agregar otro curso
         </button>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Acceso al Sistema</p>
+        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted-foreground)] mb-3">Acceso al Sistema</p>
         {email && (
-          <div className="bg-gray-50 rounded-[20px] px-4 py-2.5 mb-3">
-            <p className="text-[11px] text-gray-400">Email generado automáticamente:</p>
-            <p className="text-sm font-medium text-gray-700">{email}</p>
+          <div className="bg-[var(--surface-2)] rounded-2xl px-4 py-2.5 mb-3">
+            <p className="text-[11px] text-[var(--muted-foreground)]">Email generado automáticamente:</p>
+            <p className="text-sm font-medium text-[var(--foreground)]">{email}</p>
           </div>
         )}
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">{passwordRequired ? "Contraseña *" : "Nueva contraseña (dejar vacío para mantener)"}</label>
-          <input type="password" value={form.password} onChange={(e) => setField("password", e.target.value)} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" minLength={6} />
+          <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">{passwordRequired ? "Contraseña *" : "Nueva contraseña (dejar vacío para mantener)"}</label>
+          <input type="password" value={form.password} onChange={(e) => setField("password", e.target.value)} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" minLength={6} />
         </div>
       </div>
     </div>
@@ -441,10 +441,10 @@ export default function ProfesoresList({
   }
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Profesores</h1>
-        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium text-center">+ Contratar Profesor</button>
+    <div className="space-y-4 md:space-y-6 pt-3 md:pt-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">Profesores</h1>
+        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] sa-btn sa-btn-primary px-6 py-2.5 text-sm font-medium text-center">+ Contratar Profesor</button>
       </div>
 
       <DataTable
@@ -459,12 +459,12 @@ export default function ProfesoresList({
             sortable: true,
             render: (t) => (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gray-200 to-gray-300 dark:from-zinc-700 dark:to-zinc-800 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-zinc-200 shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-[var(--surface-3)] flex items-center justify-center text-xs font-medium text-[var(--foreground)] shrink-0">
                   {t.user.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{t.user.name}</p>
-                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">{t.user.email}</p>
+                  <p className="text-sm font-medium text-[var(--foreground)]">{t.user.name}</p>
+                  <p className="text-[11px] text-[var(--muted-foreground)]">{t.user.email}</p>
                 </div>
               </div>
             ),
@@ -473,18 +473,18 @@ export default function ProfesoresList({
             key: "speciality",
             label: "Especialidad",
             sortable: true,
-            render: (t) => t.speciality ? <span className="badge-blue text-xs rounded-full px-2.5 py-0.5 border">{t.speciality}</span> : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
+            render: (t) => t.speciality ? <span className="badge-blue text-xs rounded-full px-2.5 py-0.5 border">{t.speciality}</span> : <span className="text-xs text-[var(--muted-foreground)]">—</span>,
           },
           {
             key: "contractType",
             label: "Contrato",
             sortable: true,
-            render: (t) => t.contractType ? <span className="badge-gray text-xs rounded-full px-2.5 py-0.5 border">{t.contractType}</span> : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
+            render: (t) => t.contractType ? <span className="badge-gray text-xs rounded-full px-2.5 py-0.5 border">{t.contractType}</span> : <span className="text-xs text-[var(--muted-foreground)]">—</span>,
           },
           {
             key: "educationLevel",
             label: "Estudios",
-            render: (t) => (t.educationLevel || t.professionalTitle) ? <span className="badge-amber text-xs rounded-full px-2.5 py-0.5 border">{t.educationLevel || t.professionalTitle}</span> : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
+            render: (t) => (t.educationLevel || t.professionalTitle) ? <span className="badge-amber text-xs rounded-full px-2.5 py-0.5 border">{t.educationLevel || t.professionalTitle}</span> : <span className="text-xs text-[var(--muted-foreground)]">—</span>,
           },
           {
             key: "assignedLevels",
@@ -501,7 +501,7 @@ export default function ProfesoresList({
                   return <span key={lvl} className={`text-xs rounded-full px-2.5 py-0.5 border ${badgeClass[lvl] ?? "badge-gray"}`}>{label}</span>
                 })}
               </div>
-            ) : <span className="text-xs text-gray-400 dark:text-zinc-500">—</span>,
+            ) : <span className="text-xs text-[var(--muted-foreground)]">—</span>,
           },
         ]}
       />
@@ -519,8 +519,8 @@ export default function ProfesoresList({
           passwordRequired
         />
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleCreate} disabled={loading} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
+          <button onClick={handleCreate} disabled={loading} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Contratar"}
           </button>
         </div>
@@ -539,22 +539,22 @@ export default function ProfesoresList({
           passwordRequired={false}
         />
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
+          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Guardar"}
           </button>
         </div>
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar profesor" size="sm">
-        <p className="text-sm text-gray-500 text-center">Se eliminará {deleting?.user?.name}. Esta acción no se puede deshacer.</p>
+        <p className="text-sm text-[var(--muted-foreground)] text-center">Se eliminará {deleting?.user?.name}. Esta acción no se puede deshacer.</p>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
           <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
             {loading ? "Eliminando..." : "Eliminar"}
           </button>
         </div>
       </Modal>
-    </>
+    </div>
   )
 }

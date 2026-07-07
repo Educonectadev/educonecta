@@ -313,23 +313,23 @@ export default function HorariosList({
   }
 
   return (
-    <>
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Horarios</h1>
+    <div className="space-y-4 md:space-y-6 pt-3 md:pt-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">Horarios</h1>
         <div className="flex gap-2">
-          <button onClick={handlePrint} className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-gray-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">
+          <button onClick={handlePrint} className="rounded-[30px] border border-[var(--surface-border)] px-5 py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">
             Imprimir
           </button>
-          <button onClick={() => { setShowJornada(true); setJornadaDay("1"); setJornadaShift("MAÑANA"); setBlocks([emptyBlock(), emptyBlock(), emptyBlock()]) }} className="rounded-[30px] border border-gray-200 dark:border-zinc-700 px-5 py-2.5 text-sm font-medium text-gray-600 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">
+          <button onClick={() => { setShowJornada(true); setJornadaDay("1"); setJornadaShift("MAÑANA"); setBlocks([emptyBlock(), emptyBlock(), emptyBlock()]) }} className="rounded-[30px] border border-[var(--surface-border)] px-5 py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">
             + Crear Jornada
           </button>
-          <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] btn-primary px-5 py-2.5 text-sm font-medium">
+          <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] sa-btn sa-btn-primary px-5 py-2.5 text-sm font-medium">
             + Nuevo Horario
           </button>
         </div>
       </div>
 
-      <div className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[30px]">
+      <div className="sa-surface">
         <Table aria-label="Horarios">
           <Table.ScrollContainer>
             <Table.Content aria-label="Tabla de horarios" className="min-w-[900px]" sortDescriptor={sortDescriptor} onSortChange={setSortDescriptor}>
@@ -364,14 +364,14 @@ export default function HorariosList({
               <Table.Body>
                 {sortedSchedules.length === 0 ? (
                   <Table.Row>
-                    <Table.Cell colSpan={10} className="text-center text-gray-500 dark:text-zinc-500 py-12">
+                    <Table.Cell colSpan={10} className="text-center text-[var(--muted-foreground)] py-12">
                       No hay horarios registrados.
                     </Table.Cell>
                   </Table.Row>
                 ) : (
                   sortedSchedules.map((s) => (
                     <Table.Row key={s.id} onClick={() => setDetail(s)} className="cursor-pointer">
-                      <Table.Cell className="font-medium text-gray-900 dark:text-white/90">{dayLabels[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`}</Table.Cell>
+                      <Table.Cell className="font-medium text-[var(--foreground)]">{dayLabels[s.dayOfWeek] ?? `Día ${s.dayOfWeek}`}</Table.Cell>
                       <Table.Cell>
                         <Chip
                           size="sm"
@@ -384,13 +384,13 @@ export default function HorariosList({
                           {s.shift}
                         </Chip>
                       </Table.Cell>
-                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.course.name}</Table.Cell>
-                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.teacher?.name ?? "—"}</Table.Cell>
-                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.grade?.name ?? "—"}</Table.Cell>
-                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.section?.name ?? "—"}</Table.Cell>
-                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.startTime}</Table.Cell>
-                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.endTime}</Table.Cell>
-                      <Table.Cell className="text-gray-700 dark:text-zinc-300">{s.classroom ?? "—"}</Table.Cell>
+                      <Table.Cell className="text-[var(--foreground)]">{s.course.name}</Table.Cell>
+                      <Table.Cell className="text-[var(--foreground)]">{s.teacher?.name ?? "—"}</Table.Cell>
+                      <Table.Cell className="text-[var(--foreground)]">{s.grade?.name ?? "—"}</Table.Cell>
+                      <Table.Cell className="text-[var(--foreground)]">{s.section?.name ?? "—"}</Table.Cell>
+                      <Table.Cell className="text-[var(--foreground)]">{s.startTime}</Table.Cell>
+                      <Table.Cell className="text-[var(--foreground)]">{s.endTime}</Table.Cell>
+                      <Table.Cell className="text-[var(--foreground)]">{s.classroom ?? "—"}</Table.Cell>
                       <Table.Cell onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center gap-1">
                           <Button isIconOnly size="sm" variant="tertiary" onClick={() => openEdit(s)}>
@@ -423,49 +423,49 @@ export default function HorariosList({
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Día</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{dayLabels[detail.dayOfWeek]}</p>
+                  <p className="text-xs uppercase tracking-widest text-[var(--muted-foreground)] mb-1">Día</p>
+                  <p className="font-medium text-[var(--foreground)]">{dayLabels[detail.dayOfWeek]}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Turno</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.shift}</p>
+                  <p className="text-xs uppercase tracking-widest text-[var(--muted-foreground)] mb-1">Turno</p>
+                  <p className="font-medium text-[var(--foreground)]">{detail.shift}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Inicio</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.startTime}</p>
+                  <p className="text-xs uppercase tracking-widest text-[var(--muted-foreground)] mb-1">Inicio</p>
+                  <p className="font-medium text-[var(--foreground)]">{detail.startTime}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Fin</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.endTime}</p>
+                  <p className="text-xs uppercase tracking-widest text-[var(--muted-foreground)] mb-1">Fin</p>
+                  <p className="font-medium text-[var(--foreground)]">{detail.endTime}</p>
                 </div>
               </div>
-              <div className="border-t border-gray-100 dark:border-zinc-800 pt-4">
-                <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Curso</p>
-                <p className="font-medium text-lg text-gray-900 dark:text-white/90">{detail.course.name}</p>
+              <div className="border-t border-[var(--surface-border)] pt-4">
+                <p className="text-xs uppercase tracking-widest text-[var(--muted-foreground)] mb-1">Curso</p>
+                <p className="font-medium text-lg text-[var(--foreground)]">{detail.course.name}</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Profesor</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.teacher?.name ?? "—"}</p>
-                  {detail.teacher?.speciality && <p className="text-xs text-gray-400 dark:text-zinc-500">{detail.teacher.speciality}</p>}
+                  <p className="text-xs uppercase tracking-widest text-[var(--muted-foreground)] mb-1">Profesor</p>
+                  <p className="font-medium text-[var(--foreground)]">{detail.teacher?.name ?? "—"}</p>
+                  {detail.teacher?.speciality && <p className="text-xs text-[var(--muted-foreground)]">{detail.teacher.speciality}</p>}
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Aula</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.classroom ?? "—"}</p>
+                  <p className="text-xs uppercase tracking-widest text-[var(--muted-foreground)] mb-1">Aula</p>
+                  <p className="font-medium text-[var(--foreground)]">{detail.classroom ?? "—"}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Grado</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.grade?.name ?? "—"}</p>
+                  <p className="text-xs uppercase tracking-widest text-[var(--muted-foreground)] mb-1">Grado</p>
+                  <p className="font-medium text-[var(--foreground)]">{detail.grade?.name ?? "—"}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-1">Sección</p>
-                  <p className="font-medium text-gray-900 dark:text-white/90">{detail.section?.name ?? "—"}</p>
+                  <p className="text-xs uppercase tracking-widest text-[var(--muted-foreground)] mb-1">Sección</p>
+                  <p className="font-medium text-[var(--foreground)]">{detail.section?.name ?? "—"}</p>
                 </div>
               </div>
             </div>
             <div className="flex gap-3 mt-8">
-              <button onClick={() => { setDetail(null); openEdit(detail) }} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">Editar</button>
-              <button onClick={() => setDetail(null)} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">Cerrar</button>
+              <button onClick={() => { setDetail(null); openEdit(detail) }} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Editar</button>
+              <button onClick={() => setDetail(null)} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">Cerrar</button>
             </div>
           </>
         )}
@@ -474,16 +474,16 @@ export default function HorariosList({
       <Modal open={showCreate || !!editing} onClose={() => { setShowCreate(false); setEditing(null) }} title={showCreate ? "Nuevo Horario" : "Editar Horario"} size="lg">
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Curso</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Curso</label>
               <Select value={form.courseId} onChange={(val) => updateField("courseId", val)} options={courses.map(c => ({value: String(c.id), label: c.name}))} placeholder="Seleccionar..." />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Profesor</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Profesor</label>
               <Select value={form.teacherId} onChange={(val) => updateField("teacherId", val)} options={teachers.map(t => ({value: String(t.id), label: t.name + (t.speciality ? ` — ${t.speciality}` : "")}))} placeholder="Seleccionar..." />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Grado</label>
+                <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Grado</label>
               <Select value={form.gradeId} onChange={(val) => {
                 updateField("gradeId", val)
                 updateField("sectionId", "")
@@ -497,20 +497,20 @@ export default function HorariosList({
               }} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Seleccionar..." />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Sección</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>
               <Select key={`sec-${form.gradeId}`} value={form.sectionId} onChange={(val) => updateField("sectionId", val)} options={filteredSections.map(sec => ({value: String(sec.id), label: sec.name}))} placeholder="Seleccionar..." />
             </div>
           </div>
           {previewStudents.length > 0 && (
-            <div className="bg-gray-50 dark:bg-zinc-900 rounded-[20px] p-4 max-h-48 overflow-y-auto scrollbar-hide">
-              <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500 mb-2">
+            <div className="bg-[var(--surface-2)] rounded-2xl p-4 max-h-48 overflow-y-auto scrollbar-hide">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted-foreground)] mb-2">
                 Alumnos ({previewStudents.length}) y sus padres
               </p>
               <div className="space-y-1.5">
                 {previewStudents.map(({ student, parents }) => (
                   <div key={student.studentId} className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-gray-700 dark:text-zinc-300">{student.lastName}, {student.firstName}</span>
-                    <span className="text-xs text-gray-400 dark:text-zinc-500 truncate ml-2 max-w-[180px]">
+                    <span className="font-medium text-[var(--foreground)]">{student.lastName}, {student.firstName}</span>
+                    <span className="text-xs text-[var(--muted-foreground)] truncate ml-2 max-w-[180px]">
                       {parents.length > 0 ? parents.join(", ") : "Sin padre asignado"}
                     </span>
                   </div>
@@ -519,11 +519,11 @@ export default function HorariosList({
             </div>
           )}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Día</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Día</label>
             <Select value={form.dayOfWeek} onChange={(val) => updateField("dayOfWeek", val)} options={Object.entries(dayLabels).map(([k, v]) => ({value: k, label: v}))} placeholder="" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Turno</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Turno</label>
             <Select value={form.shift} onChange={(val) => {
               updateField("shift", val)
               updateField("startTime", val === "MAÑANA" ? "06:10" : "12:00")
@@ -532,37 +532,37 @@ export default function HorariosList({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Inicio</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Inicio</label>
               <TimePickerField value={form.startTime} onChange={(val) => updateField("startTime", val)} />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Fin</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Fin</label>
               <TimePickerField value={form.endTime} onChange={(val) => updateField("endTime", val)} />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Aula</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Aula</label>
             <Select value={form.classroom} onChange={(val) => updateField("classroom", val)} options={classrooms.map(a => ({value: a.name, label: a.name + (a.code ? ` (${a.code})` : "")}))} placeholder="Sin aula" />
           </div>
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => { setShowCreate(false); setEditing(null) }} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">Cancelar</button>
-          <button onClick={showCreate ? handleCreate : handleSave} disabled={loading || !form.courseId} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <button onClick={() => { setShowCreate(false); setEditing(null) }} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
+          <button onClick={showCreate ? handleCreate : handleSave} disabled={loading || !form.courseId} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : showCreate ? "Crear" : "Guardar"}
           </button>
         </div>
       </Modal>
 
       <Modal open={showJornada} onClose={() => setShowJornada(false)} title="Crear Jornada" size="2xl" scroll="inside">
-        <p className="text-sm text-gray-500 dark:text-zinc-400 mb-6">Define los bloques de curso para un día completo. El receso se agrega automáticamente.</p>
+        <p className="text-sm text-[var(--muted-foreground)] mb-6">Define los bloques de curso para un día completo. El receso se agrega automáticamente.</p>
 
         <div className="flex gap-4 mb-6">
           <div className="flex-1">
-            <label className="block text-xs font-medium text-gray-500 mb-1">Día</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Día</label>
             <Select value={jornadaDay} onChange={setJornadaDay} options={Object.entries(dayLabels).map(([k, v]) => ({value: k, label: v}))} placeholder="" />
           </div>
           <div className="flex-1">
-            <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Turno</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Turno</label>
             <Select value={jornadaShift} onChange={setJornadaShift} options={[{value: "MAÑANA", label: "Mañana (6:10 - 12:00)"}, {value: "TARDE", label: "Tarde (12:00 - 18:00)"}]} />
           </div>
         </div>
@@ -572,30 +572,30 @@ export default function HorariosList({
             ? sections.filter((s) => String(s.gradeId) === blocks[idx].gradeId)
             : []
           return (
-            <div key={idx} className="border border-gray-200 dark:border-zinc-700 rounded-[25px] p-5 mb-4">
+            <div key={idx} className="border border-[var(--surface-border)] rounded-2xl p-5 mb-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-sm text-gray-900 dark:text-white/90">{block.label}</h3>
-                <span className="text-xs text-gray-400 dark:text-zinc-500">{block.start} – {block.end}</span>
+                <h3 className="font-semibold text-sm text-[var(--foreground)]">{block.label}</h3>
+                <span className="text-xs text-[var(--muted-foreground)]">{block.start} – {block.end}</span>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Curso</label>
+                  <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Curso</label>
                   <Select value={blocks[idx]?.courseId ?? ""} onChange={(val) => updateBlock(idx, "courseId", val)} options={courses.map(c => ({value: String(c.id), label: c.name}))} placeholder="Seleccionar..." />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Profesor</label>
+                  <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Profesor</label>
                   <Select value={blocks[idx]?.teacherId ?? ""} onChange={(val) => updateBlock(idx, "teacherId", val)} options={teachers.map(t => ({value: String(t.id), label: t.name + (t.speciality ? ` — ${t.speciality}` : "")}))} placeholder="Seleccionar..." />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Grado</label>
+                  <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Grado</label>
                   <Select value={blocks[idx]?.gradeId ?? ""} onChange={(val) => { updateBlock(idx, "gradeId", val); updateBlock(idx, "sectionId", "") }} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Seleccionar..." />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Sección</label>
+                  <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>
                   <Select key={`blk-sec-${idx}-${blocks[idx]?.gradeId ?? ""}`} value={blocks[idx]?.sectionId ?? ""} onChange={(val) => updateBlock(idx, "sectionId", val)} options={blocks[idx]?.gradeId ? sections.filter((s) => String(s.gradeId) === blocks[idx].gradeId).map(sec => ({value: String(sec.id), label: sec.name})) : []} placeholder="Seleccionar..." />
                 </div>
                 <div className="col-span-2">
-<label className="block text-xs font-medium text-gray-500 dark:text-zinc-400 mb-1">Aula</label>
+<label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Aula</label>
                   <Select value={blocks[idx]?.classroom ?? ""} onChange={(val) => updateBlock(idx, "classroom", val)} options={classrooms.map(a => ({value: a.name, label: a.name + (a.code ? ` (${a.code})` : "")}))} placeholder="Sin aula" />
                 </div>
                   </div>
@@ -603,27 +603,27 @@ export default function HorariosList({
               )
             })}
 
-        <div className="bg-amber-50 dark:bg-amber-950/30 rounded-[20px] p-4 text-sm text-amber-700 dark:text-amber-300 mb-4">
+        <div className="bg-amber-50 dark:bg-amber-950/30 rounded-2xl p-4 text-sm text-amber-700 dark:text-amber-300 mb-4">
           <span className="font-semibold">Receso:</span> {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].find((b) => b.recess)?.start} – {shiftBlocks[jornadaShift as keyof typeof shiftBlocks].find((b) => b.recess)?.end} (15 min) — se agrega automáticamente
         </div>
 
         <div className="flex gap-3 mt-6">
-          <button onClick={() => setShowJornada(false)} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">Cancelar</button>
-          <button onClick={handleCreateJornada} disabled={loading || blocks.every((b) => !b.courseId)} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <button onClick={() => setShowJornada(false)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
+          <button onClick={handleCreateJornada} disabled={loading || blocks.every((b) => !b.courseId)} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Guardar Jornada"}
           </button>
         </div>
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar horario" size="sm">
-        <p className="text-sm text-gray-500 dark:text-zinc-400 text-center">{deleting ? `${dayLabels[deleting.dayOfWeek]} — ${deleting.course.name} (${deleting.startTime} - ${deleting.endTime}). Esta acción no se puede deshacer.` : ""}</p>
+        <p className="text-sm text-[var(--muted-foreground)] text-center">{deleting ? `${dayLabels[deleting.dayOfWeek]} — ${deleting.course.name} (${deleting.startTime} - ${deleting.endTime}). Esta acción no se puede deshacer.` : ""}</p>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-gray-500 dark:text-zinc-400 hover:bg-gray-50 dark:hover:bg-zinc-800/50 transition-all">Cancelar</button>
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
           <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
             {loading ? "Eliminando..." : "Eliminar"}
           </button>
         </div>
       </Modal>
-    </>
+    </div>
   )
 }

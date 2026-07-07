@@ -17,26 +17,26 @@ function FormFields({ form, setForm }: { form: { name: string; code: string; cap
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Nombre del Aula</label>
+        <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nombre del Aula</label>
         <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required
-          className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Aula 101" />
+          className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Aula 101" />
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Código</label>
+          <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Código</label>
           <input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })}
-            className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="A-101" />
+            className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="A-101" />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Capacidad</label>
+          <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Capacidad</label>
           <input type="number" min={1} value={form.capacity} onChange={(e) => setForm({ ...form, capacity: e.target.value })}
-            className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="30" />
+            className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="30" />
         </div>
       </div>
       <div>
-        <label className="block text-xs font-medium text-gray-500 mb-1">Ubicación</label>
+        <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Ubicación</label>
         <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })}
-          className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Pabellón A, 2do piso" />
+          className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Pabellón A, 2do piso" />
       </div>
     </div>
   )
@@ -98,10 +98,10 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
   }
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Aulas</h1>
-        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium text-center">+ Registrar Aula</button>
+    <div className="space-y-4 md:space-y-6 pt-3 md:pt-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">Aulas</h1>
+        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] sa-btn sa-btn-primary px-6 py-2.5 text-sm font-medium text-center">+ Registrar Aula</button>
       </div>
 
       <DataTable
@@ -116,8 +116,8 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
             sortable: true,
             render: (a) => (
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white/90">{a.name}</p>
-                {a.code && <p className="text-[11px] text-gray-500 dark:text-zinc-400">{a.code}</p>}
+                <p className="text-sm font-medium text-[var(--foreground)]">{a.name}</p>
+                {a.code && <p className="text-[11px] text-[var(--muted-foreground)]">{a.code}</p>}
               </div>
             ),
           },
@@ -125,13 +125,13 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
             key: "capacity",
             label: "Capacidad",
             sortable: true,
-            render: (a) => a.capacity != null ? <span className="text-sm text-gray-700 dark:text-zinc-300">{a.capacity} estudiantes</span> : <span className="text-sm text-gray-400 dark:text-zinc-600">—</span>,
+            render: (a) => a.capacity != null ? <span className="text-sm text-[var(--foreground)]">{a.capacity} estudiantes</span> : <span className="text-sm text-[var(--muted-foreground)]">—</span>,
           },
           {
             key: "location",
             label: "Ubicación",
             sortable: true,
-            render: (a) => a.location ? <span className="text-sm text-gray-700 dark:text-zinc-300">{a.location}</span> : <span className="text-sm text-gray-400 dark:text-zinc-600">—</span>,
+            render: (a) => a.location ? <span className="text-sm text-[var(--foreground)]">{a.location}</span> : <span className="text-sm text-[var(--muted-foreground)]">—</span>,
           },
         ]}
       />
@@ -139,8 +139,8 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Registrar Aula" size="md" scroll="inside">
         <FormFields form={form} setForm={setForm} />
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleCreate} disabled={loading || !form.name} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
+          <button onClick={handleCreate} disabled={loading || !form.name} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Registrar"}
           </button>
         </div>
@@ -149,22 +149,22 @@ export default function AulasList({ aulas }: { aulas: Aula[] }) {
       <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Aula" size="md" scroll="inside">
         <FormFields form={form} setForm={setForm} />
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
+          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Guardar"}
           </button>
         </div>
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar aula" size="sm">
-        <p className="text-sm text-gray-500 text-center">Se eliminará {deleting?.name}. Esta acción no se puede deshacer.</p>
+        <p className="text-sm text-[var(--muted-foreground)] text-center">Se eliminará {deleting?.name}. Esta acción no se puede deshacer.</p>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
           <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
             {loading ? "Eliminando..." : "Eliminar"}
           </button>
         </div>
       </Modal>
-    </>
+    </div>
   )
 }

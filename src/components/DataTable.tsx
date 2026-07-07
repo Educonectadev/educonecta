@@ -94,7 +94,7 @@ export default function DataTable<T extends { id: number }>({
               <tr
                 key={item.id}
                 onClick={onRowClick ? () => onRowClick(item) : undefined}
-                className={`border-b border-[var(--surface-border)] last:border-b-0 transition-colors ${
+                className={`border-b border-[var(--surface-border)] last:border-b-0 ${
                   onRowClick ? "cursor-pointer" : ""
                 } hover:bg-[var(--surface-2)]`}
               >
@@ -109,7 +109,7 @@ export default function DataTable<T extends { id: number }>({
                       {onEdit && (
                         <button
                           onClick={(e) => { e.stopPropagation(); onEdit(item) }}
-                          className="size-8 rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] transition-colors"
+                          className="size-8 rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:bg-[var(--accent)]/10 hover:text-[var(--accent)]"
                           aria-label="Editar"
                         >
                           {getIcon("edit", { size: 15 })}
@@ -118,7 +118,7 @@ export default function DataTable<T extends { id: number }>({
                       {onDelete && (
                         <button
                           onClick={(e) => { e.stopPropagation(); onDelete(item) }}
-                          className="size-8 rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-500 transition-colors"
+                          className="size-8 rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-500"
                           aria-label="Eliminar"
                         >
                           {getIcon("trash", { size: 15 })}

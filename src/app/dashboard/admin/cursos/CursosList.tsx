@@ -257,13 +257,13 @@ export default function CursosList({
   }
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+    <div className="space-y-4 md:space-y-6 pt-3 md:pt-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Cursos</h1>
-          <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">{courses.length} cursos registrados · {teachers.length} profesores disponibles</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">Cursos</h1>
+          <p className="text-xs text-[var(--muted-foreground)] mt-1">{courses.length} cursos registrados · {teachers.length} profesores disponibles</p>
         </div>
-        <button onClick={openCreate} className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium text-center">
+        <button onClick={openCreate} className="rounded-[30px] sa-btn sa-btn-primary px-6 py-2.5 text-sm font-medium text-center">
           + Nuevo Curso
         </button>
       </div>
@@ -280,8 +280,8 @@ export default function CursosList({
             sortable: true,
             render: (c) => (
               <div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white/90">{c.name}</p>
-                {c.code && <p className="text-[11px] text-gray-500 dark:text-zinc-400">Código: {c.code}</p>}
+                <p className="text-sm font-medium text-[var(--foreground)]">{c.name}</p>
+                {c.code && <p className="text-[11px] text-[var(--muted-foreground)]">Código: {c.code}</p>}
               </div>
             ),
           },
@@ -289,7 +289,7 @@ export default function CursosList({
             key: "description",
             label: "Descripción",
             sortable: false,
-            render: (c) => c.description ? <span className="text-sm text-gray-700 dark:text-zinc-300 line-clamp-1">{c.description}</span> : <span className="text-sm text-gray-400 dark:text-zinc-600">—</span>,
+            render: (c) => c.description ? <span className="text-sm text-[var(--foreground)] line-clamp-1">{c.description}</span> : <span className="text-sm text-[var(--muted-foreground)]">—</span>,
           },
           {
             key: "scheduleCount",
@@ -316,15 +316,15 @@ export default function CursosList({
                       </span>
                     ))}
                     {c.teachers.length > 2 && (
-                      <span className="text-[11px] text-gray-500 dark:text-zinc-400">+{c.teachers.length - 2}</span>
+                      <span className="text-[11px] text-[var(--muted-foreground)]">+{c.teachers.length - 2}</span>
                     )}
                   </div>
                 ) : (
-                  <span className="text-sm text-gray-400 dark:text-zinc-500">Sin asignar</span>
+                  <span className="text-sm text-[var(--muted-foreground)]">Sin asignar</span>
                 )}
                 <button
                   onClick={(e) => { e.stopPropagation(); onAssign(c) }}
-                  className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 ml-1"
+                  className="text-xs text-[var(--accent)] ml-1"
                 >
                   Asignar
                 </button>
@@ -337,25 +337,25 @@ export default function CursosList({
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Nuevo Curso" size="lg" scroll="inside">
         <div className="space-y-5">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Información del Curso</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted-foreground)] mb-3">Información del Curso</p>
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Nombre *</label>
+                <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nombre *</label>
                 <input
                   value={form.name}
                   onChange={(e) => onNameChange(e.target.value)}
-                  className={`w-full rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${nameError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-black focus:ring-black"}`}
+                  className={`w-full rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${nameError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-[var(--surface-border)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"}`}
                   placeholder="Ej. Matemática"
                 />
                 {nameError && <p className="text-xs text-red-500 mt-1">{nameError}</p>}
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Código</label>
+                <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Código</label>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                   <input
                     value={form.code}
                     onChange={(e) => { setForm({ ...form, code: e.target.value }); setAutoCode(false) }}
-                    className={`w-full sm:flex-1 rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${codeError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-black focus:ring-black"}`}
+                    className={`w-full sm:flex-1 rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${codeError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-[var(--surface-border)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"}`}
                     placeholder="MAT"
                   />
                   <button
@@ -371,8 +371,8 @@ export default function CursosList({
                     }}
                     className={`inline-flex items-center justify-between sm:justify-start gap-2 shrink-0 rounded-full border px-3 py-2 text-xs font-medium transition-all duration-150 active:scale-95 ${
                       autoCode
-                        ? "bg-black text-white border-black"
-                        : "bg-white text-gray-700 border-gray-300 hover:border-gray-400"
+                        ? "bg-[var(--accent)] text-white border-[var(--accent)]"
+                        : "bg-[var(--surface-2)] text-[var(--foreground)] border-[var(--surface-border)]"
                     }`}
                   >
                     <span className="flex items-center gap-2">
@@ -394,11 +394,11 @@ export default function CursosList({
                 {codeError && <p className="text-xs text-red-500 mt-1">{codeError}</p>}
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Descripción</label>
+                <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Descripción</label>
                 <textarea
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+                  className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all"
                   rows={2}
                   placeholder="Breve descripción del curso (opcional)"
                   maxLength={255}
@@ -408,11 +408,11 @@ export default function CursosList({
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">Asignar Profesor (opcional)</p>
-            <p className="text-xs text-gray-400 mb-3">Si asignas un profesor ahora, podrá dictar este curso inmediatamente.</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted-foreground)] mb-3">Asignar Profesor (opcional)</p>
+            <p className="text-xs text-[var(--muted-foreground)] mb-3">Si asignas un profesor ahora, podrá dictar este curso inmediatamente.</p>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Profesor</label>
+                <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Profesor</label>
                 <Select
                   value={form.initialTeacherId}
                   onChange={(val) => setForm({ ...form, initialTeacherId: val })}
@@ -421,7 +421,7 @@ export default function CursosList({
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+                <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Grado</label>
                 <Select
                   value={form.initialGradeId}
                   onChange={(val) => setForm({ ...form, initialGradeId: val, initialSectionId: "" })}
@@ -430,7 +430,7 @@ export default function CursosList({
                 />
               </div>
               <div className="col-span-2">
-                <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+                <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>
                 <Select
                   key={`create-sec-${form.initialGradeId}`}
                   value={form.initialSectionId}
@@ -443,11 +443,11 @@ export default function CursosList({
           </div>
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
           <button
             onClick={handleCreate}
             disabled={loading || !form.name.trim() || !!nameError || !!codeError}
-            className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+            className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium"
           >
             {loading ? "Creando..." : "Crear Curso"}
           </button>
@@ -457,39 +457,39 @@ export default function CursosList({
       <Modal open={!!editing} onClose={() => setEditing(null)} title="Editar Curso" size="md" scroll="inside">
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Nombre *</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nombre *</label>
             <input
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className={`w-full rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${nameError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-black focus:ring-black"}`}
+              className={`w-full rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${nameError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-[var(--surface-border)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"}`}
             />
             {nameError && <p className="text-xs text-red-500 mt-1">{nameError}</p>}
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Código</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Código</label>
             <input
               value={form.code}
               onChange={(e) => setForm({ ...form, code: e.target.value })}
-              className={`w-full rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${codeError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-200 focus:border-black focus:ring-black"}`}
+              className={`w-full rounded-[30px] border px-4 py-2.5 text-sm focus:outline-none focus:ring-1 transition-all ${codeError ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-[var(--surface-border)] focus:border-[var(--accent)] focus:ring-[var(--accent)]"}`}
             />
             {codeError && <p className="text-xs text-red-500 mt-1">{codeError}</p>}
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Descripción</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Descripción</label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
-              className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all"
+              className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all"
               rows={3}
               maxLength={255}
             />
           </div>
           {editing && editing.teachers.length > 0 && (
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-2">Profesores actualmente asignados</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-2">Profesores actualmente asignados</label>
               <div className="space-y-1.5">
                 {editing.teachers.map((ct) => (
-                  <div key={ct.id} className="text-xs flex items-center justify-between bg-gray-50 rounded-[20px] px-3 py-2">
+                  <div key={ct.id} className="text-xs flex items-center justify-between bg-[var(--surface-2)] rounded-[20px] px-3 py-2">
                     <span>
                       {ct.teacher.user.name}
                       {(ct.grade || ct.section) && ` (${ct.grade?.name ?? ""}${ct.grade && ct.section ? " / " : ""}${ct.section?.name ?? ""})`}
@@ -501,11 +501,11 @@ export default function CursosList({
           )}
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
           <button
             onClick={handleSave}
             disabled={loading || !form.name.trim() || !!nameError || !!codeError}
-            className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+            className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium"
           >
             {loading ? "Guardando..." : "Guardar"}
           </button>
@@ -513,18 +513,18 @@ export default function CursosList({
       </Modal>
 
       <Modal open={!!assigning} onClose={closeAssign} title="Asignar Profesor" size="md" scroll="inside">
-        <p className="text-sm text-gray-500 mb-1">Curso: <strong className="text-gray-900">{assigning?.name}</strong></p>
+        <p className="text-sm text-[var(--muted-foreground)] mb-1">Curso: <strong className="text-[var(--foreground)]">{assigning?.name}</strong></p>
         {assigning && assigning.scheduleCount && assigning.scheduleCount > 0 && (
           <p className="text-xs text-amber-600 mb-4">⚠ Este curso tiene {assigning.scheduleCount} horario(s) creado(s)</p>
         )}
 
         {assigning && assigning.teachers.length > 0 && (
           <div className="mb-4">
-            <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-2">Asignados actualmente</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--muted-foreground)] mb-2">Asignados actualmente</p>
             <div className="space-y-1.5">
               {assigning.teachers.map((ct) => (
-                <div key={ct.id} className="flex items-center justify-between text-sm bg-gray-50 rounded-[20px] px-3 py-2">
-                  <span className="text-gray-600">
+                <div key={ct.id} className="flex items-center justify-between text-sm bg-[var(--surface-2)] rounded-[20px] px-3 py-2">
+                  <span className="text-[var(--foreground)]">
                     {ct.teacher.user.name} {ct.grade ? `(${ct.grade.name}${ct.section ? ` / ${ct.section.name}` : ""})` : "(Todos los grados)"}
                   </span>
                   <button onClick={() => handleRemoveAssignment(ct.id)} className="text-xs text-red-500 hover:text-red-700">Quitar</button>
@@ -534,9 +534,9 @@ export default function CursosList({
           </div>
         )}
 
-        <div className="border-t border-gray-100 pt-4 space-y-4">
+        <div className="border-t border-[var(--surface-border)] pt-4 space-y-4">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Profesor *</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Profesor *</label>
             <Select
               value={assignForm.teacherId}
               onChange={(val) => setAssignForm({ ...assignForm, teacherId: val })}
@@ -545,7 +545,7 @@ export default function CursosList({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Grado</label>
             <Select
               value={assignForm.gradeId}
               onChange={(val) => setAssignForm({ ...assignForm, gradeId: val, sectionId: "" })}
@@ -554,7 +554,7 @@ export default function CursosList({
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>
             <Select
               key={`assign-sec-${assignForm.gradeId}`}
               value={assignForm.sectionId}
@@ -566,11 +566,11 @@ export default function CursosList({
         </div>
 
         <div className="flex gap-3 mt-8">
-          <button onClick={closeAssign} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cerrar</button>
+          <button onClick={closeAssign} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cerrar</button>
           <button
             onClick={handleAssign}
             disabled={loading || !assignForm.teacherId}
-            className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium"
+            className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium"
           >
             {loading ? "Asignando..." : "Asignar"}
           </button>
@@ -578,8 +578,8 @@ export default function CursosList({
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar curso" size="sm">
-        <p className="text-sm text-gray-500 text-center">
-          Se eliminará <strong className="text-gray-900">{deleting?.name}</strong>.
+        <p className="text-sm text-[var(--muted-foreground)] text-center">
+          Se eliminará <strong className="text-[var(--foreground)]">{deleting?.name}</strong>.
         </p>
         {deleting && deleting.scheduleCount && deleting.scheduleCount > 0 && (
           <p className="text-xs text-amber-600 text-center mt-2">
@@ -591,14 +591,14 @@ export default function CursosList({
             ⚠ Tiene {deleting.teachers.length} asignación(es) de profesor que se eliminarán.
           </p>
         )}
-        <p className="text-xs text-gray-400 text-center mt-2">Esta acción no se puede deshacer.</p>
+        <p className="text-xs text-[var(--muted-foreground)] text-center mt-2">Esta acción no se puede deshacer.</p>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
           <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
             {loading ? "Eliminando..." : "Eliminar"}
           </button>
         </div>
       </Modal>
-    </>
+    </div>
   )
 }

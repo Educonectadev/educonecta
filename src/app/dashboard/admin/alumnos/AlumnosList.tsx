@@ -142,10 +142,10 @@ export default function AlumnosList({
   }
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Alumnos</h1>
-        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium text-center">
+    <div className="space-y-4 md:space-y-6 pt-3 md:pt-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">Alumnos</h1>
+        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] sa-btn sa-btn-primary px-6 py-2.5 text-sm font-medium text-center">
           + Registrar Alumno
         </button>
       </div>
@@ -162,12 +162,12 @@ export default function AlumnosList({
             sortable: true,
             render: (s) => (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-zinc-300 shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-[var(--surface-3)] flex items-center justify-center text-xs font-medium text-[var(--muted-foreground)] shrink-0">
                   {s.firstName.charAt(0)}{s.lastName.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{s.firstName} {s.lastName}</p>
-                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">{s.email || "—"}</p>
+                  <p className="text-sm font-medium text-[var(--foreground)]">{s.firstName} {s.lastName}</p>
+                  <p className="text-[11px] text-[var(--muted-foreground)]">{s.email || "—"}</p>
                 </div>
               </div>
             ),
@@ -194,31 +194,31 @@ export default function AlumnosList({
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
-              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nombre</label>
+              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-2xl border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Apellido</label>
-              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Documento</label>
-              <input value={form.documentId} onChange={(e) => setForm({ ...form, documentId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Email</label>
-              <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Apellido</label>
+              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-2xl border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Documento</label>
+              <input value={form.documentId} onChange={(e) => setForm({ ...form, documentId: e.target.value })} className="w-full rounded-2xl border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Email</label>
+              <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full rounded-2xl border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Grado</label>
               <Select value={form.gradeId} onChange={(val) => setForm({...form, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Sin grado" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>
               <Select value={form.sectionId} onChange={(val) => setForm({...form, sectionId: val})} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Sin sección" />
             </div>
           </div>
@@ -229,7 +229,7 @@ export default function AlumnosList({
               onChange={(e) => setForm({ ...form, createAccount: e.target.checked })}
               className="size-4"
             />
-            <span className="text-xs text-gray-600">
+            <span className="text-xs text-[var(--muted-foreground)]">
               Crear cuenta de acceso para que el alumno entre a su portal.
             </span>
           </label>
@@ -240,8 +240,8 @@ export default function AlumnosList({
           )}
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.documentId} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
+          <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.documentId} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Registrar"}
           </button>
         </div>
@@ -258,12 +258,12 @@ export default function AlumnosList({
             </div>
             <div className="space-y-3">
               <div>
-                <p className="text-[11px] uppercase tracking-widest text-gray-400 dark:text-zinc-500">Email</p>
-                <p className="text-sm font-mono text-gray-900 dark:text-white/90">{createdCredentials.email}</p>
+                <p className="text-[11px] uppercase tracking-widest text-[var(--muted-foreground)]">Email</p>
+                <p className="text-sm font-mono text-[var(--foreground)]">{createdCredentials.email}</p>
               </div>
               <div>
-                <p className="text-[11px] uppercase tracking-widest text-gray-400 dark:text-zinc-500">Contraseña temporal</p>
-                <p className="text-sm font-mono text-gray-900 dark:text-white/90 select-all bg-gray-50 dark:bg-zinc-800 rounded-[20px] px-4 py-2 inline-block">{createdCredentials.tempPassword}</p>
+                <p className="text-[11px] uppercase tracking-widest text-[var(--muted-foreground)]">Contraseña temporal</p>
+                <p className="text-sm font-mono text-[var(--foreground)] select-all bg-[var(--surface-2)] border border-[var(--surface-border)] rounded-2xl px-4 py-2 inline-block">{createdCredentials.tempPassword}</p>
               </div>
             </div>
             <button
@@ -280,52 +280,52 @@ export default function AlumnosList({
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
-              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nombre</label>
+              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-2xl border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Apellido</label>
-              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Documento</label>
-              <input value={form.documentId} onChange={(e) => setForm({ ...form, documentId: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Email</label>
-              <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Apellido</label>
+              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-2xl border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Grado</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Documento</label>
+              <input value={form.documentId} onChange={(e) => setForm({ ...form, documentId: e.target.value })} className="w-full rounded-2xl border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Email</label>
+              <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full rounded-2xl border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Grado</label>
               <Select value={form.gradeId} onChange={(val) => setForm({...form, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Sin grado" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Sección</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>
               <Select value={form.sectionId} onChange={(val) => setForm({...form, sectionId: val})} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Sin sección" />
             </div>
           </div>
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
+          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Guardar"}
           </button>
         </div>
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar alumno" size="sm">
-        <p className="text-sm text-gray-500 text-center">Se eliminará {deleting?.firstName} {deleting?.lastName}. Esta acción no se puede deshacer.</p>
+        <p className="text-sm text-[var(--muted-foreground)] text-center">Se eliminará {deleting?.firstName} {deleting?.lastName}. Esta acción no se puede deshacer.</p>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
           <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
             {loading ? "Eliminando..." : "Eliminar"}
           </button>
         </div>
       </Modal>
-    </>
+    </div>
   )
 }

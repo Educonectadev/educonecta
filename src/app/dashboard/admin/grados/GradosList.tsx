@@ -140,42 +140,42 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
+    <div className="space-y-4 md:space-y-6 pt-3 md:pt-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Grados y Secciones</h1>
-          <p className="mt-1 text-sm text-gray-500">Administra los grados y sus secciones</p>
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">Grados y Secciones</h1>
+          <p className="mt-1 text-sm text-[var(--muted-foreground)]">Administra los grados y sus secciones</p>
         </div>
         <button
           onClick={() => { setModal("create-grade"); setForm({ name: "", level: "", capacity: "", defaultShift: "" }); setError("") }}
-          className="btn-primary px-5 py-2 rounded-[30px] text-sm font-medium"
+          className="sa-btn sa-btn-primary px-5 py-2 rounded-[30px] text-sm font-medium"
         >
           + Nuevo Grado
         </button>
       </div>
 
       {grades.length === 0 ? (
-        <p className="text-sm text-gray-400 dark:text-zinc-600">No hay grados registrados. Crea el primer grado.</p>
+        <p className="text-sm text-[var(--muted-foreground)]">No hay grados registrados. Crea el primer grado.</p>
       ) : (
         <div className="space-y-4">
           {grades.map((grade) => (
-            <div key={grade.id} className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-[25px] overflow-hidden">
-              <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-zinc-800">
+            <div key={grade.id} className="sa-surface overflow-hidden">
+              <div className="flex items-center justify-between p-5 border-b border-[var(--surface-border)]">
                 <div>
-                  <span className="font-semibold text-gray-900 dark:text-white/90">{grade.name}</span>
-                  {grade.level && <span className="ml-2 text-xs text-gray-400 dark:text-zinc-600">{grade.level}</span>}
-                  <span className="ml-3 text-xs text-gray-400 dark:text-zinc-600">{grade.sections.length} secciones</span>
+                  <span className="font-semibold text-[var(--foreground)]">{grade.name}</span>
+                  {grade.level && <span className="ml-2 text-xs text-[var(--muted-foreground)]">{grade.level}</span>}
+                  <span className="ml-3 text-xs text-[var(--muted-foreground)]">{grade.sections.length} secciones</span>
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => openSectionCreate(grade)}
-                    className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white/90 transition-all"
+                    className="text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-all"
                   >
                     + Sección
                   </button>
                   <button
                     onClick={() => openGradeEdit(grade)}
-                    className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white/90 transition-all"
+                    className="text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-all"
                   >
                     Editar
                   </button>
@@ -188,17 +188,17 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
                 </div>
               </div>
               {grade.sections.length > 0 ? (
-                <div className="divide-y divide-gray-200 dark:divide-zinc-800">
+                <div className="divide-y divide-[var(--surface-border)]">
                   {grade.sections.map((s) => (
                     <div key={s.id} className="flex items-center justify-between px-5 py-3">
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-gray-600 dark:text-zinc-400">Sección {s.name}</span>
-                        {s.capacity && <span className="text-xs text-gray-400 dark:text-zinc-600">Capacidad: {s.capacity}</span>}
+                        <span className="text-sm font-medium text-[var(--muted-foreground)]">Sección {s.name}</span>
+                        {s.capacity && <span className="text-xs text-[var(--muted-foreground)]">Capacidad: {s.capacity}</span>}
                       </div>
                       <div className="flex gap-2">
                         <button
                           onClick={() => openSectionEdit(s)}
-                          className="text-xs text-gray-400 dark:text-zinc-500 hover:text-gray-900 dark:hover:text-white/90 transition-all"
+                          className="text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-all"
                         >
                           Editar
                         </button>
@@ -213,7 +213,7 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
                   ))}
                 </div>
               ) : (
-                <p className="px-5 py-3 text-sm text-gray-400 dark:text-zinc-600">Sin secciones</p>
+                <p className="px-5 py-3 text-sm text-[var(--muted-foreground)]">Sin secciones</p>
               )}
             </div>
           ))}
@@ -235,23 +235,23 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
       >
         {(modal === "delete-grade" || modal === "delete-section") ? (
           <form onSubmit={handleSubmit}>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-[var(--muted-foreground)] mb-6">
               ¿Estás seguro de eliminar {modal === "delete-grade" ? "este grado" : "esta sección"}? Los estudiantes asociados perderán la asignación.
             </p>
             {error && <p className="text-xs text-red-500 mb-4">{error}</p>}
             <div className="flex gap-3 justify-end">
-              <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-black transition-all">Cancelar</button>
+              <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-all">Cancelar</button>
               <button type="submit" disabled={loading} className="bg-red-600 text-white px-5 py-2 rounded-[30px] text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">{loading ? "..." : "Eliminar"}</button>
             </div>
           </form>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Nombre</label>
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nombre</label>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
+                className="w-full border border-[var(--surface-border)] rounded-2xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
                 placeholder={modal === "create-section" ? "Ej: A, B, C..." : "Ej: 1ero, 2do..."}
                 required
                 autoFocus
@@ -260,31 +260,31 @@ export default function GradosList({ grades: initial }: { grades: Grade[] }) {
             {(modal === "create-grade" || modal === "edit-grade") && (
               <>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Nivel</label>
+                  <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nivel</label>
                   <Select value={form.level} onChange={(val) => setForm({...form, level: val})} options={[{value: "Inicial", label: "Inicial"}, {value: "Primaria", label: "Primaria"}, {value: "Secundaria", label: "Secundaria"}]} placeholder="Sin nivel" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-500 mb-1">Turno por defecto</label>
+                  <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Turno por defecto</label>
                   <Select value={form.defaultShift} onChange={(val) => setForm({...form, defaultShift: val})} options={[{value: "MAÑANA", label: "Mañana"}, {value: "TARDE", label: "Tarde"}]} placeholder="Sin turno" />
                 </div>
               </>
             )}
             {(modal === "create-section" || modal === "edit-section") && (
               <div>
-                <label className="block text-xs font-medium text-gray-500 mb-1">Capacidad</label>
+                <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Capacidad</label>
                 <input
                   type="number"
                   value={form.capacity}
                   onChange={(e) => setForm({ ...form, capacity: e.target.value })}
-                  className="w-full border border-gray-200 rounded-[15px] px-3 py-2 text-sm focus:outline-none focus:border-gray-400"
+                  className="w-full border border-[var(--surface-border)] rounded-2xl px-3 py-2 text-sm focus:outline-none focus:border-[var(--accent)]"
                   placeholder="Opcional"
                 />
               </div>
             )}
             {error && <p className="text-xs text-red-500">{error}</p>}
             <div className="flex gap-3 justify-end pt-2">
-              <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-black transition-all">Cancelar</button>
-              <button type="submit" disabled={loading} className="btn-primary px-5 py-2 rounded-[30px] text-sm font-medium">{loading ? "..." : "Guardar"}</button>
+              <button type="button" onClick={() => setModal(null)} className="px-5 py-2 text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-all">Cancelar</button>
+              <button type="submit" disabled={loading} className="sa-btn sa-btn-primary px-5 py-2 rounded-[30px] text-sm font-medium">{loading ? "..." : "Guardar"}</button>
             </div>
           </form>
         )}

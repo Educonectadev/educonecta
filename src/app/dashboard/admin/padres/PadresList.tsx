@@ -103,10 +103,10 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
   }
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white/90">Padres</h1>
-        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] btn-primary px-6 py-2.5 text-sm font-medium text-center">+ Registrar Padre</button>
+    <div className="space-y-4 md:space-y-6 pt-3 md:pt-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-2xl font-bold tracking-tight text-[var(--foreground)]">Padres</h1>
+        <button onClick={() => { setShowCreate(true); resetForm() }} className="rounded-[30px] sa-btn sa-btn-primary px-6 py-2.5 text-sm font-medium text-center">+ Registrar Padre</button>
       </div>
 
       <DataTable
@@ -121,12 +121,12 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
             sortable: true,
             render: (p) => (
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-xs font-medium text-gray-600 dark:text-zinc-300 shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-[var(--surface-3)] flex items-center justify-center text-xs font-medium text-[var(--muted-foreground)] shrink-0">
                   {p.user.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white/90">{p.user.name}</p>
-                  <p className="text-[11px] text-gray-500 dark:text-zinc-400">{p.user.email}</p>
+                  <p className="text-sm font-medium text-[var(--foreground)]">{p.user.name}</p>
+                  <p className="text-[11px] text-[var(--muted-foreground)]">{p.user.email}</p>
                 </div>
               </div>
             ),
@@ -134,16 +134,16 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
           {
             key: "phone",
             label: "Teléfono",
-            render: (p) => p.user.phone ? <span className="text-sm text-gray-700 dark:text-zinc-300">{p.user.phone}</span> : <span className="text-sm text-gray-400 dark:text-zinc-600">—</span>,
+            render: (p) => p.user.phone ? <span className="text-sm text-[var(--foreground)]">{p.user.phone}</span> : <span className="text-sm text-[var(--muted-foreground)]">—</span>,
           },
           {
             key: "childrenCount",
             label: "Hijos",
             render: (p) => (
               <div>
-                <span className="text-sm font-medium text-gray-900 dark:text-white/90">{p.children.length}</span>
+                <span className="text-sm font-medium text-[var(--foreground)]">{p.children.length}</span>
                 {p.children.length > 0 && (
-                  <div className="text-[11px] text-gray-500 dark:text-zinc-400 mt-0.5">
+                  <div className="text-[11px] text-[var(--muted-foreground)] mt-0.5">
                     {p.children.map((c) => c.student.firstName).join(", ")}
                   </div>
                 )}
@@ -157,33 +157,33 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Nombres</label>
-              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Juan" />
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nombres</label>
+              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Juan" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Apellidos</label>
-              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" placeholder="Pérez" />
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Apellidos</label>
+              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" placeholder="Pérez" />
             </div>
           </div>
           {form.firstName && form.lastName && (
-            <div className="bg-gray-50 rounded-[20px] px-4 py-2.5">
-              <p className="text-[11px] text-gray-400">Email generado automáticamente:</p>
-              <p className="text-sm font-medium text-gray-700">{form.firstName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}.{form.lastName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}@colegio.edu.pe</p>
+            <div className="bg-[var(--surface-2)] rounded-[20px] px-4 py-2.5">
+              <p className="text-[11px] text-[var(--muted-foreground)]">Email generado automáticamente:</p>
+              <p className="text-sm font-medium text-[var(--foreground)]">{form.firstName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}.{form.lastName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}@colegio.edu.pe</p>
             </div>
           )}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Contraseña</label>
-            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Contraseña</label>
+            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
-            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Teléfono</label>
+            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Hijos vinculados</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Hijos vinculados</label>
             <div className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-hide">
               {allStudents.map((s) => (
-                <label key={s.id} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                <label key={s.id} className="flex items-center gap-2 text-sm text-[var(--muted-foreground)] cursor-pointer">
                   <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} />
                   {s.firstName} {s.lastName}
                 </label>
@@ -192,8 +192,8 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
           </div>
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.password} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <button onClick={() => setShowCreate(false)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
+          <button onClick={handleCreate} disabled={loading || !form.firstName || !form.lastName || !form.password} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Registrar"}
           </button>
         </div>
@@ -203,27 +203,27 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Nombres</label>
-              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nombres</label>
+              <input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Apellidos</label>
-              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+              <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Apellidos</label>
+              <input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" />
             </div>
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Nueva contraseña (vacío = mantener)</label>
-            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Nueva contraseña (vacío = mantener)</label>
+            <input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Teléfono</label>
-            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-[30px] border border-gray-200 px-4 py-2.5 text-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black transition-all" />
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Teléfono</label>
+            <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full rounded-[30px] border border-[var(--surface-border)] px-4 py-2.5 text-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] transition-all" />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Hijos vinculados</label>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Hijos vinculados</label>
             <div className="space-y-1.5 max-h-40 overflow-y-auto scrollbar-hide">
               {allStudents.map((s) => (
-                <label key={s.id} className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                <label key={s.id} className="flex items-center gap-2 text-sm text-[var(--muted-foreground)] cursor-pointer">
                   <input type="checkbox" checked={form.studentIds.includes(s.id)} onChange={() => toggleChild(s.id)} />
                   {s.firstName} {s.lastName}
                 </label>
@@ -232,22 +232,22 @@ export default function PadresList({ parents, allStudents }: { parents: Parent[]
           </div>
         </div>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
-          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] btn-primary py-2.5 text-sm font-medium">
+          <button onClick={() => setEditing(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
+          <button onClick={handleSave} disabled={loading} className="flex-1 rounded-[30px] sa-btn sa-btn-primary py-2.5 text-sm font-medium">
             {loading ? "Guardando..." : "Guardar"}
           </button>
         </div>
       </Modal>
 
       <Modal open={!!deleting} onClose={() => setDeleting(null)} title="Eliminar padre" size="sm">
-        <p className="text-sm text-gray-500 text-center">Se eliminará {deleting?.user?.name}. Esta acción no se puede deshacer.</p>
+        <p className="text-sm text-[var(--muted-foreground)] text-center">Se eliminará {deleting?.user?.name}. Esta acción no se puede deshacer.</p>
         <div className="flex gap-3 mt-8">
-          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-gray-200 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Cancelar</button>
+          <button onClick={() => setDeleting(null)} className="flex-1 rounded-[30px] border border-[var(--surface-border)] py-2.5 text-sm font-medium text-[var(--muted-foreground)] transition-all">Cancelar</button>
           <button onClick={handleDelete} disabled={loading} className="flex-1 rounded-[30px] bg-red-600 text-white py-2.5 text-sm font-medium hover:bg-red-700 transition-all disabled:opacity-50">
             {loading ? "Eliminando..." : "Eliminar"}
           </button>
         </div>
       </Modal>
-    </>
+    </div>
   )
 }
