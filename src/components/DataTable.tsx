@@ -1,15 +1,12 @@
 "use client"
 
-import type { Selection, SortDescriptor } from "@heroui/react"
-import { Button, Checkbox, Table } from "@heroui/react"
-import { Icon } from "@iconify/react"
 import { useMemo, useState } from "react"
+import { getIcon } from "@/components/premium/iconRegistry"
 
 interface Column<T> {
   key: string
   label: string
   sortable?: boolean
-  width?: string
   className?: string
   render?: (item: T) => React.ReactNode
 }
@@ -21,7 +18,6 @@ interface DataTableProps<T> {
   onDelete?: (item: T) => void
   onRowClick?: (item: T) => void
   emptyMessage?: string
-  selectionMode?: "none" | "single" | "multiple"
 }
 
 export default function DataTable<T extends { id: number }>({
@@ -31,128 +27,111 @@ export default function DataTable<T extends { id: number }>({
   onDelete,
   onRowClick,
   emptyMessage = "No hay registros.",
-  selectionMode = "none",
 }: DataTableProps<T>) {
-  const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set())
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: columns[0]?.key,
-    direction: "ascending",
-  })
-
-  const sorted = useMemo(() => {
-    const col = sortDescriptor.column as string
-    if (!col) return data
-    return [...data].sort((a, b) => {
-      const first = String((a as any)[col] ?? "")
-      const second = String((b as any)[col] ?? "")
-      let cmp = first.localeCompare(second)
-      if (sortDescriptor.direction === "descending") cmp *= -1
-      return cmp
-    })
-  }, [data, sortDescriptor])
+  const [sortKey, setSortKey] = useState(columns[0]?.key ?? "")
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc")
 
   const hasActions = !!onEdit || !!onDelete
 
+  const sorted = useMemo(() => {
+    if (!sortKey) return data
+    return [...data].sort((a, b) => {
+      const first = String((a as any)[sortKey] ?? "")
+      const second = String((b as any)[sortKey] ?? "")
+      let cmp = first.localeCompare(second)
+      if (sortDir === "desc") cmp *= -1
+      return cmp
+    })
+  }, [data, sortKey, sortDir])
+
+  function toggleSort(key: string) {
+    if (sortKey === key) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc")
+    } else {
+      setSortKey(key)
+      setSortDir("asc")
+    }
+  }
+
+  if (data.length === 0) {
+    return (
+      <div className="sa-surface py-14 md:py-16 text-center">
+        <div className="size-12 rounded-2xl mx-auto flex items-center justify-center bg-[var(--surface-3)] text-[var(--muted-foreground)] mb-3">
+          {getIcon("inbox", { size: 20 })}
+        </div>
+        <p className="text-sm font-medium text-[var(--foreground)]">{emptyMessage}</p>
+      </div>
+    )
+  }
+
   return (
-    <Table>
-      <Table.ScrollContainer>
-        <Table.Content
-          className="min-w-[600px]"
-          selectedKeys={selectedKeys}
-          selectionMode={selectionMode === "none" ? undefined : selectionMode}
-          sortDescriptor={sortDescriptor}
-          onSelectionChange={setSelectedKeys}
-          onSortChange={setSortDescriptor}
-        >
-          <Table.Header>
-            {selectionMode !== "none" && (
-              <Table.Column className="w-10 pr-0"> </Table.Column>
-            )}
-            {columns.map((col) => (
-              <Table.Column
-                key={col.key}
-                id={col.key}
-                allowsSorting={col.sortable}
-                isRowHeader={col.key === columns[0]?.key}
-                className={col.className}
-              >
-                {col.sortable
-                  ? ({ sortDirection }: any) => (
-                      <Table.SortableColumnHeader sortDirection={sortDirection}>
-                        {col.label}
-                      </Table.SortableColumnHeader>
-                    )
-                  : col.label
-                }
-              </Table.Column>
-            ))}
-            {hasActions && (
-              <Table.Column className="text-end">Acciones</Table.Column>
-            )}
-          </Table.Header>
-          <Table.Body
-            renderEmptyState={() => (
-              <div className="flex h-full w-full flex-col items-center justify-center gap-4 text-center py-12">
-                <Icon
-                  className="size-8"
-                  icon="gravity-ui:tray"
-                  style={{ color: "var(--muted-foreground)" }}
-                />
-                <span className="text-sm" style={{ color: "var(--muted-foreground)" }}>
-                  {emptyMessage}
-                </span>
-              </div>
-            )}
-          >
-            {sorted.map((item) => (
-              <Table.Row
+    <div className="sa-surface overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-[var(--surface-border)]">
+              {columns.map((col) => (
+                <th
+                  key={col.key}
+                  className={`text-left text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] px-4 py-3 ${
+                    col.sortable ? "cursor-pointer hover:text-[var(--foreground)] transition-colors select-none" : ""
+                  } ${col.className ?? ""}`}
+                  onClick={col.sortable ? () => toggleSort(col.key) : undefined}
+                >
+                  <span className="inline-flex items-center gap-1">
+                    {col.label}
+                    {col.sortable && sortKey === col.key && (
+                      <span className="text-[10px]">{sortDir === "asc" ? "▲" : "▼"}</span>
+                    )}
+                  </span>
+                </th>
+              ))}
+              {hasActions && <th className="text-right text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] px-4 py-3">Acciones</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.map((item, idx) => (
+              <tr
                 key={item.id}
-                id={item.id}
-                onAction={onRowClick ? () => onRowClick(item) : undefined}
+                onClick={onRowClick ? () => onRowClick(item) : undefined}
+                className={`border-b border-[var(--surface-border)] last:border-b-0 transition-colors ${
+                  onRowClick ? "cursor-pointer" : ""
+                } hover:bg-[var(--surface-2)]`}
               >
-                {selectionMode !== "none" && (
-                  <Table.Cell className="pr-0">
-                    <Checkbox aria-label={`Select ${item.id}`} slot="selection" variant="secondary" />
-                  </Table.Cell>
-                )}
                 {columns.map((col) => (
-                  <Table.Cell key={col.key}>
+                  <td key={col.key} className={`px-4 py-3.5 text-sm text-[var(--foreground)] ${col.className ?? ""}`}>
                     {col.render ? col.render(item) : String((item as any)[col.key] ?? "—")}
-                  </Table.Cell>
+                  </td>
                 ))}
                 {hasActions && (
-                  <Table.Cell>
+                  <td className="px-4 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-1">
                       {onEdit && (
-                        <Button
-                          isIconOnly
-                          size="sm"
-                          variant="tertiary"
+                        <button
+                          onClick={(e) => { e.stopPropagation(); onEdit(item) }}
+                          className="size-8 rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] transition-colors"
                           aria-label="Editar"
-                          onPress={() => onEdit(item)}
                         >
-                          <Icon className="size-4" icon="gravity-ui:pencil" />
-                        </Button>
+                          {getIcon("edit", { size: 15 })}
+                        </button>
                       )}
                       {onDelete && (
-                        <Button
-                          isIconOnly
-                          size="sm"
-                          variant="danger-soft"
+                        <button
+                          onClick={(e) => { e.stopPropagation(); onDelete(item) }}
+                          className="size-8 rounded-xl flex items-center justify-center text-[var(--muted-foreground)] hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-500 transition-colors"
                           aria-label="Eliminar"
-                          onPress={() => onDelete(item)}
                         >
-                          <Icon className="size-4" icon="gravity-ui:trash-bin" />
-                        </Button>
+                          {getIcon("trash", { size: 15 })}
+                        </button>
                       )}
                     </div>
-                  </Table.Cell>
+                  </td>
                 )}
-              </Table.Row>
+              </tr>
             ))}
-          </Table.Body>
-        </Table.Content>
-      </Table.ScrollContainer>
-    </Table>
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }

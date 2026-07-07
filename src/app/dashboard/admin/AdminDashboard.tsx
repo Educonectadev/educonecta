@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { getIcon } from "@/components/premium/iconRegistry"
 
 interface Stat {
@@ -30,11 +29,6 @@ interface CarouselImg {
   id: number
   url: string
   alt: string | null
-}
-
-const tile = {
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const } },
 }
 
 export default function AdminDashboard({
@@ -83,73 +77,59 @@ export default function AdminDashboard({
         </div>
       </div>
 
-      {/* Metric tiles — like Daybase habit tiles */}
-      <motion.div
-        initial="initial"
-        animate="animate"
-        className="grid grid-cols-2 gap-3 md:gap-4"
-      >
+      {/* Metric tiles */}
+      <div className="grid grid-cols-2 gap-3 md:gap-4">
         {stats.map((s) => (
-          <motion.div key={s.label} variants={tile}>
-            <Link
-              href={s.href}
-              className="sa-surface sa-surface-hover block p-5 md:p-6"
-            >
-              <div className="flex items-center gap-4 mb-3">
-                <div className="size-10 md:size-12 rounded-2xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)]">
-                  {getIcon(s.icon, { size: 20 })}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[11px] md:text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wider truncate">
-                    {s.label}
-                  </p>
-                  <p className="text-2xl md:text-3xl font-bold tracking-tight text-[var(--foreground)] mt-0.5">
-                    {s.value}
-                  </p>
-                </div>
+          <Link
+            key={s.label}
+            href={s.href}
+            className="sa-surface sa-surface-hover block p-5 md:p-6"
+          >
+            <div className="flex items-center gap-4 mb-3">
+              <div className="size-10 md:size-12 rounded-2xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)]">
+                {getIcon(s.icon, { size: 20 })}
               </div>
-              <div className="h-1 rounded-full bg-[var(--surface-3)] overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-[var(--accent)] transition-all"
-                  style={{ width: `${Math.min(100, (s.value / Math.max(1, stats[0]?.value || 1)) * 100)}%` }}
-                />
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] md:text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wider truncate">
+                  {s.label}
+                </p>
+                <p className="text-2xl md:text-3xl font-bold tracking-tight text-[var(--foreground)] mt-0.5">
+                  {s.value}
+                </p>
               </div>
-            </Link>
-          </motion.div>
+            </div>
+            <div className="h-1.5 rounded-full bg-[var(--surface-3)] overflow-hidden">
+              <div
+                className="h-full rounded-full bg-[var(--accent)] transition-all duration-500"
+                style={{ width: `${Math.min(100, (s.value / Math.max(1, stats[0]?.value || 1)) * 100)}%` }}
+              />
+            </div>
+          </Link>
         ))}
-      </motion.div>
+      </div>
 
-      {/* Quick links — smaller tiles */}
-      <motion.div
-        initial="initial"
-        animate="animate"
-        className="grid grid-cols-4 sm:grid-cols-7 gap-2 md:gap-3"
-      >
-        {quickLinks.map((l, i) => (
-          <motion.div key={l.label} variants={tile}>
-            <Link
-              href={l.href}
-              className="sa-surface sa-surface-hover flex flex-col items-center justify-center gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[90px] text-center"
-            >
-              <div className="size-9 md:size-10 rounded-xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)]">
-                {getIcon(l.icon, { size: 18 })}
-              </div>
-              <span className="text-[11px] md:text-xs font-semibold text-[var(--foreground)] leading-tight">
-                {l.label}
-              </span>
-            </Link>
-          </motion.div>
+      {/* Quick links */}
+      <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 md:gap-3">
+        {quickLinks.map((l) => (
+          <Link
+            key={l.label}
+            href={l.href}
+            className="sa-surface sa-surface-hover flex flex-col items-center justify-center gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[90px] text-center"
+          >
+            <div className="size-9 md:size-10 rounded-xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)]">
+              {getIcon(l.icon, { size: 18 })}
+            </div>
+            <span className="text-[11px] md:text-xs font-semibold text-[var(--foreground)] leading-tight">
+              {l.label}
+            </span>
+          </Link>
         ))}
-      </motion.div>
+      </div>
 
-      {/* Activity — two wide tiles */}
-      <motion.div
-        initial="initial"
-        animate="animate"
-        className="grid gap-4 md:gap-5 lg:grid-cols-2"
-      >
+      {/* Activity */}
+      <div className="grid gap-4 md:gap-5 lg:grid-cols-2">
         {/* Students */}
-        <motion.div variants={tile} className="sa-surface p-5 md:p-6">
+        <div className="sa-surface p-5 md:p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2.5">
               <div className="size-8 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
@@ -171,12 +151,9 @@ export default function AdminDashboard({
             </div>
           ) : (
             <div className="space-y-1">
-              {recentStudents.map((s, idx) => (
-                <motion.div
+              {recentStudents.map((s) => (
+                <div
                   key={s.id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.025, ease: [0.16, 1, 0.3, 1] as const }}
                   className="flex items-center justify-between py-2 px-3 rounded-xl -mx-3 hover:bg-[var(--surface-2)] transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
@@ -191,14 +168,14 @@ export default function AdminDashboard({
                   <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-1 rounded-full shrink-0 ml-2">
                     {s.documentId}
                   </span>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
-        </motion.div>
+        </div>
 
         {/* Teachers */}
-        <motion.div variants={tile} className="sa-surface p-5 md:p-6">
+        <div className="sa-surface p-5 md:p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2.5">
               <div className="size-8 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
@@ -220,12 +197,9 @@ export default function AdminDashboard({
             </div>
           ) : (
             <div className="space-y-1">
-              {recentTeachers.map((t, idx) => (
-                <motion.div
+              {recentTeachers.map((t) => (
+                <div
                   key={t.id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: idx * 0.025, ease: [0.16, 1, 0.3, 1] as const }}
                   className="flex items-center justify-between py-2 px-3 rounded-xl -mx-3 hover:bg-[var(--surface-2)] transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
@@ -240,12 +214,12 @@ export default function AdminDashboard({
                   <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-1 rounded-full shrink-0 ml-2">
                     {t.speciality ?? "Docente"}
                   </span>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   )
 }
