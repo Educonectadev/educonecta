@@ -78,6 +78,13 @@ export default function InstitutionModal({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
+  const [secretaryUser, setSecretaryUser] = useState<{ id: number; email: string; name: string } | null>(null)
+  const [secretaryLoading, setSecretaryLoading] = useState(true)
+  const [showCreateSecretary, setShowCreateSecretary] = useState(false)
+  const [secretaryForm, setSecretaryForm] = useState({ email: "", password: "", name: "" })
+  const [secretarySaving, setSecretarySaving] = useState(false)
+  const [secretaryError, setSecretaryError] = useState("")
+
   const handleDelete = useCallback(async () => {
     setDeleting(true)
     const res = await fetch(`/api/super-admin/instituciones?id=${institution.id}`, { method: "DELETE" })
@@ -110,6 +117,35 @@ export default function InstitutionModal({
   useEffect(() => {
     if (directorUser) setEditDirectorEmail(directorUser.email)
   }, [directorUser])
+
+  useEffect(() => {
+    setSecretaryLoading(true)
+    fetch(`/api/super-admin/instituciones/secretary?institutionId=${institution.id}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setSecretaryUser(data)
+        if (data) setSecretaryForm((prev) => ({ ...prev, name: data.name, email: data.email }))
+      })
+      .finally(() => setSecretaryLoading(false))
+  }, [institution.id])
+
+  async function handleCreateSecretary() {
+    setSecretaryError("")
+    setSecretarySaving(true)
+    const res = await fetch("/api/super-admin/instituciones/secretary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ institutionId: institution.id, ...secretaryForm }),
+    })
+    const data = await res.json()
+    setSecretarySaving(false)
+    if (!res.ok) {
+      setSecretaryError(data.message ?? "Error al crear secretario")
+      return
+    }
+    setSecretaryUser(data.user)
+    setShowCreateSecretary(false)
+  }
 
   async function handleCreateDirector() {
     setDirectorError("")
@@ -423,6 +459,62 @@ export default function InstitutionModal({
                     </button>
                     <button
                       onClick={() => { setShowCreateDirector(false); setDirectorError("") }}
+                      className="text-xs text-gray-400 dark:text-zinc-500 hover:text-black dark:hover:text-white transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-400 dark:text-zinc-500">Sin acceso configurado</p>
+              )}
+            </div>
+
+            {/* Secretary Admin */}
+            <div className="bg-gray-50 dark:bg-zinc-900/50 rounded-[25px] p-4 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">Secretario(a) - Acceso al Sistema</h3>
+                {!secretaryLoading && !secretaryUser && !showCreateSecretary && (
+                  <button onClick={() => setShowCreateSecretary(true)} className="text-[11px] font-medium text-black dark:text-white hover:text-black/60 dark:hover:text-white/60 transition-colors">Crear Acceso</button>
+                )}
+              </div>
+              {secretaryLoading ? (
+                <div className="h-10 bg-gray-200/60 dark:bg-zinc-700/60 rounded-[20px] animate-pulse" />
+              ) : secretaryUser ? (
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white/90">{secretaryUser.name}</p>
+                    <p className="text-xs text-gray-400 dark:text-zinc-500">{secretaryUser.email}</p>
+                  </div>
+                  <span className="text-[11px] text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-[30px] px-3 py-1 font-medium">Acceso creado</span>
+                </div>
+              ) : showCreateSecretary ? (
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-1">Nombre</p>
+                    <input type="text" value={secretaryForm.name} onChange={(e) => setSecretaryForm((p) => ({ ...p, name: e.target.value }))} className="w-full rounded-[20px] border border-gray-200 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all bg-white dark:bg-zinc-800" placeholder="Nombre del secretario" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-1">Email *</p>
+                      <input type="email" value={secretaryForm.email} onChange={(e) => setSecretaryForm((p) => ({ ...p, email: e.target.value }))} className="w-full rounded-[20px] border border-gray-200 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all bg-white dark:bg-zinc-800" placeholder="secretario@colegio.pe" />
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-medium text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-1">Contraseña *</p>
+                      <input type="password" value={secretaryForm.password} onChange={(e) => setSecretaryForm((p) => ({ ...p, password: e.target.value }))} className="w-full rounded-[20px] border border-gray-200 dark:border-zinc-700 px-4 py-2.5 text-sm text-gray-900 dark:text-white/90 placeholder:text-gray-300 dark:placeholder:text-zinc-600 focus:border-black dark:focus:border-white focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white transition-all bg-white dark:bg-zinc-800" placeholder="••••••" />
+                    </div>
+                  </div>
+                  {secretaryError && <p className="text-xs text-red-600 dark:text-red-400">{secretaryError}</p>}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleCreateSecretary}
+                      disabled={secretarySaving}
+                      className="rounded-[30px] btn-primary px-5 py-2 text-xs font-medium"
+                    >
+                      {secretarySaving ? "Creando..." : "Crear Secretario"}
+                    </button>
+                    <button
+                      onClick={() => { setShowCreateSecretary(false); setSecretaryError("") }}
                       className="text-xs text-gray-400 dark:text-zinc-500 hover:text-black dark:hover:text-white transition-colors"
                     >
                       Cancelar

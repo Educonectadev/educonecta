@@ -16,8 +16,9 @@ export async function GET(req: NextRequest) {
   try {
     const supabase = getSupabaseAdmin()
 
-    const [adminsRes, teachersRes, parentsRes, studentsRes, coursesRes, gradesRes] = await Promise.all([
+    const [adminsRes, secretariesRes, teachersRes, parentsRes, studentsRes, coursesRes, gradesRes] = await Promise.all([
       supabase.from("User").select("id", { count: "exact", head: true }).eq("institutionId", id).eq("role", "INSTITUTIONAL_ADMIN"),
+      supabase.from("User").select("id", { count: "exact", head: true }).eq("institutionId", id).eq("role", "SECRETARY"),
       supabase.from("User").select("id", { count: "exact", head: true }).eq("institutionId", id).eq("role", "TEACHER"),
       supabase.from("User").select("id", { count: "exact", head: true }).eq("institutionId", id).eq("role", "PARENT"),
       supabase.from("Student").select("id", { count: "exact", head: true }).eq("institutionId", id),
@@ -26,6 +27,7 @@ export async function GET(req: NextRequest) {
     ])
 
     const admins = adminsRes.count ?? 0
+    const secretaries = secretariesRes.count ?? 0
     const teachers = teachersRes.count ?? 0
     const parents = parentsRes.count ?? 0
     const students = studentsRes.count ?? 0
@@ -33,8 +35,9 @@ export async function GET(req: NextRequest) {
     const grades = gradesRes.count ?? 0
 
     return NextResponse.json({
-      total: admins + teachers + parents + students,
+      total: admins + secretaries + teachers + parents + students,
       admins,
+      secretaries,
       teachers,
       parents,
       students,
