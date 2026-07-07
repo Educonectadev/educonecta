@@ -34,7 +34,7 @@ CREATE TABLE "User" (
   email VARCHAR(255) NOT NULL UNIQUE,
   passwordHash VARCHAR(255) NOT NULL,
   name VARCHAR(255) NOT NULL,
-  role VARCHAR(50) NOT NULL CHECK (role IN ('SUPER_ADMIN', 'INSTITUTIONAL_ADMIN', 'TEACHER', 'PARENT', 'STUDENT')),
+  role VARCHAR(50) NOT NULL CHECK (role IN ('SUPER_ADMIN', 'INSTITUTIONAL_ADMIN', 'SECRETARY', 'TEACHER', 'PARENT', 'STUDENT')),
   phone VARCHAR(255),
   brandColor VARCHAR(9) DEFAULT '#000000',
   isActive BOOLEAN NOT NULL DEFAULT TRUE,
@@ -57,6 +57,17 @@ CREATE TABLE "InstitutionalAdmin" (
 );
 
 CREATE INDEX idx_inst_admin_institution ON "InstitutionalAdmin"(institutionId);
+
+-- ── Secretary ──
+CREATE TABLE "Secretary" (
+  id SERIAL PRIMARY KEY,
+  userId INT NOT NULL UNIQUE REFERENCES "User"(id) ON DELETE CASCADE,
+  institutionId INT NOT NULL REFERENCES "Institution"(id) ON DELETE CASCADE,
+  createdAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_secretary_institution ON "Secretary"(institutionId);
 
 -- ── Teacher ──
 CREATE TABLE "Teacher" (

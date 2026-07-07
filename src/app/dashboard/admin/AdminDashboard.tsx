@@ -11,21 +11,6 @@ interface Stat {
   icon: string
 }
 
-interface RecentStudent {
-  id: number
-  firstName: string
-  lastName: string
-  documentId: string
-  grade: { name: string } | null
-  section: { name: string } | null
-}
-
-interface RecentTeacher {
-  id: number
-  user: { name: string; email: string }
-  speciality: string | null
-}
-
 interface CarouselImg {
   id: number
   url: string
@@ -63,14 +48,10 @@ function StatCard({ stat, max }: { stat: Stat; max: number }) {
 
 export default function AdminDashboard({
   stats,
-  recentStudents,
-  recentTeachers,
   institutionName,
   carouselImages,
 }: {
   stats: Stat[]
-  recentStudents: RecentStudent[]
-  recentTeachers: RecentTeacher[]
   institutionName?: string
   carouselImages?: CarouselImg[]
 }) {
@@ -148,79 +129,6 @@ export default function AdminDashboard({
         {stats.map((s) => (
           <StatCard key={s.label} stat={s} max={maxStat} />
         ))}
-      </div>
-
-      {/* Recent activity */}
-      <div className="grid gap-3">
-        {/* Students */}
-        <div className="bg-[var(--surface)] border border-[var(--surface-border)] rounded-2xl p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="size-7 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center shrink-0">
-                {getIcon("users", { size: 14 })}
-              </div>
-              <span className="text-xs font-semibold text-[var(--foreground)]">Alumnos</span>
-            </div>
-            <Link href="/dashboard/admin/alumnos" className="text-[11px] text-[var(--muted-foreground)] shrink-0 ml-2">
-              Ver todo
-            </Link>
-          </div>
-          {recentStudents.length === 0 ? (
-            <p className="text-sm text-[var(--muted-foreground)] text-center py-6">Sin alumnos registrados</p>
-          ) : (
-            <div className="space-y-1">
-              {recentStudents.map((s) => (
-                <div key={s.id} className="flex items-center gap-2 py-1.5">
-                  <div className="size-6 rounded-lg flex items-center justify-center text-[10px] font-semibold bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
-                    {s.firstName.charAt(0)}{s.lastName.charAt(0)}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-[var(--foreground)] truncate">{s.firstName} {s.lastName}</p>
-                    <p className="text-[11px] text-[var(--muted-foreground)] truncate">{s.grade?.name ?? ""} {s.section?.name ?? ""}</p>
-                  </div>
-                  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-0.5 rounded-full shrink-0">
-                    {s.documentId}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Teachers */}
-        <div className="bg-[var(--surface)] border border-[var(--surface-border)] rounded-2xl p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="size-7 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center shrink-0">
-                {getIcon("school", { size: 14 })}
-              </div>
-              <span className="text-xs font-semibold text-[var(--foreground)]">Docentes</span>
-            </div>
-            <Link href="/dashboard/admin/profesores" className="text-[11px] text-[var(--muted-foreground)] shrink-0 ml-2">
-              Ver todo
-            </Link>
-          </div>
-          {recentTeachers.length === 0 ? (
-            <p className="text-sm text-[var(--muted-foreground)] text-center py-6">Sin docentes registrados</p>
-          ) : (
-            <div className="space-y-1">
-              {recentTeachers.map((t) => (
-                <div key={t.id} className="flex items-center gap-2 py-1.5">
-                  <div className="size-6 rounded-lg flex items-center justify-center text-[10px] font-semibold bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
-                    {t.user.name.charAt(0)}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-[var(--foreground)] truncate">{t.user.name}</p>
-                    <p className="text-[11px] text-[var(--muted-foreground)] truncate">{t.user.email}</p>
-                  </div>
-                  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-0.5 rounded-full shrink-0">
-                    {t.speciality ?? "Docente"}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
       </div>
     </div>
   )

@@ -1,4 +1,4 @@
-export type TourRole = "SUPER_ADMIN" | "INSTITUTIONAL_ADMIN" | "TEACHER" | "PARENT" | "STUDENT"
+export type TourRole = "SUPER_ADMIN" | "INSTITUTIONAL_ADMIN" | "SECRETARY" | "TEACHER" | "PARENT" | "STUDENT"
 
 export interface TourStep {
   id: string

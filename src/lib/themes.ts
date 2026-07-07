@@ -96,4 +96,20 @@ export const themes: Record<string, RoleTheme> = {
     avatar: "bg-violet-600",
     accent: "text-violet-600",
   },
+  SECRETARY: {
+    sidebar: {
+      activeBg: "bg-teal-600",
+      activeText: "text-white",
+      hoverBg: "hover:bg-teal-600",
+      hoverText: "hover:text-white",
+      labelColor: "text-teal-500",
+    },
+    card: {
+      bg: "bg-teal-50 dark:bg-teal-950/30",
+      border: "border-teal-200 dark:border-teal-900",
+      hoverBg: "hover:bg-teal-100 dark:hover:bg-teal-900/50",
+    },
+    avatar: "bg-teal-600",
+    accent: "text-teal-600",
+  },
 }

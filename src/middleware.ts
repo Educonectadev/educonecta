@@ -6,6 +6,7 @@ import type { NextRequest } from "next/server"
 const rolePaths: Record<string, string[]> = {
   SUPER_ADMIN: ["/super-admin", "/dashboard/super-admin", "/developer"],
   INSTITUTIONAL_ADMIN: ["/admin", "/dashboard/admin", "/director"],
+  SECRETARY: ["/dashboard/secretary"],
   TEACHER: ["/profesor", "/dashboard/teacher", "/docente"],
   PARENT: ["/padre", "/dashboard/parent", "/padres"],
   STUDENT: ["/dashboard/student", "/alumnos"],
@@ -66,7 +67,7 @@ export async function middleware(req: NextRequest) {
 
       const isProtected = [
         "/admin", "/profesor", "/padre", "/super-admin",
-        "/dashboard/admin", "/dashboard/teacher", "/dashboard/parent", "/dashboard/super-admin", "/dashboard/student",
+        "/dashboard/admin", "/dashboard/teacher", "/dashboard/parent", "/dashboard/super-admin", "/dashboard/student", "/dashboard/secretary",
         "/developer", "/director", "/docente", "/padres", "/alumnos",
       ].some((p) => pathname === p || pathname.startsWith(p + "/"))
 
@@ -85,5 +86,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/login", "/admin/:path*", "/profesor/:path*", "/padre/:path*", "/super-admin/:path*", "/dashboard/:path*", "/developer", "/director", "/docente", "/padres", "/alumnos"],
+  matcher: ["/", "/login", "/admin/:path*", "/profesor/:path*", "/padre/:path*", "/super-admin/:path*", "/dashboard/:path*", "/developer", "/director", "/docente", "/padres", "/alumnos", "/secretaria"],
 }

@@ -13,7 +13,7 @@ interface Student {
   lastName: string
   documentId: string
   email: string | null
-  grade: { id: number; name: string } | null
+  grade: { id: number; name: string; shift?: string } | null
   section: { id: number; name: string } | null
 }
 
@@ -155,6 +155,37 @@ export default function AlumnosList({
         emptyMessage="No hay alumnos registrados."
         onEdit={openEdit}
         onDelete={(s) => setDeleting(s)}
+        detailModal={(s) => (
+          <div className="space-y-5">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-[var(--surface-3)] flex items-center justify-center text-lg font-bold text-[var(--foreground)] shrink-0">
+                {s.firstName.charAt(0)}{s.lastName.charAt(0)}
+              </div>
+              <div>
+                <p className="text-lg font-bold text-[var(--foreground)]">{s.firstName} {s.lastName}</p>
+                <p className="text-sm text-[var(--muted-foreground)]">{s.email || "Sin email"}</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-[var(--surface-2)] rounded-2xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1">Documento</p>
+                <p className="text-sm font-medium text-[var(--foreground)]">{s.documentId}</p>
+              </div>
+              <div className="bg-[var(--surface-2)] rounded-2xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1">Grado</p>
+                <p className="text-sm font-medium text-[var(--foreground)]">{s.grade?.name || "—"}</p>
+              </div>
+              <div className="bg-[var(--surface-2)] rounded-2xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1">Sección</p>
+                <p className="text-sm font-medium text-[var(--foreground)]">{s.section?.name || "—"}</p>
+              </div>
+              <div className="bg-[var(--surface-2)] rounded-2xl p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1">Turno</p>
+                <p className="text-sm font-medium text-[var(--foreground)]">{s.grade?.shift || "—"}</p>
+              </div>
+            </div>
+          </div>
+        )}
         columns={[
           {
             key: "name",
@@ -185,6 +216,15 @@ export default function AlumnosList({
                 {s.grade && <span className="badge-gray text-xs rounded-full px-2 py-0.5 border">{s.grade.name}</span>}
                 {s.section && <span className="badge-gray text-xs rounded-full px-2 py-0.5 border">Sec. {s.section.name}</span>}
               </div>
+            ),
+          },
+          {
+            key: "shift",
+            label: "Turno",
+            render: (s) => (
+              <span className="text-xs font-medium text-[var(--muted-foreground)]">
+                {s.grade?.shift || "—"}
+              </span>
             ),
           },
         ]}

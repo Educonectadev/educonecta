@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react"
 import { getIcon } from "@/components/premium/iconRegistry"
+import Modal from "./Modal"
 
 interface Column<T> {
   key: string
@@ -18,6 +19,7 @@ interface DataTableProps<T> {
   onDelete?: (item: T) => void
   onRowClick?: (item: T) => void
   emptyMessage?: string
+  detailModal?: (item: T) => React.ReactNode
 }
 
 export default function DataTable<T extends { id: number }>({
@@ -27,11 +29,14 @@ export default function DataTable<T extends { id: number }>({
   onDelete,
   onRowClick,
   emptyMessage = "No hay registros.",
+  detailModal,
 }: DataTableProps<T>) {
   const [sortKey, setSortKey] = useState(columns[0]?.key ?? "")
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc")
+  const [selectedItem, setSelectedItem] = useState<T | null>(null)
 
   const hasActions = !!onEdit || !!onDelete
+  const hasModal = !!detailModal
 
   const sorted = useMemo(() => {
     if (!sortKey) return data
@@ -53,6 +58,14 @@ export default function DataTable<T extends { id: number }>({
     }
   }
 
+  function handleRowClick(item: T) {
+    if (detailModal) {
+      setSelectedItem(item)
+    } else if (onRowClick) {
+      onRowClick(item)
+    }
+  }
+
   if (data.length === 0) {
     return (
       <div className="sa-surface py-14 md:py-16 text-center">
@@ -66,52 +79,8 @@ export default function DataTable<T extends { id: number }>({
 
   return (
     <>
-      {/* Mobile cards */}
-      <div className="sm:hidden space-y-3">
-        {sorted.map((item, idx) => (
-          <div
-            key={item.id}
-            onClick={onRowClick ? () => onRowClick(item) : undefined}
-            className={`sa-surface p-4 space-y-2.5 ${onRowClick ? "cursor-pointer" : ""}`}
-          >
-            {columns.map((col) => (
-              <div key={col.key}>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] block mb-0.5">
-                  {col.label}
-                </span>
-                <div className="text-sm text-[var(--foreground)]">
-                  {col.render ? col.render(item) : String((item as any)[col.key] ?? "—")}
-                </div>
-              </div>
-            ))}
-            {hasActions && (
-              <div className="flex items-center justify-end gap-2 pt-2.5 border-t border-[var(--surface-border)]">
-                {onEdit && (
-                  <button
-                    onClick={(e) => { e.stopPropagation(); onEdit(item) }}
-                    className="sa-btn sa-btn-ghost text-xs gap-1.5"
-                  >
-                    {getIcon("edit", { size: 14 })}
-                    Editar
-                  </button>
-                )}
-                {onDelete && (
-                  <button
-                    onClick={(e) => { e.stopPropagation(); onDelete(item) }}
-                    className="sa-btn sa-btn-ghost text-xs gap-1.5 text-[var(--muted-foreground)]"
-                  >
-                    {getIcon("trash", { size: 14 })}
-                    Eliminar
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Desktop table */}
-      <div className="hidden sm:block sa-surface overflow-hidden">
+      <div className="sa-surface overflow-hidden">
+        {/* Desktop table */}
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -139,9 +108,9 @@ export default function DataTable<T extends { id: number }>({
               {sorted.map((item) => (
                 <tr
                   key={item.id}
-                  onClick={onRowClick ? () => onRowClick(item) : undefined}
+                  onClick={() => handleRowClick(item)}
                   className={`border-b border-[var(--surface-border)] last:border-b-0 ${
-                    onRowClick ? "cursor-pointer" : ""
+                    hasModal ? "cursor-pointer" : ""
                   } hover:bg-[var(--surface-2)]`}
                 >
                   {columns.map((col) => (
@@ -179,6 +148,21 @@ export default function DataTable<T extends { id: number }>({
           </table>
         </div>
       </div>
+
+      {/* Detail modal */}
+      {hasModal && selectedItem && (
+        <Modal
+          open={!!selectedItem}
+          onClose={() => setSelectedItem(null)}
+          title=""
+          size="2xl"
+          scroll="inside"
+          dialogClassName="!overflow-hidden"
+          bodyClassName="scrollbar-none"
+        >
+          {detailModal(selectedItem)}
+        </Modal>
+      )}
     </>
   )
 }

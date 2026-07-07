@@ -6,22 +6,29 @@ import { themes } from "@/lib/themes"
 
 
 const links = [
-  { href: "/dashboard/admin", label: "Dashboard", icon: "dashboard" },
-  { href: "/dashboard/admin/perfil", label: "Perfil", icon: "person" },
-  { href: "/dashboard/admin/configuracion/evaluacion", label: "Evaluación", icon: "fact_check" },
-  { href: "/dashboard/admin/configuracion/periodos", label: "Períodos", icon: "calendar_today" },
+  { href: "/dashboard/secretary", label: "Dashboard", icon: "dashboard" },
+  { href: "/dashboard/secretary/perfil", label: "Perfil", icon: "person" },
+  { href: "/dashboard/secretary/alumnos", label: "Alumnos", icon: "school" },
+  { href: "/dashboard/secretary/padres", label: "Padres", icon: "group" },
+  { href: "/dashboard/secretary/matricula", label: "Matrícula", icon: "how_to_reg" },
+  { href: "/dashboard/secretary/aulas", label: "Aulas", icon: "meeting_room" },
+  { href: "/dashboard/secretary/cursos", label: "Cursos", icon: "menu_book" },
+  { href: "/dashboard/secretary/grados", label: "Grados", icon: "layers" },
+  { href: "/dashboard/secretary/horarios", label: "Horarios", icon: "calendar_month" },
+  { href: "/dashboard/secretary/carga-masiva", label: "Carga masiva", icon: "file_upload" },
+  { href: "/dashboard/secretary/cuotas", label: "Cuotas", icon: "payments" },
 ]
 
-export default function AdminSidebar() {
+export default function SecretarySidebar() {
   const router = useRouter()
   const pathname = usePathname()
-  const t = themes.INSTITUTIONAL_ADMIN
+  const t = themes.SECRETARY
 
   return (
     <aside className="hidden w-56 shrink-0 md:block" data-tour="sidebar">
       <nav className="h-[calc(100dvh-3.5rem)] sticky top-14 flex flex-col gap-0.5 p-4">
         <p className={`px-4 pb-3 pt-1 text-[10px] font-semibold uppercase tracking-widest ${t.sidebar.labelColor}`}>
-          Director
+          Secretaría
         </p>
         {links.map((link) => {
           const segments = link.href.split("/").filter(Boolean)

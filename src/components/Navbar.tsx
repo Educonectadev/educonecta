@@ -18,7 +18,8 @@ export default function Navbar() {
 
   const roleLabel: Record<string, string> = {
     SUPER_ADMIN: "Super Admin",
-    INSTITUTIONAL_ADMIN: "Admin",
+    INSTITUTIONAL_ADMIN: "Director",
+    SECRETARY: "Secretaría",
     TEACHER: "Profesor",
     PARENT: "Padre",
   }
@@ -27,17 +28,19 @@ export default function Navbar() {
     ? session.user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
     : "?"
 
-  const roleHasProfile = !!session?.user && ["PARENT", "TEACHER", "INSTITUTIONAL_ADMIN"].includes(session.user.role)
+  const roleHasProfile = !!session?.user && ["PARENT", "TEACHER", "INSTITUTIONAL_ADMIN", "SECRETARY"].includes(session.user.role)
 
   const profileHref =
     session?.user?.role === "PARENT" ? "/dashboard/parent/perfil" :
     session?.user?.role === "TEACHER" ? "/dashboard/teacher/perfil" :
+    session?.user?.role === "SECRETARY" ? "/dashboard/secretary/perfil" :
     "/dashboard/admin/perfil"
 
   const configHref =
     session?.user?.role === "PARENT" ? "/dashboard/parent/configuracion" :
     session?.user?.role === "TEACHER" ? "/dashboard/teacher/configuracion" :
     session?.user?.role === "INSTITUTIONAL_ADMIN" ? "/dashboard/admin/configuracion" :
+    session?.user?.role === "SECRETARY" ? "/dashboard/secretary/configuracion" :
     "/dashboard/super-admin/configuracion"
 
   return (

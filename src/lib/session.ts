@@ -9,6 +9,7 @@ export type UserSession = {
   parentId: number | null
   adminId: number | null
   studentId: number | null
+  secretaryId: number | null
 }
 
 export type Session = {

@@ -525,7 +525,7 @@ input[type="checkbox"]:checked::after {
   --surface-shadow: 0 1px 2px rgba(15, 15, 18, 0.03), 0 4px 16px rgba(15, 15, 18, 0.04);
   --surface-shadow-hover: 0 2px 4px rgba(15, 15, 18, 0.04), 0 12px 28px rgba(15, 15, 18, 0.06);
 
-  --radius-card: 45px;
+  --radius-card: 28px;
   --radius-tile: 22px;
   --radius-pill: 999px;
 }
@@ -542,6 +542,34 @@ input[type="checkbox"]:checked::after {
   --surface-border: rgba(255, 255, 255, 0.06);
   --surface-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.35);
   --surface-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.55), 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Scrollbar utilities ─────────────────────────────────────────── */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-border) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--surface-border);
+  border-radius: 999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
 }
 
 /* ── Surfaces ─────────────────────────────────────────────────────── */

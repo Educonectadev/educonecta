@@ -1,11 +1,11 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
-import AlumnosList from "./AlumnosList"
+import AlumnosList from "../../admin/alumnos/AlumnosList"
 
-export default async function AlumnosPage() {
+export default async function SecretaryAlumnosPage() {
   const session = await getServerSession()
-  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") redirect("/login")
+  if (!session || session.user.role !== "SECRETARY") redirect("/login")
 
   const institutionId = session.user.institutionId!
 
