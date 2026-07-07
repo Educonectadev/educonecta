@@ -68,18 +68,18 @@ export default function AdminDashboard({
   ]
 
   return (
-    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6" data-tour="dashboard">
+    <div className="space-y-4 md:space-y-6 py-4 md:pt-6" data-tour="dashboard">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <p className="sa-eyebrow text-[var(--muted-foreground)]">{institutionName || "Institución"}</p>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[var(--foreground)] font-[var(--font-display)]">
+        <div className="min-w-0 flex-1">
+          <p className="sa-eyebrow text-[var(--muted-foreground)] truncate">{institutionName || "Institución"}</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[var(--foreground)] font-[var(--font-display)]">
             Panel del Director
           </h1>
         </div>
-        <div className="hidden sm:flex items-center gap-2 text-xs text-[var(--muted-foreground)]">
+        <div className="hidden sm:flex items-center gap-2 text-xs text-[var(--muted-foreground)] shrink-0 ml-3">
           {getIcon("calendar", { size: 14 })}
-          <span>{new Date().toLocaleDateString("es-PE", { weekday: "long", day: "numeric", month: "long" })}</span>
+          <span className="whitespace-nowrap">{new Date().toLocaleDateString("es-PE", { weekday: "long", day: "numeric", month: "long" })}</span>
         </div>
       </div>
 
@@ -119,48 +119,48 @@ export default function AdminDashboard({
       )}
 
       {/* Metric tiles */}
-      <div className="grid grid-cols-2 gap-3 md:gap-4">
+      <div className="grid grid-cols-2 gap-2 md:gap-4">
         {stats.map((s) => (
           <Link
             key={s.label}
             href={s.href}
-            className="sa-surface sa-surface-hover block p-5 md:p-6"
+            className="sa-surface sa-surface-hover block p-4 md:p-6"
           >
-            <div className="flex items-center gap-4 mb-3">
-              <div className="size-10 md:size-12 rounded-2xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)]">
-                {getIcon(s.icon, { size: 20 })}
+            <div className="flex items-center gap-3 md:gap-4 mb-2 md:mb-3">
+              <div className="size-9 md:size-12 rounded-2xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
+                {getIcon(s.icon, { size: 18 })}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[11px] md:text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wider truncate">
+              <div className="min-w-0">
+                <p className="text-[10px] md:text-xs font-medium text-[var(--muted-foreground)] uppercase tracking-wider truncate">
                   {s.label}
                 </p>
-                <p className="text-2xl md:text-3xl font-bold tracking-tight text-[var(--foreground)] mt-0.5">
+                <p className="text-xl md:text-3xl font-bold tracking-tight text-[var(--foreground)]">
                   {s.value}
                 </p>
               </div>
             </div>
-              <div className="h-1.5 rounded-full bg-[var(--surface-3)]">
-                <div
-                  className="h-full rounded-full bg-[var(--accent)]"
-                  style={{ width: `${Math.min(100, (s.value / Math.max(1, stats[0]?.value || 1)) * 100)}%` }}
-                />
-              </div>
+            <div className="h-1 md:h-1.5 rounded-full bg-[var(--surface-3)]">
+              <div
+                className="h-full rounded-full bg-[var(--accent)]"
+                style={{ width: `${Math.min(100, (s.value / Math.max(1, stats[0]?.value || 1)) * 100)}%` }}
+              />
+            </div>
           </Link>
         ))}
       </div>
 
       {/* Quick links */}
-      <div className="grid grid-cols-4 sm:grid-cols-7 gap-2 md:gap-3">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2 md:gap-3">
         {quickLinks.map((l) => (
           <Link
             key={l.label}
             href={l.href}
-            className="sa-surface sa-surface-hover flex flex-col items-center justify-center gap-2 p-3 md:p-4 min-h-[80px] md:min-h-[90px] text-center"
+            className="sa-surface sa-surface-hover flex flex-col items-center justify-center gap-1.5 p-2.5 md:p-4 min-h-[70px] md:min-h-[90px] text-center"
           >
-            <div className="size-9 md:size-10 rounded-xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)]">
-              {getIcon(l.icon, { size: 18 })}
+            <div className="size-8 md:size-10 rounded-xl flex items-center justify-center bg-[var(--accent)]/10 text-[var(--accent)]">
+              {getIcon(l.icon, { size: 16 })}
             </div>
-            <span className="text-[11px] md:text-xs font-semibold text-[var(--foreground)] leading-tight">
+            <span className="text-[10px] md:text-xs font-semibold text-[var(--foreground)] leading-tight">
               {l.label}
             </span>
           </Link>
@@ -168,22 +168,22 @@ export default function AdminDashboard({
       </div>
 
       {/* Activity */}
-      <div className="grid gap-4 md:gap-5 lg:grid-cols-2">
+      <div className="grid gap-3 md:gap-5 lg:grid-cols-2">
         {/* Students */}
-        <div className="sa-surface p-5 md:p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="size-8 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
-                {getIcon("users", { size: 16 })}
+        <div className="sa-surface p-4 md:p-6">
+          <div className="flex items-center justify-between mb-3 md:mb-4">
+            <div className="flex items-center gap-2">
+              <div className="size-7 md:size-8 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center shrink-0">
+                {getIcon("users", { size: 14 })}
               </div>
               <span className="text-xs font-semibold text-[var(--foreground)]">Alumnos</span>
             </div>
-            <Link href="/dashboard/admin/alumnos" className="text-[11px] text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors">
+            <Link href="/dashboard/admin/alumnos" className="text-[11px] text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors shrink-0 ml-2">
               Ver todo
             </Link>
           </div>
           {recentStudents.length === 0 ? (
-            <div className="py-10 text-center">
+            <div className="py-8 md:py-10 text-center">
               <div className="size-10 rounded-xl mx-auto flex items-center justify-center bg-[var(--surface-3)] text-[var(--muted-foreground)] mb-2">
                 {getIcon("users", { size: 18 })}
               </div>
@@ -191,22 +191,22 @@ export default function AdminDashboard({
               <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Registra alumnos para verlos aquí.</p>
             </div>
           ) : (
-            <div className="space-y-1">
+            <div className="space-y-0.5 md:space-y-1">
               {recentStudents.map((s) => (
                 <div
                   key={s.id}
-                  className="flex items-center justify-between py-2 px-3 rounded-xl -mx-3 hover:bg-[var(--surface-2)] transition-colors"
+                  className="flex items-center justify-between py-2 px-2.5 md:px-3 rounded-xl -mx-2.5 md:-mx-3 hover:bg-[var(--surface-2)] transition-colors"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <div className="size-7 rounded-lg flex items-center justify-center text-[10px] font-semibold bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <div className="size-6 md:size-7 rounded-lg flex items-center justify-center text-[10px] font-semibold bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
                       {s.firstName.charAt(0)}{s.lastName.charAt(0)}
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-[var(--foreground)] truncate">{s.firstName} {s.lastName}</p>
-                      <p className="text-[11px] text-[var(--muted-foreground)]">{s.grade?.name ?? ""} {s.section?.name ?? ""}</p>
+                      <p className="text-[11px] text-[var(--muted-foreground)] truncate">{s.grade?.name ?? ""} {s.section?.name ?? ""}</p>
                     </div>
                   </div>
-                  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-1 rounded-full shrink-0 ml-2">
+                  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-1 rounded-full shrink-0 ml-1.5">
                     {s.documentId}
                   </span>
                 </div>
@@ -216,20 +216,20 @@ export default function AdminDashboard({
         </div>
 
         {/* Teachers */}
-        <div className="sa-surface p-5 md:p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="size-8 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center">
-                {getIcon("school", { size: 16 })}
+        <div className="sa-surface p-4 md:p-6">
+          <div className="flex items-center justify-between mb-3 md:mb-4">
+            <div className="flex items-center gap-2">
+              <div className="size-7 md:size-8 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center shrink-0">
+                {getIcon("school", { size: 14 })}
               </div>
               <span className="text-xs font-semibold text-[var(--foreground)]">Docentes</span>
             </div>
-            <Link href="/dashboard/admin/profesores" className="text-[11px] text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors">
+            <Link href="/dashboard/admin/profesores" className="text-[11px] text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors shrink-0 ml-2">
               Ver todo
             </Link>
           </div>
           {recentTeachers.length === 0 ? (
-            <div className="py-10 text-center">
+            <div className="py-8 md:py-10 text-center">
               <div className="size-10 rounded-xl mx-auto flex items-center justify-center bg-[var(--surface-3)] text-[var(--muted-foreground)] mb-2">
                 {getIcon("school", { size: 18 })}
               </div>
@@ -237,14 +237,14 @@ export default function AdminDashboard({
               <p className="text-xs text-[var(--muted-foreground)] mt-0.5">Registra docentes para verlos aquí.</p>
             </div>
           ) : (
-            <div className="space-y-1">
+            <div className="space-y-0.5 md:space-y-1">
               {recentTeachers.map((t) => (
                 <div
                   key={t.id}
-                  className="flex items-center justify-between py-2 px-3 rounded-xl -mx-3 hover:bg-[var(--surface-2)] transition-colors"
+                  className="flex items-center justify-between py-2 px-2.5 md:px-3 rounded-xl -mx-2.5 md:-mx-3 hover:bg-[var(--surface-2)] transition-colors"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <div className="size-7 rounded-lg flex items-center justify-center text-[10px] font-semibold bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <div className="size-6 md:size-7 rounded-lg flex items-center justify-center text-[10px] font-semibold bg-[var(--accent)]/10 text-[var(--accent)] shrink-0">
                       {t.user.name.charAt(0)}
                     </div>
                     <div className="min-w-0">
@@ -252,7 +252,7 @@ export default function AdminDashboard({
                       <p className="text-[11px] text-[var(--muted-foreground)] truncate">{t.user.email}</p>
                     </div>
                   </div>
-                  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-1 rounded-full shrink-0 ml-2">
+                  <span className="text-[10px] text-[var(--muted-foreground)] bg-[var(--surface-3)] px-2 py-1 rounded-full shrink-0 ml-1.5">
                     {t.speciality ?? "Docente"}
                   </span>
                 </div>
