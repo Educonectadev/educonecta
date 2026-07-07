@@ -139,12 +139,12 @@ export default function AdminDashboard({
                 </p>
               </div>
             </div>
-            <div className="h-1.5 rounded-full bg-[var(--surface-3)] overflow-hidden">
-              <div
-                className="h-full rounded-full bg-[var(--accent)] transition-all duration-500"
-                style={{ width: `${Math.min(100, (s.value / Math.max(1, stats[0]?.value || 1)) * 100)}%` }}
-              />
-            </div>
+              <div className="h-1.5 rounded-full bg-[var(--surface-3)]">
+                <div
+                  className="h-full rounded-full bg-[var(--accent)]"
+                  style={{ width: `${Math.min(100, (s.value / Math.max(1, stats[0]?.value || 1)) * 100)}%` }}
+                />
+              </div>
           </Link>
         ))}
       </div>
