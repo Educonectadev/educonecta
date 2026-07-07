@@ -99,6 +99,7 @@ async function AdminDashboardData({ institutionId }: { institutionId: number }) 
       recentStudents={students as any[]}
       recentTeachers={teachers as any[]}
       institutionName={institutionName}
+      carouselImages={carouselImages as any[]}
     />
   )
 }
