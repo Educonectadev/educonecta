@@ -32,7 +32,7 @@ async function AdminDashboardData({ institutionId }: { institutionId: number }) 
            (SELECT COUNT(*)::int FROM "Teacher"  WHERE "institutionId" = ?) AS "teacherCount",
            (SELECT COUNT(*)::int FROM "Parent"   WHERE "institutionId" = ?) AS "parentCount",
            (SELECT COUNT(*)::int FROM "Course"   WHERE "institutionId" = ?) AS "courseCount"`,
-        [institutionId]
+        [institutionId, institutionId, institutionId, institutionId, institutionId]
       ).catch(() => []),
       query<any[]>(
         `SELECT s.id, s."firstName", s."lastName", s."documentId",
