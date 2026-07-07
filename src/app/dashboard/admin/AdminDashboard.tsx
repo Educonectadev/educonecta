@@ -1,6 +1,8 @@
 "use client"
 
 import Link from "next/link"
+import { useState } from "react"
+import { CarouselLg } from "@/components/Carousel"
 import { getIcon } from "@/components/premium/iconRegistry"
 
 interface Stat {
@@ -40,6 +42,7 @@ export default function AdminDashboard({
   totalParents,
   totalCourses,
   institutionName,
+  carouselImages,
 }: {
   stats: Stat[]
   recentStudents: RecentStudent[]
@@ -51,6 +54,9 @@ export default function AdminDashboard({
   institutionName?: string
   carouselImages?: CarouselImg[]
 }) {
+  const [showGallery, setShowGallery] = useState(false)
+  const hasImages = (carouselImages ?? []).length > 0
+
   const quickLinks = [
     { label: "Alumnos", href: "/dashboard/admin/alumnos", icon: "users" },
     { label: "Profesores", href: "/dashboard/admin/profesores", icon: "school" },
@@ -76,6 +82,41 @@ export default function AdminDashboard({
           <span>{new Date().toLocaleDateString("es-PE", { weekday: "long", day: "numeric", month: "long" })}</span>
         </div>
       </div>
+
+      {/* Gallery */}
+      {hasImages && (
+        <div>
+          <button
+            onClick={() => setShowGallery(!showGallery)}
+            className="flex items-center gap-2 text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+          >
+            {getIcon("eye", { size: 14 })}
+            <span>Galería del colegio</span>
+            <svg
+              className={`size-3 transition-transform ${showGallery ? "rotate-180" : ""}`}
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          {showGallery && (
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="sa-eyebrow text-[var(--muted-foreground)]">Tu colegio</h2>
+                <Link href="/dashboard/admin/perfil/carrusel" className="text-xs text-[var(--muted-foreground)] hover:text-[var(--accent)] transition-colors">
+                  Editar
+                </Link>
+              </div>
+              <CarouselLg
+                images={carouselImages!}
+                autoPlay
+                intervalMs={6000}
+                aspectClass="aspect-[16/9] sm:aspect-[21/9]"
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Metric tiles */}
       <div className="grid grid-cols-2 gap-3 md:gap-4">
