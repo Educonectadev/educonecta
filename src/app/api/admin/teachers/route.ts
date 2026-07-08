@@ -29,7 +29,7 @@ async function generateEmail(firstName: string, lastName: string, institutionId:
 
 export async function GET() {
   const session = await getServerSession()
-  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
+  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN" && session.user.role !== "SECRETARY") {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
 
@@ -49,7 +49,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const session = await getServerSession()
-  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
+  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN" && session.user.role !== "SECRETARY") {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
 

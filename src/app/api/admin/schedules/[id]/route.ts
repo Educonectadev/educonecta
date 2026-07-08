@@ -4,7 +4,7 @@ import { query, update, remove } from "@/lib/prisma"
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession()
-  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
+  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN" && session.user.role !== "SECRETARY") {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
   const institutionId = session.user.institutionId!
@@ -72,7 +72,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession()
-  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN") {
+  if (!session || session.user.role !== "INSTITUTIONAL_ADMIN" && session.user.role !== "SECRETARY") {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 })
   }
   const institutionId = session.user.institutionId!
