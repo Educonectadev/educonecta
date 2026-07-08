@@ -17,7 +17,7 @@ interface Student {
   section: { id: number; name: string } | null
 }
 
-interface Grade { id: number; name: string }
+interface Grade { id: number; name: string; shift?: string }
 interface Section { id: number; name: string }
 
 export default function AlumnosList({
@@ -255,7 +255,7 @@ export default function AlumnosList({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Grado</label>
-              <Select value={form.gradeId} onChange={(val) => setForm({...form, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Sin grado" />
+              <Select value={form.gradeId} onChange={(val) => setForm({...form, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.shift ? `${g.name} · ${g.shift}` : g.name}))} placeholder="Sin grado" />
             </div>
             <div>
               <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>
@@ -341,7 +341,7 @@ export default function AlumnosList({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Grado</label>
-              <Select value={form.gradeId} onChange={(val) => setForm({...form, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.name}))} placeholder="Sin grado" />
+              <Select value={form.gradeId} onChange={(val) => setForm({...form, gradeId: val})} options={grades.map(g => ({value: String(g.id), label: g.shift ? `${g.name} · ${g.shift}` : g.name}))} placeholder="Sin grado" />
             </div>
             <div>
               <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>

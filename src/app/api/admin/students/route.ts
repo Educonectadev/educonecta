@@ -25,7 +25,7 @@ export async function GET() {
             s."documentId",
             s.email,
             s.phone,
-            CASE WHEN s."gradeId" IS NOT NULL THEN jsonb_build_object('id', g.id, 'name', g.name) ELSE NULL END AS grade,
+            CASE WHEN s."gradeId" IS NOT NULL THEN jsonb_build_object('id', g.id, 'name', g.name, 'shift', g.shift) ELSE NULL END AS grade,
             CASE WHEN s."sectionId" IS NOT NULL THEN jsonb_build_object('id', sec.id, 'name', sec.name) ELSE NULL END AS section,
             (s."userId" IS NOT NULL) AS "hasAccount"
      FROM Student s
@@ -121,7 +121,7 @@ export async function POST(request: Request) {
 
     const student = await query(
       `SELECT s.*,
-        CASE WHEN s."gradeId" IS NOT NULL THEN jsonb_build_object('id', g.id, 'name', g.name) ELSE NULL END AS grade,
+        CASE WHEN s."gradeId" IS NOT NULL THEN jsonb_build_object('id', g.id, 'name', g.name, 'shift', g.shift) ELSE NULL END AS grade,
         CASE WHEN s."sectionId" IS NOT NULL THEN jsonb_build_object('id', sec.id, 'name', sec.name) ELSE NULL END AS section
       FROM Student s
       LEFT JOIN Grade g ON s."gradeId" = g.id
