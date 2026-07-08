@@ -17,6 +17,7 @@ export default async function AlumnosPage() {
               s.documentId AS "documentId",
               s.email,
               s.phone,
+              s.shift,
               jsonb_build_object('id', g.id, 'name', g.name, 'shift', g.shift) AS grade,
               jsonb_build_object('id', sec.id, 'name', sec.name) AS section
        FROM Student s

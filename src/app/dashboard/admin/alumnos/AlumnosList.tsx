@@ -15,6 +15,7 @@ interface Student {
   email: string | null
   grade: { id: number; name: string; shift?: string } | null
   section: { id: number; name: string } | null
+  shift?: string | null
 }
 
 interface Grade { id: number; name: string; shift?: string }
@@ -43,11 +44,12 @@ export default function AlumnosList({
     phone: "",
     gradeId: "",
     sectionId: "",
+    shift: "",
     createAccount: false,
   })
 
   function resetForm() {
-    setForm({ firstName: "", lastName: "", documentId: "", email: "", phone: "", gradeId: "", sectionId: "", createAccount: false })
+    setForm({ firstName: "", lastName: "", documentId: "", email: "", phone: "", gradeId: "", sectionId: "", shift: "", createAccount: false })
   }
 
   function openEdit(s: Student) {
@@ -60,6 +62,7 @@ export default function AlumnosList({
       phone: "",
       gradeId: s.grade?.id?.toString() ?? "",
       sectionId: s.section?.id?.toString() ?? "",
+      shift: s.shift ?? "",
       createAccount: false,
     })
   }
@@ -80,6 +83,7 @@ export default function AlumnosList({
         email: form.email || null,
         gradeId: form.gradeId ? Number(form.gradeId) : null,
         sectionId: form.sectionId ? Number(form.sectionId) : null,
+        shift: form.shift || null,
         createAccount: form.createAccount,
       }),
     })
@@ -116,6 +120,7 @@ export default function AlumnosList({
         email: form.email || null,
         gradeId: form.gradeId ? Number(form.gradeId) : null,
         sectionId: form.sectionId ? Number(form.sectionId) : null,
+        shift: form.shift || null,
       }),
     })
     setLoading(false)
@@ -181,7 +186,7 @@ export default function AlumnosList({
               </div>
               <div className="bg-[var(--surface-2)] rounded-2xl p-4">
                 <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)] mb-1">Turno</p>
-                <p className="text-sm font-medium text-[var(--foreground)]">{s.grade?.shift || "—"}</p>
+                <p className="text-sm font-medium text-[var(--foreground)]">{s.shift || s.grade?.shift || "—"}</p>
               </div>
             </div>
           </div>
@@ -223,7 +228,7 @@ export default function AlumnosList({
             label: "Turno",
             render: (s) => (
               <span className="text-xs font-medium text-[var(--muted-foreground)]">
-                {s.grade?.shift || "—"}
+                {s.shift || s.grade?.shift || "—"}
               </span>
             ),
           },
@@ -261,6 +266,10 @@ export default function AlumnosList({
               <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>
               <Select value={form.sectionId} onChange={(val) => setForm({...form, sectionId: val})} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Sin sección" />
             </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Turno</label>
+            <Select value={form.shift} onChange={(val) => setForm({...form, shift: val})} options={[{value: "MAÑANA", label: "Mañana"}, {value: "TARDE", label: "Tarde"}]} placeholder="Sin turno (heredado del grado)" />
           </div>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -347,6 +356,10 @@ export default function AlumnosList({
               <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Sección</label>
               <Select value={form.sectionId} onChange={(val) => setForm({...form, sectionId: val})} options={sections.map(s => ({value: String(s.id), label: s.name}))} placeholder="Sin sección" />
             </div>
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[var(--muted-foreground)] mb-1">Turno</label>
+            <Select value={form.shift} onChange={(val) => setForm({...form, shift: val})} options={[{value: "MAÑANA", label: "Mañana"}, {value: "TARDE", label: "Tarde"}]} placeholder="Sin turno (heredado del grado)" />
           </div>
         </div>
         <div className="flex gap-3 mt-8">

@@ -16,7 +16,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
   try {
     const body = await request.json()
-    const { firstName, lastName, documentId, email, phone, gradeId, sectionId } = body
+    const { firstName, lastName, documentId, email, phone, gradeId, sectionId, shift } = body
 
     if (documentId && documentId !== student.documentId) {
       const dup = await query("SELECT id FROM Student WHERE documentId = ? AND institutionId = ? AND id != ?", [documentId, institutionId, id])
@@ -31,6 +31,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       phone: phone !== undefined ? phone : student.phone,
       gradeId: gradeId !== undefined ? gradeId : student.gradeId,
       sectionId: sectionId !== undefined ? sectionId : student.sectionId,
+      shift: shift !== undefined ? shift : student.shift,
     })
 
     const updated = await query(

@@ -25,6 +25,7 @@ export async function GET() {
             s."documentId",
             s.email,
             s.phone,
+            s.shift,
             CASE WHEN s."gradeId" IS NOT NULL THEN jsonb_build_object('id', g.id, 'name', g.name, 'shift', g.shift) ELSE NULL END AS grade,
             CASE WHEN s."sectionId" IS NOT NULL THEN jsonb_build_object('id', sec.id, 'name', sec.name) ELSE NULL END AS section,
             (s."userId" IS NOT NULL) AS "hasAccount"
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { firstName, lastName, documentId, email, phone, gradeId, sectionId, createAccount } = body
+    const { firstName, lastName, documentId, email, phone, gradeId, sectionId, shift, createAccount } = body
 
     if (!firstName || !lastName || !documentId) {
       return NextResponse.json({ error: "Nombre, apellido y documento son requeridos" }, { status: 400 })
@@ -115,6 +116,7 @@ export async function POST(request: Request) {
       phone: phone || null,
       gradeId: gradeId || null,
       sectionId: sectionId || null,
+      shift: shift || null,
       institutionId,
       userId,
     })
