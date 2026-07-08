@@ -1,7 +1,6 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
-import { motion } from "framer-motion"
 
 export default async function StudentComunicadosPage() {
   const session = await getServerSession()
@@ -32,13 +31,7 @@ export default async function StudentComunicadosPage() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-5 md:space-y-6 pt-3 md:pt-6"
-      data-tour="announcements"
-    >
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6" data-tour="announcements">
       <header>
         <p className="sa-eyebrow" style={{ color: "#8b5cf6" }}>Comunicación</p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Comunicados</h1>
@@ -57,13 +50,8 @@ export default async function StudentComunicadosPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {items.map((c, idx) => (
-            <motion.article
-              key={c.id}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: idx * 0.025, ease: [0.16, 1, 0.3, 1] }}
-              className="sa-surface p-5 md:p-6"
+          {items.map((c) => (
+            <article key={c.id} className="sa-surface p-5 md:p-6"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -77,10 +65,10 @@ export default async function StudentComunicadosPage() {
                 </span>
               </div>
               <p className="mt-3 text-sm whitespace-pre-wrap" style={{ color: "var(--foreground)" }}>{c.content}</p>
-            </motion.article>
+            </article>
           ))}
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }

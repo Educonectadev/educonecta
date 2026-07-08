@@ -1,7 +1,6 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
-import { motion } from "framer-motion"
 
 export default async function StudentAsistenciaPage() {
   const session = await getServerSession()
@@ -23,13 +22,7 @@ export default async function StudentAsistenciaPage() {
   const pct = total > 0 ? Math.round((presentes / total) * 100) : null
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-5 md:space-y-6 pt-3 md:pt-6"
-      data-tour="attendance"
-    >
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6" data-tour="attendance">
       <header>
         <p className="sa-eyebrow" style={{ color: "#8b5cf6" }}>Control</p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Mi asistencia</h1>
@@ -55,13 +48,8 @@ export default async function StudentAsistenciaPage() {
       ) : (
         <div className="sa-surface overflow-hidden">
           <ul className="divide-y sa-divider">
-            {attendance.map((a, idx) => (
-              <motion.li
-                key={a.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35, delay: idx * 0.02, ease: [0.16, 1, 0.3, 1] }}
-                className="p-4 flex items-center justify-between gap-3"
+            {attendance.map((a) => (
+              <li key={a.id} className="p-4 flex items-center justify-between gap-3"
               >
                 <div>
                   <p className="text-sm font-medium" style={{ color: "var(--foreground)" }}>
@@ -74,25 +62,21 @@ export default async function StudentAsistenciaPage() {
                 ) : (
                   <span className="sa-chip" style={{ color: "#ef4444", background: "rgba(239, 68, 68, 0.12)" }}>Falta</span>
                 )}
-              </motion.li>
+              </li>
             ))}
           </ul>
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }
 
 function Stat({ label, value, accent }: { label: string; value: number | string; accent: string }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="sa-tile"
+    <div className="sa-tile"
     >
       <p className="sa-eyebrow" style={{ color: "var(--muted-foreground)" }}>{label}</p>
       <p className="mt-2 sa-num text-2xl md:text-3xl" style={{ color: accent }}>{value}</p>
-    </motion.div>
+    </div>
   )
 }

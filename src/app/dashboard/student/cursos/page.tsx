@@ -1,7 +1,6 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
-import { motion } from "framer-motion"
 
 export default async function StudentCursosPage() {
   const session = await getServerSession()
@@ -22,13 +21,7 @@ export default async function StudentCursosPage() {
   )
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-5 md:space-y-6 pt-3 md:pt-6"
-      data-tour="courses"
-    >
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6" data-tour="courses">
       <header>
         <p className="sa-eyebrow" style={{ color: "#8b5cf6" }}>Académico</p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Mis cursos</h1>
@@ -46,22 +39,16 @@ export default async function StudentCursosPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {courses.map((c, idx) => (
-            <motion.div
-              key={c.id}
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: idx * 0.03, ease: [0.16, 1, 0.3, 1] }}
-              className="sa-surface p-5"
-            >
+          {courses.map((c) => (
+            <div key={c.id} className="sa-surface p-5">
               <p className="sa-chip" style={{ color: "#8b5cf6", background: "color-mix(in srgb, #8b5cf6 14%, transparent)" }}>
                 {c.courseCode ?? "—"}
               </p>
               <h3 className="mt-2 text-base font-semibold font-display" style={{ color: "var(--foreground)" }}>{c.courseName}</h3>
-            </motion.div>
+            </div>
           ))}
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }

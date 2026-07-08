@@ -1,7 +1,6 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
-import { motion } from "framer-motion"
 
 export default async function StudentCalificacionesPage() {
   const session = await getServerSession()
@@ -36,13 +35,7 @@ export default async function StudentCalificacionesPage() {
     : null
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-5 md:space-y-6 pt-3 md:pt-6"
-      data-tour="grades"
-    >
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6" data-tour="grades">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <p className="sa-eyebrow" style={{ color: "#8b5cf6" }}>Académico</p>
@@ -65,14 +58,8 @@ export default async function StudentCalificacionesPage() {
         </div>
       ) : (
         <div className="space-y-5">
-          {courses.map((c, idx) => (
-            <motion.section
-              key={c.course}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: idx * 0.04, ease: [0.16, 1, 0.3, 1] }}
-              className="sa-surface p-5 md:p-6"
-            >
+          {courses.map((c) => (
+            <section key={c.course} className="sa-surface p-5 md:p-6">
               <header className="flex items-center justify-between mb-3">
                 <h2 className="text-base font-semibold" style={{ color: "var(--foreground)" }}>{c.course}</h2>
                 <span className="sa-chip" style={{ color: "#8b5cf6", background: "color-mix(in srgb, #8b5cf6 14%, transparent)" }}>
@@ -94,10 +81,10 @@ export default async function StudentCalificacionesPage() {
                   </li>
                 ))}
               </ul>
-            </motion.section>
+            </section>
           ))}
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }

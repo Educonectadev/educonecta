@@ -1,7 +1,6 @@
 import { getServerSession } from "@/lib/auth"
 import { redirect } from "next/navigation"
 import { query } from "@/lib/prisma"
-import { motion } from "framer-motion"
 
 export default async function StudentTareasPage() {
   const session = await getServerSession()
@@ -27,12 +26,7 @@ export default async function StudentTareasPage() {
   const vencidas = tareas.filter((t) => new Date(t.dueDate) < ahora)
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-5 md:space-y-6 pt-3 md:pt-6"
-    >
+    <div className="space-y-5 md:space-y-6 pt-3 md:pt-6">
       <header>
         <p className="sa-eyebrow" style={{ color: "#8b5cf6" }}>Académico</p>
         <h1 className="mt-1 text-2xl font-bold tracking-tight font-display" style={{ color: "var(--foreground)" }}>Mis tareas</h1>
@@ -54,16 +48,10 @@ export default async function StudentTareasPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {tareas.map((t, idx) => {
+          {tareas.map((t) => {
             const overdue = new Date(t.dueDate) < ahora
             return (
-              <motion.div
-                key={t.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: idx * 0.02, ease: [0.16, 1, 0.3, 1] }}
-                className="sa-surface p-5 md:p-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3"
-              >
+              <div key={t.id} className="sa-surface p-5 md:p-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <h3 className="text-base font-semibold font-display" style={{ color: "var(--foreground)" }}>{t.title}</h3>
@@ -82,11 +70,11 @@ export default async function StudentTareasPage() {
                     {new Date(t.dueDate).toLocaleDateString("es-PE", { day: "2-digit", month: "short" })}
                   </p>
                 </div>
-              </motion.div>
+              </div>
             )
           })}
         </div>
       )}
-    </motion.div>
+    </div>
   )
 }
