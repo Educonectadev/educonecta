@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "@/lib/auth"
-import { query, transaction } from "@/lib/prisma"
+import { query, execute } from "@/lib/prisma"
 
 export async function GET() {
   try {
@@ -9,7 +9,11 @@ export async function GET() {
       return NextResponse.json({ success: false, message: "No autorizado" }, { status: 401 })
     }
 
-    const teacherId = session.user.teacherId!
+    const teacherId = session.user.teacherId
+    if (!teacherId) {
+      return NextResponse.json({ success: false, message: "No autorizado" }, { status: 401 })
+    }
+
     const rows = await query<any[]>(
       `SELECT gr.*,
               s.id AS student__id, s.firstName AS student__firstName, s.lastName AS student__lastName, s.documentId AS student__documentId,
@@ -46,29 +50,29 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: "No autorizado" }, { status: 401 })
     }
 
-    const teacherId = session.user.teacherId!
+    const teacherId = session.user.teacherId
+    if (!teacherId) {
+      return NextResponse.json({ success: false, message: "No autorizado" }, { status: 401 })
+    }
+
     const { courseId, evaluationName, evaluationDate, records } = await req.json()
 
     if (!courseId || !evaluationName || !records || !Array.isArray(records)) {
       return NextResponse.json({ success: false, message: "Datos incompletos" }, { status: 400 })
     }
 
-    const created = await transaction(async (conn) => {
-      const c = conn as any
-      const out = []
-      for (const r of records) {
-        const [result] = await c.execute(
-          `INSERT INTO GradeRecord (studentId, courseId, teacherId, grade, evaluationName, evaluationDate) VALUES (?, ?, ?, ?, ?, ?)`,
-          [r.studentId, courseId, teacherId, r.grade, evaluationName, evaluationDate ? new Date(evaluationDate) : null]
-        )
-        out.push(result)
-      }
-      return out
-    })
+    let count = 0
+    for (const r of records) {
+      await execute(
+        `INSERT INTO GradeRecord (studentId, courseId, teacherId, grade, evaluationName, evaluationDate) VALUES (?, ?, ?, ?, ?, ?)`,
+        [r.studentId, courseId, teacherId, r.grade, evaluationName, evaluationDate || null]
+      )
+      count++
+    }
 
-    return NextResponse.json({ success: true, count: created.length })
+    return NextResponse.json({ success: true, count })
   } catch (error) {
     console.error("Error creating grades:", error)
-    return NextResponse.json({ success: false, message: "Error interno" }, { status: 500 })
+    return NextResponse.json({ success: false, message: "Error al registrar calificaciones" }, { status: 500 })
   }
 }
