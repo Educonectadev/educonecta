@@ -8,6 +8,11 @@ const dayLabels: Record<number, string> = {
   1: "Lunes", 2: "Martes", 3: "Miércoles", 4: "Jueves", 5: "Viernes",
 }
 
+function escapeHtml(str: string | null | undefined): string {
+  if (!str) return "—"
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
+}
+
 interface Schedule {
   id: number
   dayOfWeek: number
@@ -33,7 +38,7 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
   const days = [1, 2, 3, 4, 5]
 
   function handlePrint() {
-    const printWin = window.open("", "_blank")
+    const printWin = window.open("", "_blank", "noopener,noreferrer")
     if (!printWin) return
     let html = `<html><head><title>Mi Horario</title>
     <style>
@@ -48,10 +53,10 @@ export default function TeacherHorariosClient({ schedules }: { schedules: Schedu
     for (const d of days) {
       const dayScheds = grouped[d] || []
       if (dayScheds.length === 0) continue
-      html += `<h2 class="day-title">${dayLabels[d]}</h2>`
+      html += `<h2 class="day-title">${escapeHtml(dayLabels[d])}</h2>`
       html += `<table><thead><tr><th>Inicio</th><th>Fin</th><th>Curso</th><th>Grado</th><th>Sección</th><th>Aula</th></tr></thead><tbody>`
       for (const s of dayScheds) {
-        html += `<tr><td>${s.startTime}</td><td>${s.endTime}</td><td>${s.course.name}</td><td>${s.grade?.name ?? "—"}</td><td>${s.section?.name ?? "—"}</td><td>${s.classroom ?? "—"}</td></tr>`
+        html += `<tr><td>${escapeHtml(s.startTime)}</td><td>${escapeHtml(s.endTime)}</td><td>${escapeHtml(s.course.name)}</td><td>${escapeHtml(s.grade?.name)}</td><td>${escapeHtml(s.section?.name)}</td><td>${escapeHtml(s.classroom)}</td></tr>`
       }
       html += `</tbody></table>`
     }

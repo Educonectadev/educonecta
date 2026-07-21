@@ -40,7 +40,7 @@ export default function NuevoPadrePage() {
   })
 
   useEffect(() => {
-    fetch("/api/admin/students")
+    fetch("/api/admin/students?scope=institution")
       .then((r) => r.json())
       .then((data) => setStudents(Array.isArray(data) ? data : []))
   }, [])

@@ -1,5 +1,10 @@
+import { getServerSession } from "@/lib/auth"
+import { redirect } from "next/navigation"
 import FeesPage from "@/components/admin/FeesPage"
 
-export default function Page() {
+export default async function SecretaryCuotasPage() {
+  const session = await getServerSession()
+  if (!session || (session.user.role !== "SECRETARY" && session.user.role !== "INSTITUTIONAL_ADMIN") || !session.user.institutionId) redirect("/login")
+
   return <FeesPage />
 }

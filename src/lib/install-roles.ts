@@ -86,6 +86,19 @@ export const installRoles: InstallRoleConfig[] = [
       "Material de estudio",
     ],
   },
+  {
+    slug: "secretary",
+    dashboardRole: "SECRETARY",
+    name: "Secretaria",
+    title: "Panel de Secretaria",
+    description: "Gestión operativa de la institución: matrícula, alumnos, profesores y reportes.",
+    features: [
+      "Gestión de alumnos y padres",
+      "Matrícula y calificaciones",
+      "Horarios y aulas",
+      "Carga masiva de datos",
+    ],
+  },
 ]
 
 export function getInstallRoleBySlug(slug: string): InstallRoleConfig | undefined {

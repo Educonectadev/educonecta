@@ -19,10 +19,9 @@ export default async function TeacherMensajesPage() {
      JOIN Parent p ON p.id = ps."parentId"
      JOIN "User" u ON u.id = p."userId"
      JOIN Student s ON s.id = ps."studentId"
-     WHERE (s."gradeId" IN (SELECT ct."gradeId" FROM "CourseTeacher" ct WHERE ct."teacherId" = ?)
-            OR EXISTS (SELECT 1 FROM "CourseTeacher" ct2 WHERE ct2."teacherId" = ? AND ct2."gradeId" IS NULL))
+     WHERE s."gradeId" IN (SELECT ct."gradeId" FROM "CourseTeacher" ct WHERE ct."teacherId" = ? AND ct."gradeId" IS NOT NULL)
      ORDER BY u.name`,
-    [teacherId, teacherId]
+    [teacherId]
   )
 
   const lastMessages = await query<any[]>(

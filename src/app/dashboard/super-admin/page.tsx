@@ -91,7 +91,7 @@ export default async function SuperAdminDashboardPage() {
                 <GreetingLabel />, <TodayLabel />
               </p>
               <h1 className="text-3xl md:text-5xl font-bold tracking-tight sa-num">
-                {session.user.name.split(" ")[0]}
+                {(session.user.name || "").split(" ")[0] || "Admin"}
               </h1>
               <p className="mt-2 text-sm md:text-base max-w-xl" style={{ color: "var(--muted-foreground)" }}>
                 Aquí tienes un resumen del estado de toda la plataforma.

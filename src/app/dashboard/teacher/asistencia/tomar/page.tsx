@@ -72,15 +72,9 @@ export default function TomarAsistenciaPage() {
     if (!gradeId || !sectionId) return
     setLoadingStudents(true)
     const params = new URLSearchParams({ gradeId, sectionId })
-    console.log("[TomarAsistencia] Cargando estudiantes:", { gradeId, sectionId, url: `/api/teacher/courses/students?${params}` })
     fetch(`/api/teacher/courses/students?${params}`)
-      .then((r) => {
-        console.log("[TomarAsistencia] Response status:", r.status)
-        return r.json()
-      })
+      .then((r) => r.json())
       .then((data) => {
-        console.log("[TomarAsistencia] Estudiantes encontrados:", Array.isArray(data) ? data.length : 0)
-        console.log("[TomarAsistencia] Estudiantes:", data)
         const list = Array.isArray(data) ? data : []
         setStudents(list)
         const initStatus: Record<number, Status> = {}
@@ -92,8 +86,7 @@ export default function TomarAsistenciaPage() {
         setStatus(initStatus)
         setMinutesLate(initMin)
       })
-      .catch((err) => {
-        console.error("[TomarAsistencia] Error cargando estudiantes:", err)
+      .catch(() => {
         setStudents([])
       })
       .finally(() => setLoadingStudents(false))

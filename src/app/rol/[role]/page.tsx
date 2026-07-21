@@ -87,9 +87,10 @@ export function generateStaticParams() {
   return roles.map((r) => ({ role: r.id }))
 }
 
-export function generateMetadata({ params }: { params: Promise<{ role: string }> }): Metadata {
+export async function generateMetadata({ params }: { params: Promise<{ role: string }> }): Promise<Metadata> {
+  const { role } = await params
   return {
-    title: `${params.then(p => roleMap[p.role]?.name ?? "Rol")} — EduConecta`,
+    title: `${roleMap[role]?.name ?? "Rol"} — EduConecta`,
   }
 }
 

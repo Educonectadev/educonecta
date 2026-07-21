@@ -6,7 +6,7 @@ export default function TeacherError({ error, reset }: { error: Error; reset: ()
       <span className="material-icons text-5xl text-red-400">error_outline</span>
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white/90">Error al cargar el panel</h2>
       <p className="text-sm text-gray-500 dark:text-zinc-400 max-w-md">
-        {error.message || "Ocurrió un error inesperado. Intenta de nuevo."}
+        Ocurrió un error inesperado. Intenta de nuevo.
       </p>
       <button
         onClick={reset}

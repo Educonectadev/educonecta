@@ -22,6 +22,11 @@ const dayLabels: Record<number, string> = {
   1: "Lunes", 2: "Martes", 3: "Miércoles", 4: "Jueves", 5: "Viernes",
 }
 
+function escapeHtml(str: string | null | undefined): string {
+  if (!str) return "—"
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
+}
+
 const shiftBlocks = {
   MAÑANA: [
     { label: "1er Bloque", start: "06:10", end: "08:00" },
@@ -268,7 +273,7 @@ export default function HorariosList({
   }
 
   function handlePrint() {
-    const printWin = window.open("", "_blank")
+    const printWin = window.open("", "_blank", "noopener,noreferrer")
     if (!printWin) return
     const days = [1, 2, 3, 4, 5]
     const grouped: Record<string, Schedule[]> = {}
@@ -294,13 +299,13 @@ export default function HorariosList({
         if (daySchedules.length === 0) return ""
         const morning = daySchedules.filter((s) => s.shift === "MAÑANA")
         const evening = daySchedules.filter((s) => s.shift === "TARDE")
-        let html = `<h2 class="shift-title">${dayLabels[d]}</h2>`
+        let html = `<h2 class="shift-title">${escapeHtml(dayLabels[d])}</h2>`
         for (const shift of [morning, evening]) {
           if (shift.length === 0) continue
-          html += `<p>Turno: ${shift[0].shift}</p>`
+          html += `<p>Turno: ${escapeHtml(shift[0].shift)}</p>`
           html += `<table><thead><tr><th>Inicio</th><th>Fin</th><th>Curso</th><th>Profesor</th><th>Grado</th><th>Sección</th><th>Aula</th></tr></thead><tbody>`
           for (const s of shift) {
-            html += `<tr><td>${s.startTime}</td><td>${s.endTime}</td><td>${s.course.name}</td><td>${s.teacher?.name ?? "—"}</td><td>${s.grade?.name ?? "—"}</td><td>${s.section?.name ?? "—"}</td><td>${s.classroom ?? "—"}</td></tr>`
+            html += `<tr><td>${escapeHtml(s.startTime)}</td><td>${escapeHtml(s.endTime)}</td><td>${escapeHtml(s.course.name)}</td><td>${escapeHtml(s.teacher?.name)}</td><td>${escapeHtml(s.grade?.name)}</td><td>${escapeHtml(s.section?.name)}</td><td>${escapeHtml(s.classroom)}</td></tr>`
           }
           html += `</tbody></table>`
         }

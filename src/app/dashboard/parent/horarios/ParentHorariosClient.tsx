@@ -5,7 +5,12 @@ import { motion } from "framer-motion"
 import { Modal, Table } from "@heroui/react"
 
 const dayLabels: Record<number, string> = {
-  1: "Lunes", 2: "Martes", 3: "Mi&eacute;rcoles", 4: "Jueves", 5: "Viernes",
+  1: "Lunes", 2: "Martes", 3: "Miércoles", 4: "Jueves", 5: "Viernes",
+}
+
+function escapeHtml(str: string | null | undefined): string {
+  if (!str) return "—"
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;")
 }
 
 interface ScheduleItem {
@@ -33,12 +38,12 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
   const [detail, setDetail] = useState<ScheduleItem | null>(null)
   const [detailChild, setDetailChild] = useState<ChildData | null>(null)
 
-  const days = ["Lunes", "Martes", "Mi&eacute;rcoles", "Jueves", "Viernes", "S&aacute;bado", "Domingo"]
+  const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
 
   function handlePrint(child: ChildData) {
-    const printWin = window.open("", "_blank")
+    const printWin = window.open("", "_blank", "noopener,noreferrer")
     if (!printWin) return
-    let html = `<html><head><title>Horario - ${child.firstName} ${child.lastName}</title>
+    let html = `<html><head><title>Horario - ${escapeHtml(child.firstName)} ${escapeHtml(child.lastName)}</title>
     <style>
       body { font-family: Arial, sans-serif; padding: 20px; }
       h1 { font-size: 18px; margin-bottom: 4px; }
@@ -48,13 +53,13 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
       th { background: #f5f5f5; font-weight: 600; }
     </style></head><body>
     <h1>Horario de Clases</h1>
-    <h2>${child.firstName} ${child.lastName} &mdash; ${child.grade?.name ?? "&mdash;"} &middot; ${child.section?.name ?? "&mdash;"}</h2>`
+    <h2>${escapeHtml(child.firstName)} ${escapeHtml(child.lastName)} — ${escapeHtml(child.grade?.name)} · ${escapeHtml(child.section?.name)}</h2>`
     for (const day of days) {
       const dayScheds = child.schedules.filter((s) => s.dayName === day)
       if (dayScheds.length === 0) continue
-      html += `<h3>${day}</h3><table><thead><tr><th>Inicio</th><th>Fin</th><th>Turno</th><th>Curso</th><th>Profesor</th><th>Aula</th></tr></thead><tbody>`
+      html += `<h3>${escapeHtml(day)}</h3><table><thead><tr><th>Inicio</th><th>Fin</th><th>Turno</th><th>Curso</th><th>Profesor</th><th>Aula</th></tr></thead><tbody>`
       for (const s of dayScheds) {
-        html += `<tr><td>${s.startTime}</td><td>${s.endTime}</td><td>${s.shift}</td><td>${s.course.name}</td><td>${s.teacherName}</td><td>${s.classroom ?? "&mdash;"}</td></tr>`
+        html += `<tr><td>${escapeHtml(s.startTime)}</td><td>${escapeHtml(s.endTime)}</td><td>${escapeHtml(s.shift)}</td><td>${escapeHtml(s.course.name)}</td><td>${escapeHtml(s.teacherName)}</td><td>${escapeHtml(s.classroom)}</td></tr>`
       }
       html += `</tbody></table>`
     }
@@ -161,7 +166,7 @@ export default function ParentHorariosClient({ childrenData }: { childrenData: C
                               <Table.Cell>{day}</Table.Cell>
                               <Table.Cell>
                                 <span className="text-xs font-semibold uppercase"
-                                  style={{ color: s.shift === "MAÑANA" || s.shift === "MA&Ntilde;ANA" ? "#d97706" : "var(--accent)" }}>
+                                  style={{ color: s.shift === "MAÑANA" ? "#d97706" : "var(--accent)" }}>
                                   {s.shift}
                                 </span>
                               </Table.Cell>

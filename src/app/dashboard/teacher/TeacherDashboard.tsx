@@ -101,11 +101,6 @@ const quickLinks = [
     { label: "Cursos", value: stats.totalCourses, icon: "menu_book" },
   ]
 
-  const studentCountByCourse = new Map<string, number>()
-  for (const ct of courseTeachers) {
-    const key = `${ct.courseId}-${ct.gradeId ?? "x"}-${ct.sectionId ?? "x"}`
-    studentCountByCourse.set(key, (studentCountByCourse.get(key) ?? 0) + 0)
-  }
   const scheduleByCourse = new Map<string, { day: string; time: string }[]>()
   for (const c of upcomingClasses) {
     const gradeId = c.gradeId ?? c.grade?.id ?? "x"
