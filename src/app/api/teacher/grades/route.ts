@@ -61,12 +61,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: "Datos incompletos" }, { status: 400 })
     }
 
+    const hasDate = !!evaluationDate
+    const sql = hasDate
+      ? `INSERT INTO GradeRecord (studentId, courseId, teacherId, grade, evaluationName, evaluationDate) VALUES (?, ?, ?, ?, ?, ?)`
+      : `INSERT INTO GradeRecord (studentId, courseId, teacherId, grade, evaluationName) VALUES (?, ?, ?, ?, ?)`
+
     let count = 0
     for (const r of records) {
-      await execute(
-        `INSERT INTO GradeRecord (studentId, courseId, teacherId, grade, evaluationName, evaluationDate) VALUES (?, ?, ?, ?, ?, ?)`,
-        [r.studentId, courseId, teacherId, r.grade, evaluationName, evaluationDate || null]
-      )
+      const params = hasDate
+        ? [r.studentId, courseId, teacherId, r.grade, evaluationName, evaluationDate]
+        : [r.studentId, courseId, teacherId, r.grade, evaluationName]
+      await execute(sql, params)
       count++
     }
 
